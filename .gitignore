@@ -25,8 +25,21 @@
 *.out
 *.app
 *.i*86
+
+# carpeta de eclipse
+.metadata/
 *.x86_64
 *.hex
+metadata/
+RemoteSystemsTempFiles/
+Debug/
 
 # Debug files
 *.dSYM/
+
+# otros
+*.bin
+prueba.txt
+*.orig
+
+
