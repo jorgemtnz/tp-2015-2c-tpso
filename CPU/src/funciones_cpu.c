@@ -3,7 +3,8 @@
 
 void leerArchivoDeConfiguracion() {
 	char* nombreArchivoConfig;
-	t_config* archivoConfig = NULL;
+	t_config* archivoConfig  = malloc(sizeof(t_config));
+	archivoConfig = NULL;
     int result, fd_archivo=0; result=0;
 
 	nombreArchivoConfig =strdup( "/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
