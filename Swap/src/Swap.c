@@ -1,16 +1,11 @@
 #include "Swap.h"
 
 int main(void) {
-	FILE *archivoSwap;
-	char* nombreArchivo;
-	char* rutaArchivoConfiguracion =
-			"/home/utnso/tpso/TPSO/Swap/config_swap.cfg";
+	FILE* archivoSwap;
+	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
+	leerArchivoDeConfiguracion();
 
-	archivoConfiguracion = config_create(rutaArchivoConfiguracion);
-	nombreArchivo = config_get_string_value(archivoConfiguracion,
-			"NOMBRE_SWAP");
-
-	archivoSwap = fopen(nombreArchivo, "w");
+	archivoSwap = fopen(configuracion->nombreSwap, "w");
 	fputs("\0", archivoSwap);
 	fclose(archivoSwap);
 	return EXIT_SUCCESS;
