@@ -17,17 +17,17 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <src/commons/string.h>
-#include <src/commons/collections/list.h>
-#include <src/commons/txt.h>
-#include <src/commons/config.h>
-#include <src/commons/log.h>
+#include <commons/string.h>
+#include <commons/collections/list.h>
+#include <commons/txt.h>
+#include <commons/config.h>
+#include <commons/log.h>
 #include <pthread.h>
 #include <string.h>
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <src/sockets/sockets.h>
+#include <utiles/sockets/sockets.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 

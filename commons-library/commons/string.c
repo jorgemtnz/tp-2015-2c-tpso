@@ -197,6 +197,18 @@ int string_length(char* text) {
 	return strlen(text);
 }
 
+char* string_reverse(char* palabra) {
+    char* resultado = calloc(1, string_length(palabra) + 1);
+
+    int i = string_length(palabra) - 1, j = 0;
+    while (i >= 0){
+        resultado[j] = palabra[i];
+        i--;
+        j++;
+    }
+
+    return resultado;
+}
 
 /** PRIVATE FUNCTIONS **/
 
@@ -230,7 +242,7 @@ void _string_append_with_format_list(const char* format, char** original, va_lis
 	string_append(original, temporal);
 	free(temporal);
 }
-//
+
 char** _string_split(char* text, char* separator, bool(*condition)(char*, int)) {
 	char **substrings = NULL;
 	int size = 0;

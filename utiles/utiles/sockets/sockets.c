@@ -1,4 +1,4 @@
-#include "sockets.h"
+#include "../../utiles/sockets/sockets.h"
 # define CHUNK_SIZE 512
 
 struct sockaddr_in especificarSocketInfo(char* direccion, int puerto) {

@@ -21,8 +21,7 @@
 static void list_link_element(t_link_element* previous, t_link_element* next);
 static t_link_element* list_create_element(void* data);
 static t_link_element* list_get_element(t_list* self, int index);
-static t_link_element* list_find_element(t_list *self, bool (*condition)(void*),
-		int* index);
+static t_link_element* list_find_element(t_list *self, bool(*condition)(void*), int* index);
 
 t_list *list_create() {
 	t_list *list = malloc(sizeof(t_list));
@@ -37,15 +36,14 @@ int list_add(t_list *self, void *data) {
 	if (self->elements_count == 0) {
 		self->head = new_element;
 	} else {
-		list_link_element(list_get_element(self, self->elements_count - 1),
-				new_element);
+		list_link_element(list_get_element(self, self->elements_count - 1), new_element);
 	}
 	self->elements_count++;
 	return self->elements_count - 1;
 }
 
 void list_add_all(t_list* self, t_list* other) {
-	void _add_in_list(void* element) {
+	void _add_in_list(void* element){
 		list_add(self, element);
 	}
 
@@ -91,18 +89,17 @@ void *list_replace(t_list *self, int index, void *data) {
 	return old_data;
 }
 
-void list_replace_and_destroy_element(t_list *self, int num, void *data,
-		void (*element_destroyer)(void*)) {
+void list_replace_and_destroy_element(t_list *self, int num, void *data, void(*element_destroyer)(void*)) {
 	void *old_data = list_replace(self, num, data);
 	element_destroyer(old_data);
 }
 
-void* list_find(t_list *self, bool (*condition)(void*)) {
+void* list_find(t_list *self, bool(*condition)(void*)) {
 	t_link_element *element = list_find_element(self, condition, NULL);
 	return element != NULL ? element->data : NULL;
 }
 
-void list_iterate(t_list* self, void (*closure)(void*)) {
+void list_iterate(t_list* self, void(*closure)(void*)) {
 	t_link_element *element = self->head;
 	while (element != NULL) {
 		closure(element->data);
@@ -114,8 +111,7 @@ void *list_remove(t_list *self, int index) {
 	void *data = NULL;
 	t_link_element *aux_element = NULL;
 
-	if (self->head == NULL)
-		return NULL;
+	if (self->head == NULL) return NULL;
 
 	aux_element = list_get_element(self, index);
 	data = aux_element->data;
@@ -132,7 +128,7 @@ void *list_remove(t_list *self, int index) {
 	return data;
 }
 
-void* list_remove_by_condition(t_list *self, bool (*condition)(void*)) {
+void* list_remove_by_condition(t_list *self, bool(*condition)(void*)) {
 	int index = 0;
 
 	t_link_element* element = list_find_element(self, condition, &index);
@@ -143,14 +139,12 @@ void* list_remove_by_condition(t_list *self, bool (*condition)(void*)) {
 	return NULL;
 }
 
-void list_remove_and_destroy_element(t_list *self, int index,
-		void (*element_destroyer)(void*)) {
+void list_remove_and_destroy_element(t_list *self, int index, void(*element_destroyer)(void*)) {
 	void* data = list_remove(self, index);
 	element_destroyer(data);
 }
 
-void list_remove_and_destroy_by_condition(t_list *self,
-		bool (*condition)(void*), void (*element_destroyer)(void*)) {
+void list_remove_and_destroy_by_condition(t_list *self, bool(*condition)(void*), void(*element_destroyer)(void*)) {
 	void* data = list_remove_by_condition(self, condition);
 	if (data)
 		element_destroyer(data);
@@ -174,8 +168,7 @@ void list_clean(t_list *self) {
 	self->elements_count = 0;
 }
 
-void list_clean_and_destroy_elements(t_list *self,
-		void (*element_destroyer)(void*)) {
+void list_clean_and_destroy_elements(t_list *self, void(*element_destroyer)(void*)){
 	list_iterate(self, element_destroyer);
 	list_clean(self);
 }
@@ -185,8 +178,7 @@ void list_destroy(t_list *self) {
 	free(self);
 }
 
-void list_destroy_and_destroy_elements(t_list *self,
-		void (*element_destroyer)(void*)) {
+void list_destroy_and_destroy_elements(t_list *self, void(*element_destroyer)(void*)) {
 	list_clean_and_destroy_elements(self, element_destroyer);
 	free(self);
 }
@@ -211,7 +203,7 @@ t_list* list_take_and_remove(t_list* self, int count) {
 	return sublist;
 }
 
-t_list* list_filter(t_list* self, bool (*condition)(void*)) {
+t_list* list_filter(t_list* self, bool(*condition)(void*)){
 	t_list* filtered = list_create();
 
 	void _add_if_apply(void* element) {
@@ -224,7 +216,7 @@ t_list* list_filter(t_list* self, bool (*condition)(void*)) {
 	return filtered;
 }
 
-t_list* list_map(t_list* self, void*(*transformer)(void*)) {
+t_list* list_map(t_list* self, void*(*transformer)(void*)){
 	t_list* mapped = list_create();
 
 	void _add_after_transform(void* element) {
@@ -239,45 +231,44 @@ t_list* list_map(t_list* self, void*(*transformer)(void*)) {
 void list_sort(t_list *self, bool (*comparator)(void *, void *)) {
 	// TODO: optimizar (usar un algoritmo mas copado)
 	int unsorted_elements = self->elements_count;
-	if (unsorted_elements < 2) {
+	if(unsorted_elements < 2) {
 		return;
 	}
 	t_link_element *auxiliar = NULL;
 	bool sorted = true;
 	do {
-		t_link_element *previous_element = self->head, *cursor =
-				previous_element->next;
+		t_link_element *previous_element = self->head, *cursor = previous_element->next;
 		sorted = true;
 		int index = 0, last_changed = unsorted_elements;
-		while (index < unsorted_elements && cursor != NULL) {
-			if (!comparator(previous_element->data, cursor->data)) {
-				auxiliar = cursor->data;
-				cursor->data = previous_element->data;
-				previous_element->data = auxiliar;
-				last_changed = index;
-				sorted = false;
+		while(index < unsorted_elements && cursor != NULL) {
+			if(!comparator(previous_element->data, cursor->data)) {
+			   auxiliar = cursor->data;
+			   cursor->data = previous_element->data;
+			   previous_element->data = auxiliar;
+			   last_changed = index;
+			   sorted = false;
 			}
 			previous_element = cursor;
 			cursor = cursor->next;
 			index++;
 		}
 		unsorted_elements = last_changed;
-	} while (!sorted);
+	} while(!sorted);
 
 }
 
-int list_count_satisfying(t_list* self, bool (*condition)(void*)) {
+int list_count_satisfying(t_list* self, bool(*condition)(void*)){
 	t_list *satisfying = list_filter(self, condition);
 	int result = satisfying->elements_count;
 	list_destroy(satisfying);
 	return result;
 }
 
-bool list_any_satisfy(t_list* self, bool (*condition)(void*)) {
+bool list_any_satisfy(t_list* self, bool(*condition)(void*)){
 	return list_count_satisfying(self, condition) > 0;
 }
 
-bool list_all_satisfy(t_list* self, bool (*condition)(void*)) {
+bool list_all_satisfy(t_list* self, bool(*condition)(void*)){
 	return list_count_satisfying(self, condition) == self->elements_count;
 }
 
@@ -310,8 +301,7 @@ static t_link_element* list_get_element(t_list* self, int index) {
 	return NULL;
 }
 
-static t_link_element* list_find_element(t_list *self, bool (*condition)(void*),
-		int* index) {
+static t_link_element* list_find_element(t_list *self, bool(*condition)(void*), int* index) {
 	t_link_element *element = self->head;
 	int position = 0;
 
