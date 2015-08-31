@@ -1,11 +1,12 @@
 #include "configExtras.h"
 
 int checkearRutaArchivoConfig(char* rutaArchivoConfig) {
-	FILE * archivoConfig = NULL;
+	FILE* archivoConfig;
 	archivoConfig = fopen(rutaArchivoConfig, "r");
 	if (archivoConfig == NULL) {
 		return -1;
 	} else {
-		return 0;
+		return archivoConfig->_fileno;
 	}
+
 }

@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 // Retorna -1 si no se encuentra el archivo de configuracion en la ruta especificada
-// 0 si el archivo se encuentra en la ruta especificada
+// retorna el fd si el archivo esta en la ruta especificada
 int checkearRutaArchivoConfig(char* rutaArchivoConfig);
 
 #endif /* CONFIGEXTRAS_CONFIGEXTRAS_H_ */

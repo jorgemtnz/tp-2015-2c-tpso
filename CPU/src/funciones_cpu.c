@@ -4,9 +4,11 @@
 void leerArchivoDeConfiguracion() {
 	char* nombreArchivoConfigFS;
 	t_config* archivoConfig = NULL;
+    int fd_archivo=0;
 
 	nombreArchivoConfigFS = "/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg";
-	if (checkearRutaArchivoConfig(nombreArchivoConfigFS) == -1) {
+	fd_archivo = checkearRutaArchivoConfig(nombreArchivoConfigFS);
+	if (fd_archivo == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
@@ -27,5 +29,6 @@ void leerArchivoDeConfiguracion() {
 				"[INFO]: Archivo de configuracion leido correctamente");
 	}
 	config_destroy(archivoConfig);
+	close(fd_archivo);
 }
 
