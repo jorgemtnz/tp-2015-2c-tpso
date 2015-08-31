@@ -41,5 +41,5 @@ Debug/
 *.bin
 prueba.txt
 *.orig
-
+*.log
 
