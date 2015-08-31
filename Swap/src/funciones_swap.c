@@ -3,10 +3,10 @@
 
 void leerArchivoDeConfiguracion() {
 	char* nombreArchivoConfig;
+
 	t_config* archivoConfig = NULL;
 	int result, fd_archivo = 0;
 	result = 0;
-
 	nombreArchivoConfig = strdup(
 			"/home/utnso/tp-2015-2c-tpso/Swap/config_swap.cfg");
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
@@ -16,7 +16,7 @@ void leerArchivoDeConfiguracion() {
 		exit(-1);
 	} else {
 		archivoConfig = config_create(nombreArchivoConfig);
-
+		configuracion = malloc(sizeof(t_configuracion));
 		configuracion->puertoMemoria = config_get_int_value(archivoConfig,
 				"PUERTO_ESCUCHA");
 		configuracion->nombreSwap = strdup(
