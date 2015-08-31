@@ -2,18 +2,19 @@
 //escribir las funciones aqui
 
 void leerArchivoDeConfiguracion() {
-	char* nombreArchivoConfigFS;
+	char* nombreArchivoConfig;
 	t_config* archivoConfig = NULL;
-    int fd_archivo=0;
+    int result, fd_archivo=0; result=0;
 
-	nombreArchivoConfigFS = "/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg";
-	fd_archivo = checkearRutaArchivoConfig(nombreArchivoConfigFS);
-	if (fd_archivo == -1) {
+	nombreArchivoConfig =strdup( "/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
+	result = checkearRutaArchivoConfig(nombreArchivoConfig);
+	if (result == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
 	} else {
-		archivoConfig = config_create(nombreArchivoConfigFS);
+		archivoConfig = config_create(nombreArchivoConfig);
+
 		configuracion->vg_puertoPlanificador = config_get_int_value(
 				archivoConfig, "PUERTO_PLANIFICADOR");
 		configuracion->vg_ipPlanificador = strdup(
@@ -29,6 +30,6 @@ void leerArchivoDeConfiguracion() {
 				"[INFO]: Archivo de configuracion leido correctamente");
 	}
 	config_destroy(archivoConfig);
-	close(fd_archivo);
+//	close(fd_archivo);
 }
 

@@ -4,9 +4,11 @@ int checkearRutaArchivoConfig(char* rutaArchivoConfig) {
 	FILE* archivoConfig;
 	archivoConfig = fopen(rutaArchivoConfig, "r");
 	if (archivoConfig == NULL) {
-		return -1;
+		//no encontro el archivo
+				return -1;
 	} else {
-		return archivoConfig->_fileno;
+	fclose(archivoConfig);
+		return 0;
 	}
 
 }
