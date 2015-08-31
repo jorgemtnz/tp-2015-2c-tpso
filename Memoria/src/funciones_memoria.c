@@ -3,7 +3,7 @@
 
 void leerArchivoDeConfiguracion() {
 	char* nombreArchivoConfig;
-	t_config* archivoConfig = NULL;
+	t_config* archivoConfig;
 	int result, fd_archivo = 0;
 	result = 0;
 
@@ -15,7 +15,9 @@ void leerArchivoDeConfiguracion() {
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
 	} else {
+
 		archivoConfig = config_create(nombreArchivoConfig);
+
 		configuracion = malloc(sizeof(t_configuracion));
 		configuracion->puertoCpu = config_get_int_value(archivoConfig,
 				"PUERTO_ESCUCHA");
