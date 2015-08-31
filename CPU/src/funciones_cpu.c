@@ -23,7 +23,9 @@ void leerArchivoDeConfiguracion() {
 		configuracion->cantidad_hilos = config_get_int_value(archivoConfig,
 				"CANTIDAD_HILOS");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO");
-
+		log_info(logger,
+				"[INFO]: Archivo de configuracion leido correctamente");
 	}
+	config_destroy(archivoConfig);
 }
 
