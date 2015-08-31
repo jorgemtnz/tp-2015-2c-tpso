@@ -20,12 +20,18 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 #include <utiles/sockets/sockets.h>
+#include <utiles/configExtras.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 #define NUMEROFUNCIONESCONSOLA 4
 
 
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
+typedef struct {
+	uint32_t puertoEscucha;
+	char* algorimoPlanificacion;
+	uint32_t quantum;
+} t_configuracion;
 //=======================================================================================
 
 
@@ -40,6 +46,8 @@
 
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
+void crearLogger();
+void cargarArchivoDeConfiguracion(int argc, char *argv[]);
 //============================================================================
 
 
@@ -59,6 +67,10 @@ void mostrarComandos();
 
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
+
+t_configuracion* configuracion;
+t_log* logger;
+
 //===========================================================================================
 
 
