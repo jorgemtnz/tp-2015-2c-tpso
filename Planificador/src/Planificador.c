@@ -12,17 +12,21 @@ int main(int argc, char *argv[]) {
 
 void cargarArchivoDeConfiguracion(int argc, char *argv[]) {
 
+	char* logMsg = NULL;
+
 	if(argc < 2) {
-		printf("[ERROR]: Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Planificador /home/utnso/tp-2015-2c-tpso/Planificador/config_plan.cfg\n");
-		log_error(logger, "[ERROR]: Debe especificar la ruta al archivo de configuracion, por ejemplo: /home/utnso/tp-2015-2c-tpso/Planificador/config_plan.cfg");
+		logMsg = string_from_format("Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Planificador /home/utnso/tp-2015-2c-tpso/Planificador/config_plan.cfg\n");
+		puts(logMsg);
+		log_error(logger, logMsg);
 		exit(-1);
 	}
 
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
-		printf("[ERROR]: Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
-		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
+		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
+		puts(logMsg);
+		log_error(logger, logMsg);
 		exit(-1);
 	} else {
 		t_config* archivoConfig = config_create(nombreArchivoConfig);
@@ -32,8 +36,9 @@ void cargarArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->algorimoPlanificacion = strdup(config_get_string_value(archivoConfig, "ALGORITMO_PLANIFICACION"));
 		configuracion->quantum = config_get_int_value(archivoConfig, "QUANTUM");
 
-		printf("[INFO]: Archivo de configuracion leido correctamente\n");
-		log_info(logger, "[INFO]: Archivo de configuracion leido correctamente");
+		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
+		puts(logMsg);
+		log_error(logger, logMsg);
 
 		config_destroy(archivoConfig);
 	}
