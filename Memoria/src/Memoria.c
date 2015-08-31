@@ -4,6 +4,12 @@
 
 
 int main(void) {
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+	FILE* archivoMemoria;
+	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
+	leerArchivoDeConfiguracion();
+
+	archivoMemoria = fopen(configuracion->nombreMemoria, "w");
+	fputs("\0", archivoMemoria);
+	fclose(archivoMemoria);
 	return EXIT_SUCCESS;
 }
