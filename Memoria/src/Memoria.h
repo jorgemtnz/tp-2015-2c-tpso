@@ -46,7 +46,7 @@ typedef struct {
 	uint8_t cantidadMarcos;
 	uint8_t tamanioMarcos;
 	uint8_t entradasTlb;
-	int tlbHabilitada;
+	uint8_t tlbHabilitada;
 	uint8_t retardoMemoria;
 
 } t_configuracion;
