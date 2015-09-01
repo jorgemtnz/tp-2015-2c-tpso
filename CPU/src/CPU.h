@@ -30,7 +30,9 @@
 #include <utiles/configExtras.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
-
+#define DISPONIBLE 1
+#define NO_DISPONIBLE 0
+#define CANT_RUTA 256
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 typedef struct {
@@ -41,6 +43,24 @@ typedef struct {
 	uint8_t cantidad_hilos;
 	uint8_t retardo;
 } t_configuracion;
+
+typedef struct {
+	char path[CANT_RUTA];
+	uint8_t ptr_proximaInstruccion;
+	uint8_t cantInstruc; // cantidad de instrucciones a ejecutar
+} t_PCB;
+
+typedef struct {
+	uint8_t idProc;
+	t_PCB pcb;
+	uint8_t tiempoEjec; // tiempo de ejecucion indicado para este proceso
+} t_mProc;
+
+typedef struct {
+	uint8_t idCPU;
+	uint8_t estado;
+	t_mProc proceso;
+} t_cpu;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -57,12 +77,12 @@ void leerArchivoDeConfiguracion();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 //========================================================================================
 
-
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
 
 t_configuracion* configuracion;
-
 t_log* logger; //VG del logger
+t_cpu* cpu;
 
+//const CANT_RUTA;
 #endif /* CPU_H_ */
