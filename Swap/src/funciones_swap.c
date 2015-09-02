@@ -1,19 +1,28 @@
 #include "Swap.h"
 //escribir las funciones aqui
 
-void leerArchivoDeConfiguracion() {
-	char* nombreArchivoConfig;
+void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
-	t_config* archivoConfig = NULL;
-	int result, fd_archivo = 0;
-	result = 0;
-	nombreArchivoConfig = strdup("/home/utnso/tp-2015-2c-tpso/Swap/config_swap.cfg");
-	result = checkearRutaArchivoConfig(nombreArchivoConfig);
+	char* logMsg = NULL;
+
+	if (argc < 2) {
+		logMsg =
+				string_from_format(
+						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Swap /home/utnso/tp-2015-2c-tpso/Swap/config_swap.cfg\n");
+		puts(logMsg);
+		log_error(logger, logMsg);
+		exit(-1);
+	}
+
+	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
+	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
-		perror("[ERROR]: Archivo de configuracion no encontrado");
-		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
+		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
+		puts(logMsg);
+		log_error(logger, logMsg);
 		exit(-1);
 	} else {
+		t_config* archivoConfig;
 		archivoConfig = config_create(nombreArchivoConfig);
 		configuracion = malloc(sizeof(t_configuracion));
 		configuracion->puertoMemoria = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
@@ -21,8 +30,12 @@ void leerArchivoDeConfiguracion() {
 		configuracion->cantidadPaginas = config_get_int_value(archivoConfig, "CANTIDAD_PAGINAS");
 		configuracion->tamanioPagina = config_get_int_value(archivoConfig, "TAMANIO_PAGINA");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO_COMPACTACION");
-		log_info(logger, "[INFO]: Archivo de configuracion leido correctamente");
+
+		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
+		puts(logMsg);
+		log_error(logger, logMsg);
+
+		config_destroy(archivoConfig);
 	}
-	config_destroy(archivoConfig);
-	close(fd_archivo);
+
 }
