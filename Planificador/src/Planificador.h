@@ -28,7 +28,7 @@
 
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 typedef struct {
-	uint32_t puertoEscucha;
+	char* puertoEscucha;
 	char* algorimoPlanificacion;
 	uint32_t quantum;
 } t_configuracion;
@@ -47,7 +47,7 @@ typedef struct {
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 void crearLogger();
-void cargarArchivoDeConfiguracion(int argc, char *argv[]);
+void leerArchivoDeConfiguracion(int argc, char *argv[]);
 //============================================================================
 
 
