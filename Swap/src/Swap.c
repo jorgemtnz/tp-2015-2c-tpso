@@ -8,5 +8,8 @@ int main(int argc, char *argv[]) {
 	archivoSwap = fopen(configuracion->nombreSwap, "w");
 	fputs("\0", archivoSwap);
 	fclose(archivoSwap);
+
+	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0);
+
 	return EXIT_SUCCESS;
 }
