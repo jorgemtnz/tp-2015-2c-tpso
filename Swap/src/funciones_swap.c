@@ -25,7 +25,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		t_config* archivoConfig;
 		archivoConfig = config_create(nombreArchivoConfig);
 		configuracion = malloc(sizeof(t_configuracion));
-		configuracion->puertoMemoria = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
+		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
 		configuracion->nombreSwap = strdup(config_get_string_value(archivoConfig, "NOMBRE_SWAP"));
 		configuracion->cantidadPaginas = config_get_int_value(archivoConfig, "CANTIDAD_PAGINAS");
 		configuracion->tamanioPagina = config_get_int_value(archivoConfig, "TAMANIO_PAGINA");

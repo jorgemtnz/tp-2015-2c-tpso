@@ -18,7 +18,7 @@ void leerArchivoDeConfiguracion() {
 		archivoConfig = config_create(nombreArchivoConfig);
 
 		configuracion = malloc(sizeof(t_configuracion));
-		configuracion->puertoCpu = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
+		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
 		configuracion->puertoSwap = config_get_int_value(archivoConfig, "PUERTO_SWAP");
 		configuracion->ipSwap = strdup(config_get_string_value(archivoConfig, "IP_SWAP"));
 		configuracion->nombreMemoria = strdup(config_get_string_value(archivoConfig, "NOMBRE_MEMORIA"));

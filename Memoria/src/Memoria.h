@@ -38,7 +38,7 @@
 
 typedef struct {
 
-	uint32_t puertoCpu;
+	uint32_t puertoEscucha;
 	uint32_t puertoSwap;
 	char* ipSwap;
 	char* nombreMemoria;

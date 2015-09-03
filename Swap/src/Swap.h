@@ -36,7 +36,7 @@
 
 typedef struct {
 
-	uint32_t puertoMemoria;
+	uint32_t puertoEscucha;
 	char* nombreSwap;
 	uint8_t cantidadPaginas;
 	uint8_t tamanioPagina;
