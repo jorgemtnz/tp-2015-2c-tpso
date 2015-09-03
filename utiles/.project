@@ -3,6 +3,7 @@
 	<name>utiles</name>
 	<comment></comment>
 	<projects>
+		<project>commons-library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
