@@ -1,4 +1,4 @@
-#include "../../utiles/sockets/sockets.h"
+#include "sockets.h"
 # define CHUNK_SIZE 512
 
 struct sockaddr_in especificarSocketInfo(char* direccion, int puerto) {
@@ -241,3 +241,258 @@ int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer) {
 
 }
 
+
+// get sockaddr, IPv4 or IPv6:
+void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET) {
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
+void procesarComando(char* comando, fd_set* master, int* fdmax) {
+
+	char* comandoLimpio = string_split(comando, "\n")[0];
+	if(string_starts_with(comandoLimpio, "_conectar")) {
+		char **elementoPath = string_split(comando, " ");
+
+		while (*elementoPath != NULL) {
+			//ultimoElementoEncontrado = string_duplicate(*elementoPath);
+			free(*elementoPath);
+			elementoPath++;
+			char* puerto = string_duplicate(*elementoPath);
+			printf("log Conectarse al puerto: %s", puerto);
+			free(*elementoPath);
+			elementoPath++;
+			int socket;
+			char* ip = "127.0.0.1";
+			if(conectar(ip, puerto, &socket) == 0) {
+				FD_SET(socket, master);
+				if(socket > *fdmax) {
+					*fdmax = socket;
+				}
+			}
+
+		}
+	}
+
+}
+
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap) {
+	fd_set master;    // master file descriptor list
+	fd_set read_fds;  // temp file descriptor list for select()
+	int fdmax;        // maximum file descriptor number
+
+	int listener;     // listening socket descriptor
+	int newfd;        // newly accept()ed socket descriptor
+	struct sockaddr_storage remoteaddr; // client address
+	socklen_t addrlen;
+
+	char buf[256];    // buffer for client data
+	int nbytes;
+
+	char remoteIP[INET6_ADDRSTRLEN];
+
+	int yes = 1;        // for setsockopt() SO_REUSEADDR, below
+	int i, j, rv;
+
+	struct addrinfo hints, *ai, *p;
+
+	FD_ZERO(&master);    // clear the master and temp sets
+	FD_ZERO(&read_fds);
+
+	char* comando;
+	bool procesandoComando = false;
+	int socketComando;
+
+	bool soyServer = !string_equals_ignore_case("0", puerto);
+
+	if (soyServer) {
+
+		// get us a socket and bind it
+		memset(&hints, 0, sizeof hints);
+		hints.ai_family = AF_UNSPEC; //old tp
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_PASSIVE;
+		if ((rv = getaddrinfo(NULL, puerto, &hints, &ai)) != 0) {
+			fprintf(stderr, "selectserver: %s\n", gai_strerror(rv));
+			exit(1);
+		}
+
+		procesandoComando = false;
+
+		for (p = ai; p != NULL; p = p->ai_next) {
+			listener = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+			if (listener < 0) {
+				continue;
+			}
+
+			// lose the pesky "address already in use" error message
+			setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+
+			if (bind(listener, p->ai_addr, p->ai_addrlen) < 0) {
+				close(listener);
+				continue;
+			}
+
+			break;
+		}
+
+		// if we got here, it means we didn't get bound
+		if (p == NULL) {
+			fprintf(stderr, "selectserver: failed to bind\n");
+			exit(2);
+		}
+
+		freeaddrinfo(ai); // all done with this
+
+		// listen
+		if (listen(listener, 10) == -1) {
+			perror("listen");
+			exit(3);
+		}
+
+		// add the listener to the master set
+		FD_SET(listener, &master);
+	}
+	FD_SET(STDIN_FILENO, &master);
+
+	if (socketServer > 0) {
+		FD_SET(socketServer, &master);
+		if (socketServer > fdmax) {
+			fdmax = socketServer;
+		}
+	}
+
+	if (socketMemoria > 0) {
+		FD_SET(socketMemoria, &master);
+		if (socketMemoria > fdmax) {
+			fdmax = socketMemoria;
+		}
+	}
+
+	if (socketSwap > 0) {
+		FD_SET(socketSwap, &master);
+		if (socketSwap > fdmax) {
+			fdmax = socketSwap;
+		}
+	}
+
+	// keep track of the biggest file descriptor
+	if (soyServer && listener > fdmax) {
+
+		fdmax = listener; // so far, it's this one
+	}
+
+	// main loop
+	for (;;) {
+		read_fds = master; // copy it
+		if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1) {
+			perror("select");
+			exit(4);
+		}
+
+		// run through the existing connections looking for data to read
+		for (i = 0; i <= fdmax; i++) {
+			if (FD_ISSET(i, &read_fds)) { // we got one!!
+				if (soyServer && i == listener) {
+					// handle new connections
+					addrlen = sizeof remoteaddr;
+					newfd = accept(listener, (struct sockaddr *) &remoteaddr, &addrlen);
+
+					if (newfd == -1) {
+						perror("accept");
+					} else {
+						FD_SET(newfd, &master); // add to master set
+						if (newfd > fdmax) {    // keep track of the max
+							fdmax = newfd;
+						}
+						printf("selectserver: new connection from %s on "
+								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
+
+						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
+						 int entero;
+						 recv(newfd , &entero, sizeof(int),0);
+						 printf("el numero recibido es %d \n", entero);
+						 */
+						//ACA TERMINA LA PRUEBA
+
+					}
+				} else {
+					// handle data from a client
+					//if ((nbytes = recv(i, buf, sizeof buf, 0)) <= 0) {
+					if ((nbytes = read(i, buf, sizeof buf)) <= 0) {
+						// got error or connection closed by client
+						if (nbytes == 0) {
+							// connection closed
+							printf("selectserver: socket %d hung up\n", i);
+						} else {
+							//perror("recv");
+							perror("read");
+						}
+						close(i); // bye!
+						FD_CLR(i, &master); // remove from master set
+					} else {
+						// we got some data from a client
+						for (j = 0; j <= fdmax; j++) {
+							// send to everyone!
+							if (FD_ISSET(j, &master) && !string_starts_with(buf, "log")) {
+
+								if (STDIN_FILENO == j && string_starts_with(buf, "_")) {
+									comando = string_new();
+									socketComando = STDIN_FILENO;
+									procesandoComando = true;
+									string_append(&comando, buf);
+									if (strstr(buf, "\n") != NULL) {
+										procesarComando(comando, &master, &fdmax);
+										procesandoComando = false;
+									}
+								} else if (STDIN_FILENO == j && procesandoComando && j == socketComando) {
+									string_append(&comando, buf);
+									if (strstr(buf, "\n") != NULL) {
+										procesarComando(comando, &master, &fdmax);
+										procesandoComando = false;
+									}
+								} else {
+									// except the listener and ourselves
+									/*if (!string_starts_with(buf, "_") && j != listener && j != i) {
+									 //if (send(j, buf, nbytes, 0) == -1) {
+									 if (write(j, buf, nbytes) == -1) {
+									 //perror("send");
+									 perror("write");
+									 }
+									 }*/
+									//Aca manejariamos todos los mensajes
+								}
+							}
+						}
+					}
+				} // END handle data from client
+			} // END got new incoming connection
+		} // END looping through file descriptors
+	} // END for(;;)--and you thought it would never end!
+
+}
+
+int conectar(char* ip, char* puerto, int *sock) {
+	struct sockaddr_in dirCent;
+
+	if ((*sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror("socket");
+		return -1;
+	}
+
+	dirCent.sin_family = AF_INET;
+	dirCent.sin_port = htons(atoi(puerto));
+	dirCent.sin_addr.s_addr = inet_addr(ip);
+	memset(&(dirCent.sin_zero), '\0', 8);
+
+	if (connect(*sock, (struct sockaddr *) &dirCent, sizeof(struct sockaddr)) == -1) {
+		perror("connect");
+		return -1;
+	}
+	return 0;
+
+}
