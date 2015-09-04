@@ -7,6 +7,7 @@
 
 #include "espacioDeDatos.h"
 
+
 char* nuevoEspacioDeDatos(char* path, char* tamanioEspacioDatos, t_log* logger) {
 	if( access( path, F_OK ) == -1 ) {
 		crearArchivoMmap(path, tamanioEspacioDatos);

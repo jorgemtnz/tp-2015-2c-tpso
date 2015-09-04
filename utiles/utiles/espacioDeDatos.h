@@ -8,6 +8,7 @@
 #ifndef UTILES_ESPACIODEDATOS_H_
 #define UTILES_ESPACIODEDATOS_H_
 
+
 #include <commons/log.h>
 #include <commons/string.h>
 #include <errno.h>
@@ -39,6 +40,5 @@ char * leerEspacioDatos(char *espacioDatos, int offset, int cantidadALeer) ;
 void crearArchivoMmap(char *pathArchivo, char* tamanioArchivoEnBytes);
 
 void borrarArchivoMmapParaTest(char *pathArchivo) ;
-
 
 #endif /* UTILES_ESPACIODEDATOS_H_ */
