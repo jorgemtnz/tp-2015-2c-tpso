@@ -35,6 +35,12 @@
 #define CANT_RUTA 256
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
+typedef struct{
+	char** bufferInstrucciones; //
+	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
+	uint32_t* ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
+}t_mapeo;
+
 typedef struct {
 	char* vg_ipPlanificador;
 	uint32_t vg_puertoPlanificador;
