@@ -51,6 +51,20 @@ typedef struct {
 
 } t_configuracion;
 
+typedef struct {
+	t_list memoriaPrincipal;
+	int limiteMP;
+}t_MP;
+
+typedef struct { // estructura que se carga en la lista de memoria principal
+	int idMarco;
+	char* contenido; // el texto que tendra esa posicion
+}t_marco;
+
+typedef struct {
+
+}t_TLB;
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
