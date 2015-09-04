@@ -1,0 +1,5 @@
+iniciar 1;
+escribir 1;
+leer 1"hola";
+entrada-salida 500
+finalizar;
