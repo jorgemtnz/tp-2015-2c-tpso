@@ -28,6 +28,8 @@
 #include <sys/wait.h>
 #include <utiles/sockets/sockets.h>
 #include <utiles/configExtras.h>
+#include <utiles/files.h>
+#include <utiles/espacioDeDatos.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 
@@ -41,6 +43,7 @@ typedef struct {
 	uint8_t cantidadPaginas;
 	uint8_t tamanioPagina;
 	uint8_t retardo;
+	char* tamanioArchivo;
 } t_configuracion;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
@@ -54,6 +57,7 @@ typedef struct {
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
+void crearArchivo();
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 //========================================================================================

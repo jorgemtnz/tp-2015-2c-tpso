@@ -30,6 +30,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidadPaginas = config_get_int_value(archivoConfig, "CANTIDAD_PAGINAS");
 		configuracion->tamanioPagina = config_get_int_value(archivoConfig, "TAMANIO_PAGINA");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO_COMPACTACION");
+		configuracion->tamanioArchivo = strdup(config_get_string_value(archivoConfig, "TAMANIO_ARCHIVO"));
 
 		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
 		puts(logMsg);
@@ -37,5 +38,29 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 		config_destroy(archivoConfig);
 	}
+
+}
+
+void crearArchivo() {
+
+	char* tamanioEspacioDatosEnBytes = configuracion->tamanioArchivo;
+	char *pathArchivo = string_new();
+	string_append(&pathArchivo, "/home/utnso/tp-2015-2c-tpso/Swap/");
+	string_append(&pathArchivo, configuracion->nombreSwap);
+
+	abrirOCrearArchivoLecturaEscritura(pathArchivo, logger);
+
+	crearArchivoMmap(pathArchivo, tamanioEspacioDatosEnBytes);
+
+	int fdEspacioDatos = abrirArchivoEspacioDatos(pathArchivo, logger);
+	//struct stat statArchivoEspacioDatos = describirArchivoEspacioDatos(pathArchivo, logger);
+	//int tamanioArchivoEspacioDatos = statArchivoEspacioDatos.st_size;
+
+	int offset = 0;
+
+	char *espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
+
+	char *contenido = "\0";
+	escribirEnEspacioDatos(espacioDatos, contenido, offset);
 
 }
