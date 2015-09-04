@@ -9,7 +9,14 @@ int main(int argc, char *argv[]) {
 	fputs("\0", archivoSwap);
 	fclose(archivoSwap);
 
-	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0);
+	int socketMemoria,prueba;
+	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketMemoria);
+
+
+	recv(socketMemoria, &prueba, sizeof(int), 0);
+	printf("%i\n",prueba);
+	prueba = 5;
+	send(socketMemoria, &prueba, sizeof(int), 0);
 
 	return EXIT_SUCCESS;
 }
