@@ -51,6 +51,40 @@ typedef struct {
 
 } t_configuracion;
 
+typedef struct {
+	t_list memoriaPrincipal;
+	int limiteMP;
+}t_MP;
+
+typedef struct { // estructura que se carga en la lista de memoria principal
+	int idMarco; // la memoria identificara a cada marco a traves de este id
+	char* contenido; // el texto que tendra esa posicion
+	bool libre;
+	t_list paginasAsociada; // permite asociar el pedido de "escribir X pagina" con el marco. Como pueden ser varias hice una lista
+}t_marco;
+
+typedef struct {
+	int idProc;
+	int pagina; // si esta vacia va -1 (o puede que no, no se)
+	int marco; // si esta vacio va -1 (o puede que no, no se)
+	int bitPresencia; // para ver si se encuentra en un marco (1) o en una pagina (0)
+} t_TLB;
+
+typedef struct {
+	int idProc;
+	int pagina; // si esta vacia va -1 (o puede que no, no se)
+	int marco; // si esta vacio va -1 (o puede que no, no se)
+	int bitPresencia; // para ver si se encuentra en un marco (1) o en una pagina (0)
+} t_TablaDePaginas;
+
+typedef struct {
+	int operacion; // 0 leer, 1 escribir ( esto hay que verlo igual )
+	char* contenido;
+	int idProc;
+	int pagina; // se va a tener que ver si esta pagina esta en un marco de la MP o en la SWAP
+}t_atenderInstruccion;
+
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
