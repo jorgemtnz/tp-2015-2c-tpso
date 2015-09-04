@@ -32,4 +32,10 @@ void leerArchivoDeConfiguracion() {
 	config_destroy(archivoConfig);
 //	close(fd_archivo);
 }
+// se debe agregar instruccion que mape el archivo -> devuelva estructura
+
+// se debe agregar funcion que intreprente instruccion ya mapeada
+
+//se debe agregar funcion que envie mensaje.
+
 

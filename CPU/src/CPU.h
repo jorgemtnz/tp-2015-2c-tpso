@@ -39,7 +39,7 @@ typedef struct{
 	char** bufferInstrucciones; //
 	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
 	uint32_t* ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
-}t_mapeo;
+}t_map;
 
 typedef struct {
 	char* vg_ipPlanificador;
@@ -52,7 +52,7 @@ typedef struct {
 
 typedef struct {
 	char path[CANT_RUTA];
-	uint8_t ptr_proximaInstruccion;
+	uint8_t* ptr_proximaInstruccion;
 	uint8_t cantInstruc; // cantidad de instrucciones a ejecutar
 } t_PCB;
 
@@ -67,11 +67,17 @@ typedef struct {
 	uint8_t estado;
 	t_mProc proceso;
 } t_cpu;
+typedef struct{
+uint8_t  contadorIdCPU;
+t_list* listaCPU;
+}t_ProcCPU;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
+t_map* crearMapeo();
+t_configuracion* crearConfiguracion();
 
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
