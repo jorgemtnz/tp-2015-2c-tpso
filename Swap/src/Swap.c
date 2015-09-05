@@ -6,7 +6,10 @@ int main(int argc, char *argv[]) {
 	leerArchivoDeConfiguracion(argc, argv);
 
 	archivoMapeadoEnMemoria = crearArchivo();
-
+	struct espacioLibre *listaEspLibre;
+	listaEspLibre = (struct espacioLibre*) malloc( sizeof(struct espacioLibre) );
+	struct procesosCargados *listaProc;
+	listaProc = (struct procesosCargados*) malloc( sizeof(struct procesosCargados) );
 
 	int socketMemoria, prueba;
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketMemoria);

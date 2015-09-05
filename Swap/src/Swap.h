@@ -46,6 +46,17 @@ typedef struct {
 	char* tamanioArchivo;
 } t_configuracion;
 
+struct espacioLibre{
+	int ubicacion;
+	int cantPagsLibres;
+	struct espacioLibre *sig;
+};
+struct procesosCargados{
+	pid_t PID;
+	int ubicacion;
+	int cantPagsUso;
+	struct procesosCargados *sig;
+};
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
