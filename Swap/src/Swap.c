@@ -9,7 +9,10 @@ int main(int argc, char *argv[]) {
 	leerArchivoDeConfiguracion(argc, argv);
 
 	archivoMapeadoEnMemoria = crearArchivo();
-
+	l_espacioLibre *listaEspLibre;
+	listaEspLibre = (l_espacioLibre*) malloc( sizeof(l_espacioLibre) );
+	l_procesosCargados *listaProc;
+	listaProc = (l_procesosCargados*) malloc( sizeof(l_procesosCargados) );
 
 	int socketMemoria, prueba;
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);

@@ -9,7 +9,7 @@ t_map* crearMapeo() {
 		exit(-1);
 	}
 	map->ptrCMemoriaMap = '\0';
-	map->ptrTamPagina = NULL;
+	map->ptrTamPagina = 0;
 
 	return map;
 }
