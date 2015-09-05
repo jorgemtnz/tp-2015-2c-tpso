@@ -33,6 +33,7 @@
 metadata/
 RemoteSystemsTempFiles/
 Debug/
+settings/
 
 # Debug files
 *.dSYM/
@@ -42,4 +43,4 @@ Debug/
 prueba.txt
 *.orig
 *.log
-
+*.settings
