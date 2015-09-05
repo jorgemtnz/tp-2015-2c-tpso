@@ -5,6 +5,9 @@
  *      Author: utnso
  */
 
+#ifndef UTILES_FILES_H_
+#define UTILES_FILES_H_
+
 #include <commons/log.h>
 #include <commons/string.h>
 #include <errno.h>
@@ -14,6 +17,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 char *extraerNombreArchivo(char *text);
 
@@ -32,3 +36,5 @@ ssize_t readLineN(int fd, void *buffer, size_t n);
 bool existeArchivo(char* path);
 
 void borrarArchivo(char *pathArchivo);
+
+#endif /* UTILES_FILES_H_ */
