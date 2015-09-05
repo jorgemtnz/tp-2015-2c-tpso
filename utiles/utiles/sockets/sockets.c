@@ -144,6 +144,31 @@ int enviarPorSocket(int fdCliente, const void *msg, int *len) {
 	return bytes_enviados;
 }
 
+int enviar(int fdCliente, const void *msg, int len) {
+
+	int bytesleft = len; // cuántos se han quedado pendientes
+	int bytes_enviados; //n
+	int total = 0;
+
+	while (total < len) {
+		bytes_enviados = send(fdCliente, msg + total, bytesleft, 0);
+		if (bytes_enviados == -1) {
+			break;
+		}
+		total += bytes_enviados;
+		bytesleft -= bytes_enviados;
+	}
+	//len = total; // devuelve aquí la cantidad enviada en realidad
+
+	if (bytes_enviados == -1) {
+		perror("[ERROR] Funcion send\bytes_enviados");
+		exit(-1);
+	}
+
+	return bytes_enviados;
+}
+
+
 int recibirPorSocket(int fdCliente, void *buf, int len) {
 	int bytes_recibidos = recv(fdCliente, buf, len, 0);
 
@@ -284,7 +309,7 @@ void procesarComando(char* comando, fd_set* master, int* fdmax) {
 
 }
 
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap) {
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, char* buffer, bool, void*, t_log*), void* extra,  t_log* logger) {
 	fd_set master;    // master file descriptor list
 	fd_set read_fds;  // temp file descriptor list for select()
 	int fdmax;        // maximum file descriptor number
@@ -349,6 +374,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 			fprintf(stderr, "selectserver: failed to bind\n");
 			exit(2);
 		}
+		printf("Escuchando nuevas conexiones en el puerto %s\n", puerto);
 
 		freeaddrinfo(ai); // all done with this
 
@@ -415,7 +441,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						}
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
-
+						funcionParaProcesarMensaje(newfd, NULL, true, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
@@ -440,10 +466,26 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						FD_CLR(i, &master); // remove from master set
 					} else {
 						// we got some data from a client
-						printf("Recibi mensaje por socket %d \"%s\"\n", i, buf);
+						printf("Recibi mensaje por socket %d\n", i);
+//						printf("En ascii ");
+//						int var = 0;
+//						for (var = 0; var < string_length(buf); var++) {
+//							printf("%d ", buf[var]);
+//						}
+//						printf("\n");
+						funcionParaProcesarMensaje(i, buf, false, extra, logger);
 						/*
-						for (j = 0; j <= fdmax; j++) {
+						//j desde listener + 1, no quiero la consola, ni el puerto de escucha
+						for (j = listener + 1; j <= fdmax; j++) {
 							// send to everyone!
+							// except the listener and ourselves
+							if (j != i) {
+								//if (send(j, buf, nbytes, 0) == -1) {
+								if (write(j, buf, nbytes) == -1) {
+									//perror("send");
+									perror("write");
+								}
+							}
 							if (FD_ISSET(j, &master) && !string_starts_with(buf, "log")) {
 
 								if (false && STDIN_FILENO == j && j == socketComando) {
@@ -462,19 +504,12 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 										procesandoComando = false;
 									}
 								} else {
-									// except the listener and ourselves
-									if (!string_starts_with(buf, "_") && j != listener && j != i) {
-									 //if (send(j, buf, nbytes, 0) == -1) {
-									 if (write(j, buf, nbytes) == -1) {
-									 //perror("send");
-									 perror("write");
-									 }
-									 }
 									//Aca manejariamos todos los mensajes
 									printf("Recibi mensaje por socket %d \"%s\"\n", j, buf);
 								}
 							}
-						}*/
+						}
+						*/
 					}
 				} // END handle data from client
 			} // END got new incoming connection
@@ -484,6 +519,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 }
 
 int conectar(char* ip, char* puerto, int *sock) {
+	printf("Conectando a %s:%s\n", ip, puerto);
 	struct sockaddr_in dirCent;
 
 	if ((*sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -500,6 +536,17 @@ int conectar(char* ip, char* puerto, int *sock) {
 		perror("connect");
 		return -1;
 	}
+	puts("Conexion OK");
 	return 0;
 
+}
+
+int defaultProcesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+//	puts("default procesar mensajes");
+	if(nuevaConexion) {
+		printf("Nueva conexion desde socket %d\n", socket);
+	} else {
+		printf("Nuevo mensaje desde socket %d\n", socket);
+	}
+	return 0;
 }

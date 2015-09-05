@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>     //memset
+#include <commons/log.h>
 #include <commons/string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -56,6 +57,7 @@ int conectar(char* ip, char* puerto, int *sock);
 
 
 // Para cliente y/o servidor
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap);
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, char* buffer, bool, void*, t_log*), void* extra,  t_log* logger);
+int defaultProcesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 
 #endif /* SOCKETS_H_ */
