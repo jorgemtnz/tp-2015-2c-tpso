@@ -41,7 +41,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void crearArchivo() {
+char* crearArchivo() {
 
 	char* tamanioEspacioDatosEnBytes = configuracion->tamanioArchivo;
 	char *pathArchivo = string_new();
