@@ -276,6 +276,10 @@ void procesarComando(char* comando, fd_set* master, int* fdmax) {
 			}
 
 		}
+	} else if(string_starts_with(comandoLimpio, "correr programa")) {
+		printf("Tendria que reenviar mensaje\n");
+	} else {
+		puts("Comando no reconocido.\n");
 	}
 
 }
@@ -436,11 +440,13 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						FD_CLR(i, &master); // remove from master set
 					} else {
 						// we got some data from a client
+						printf("Recibi mensaje por socket %d \"%s\"\n", i, buf);
+						/*
 						for (j = 0; j <= fdmax; j++) {
 							// send to everyone!
 							if (FD_ISSET(j, &master) && !string_starts_with(buf, "log")) {
 
-								if (STDIN_FILENO == j && string_starts_with(buf, "_")) {
+								if (false && STDIN_FILENO == j && j == socketComando) {
 									comando = string_new();
 									socketComando = STDIN_FILENO;
 									procesandoComando = true;
@@ -449,7 +455,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 										procesarComando(comando, &master, &fdmax);
 										procesandoComando = false;
 									}
-								} else if (STDIN_FILENO == j && procesandoComando && j == socketComando) {
+								} else if (false && STDIN_FILENO == j && procesandoComando && j == socketComando) {
 									string_append(&comando, buf);
 									if (strstr(buf, "\n") != NULL) {
 										procesarComando(comando, &master, &fdmax);
@@ -457,17 +463,18 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 									}
 								} else {
 									// except the listener and ourselves
-									/*if (!string_starts_with(buf, "_") && j != listener && j != i) {
+									if (!string_starts_with(buf, "_") && j != listener && j != i) {
 									 //if (send(j, buf, nbytes, 0) == -1) {
 									 if (write(j, buf, nbytes) == -1) {
 									 //perror("send");
 									 perror("write");
 									 }
-									 }*/
+									 }
 									//Aca manejariamos todos los mensajes
+									printf("Recibi mensaje por socket %d \"%s\"\n", j, buf);
 								}
 							}
-						}
+						}*/
 					}
 				} // END handle data from client
 			} // END got new incoming connection
