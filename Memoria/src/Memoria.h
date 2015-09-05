@@ -99,6 +99,7 @@ typedef struct {
 void leerArchivoDeConfiguracion();
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
+int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 //========================================================================================
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
