@@ -37,12 +37,15 @@
 #define CANT_RUTA 256
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
+
+//--------------------------------estructura para manejar las instrucciones en el CPU----------------
 typedef struct{
 	char** bufferInstrucciones; //
 	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
 	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
 }t_map;
 
+//--------------------estructura para levantar del archivo de config -----------------------------------------
 typedef struct {
 	char* vg_ipPlanificador;
 	uint32_t vg_puertoPlanificador;
@@ -52,24 +55,28 @@ typedef struct {
 	uint8_t retardo;
 } t_configuracion;
 
+//----------------------------------------------estructura del PCB del proceso------------------
 typedef struct {
 	char path[CANT_RUTA];
 	uint8_t* ptr_proximaInstruccion;
 	uint8_t cantInstruc; // cantidad de instrucciones a ejecutar
 } t_PCB;
 
+//---------------------------------------------estructura de un proceso-------------------------
 typedef struct {
 	uint8_t idProc;
 	t_PCB* pcb;
 	uint8_t tiempoEjec; // tiempo de ejecucion indicado para este proceso
 } t_mProc;
 
+//---------------------------------------------estructura de una CPU, seria la de un hilo--------
 typedef struct {
 	uint8_t idCPU;
 	uint8_t estado;
 	t_mProc* proceso;
 } t_cpu;
 
+//---------------------------------------------estructura principal del proceso CPU--------------
 typedef struct{
 uint8_t  contadorIdCPU;
 t_list* listaCPU;
