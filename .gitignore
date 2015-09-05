@@ -34,6 +34,8 @@ metadata/
 RemoteSystemsTempFiles/
 Debug/
 settings/
+.settings/
+*.settings/
 
 # Debug files
 *.dSYM/
