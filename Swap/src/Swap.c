@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
 
 	archivoMapeadoEnMemoria = crearArchivo();
 
+
 	int socketMemoria, prueba;
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketMemoria);
 

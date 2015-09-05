@@ -63,4 +63,5 @@ char* crearArchivo() {
 	char *contenido = "\0";
 	escribirEnEspacioDatos(espacioDatos, contenido, offset);
 
+	return espacioDatos;
 }
