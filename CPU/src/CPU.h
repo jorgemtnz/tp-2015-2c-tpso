@@ -58,15 +58,16 @@ typedef struct {
 
 typedef struct {
 	uint8_t idProc;
-	t_PCB pcb;
+	t_PCB* pcb;
 	uint8_t tiempoEjec; // tiempo de ejecucion indicado para este proceso
 } t_mProc;
 
 typedef struct {
 	uint8_t idCPU;
 	uint8_t estado;
-	t_mProc proceso;
+	t_mProc* proceso;
 } t_cpu;
+
 typedef struct{
 uint8_t  contadorIdCPU;
 t_list* listaCPU;
@@ -78,10 +79,19 @@ t_list* listaCPU;
 //============================================================
 t_map* crearMapeo();
 t_configuracion* crearConfiguracion();
+t_PCB* crearPCB() ;
+t_mProc* crear_mProc();
+t_cpu* crearCPU();
+t_ProcCPU* crearProcCPU();
 
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
-
+void destMap(t_map* unMap) ;
+void destConfig(t_configuracion* unaConfig);
+void destPCB(t_PCB* unPCB);
+void dest_mProc(t_mProc* un_mProc);
+void destHiloCPU(t_cpu* unHiloCPU);
+void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
