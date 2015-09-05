@@ -28,6 +28,8 @@
 #include <sys/wait.h>
 #include <utiles/sockets/sockets.h>
 #include <utiles/configExtras.h>
+#include<utiles/espacioDeDatos.h>
+#include<utiles/mapeoAMemoria.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 #define DISPONIBLE 1
@@ -38,7 +40,7 @@
 typedef struct{
 	char** bufferInstrucciones; //
 	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
-	uint32_t* ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
+	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
 }t_map;
 
 typedef struct {
@@ -95,7 +97,7 @@ void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
-
+void cargaPorcesoaCPU(char* dirArchivo);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 //========================================================================================
 
@@ -105,6 +107,7 @@ void leerArchivoDeConfiguracion();
 t_configuracion* configuracion;
 t_log* logger; //VG del logger
 t_cpu* cpu;
+t_map* mCodCPU; // para manejar las instrucciones en el cpu
 
-//const CANT_RUTA;
+
 #endif /* CPU_H_ */
