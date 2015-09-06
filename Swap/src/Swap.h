@@ -68,15 +68,17 @@ typedef struct {
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
-char* crearArchivo();
+void crearArchivo();
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+int procesarMensajesDeMemoria(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 //========================================================================================
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
 t_configuracion* configuracion;
 t_log* logger;
+char *espacioDatos;
 
 #endif /* SWAP_H_ */

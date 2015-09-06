@@ -41,27 +41,46 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-char* crearArchivo() {
+void crearArchivo() {
 
-	char* tamanioEspacioDatosEnBytes = configuracion->tamanioArchivo;
+
 	char *pathArchivo = string_new();
 	string_append(&pathArchivo, "/home/utnso/tp-2015-2c-tpso/Swap/");
 	string_append(&pathArchivo, configuracion->nombreSwap);
 
 	abrirOCrearArchivoLecturaEscritura(pathArchivo, logger);
 
-	crearArchivoMmap(pathArchivo, tamanioEspacioDatosEnBytes);
+	crearArchivoMmap(pathArchivo, configuracion->tamanioArchivo);
 
 	int fdEspacioDatos = abrirArchivoEspacioDatos(pathArchivo, logger);
-	//struct stat statArchivoEspacioDatos = describirArchivoEspacioDatos(pathArchivo, logger);
-	//int tamanioArchivoEspacioDatos = statArchivoEspacioDatos.st_size;
+
 
 	int offset = 0;
 
-	char *espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
+	espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
 
 	char *contenido = "\0";
 	escribirEnEspacioDatos(espacioDatos, contenido, offset);
 
-	return espacioDatos;
 }
+
+int procesarMensajesDeMemoria(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger){
+	puts("Swap procesar mensajes");
+	int offset = 0;
+		defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
+		if(nuevaConexion) {
+			/*recv(socket, &, sizeof(int), 0); ACA TENGO QUE RECIBIR DE MEMORIA EL MPROC Y EL TAMANIO(HAY QE VER LA SERIALIZACION)
+			if(tamanioquerecibimos < espaciolibre){
+			HAY QUE GUARDAR EN NUESTRA LISTA LO QE RECIBIMOS
+			escribirEnEspacioDatos(espacioDatos, contenido, offset);
+			 AUMENTAR EL OFFSET CON EL TAMANIO RECIBIDO}else{
+			  send(socket, &error , sizeof(int) ,0)       error = numero que le pasamos a memoria para que sepa que no se pudo guardar
+		}*/
+		} else {
+			//ACA HAY QUE HACER EL ALGORITMO PARA VER SI HAY ESPACIO
+		}
+		return 0;
+
+}
+
+
