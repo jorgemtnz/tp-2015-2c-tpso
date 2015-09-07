@@ -77,6 +77,7 @@ typedef struct {
 //============================================================================
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
+void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);

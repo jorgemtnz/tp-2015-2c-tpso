@@ -62,3 +62,27 @@ void crearArchivo() {
 
 }
 
+void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
+	l_espacioLibre* espacioA;
+	espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	l_espacioLibre* espacioB;
+	espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	l_espacioLibre* espacioC;
+	espacioC = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	int a;
+	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+
+		espacioA = list_get(listaDeEspaciosLibres, a);
+		espacioB = list_get(listaDeEspaciosLibres, a + 1);
+
+		if ((espacioA->ubicacion + espacioA->cantPagsLibres) == (espacioB->ubicacion - 1)) {
+			espacioC->ubicacion = espacioA->ubicacion;
+			espacioC->cantPagsLibres = (espacioA->cantPagsLibres + espacioB->cantPagsLibres);
+			list_remove(listaDeEspaciosLibres, a);
+			list_remove(listaDeEspaciosLibres, a + 1);
+			list_add_in_index(listaDeEspaciosLibres, a, espacioC);
+			a--;
+		}
+	}
+
+}
