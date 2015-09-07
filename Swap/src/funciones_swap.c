@@ -86,3 +86,22 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	}
 
 }
+
+void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres){
+	l_espacioLibre* espacioA;
+		espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+		l_espacioLibre* espacioB;
+		espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+		int a;
+			for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+
+				espacioA = list_get(listaDeEspaciosLibres, a);
+				espacioB = list_get(listaDeEspaciosLibres, a + 1);
+
+				if((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion - 1)){
+					if((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion -1)){
+						list_add_in_index(listaDeEspaciosLibres,a+1,espacioLibre);
+					}
+				}
+}
+}

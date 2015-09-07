@@ -3,7 +3,7 @@
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
-	int aux;
+	int aux,ubicacion;
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
 	l_procesosCargados* procesoAleer;
 	unProceso = (l_procesosCargados*) malloc(sizeof(l_procesosCargados));
 	procesoAleer = (l_procesosCargados*) malloc(sizeof(l_procesosCargados));
-	t_paqueteDelProceso* proceso;
-	proceso = (t_paqueteDelProceso*) malloc(sizeof(t_paqueteDelProceso));
+	t_escribirEnProceso* procesoAEscribir;
+	procesoAEscribir = (t_escribirEnProceso*) malloc(sizeof(t_escribirEnProceso));
 	int socketMemoria, entero, a, cantidadPaginas, cantidadDePagLibres, respuesta, paginasLibresRestantes;
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 
@@ -82,16 +82,25 @@ int main(int argc, char *argv[]) {
 
 		case 35: // escribir
 
-			//if(recv(socketMemoria, paquete, sizeof(int),0)<0) return EXIT_SUCCESS;
-			//DESERIALIZAR y guardar en proceso
+			//RECIBIR PAQUETE DE MEMORIA
+			//DESERIALIZAR y guardar en procesoAEscribir
+			for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+							unProceso = list_get(listaDeProcesosCargados, a);
+							if (unProceso->PID == procesoAEscribir->PID) {
 
+								ubicacion = unProceso->ubicacion;
+							}
+						}
+						 escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ubicacion);
+						 respuesta = 0;
+						 send(socketMemoria, &respuesta, sizeof(int), 0);
 			break;
 
 		case 42: //leer
 
 			if (recv(socketMemoria, &pid, sizeof(int), 0) < 0)
 				return EXIT_SUCCESS;
-			for (a = 0; a < list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+			for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 				unProceso = list_get(listaDeProcesosCargados, a);
 				if (unProceso->PID == pid) {
 					procesoAleer->PID = unProceso->PID;
@@ -107,6 +116,20 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 99: //finalizar
+			if (recv(socketMemoria, &pid, sizeof(int), 0) < 0)
+							return EXIT_SUCCESS;
+
+			for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+							unProceso = list_get(listaDeProcesosCargados, a);
+							if (unProceso->PID == pid) {
+								list_remove(listaDeProcesosCargados,a);
+
+								espacioLibre->ubicacion = unProceso->ubicacion;
+								espacioLibre->cantPagsLibres = unProceso->cantPagsUso;
+								agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
+								//BORRAR DEL ESPACIO DE DATOS
+							}
+						}
 
 			break;
 

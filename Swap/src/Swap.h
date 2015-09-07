@@ -62,8 +62,7 @@ typedef struct {
 typedef struct {
 	pid_t PID;
 	char* contenido;
-	int cantidadPaginas;
-} t_paqueteDelProceso;
+} t_escribirEnProceso;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -78,6 +77,7 @@ typedef struct {
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
+void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
