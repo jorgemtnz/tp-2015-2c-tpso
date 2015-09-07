@@ -27,6 +27,7 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 			char* socketCPU = (char*)dictionary_get(conexiones, "Swap");
 			puts("Enviando \"correr programa\" al Swap");
 			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+			puts("Enviado al Swap");
 		}
 	}
 
