@@ -49,14 +49,22 @@ typedef struct {
 typedef struct {
 	int ubicacion;
 	int cantPagsLibres;
-	struct espacioLibre *sig;
+
 } l_espacioLibre;
 typedef struct {
 	pid_t PID;
 	int ubicacion;
 	int cantPagsUso;
-	struct procesosCargados *sig;
+
 } l_procesosCargados;
+
+//POSIBLE ESTRUCTURA ENTRE MEMORIA Y SWAP
+typedef struct {
+	pid_t PID;
+	char* contenido;
+	int cantidadPaginas;
+} t_paqueteDelProceso;
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa

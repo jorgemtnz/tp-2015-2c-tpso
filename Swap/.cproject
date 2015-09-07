@@ -57,6 +57,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.441160698.1498440528" name="Swap.c" rcbsApplicability="disable" resourcePath="src/Swap.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1079696139.1098987545">
+						<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1079696139.1098987545" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1079696139">
+							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.438200393" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
