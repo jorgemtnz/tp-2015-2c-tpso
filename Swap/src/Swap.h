@@ -62,7 +62,14 @@ typedef struct {
 typedef struct {
 	pid_t PID;
 	char* contenido;
+	int numeroPagina;
 } t_escribirEnProceso;
+
+typedef struct {
+	pid_t PID;
+	int numeroPaginaInicio;
+	int numeroPaginaFin;
+} t_leerDeProceso;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -78,10 +85,15 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-
+void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, l_espacioLibre* espacioLibre, pid_t pid,
+		l_procesosCargados* procesoAInsertarEnLista, l_espacioLibre* espacioLibreAInsertar);
+void escribir(t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, t_escribirEnProceso* procesoAEscribir);
+void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_procesosCargados* procesoAleer);
+void finalizar(pid_t pid, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_espacioLibre* espacioLibre, t_list* listaDeEspaciosLibres);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+
 //========================================================================================
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
