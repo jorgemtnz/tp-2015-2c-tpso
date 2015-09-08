@@ -123,6 +123,8 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 //===========================================================================================
 t_configuracion* configuracion;
 t_log* logger;
-
+t_list memoria;
+t_list TLB;
+t_list tablaDePag;
 
 #endif /* MEMORIA_H_ */
