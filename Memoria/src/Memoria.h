@@ -84,6 +84,26 @@ typedef struct {
 	int pagina; // se va a tener que ver si esta pagina esta en un marco de la MP o en la SWAP
 }t_atenderInstruccion;
 
+typedef struct {
+	int idProc;
+	int CantPag;
+}t_iniciarProc;
+
+typedef struct {
+	int idProc;
+	int Pag;
+	char* texto;
+}t_escrituraProc;
+
+typedef struct {
+	int idProc;
+	int pagIn;
+	int pagFin;
+}t_lecturaProc;
+
+typedef struct {
+	int idProc;
+}t_finalizarProc;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
