@@ -23,14 +23,29 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
 		printf("Recibi el mensaje: %s\n", buffer);
-		if(string_starts_with(buffer, "correr programa")) {
-			char* socketCPU = (char*)dictionary_get(conexiones, "Swap");
-			puts("Enviando \"correr programa\" al Swap");
-			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-			puts("Enviado al Swap");
+		if (string_starts_with(buffer, "correr programa")) {
+			char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+			/* EJEMPLO
+			 puts("Enviando \"correr programa\" al Swap");
+			 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+			 puts("Enviado al Swap");
+			 */
+			int buff, idProc, cantPag; // seria el buffer ques e deba poner
+			switch (buff) {
+			case 1: // va a ser iniciar este
+				iniciar(idProc, cantPag);
+				break;
+			case 2: // va a ser escribir este
+				escribir(idProc, cantPag);
+				break;
+			case 3: // va a ser leer este
+				leer(idProc, cantPag);
+				break;
+			case 4: // va a ser finalizar este
+				finalizar(idProc, cantPag);
+				break;
+			}
 		}
+
+		return 0;
 	}
-
-
-	return 0;
-}
