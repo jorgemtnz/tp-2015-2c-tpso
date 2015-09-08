@@ -105,6 +105,8 @@ void destProcCPU(t_ProcCPU* unCPU);
 //============================================================================
 void leerArchivoDeConfiguracion();
 void cargaPorcesoaCPU(char* dirArchivo);
+void levantarHilosCPU() ;
+void hiloCPU();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 //========================================================================================
