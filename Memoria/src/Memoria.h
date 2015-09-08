@@ -54,14 +54,14 @@ typedef struct {
 typedef struct {
 	t_list memoriaPrincipal;
 	int limiteMP;
-}t_MP;
+} t_MP;
 
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
 	char* contenido; // el texto que tendra esa posicion
 	bool libre;
-	t_list paginasAsociada; // permite asociar el pedido de "escribir X pagina" con el marco. Como pueden ser varias hice una lista
-}t_marco;
+	int bitPagModificada; // si esta en memoria ver si fue modificada
+} t_marco;
 
 typedef struct {
 	int idProc;
@@ -78,12 +78,25 @@ typedef struct {
 } t_TablaDePaginas;
 
 typedef struct {
-	int operacion; // 0 leer, 1 escribir ( esto hay que verlo igual )
-	char* contenido;
 	int idProc;
-	int pagina; // se va a tener que ver si esta pagina esta en un marco de la MP o en la SWAP
-}t_atenderInstruccion;
+	int CantPag;
+}t_iniciarProc;
 
+typedef struct {
+	int idProc;
+	int Pag;
+	char* texto;
+}t_escrituraProc;
+
+typedef struct {
+	int idProc;
+	int pagIn;
+	int pagFin;
+}t_lecturaProc;
+
+typedef struct {
+	int idProc;
+}t_finalizarProc;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -97,6 +110,10 @@ typedef struct {
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
+void iniciar(int idProc, int cantPag);
+void escribir(int idProc, int cantPag);
+void leer(int idProc, int cantPag);
+void finalizar(int idProc,int cantPag);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
@@ -106,6 +123,8 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 //===========================================================================================
 t_configuracion* configuracion;
 t_log* logger;
-
+t_list memoria;
+t_list TLB;
+t_list tablaDePag;
 
 #endif /* MEMORIA_H_ */

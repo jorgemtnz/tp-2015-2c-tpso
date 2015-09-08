@@ -62,6 +62,103 @@ void crearArchivo() {
 
 }
 
+void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, l_espacioLibre* espacioLibre, pid_t pid,
+		l_procesosCargados* procesoAInsertarEnLista, l_espacioLibre* espacioLibreAInsertar) {
+	int a, paginasLibresRestantes;
+
+	int cantidadDePagLibres = 0;
+	espacioLibre->ubicacion = 0;
+	espacioLibre->cantPagsLibres = configuracion->cantidadPaginas;
+	if (list_size(listaDeEspaciosLibres) != 0) {
+		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+			espacioLibre = list_get(listaDeEspaciosLibres, a);
+			cantidadDePagLibres += espacioLibre->cantPagsLibres;
+		}
+	} else { //SI ESTAN TODAS LAS PAG LIBRES
+		cantidadDePagLibres = configuracion->cantidadPaginas;
+		espacioLibre->ubicacion = 0;
+		espacioLibre->cantPagsLibres = configuracion->cantidadPaginas;
+		list_add(listaDeEspaciosLibres, espacioLibre);
+	}
+	if (cantidadDePagLibres >= cantidadPaginas) {
+
+		acomodarEspaciosLibres(listaDeEspaciosLibres); // POR SI QUEDARON DON BLOQUES LIBRES CONTINUOS
+		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+			espacioLibre = list_get(listaDeEspaciosLibres, a);
+			if (espacioLibre->cantPagsLibres >= cantidadPaginas) { // SI ENCUENTRO UN ESPACIO EN EL QE ENTRE LO METO y actualizo la lista de espacios libres
+				procesoAInsertarEnLista->PID = pid;
+				procesoAInsertarEnLista->ubicacion = espacioLibre->ubicacion;
+				procesoAInsertarEnLista->cantPagsUso = cantidadPaginas;
+				list_add(listaDeProcesosCargados, procesoAInsertarEnLista);
+				paginasLibresRestantes = espacioLibre->cantPagsLibres - cantidadPaginas;
+				list_remove(listaDeEspaciosLibres, a);
+				espacioLibreAInsertar->cantPagsLibres = paginasLibresRestantes;
+				espacioLibreAInsertar->ubicacion = espacioLibre->ubicacion + cantidadPaginas;
+				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
+			} else {
+				//HACER ALGORITMO COMPACTACION
+			}
+
+		/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+			puts("Enviando \"respuesta de iniciar\" a Memoria");
+			enviar(atoi(socketMemoria), "OK INICIAR", strlen("OK INICIAR"));
+*/
+		}
+	} else {
+		/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+		puts("Enviando \"respuesta de iniciar\" a Memoria");
+		enviar(atoi(socketMemoria), "ERROR INICIAR", strlen("ERROR INICIAR"));*/
+	}
+}
+
+void escribir(t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, t_escribirEnProceso* procesoAEscribir) {
+
+	int a, ubicacion;
+	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+		unProceso = list_get(listaDeProcesosCargados, a);
+		if (unProceso->PID == procesoAEscribir->PID) {
+
+			ubicacion = unProceso->ubicacion;
+		}
+	}
+	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, (ubicacion + procesoAEscribir->numeroPagina));
+/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+	puts("Enviando \"respuesta de escribir\" a Memoria");
+	enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
+}
+
+void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_procesosCargados* procesoAleer) {
+	int a;
+	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+		unProceso = list_get(listaDeProcesosCargados, a);
+		if (unProceso->PID == procesoRecibido->PID) {
+			procesoAleer->PID = unProceso->PID;
+			procesoAleer->cantPagsUso = unProceso->cantPagsUso;
+			procesoAleer->ubicacion = unProceso->ubicacion;
+		}
+	}
+	char* datosLeidos = leerEspacioDatos(espacioDatos, (procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio),
+			(procesoAleer->ubicacion + procesoRecibido->numeroPaginaFin));
+	//MANDAR A MEMORIA DATOS LEIDOS
+}
+
+void finalizar(pid_t pid, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_espacioLibre* espacioLibre, t_list* listaDeEspaciosLibres) {
+	int a;
+	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+		unProceso = list_get(listaDeProcesosCargados, a);
+		if (unProceso->PID == pid) {
+			list_remove(listaDeProcesosCargados, a);
+
+			espacioLibre->ubicacion = unProceso->ubicacion;
+			espacioLibre->cantPagsLibres = unProceso->cantPagsUso;
+			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
+			//BORRAR DEL ESPACIO DE DATOS
+		}
+	}
+	/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+	puts("Enviando \"respuesta de finalizar\" a Memoria");
+	enviar(atoi(socketMemoria), "OK FINALIZAR", strlen("OK FINALIZAR"));*/
+}
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
 	espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
@@ -87,21 +184,21 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
 }
 
-void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres){
+void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
-		espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
-		l_espacioLibre* espacioB;
-		espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
-		int a;
-			for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+	espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	l_espacioLibre* espacioB;
+	espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	int a;
+	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 
-				espacioA = list_get(listaDeEspaciosLibres, a);
-				espacioB = list_get(listaDeEspaciosLibres, a + 1);
+		espacioA = list_get(listaDeEspaciosLibres, a);
+		espacioB = list_get(listaDeEspaciosLibres, a + 1);
 
-				if((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion - 1)){
-					if((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion -1)){
-						list_add_in_index(listaDeEspaciosLibres,a+1,espacioLibre);
-					}
-				}
-}
+		if ((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion - 1)) {
+			if ((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion - 1)) {
+				list_add_in_index(listaDeEspaciosLibres, a + 1, espacioLibre);
+			}
+		}
+	}
 }
