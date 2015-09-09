@@ -7,7 +7,6 @@ int main(int argc, char *argv[]) {
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
 
-
 	int socketSwap;
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap), &socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
@@ -19,7 +18,7 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
-	if(nuevaConexion) {
+	if (nuevaConexion) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
 		printf("Recibi el mensaje: %s\n", buffer);
@@ -47,5 +46,8 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 			}
 		}
 
-		return 0;
+
 	}
+	return 0;
+}
+
