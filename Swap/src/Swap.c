@@ -22,7 +22,6 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
-	//HACER FUNCIONES CONSTRUCTORAS COMO DIJO JORGE
 	t_list* listaDeProcesosCargados;
 	t_list* listaDeEspaciosLibres;
 	listaDeEspaciosLibres = list_create();
@@ -32,8 +31,8 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 
 	t_escribirEnProceso* procesoAEscribir;
 	t_leerDeProceso* procesoRecibido;
-	procesoAEscribir = (t_escribirEnProceso*) malloc(sizeof(t_escribirEnProceso));
-	int entero, a, cantidadPaginas, cantidadDePagLibres, respuesta, paginasLibresRestantes;
+	procesoAEscribir = crearEscribirEnProceso();
+	int cantidadPaginas;
 	int buff; // PONGO EL BUFFER COMO INT PQ NO ME ANDA CON STRING
 	switch (buff) {
 	case 1: // "iniciar":

@@ -77,6 +77,7 @@ typedef struct {
 //============================================================
 l_procesosCargados* crearProceso();
 l_espacioLibre* crearEspacioLibre();
+t_escribirEnProceso* crearEscribirEnProceso();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 

@@ -37,3 +37,18 @@ l_espacioLibre* crearEspacioLibre(){
 			return espacio;
 
 }
+
+t_escribirEnProceso* crearEscribirEnProceso(){
+
+	t_escribirEnProceso* contenido = malloc(sizeof(t_escribirEnProceso));
+				if (contenido == NULL) {
+					perror("[ERROR] No se reservo memoria para Swap>..>espacioLibre");
+					log_error(logger, "[ERROR] No se reservo memoria para Swap>..>espacioLibre");
+					exit(-1);
+				}
+				contenido->PID = 0;
+				contenido->numeroPagina = 0;
+				contenido->contenido = '\0';
+
+				return contenido;
+}
