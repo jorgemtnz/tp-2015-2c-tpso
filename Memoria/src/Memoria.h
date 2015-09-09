@@ -72,9 +72,9 @@ typedef struct {
 
 typedef struct {
 	int idProc;
-	int pagina; // si esta vacia va -1 (o puede que no, no se)
-	int marco; // si esta vacio va -1 (o puede que no, no se)
-	int bitPresencia; // para ver si se encuentra en un marco (1) o en una pagina (0)
+	int paginaEnMemoria; // puede no ser necesario, esta en veremos
+	int paginaDelProceso;
+	int marco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar a las paginas
 } t_TablaDePaginas;
 
 typedef struct {
@@ -110,10 +110,11 @@ typedef struct {
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
-void iniciar(int idProc, int cantPag);
-void escribir(int idProc, int cantPag);
-void leer(int idProc, int cantPag);
-void finalizar(int idProc,int cantPag);
+void iniciar(int idProc, int cantPag, int socketCPU);
+void escribir(int idProc, int nroPag);
+void leer(int idProc, int pagIn, int pagFin);
+void finalizar(int idProc);
+void inicializadoCorrecto(int idProc, int cantPag);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
@@ -123,8 +124,16 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 //===========================================================================================
 t_configuracion* configuracion;
 t_log* logger;
-t_list memoria;
-t_list TLB;
-t_list tablaDePag;
+// ----------- Contadores -------- //
+int contadorPagTP; // contador de paginas de la tabla de paginas
+
+// ----------- Listas ------------ //
+t_list* listaMemoria;
+t_list* listaTLB;
+t_list* listaTablaDePag;
+
+// ----------- Semaforos ---------- //
+pthread_mutex_t mutexProcesadorMensajes;
+pthread_mutex_t mutexParaInicializado;
 
 #endif /* MEMORIA_H_ */

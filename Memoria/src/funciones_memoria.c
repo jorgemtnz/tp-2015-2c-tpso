@@ -46,18 +46,46 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(int idProc, int cantPag){
+void iniciar(int idProc, int cantPag, int socketCPU) {
+	int rtaSwap,contador;
+	t_TablaDePaginas* tablaDePag;
+	tablaDePag = malloc(sizeof(tablaDePag));
 
+	/* PARTE DE ENVIAR A SWAP UN PROCESO
+	 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+	 *  puts("Enviando \"puede iniciar proceso\" al Swap");
+	 enviar(atoi(socketCPU), "puede iniciar proceso", strlen("puede iniciar proceso));
+	 puts("Enviado al Swap");
+	 */
+
+	if (rtaSwap) { // rtaSwap == 0, indica ok
+		for (contador = 0; contador < cantPag; contador++) {
+			contadorPagTP++;
+			tablaDePag = malloc(sizeof(tablaDePag));
+			tablaDePag->idProc = idProc;
+			tablaDePag->paginaEnMemoria = contadorPagTP;
+			tablaDePag->paginaDelProceso = contador + 1;
+			tablaDePag->marco = -1; // porque no esta en algun marco en mem pcpal
+			list_add(listaTablaDePag, tablaDePag);
+		}
+	} else { // la respuesta no fue ok
+		/* PARTE DE ENVIAR A CPU QUE NO SE ENVIO BIEN
+		 *char* socketCPU = (char*) dictionary_get(conexiones, "Cpu");
+		 *  puts("Enviando \"No puede iniciar el proceso\" al Cpu");
+		 enviar(atoi(socketCPU), "No puede iniciar el proceso", strlen("No puede iniciar el proceso));
+		 puts("Enviado al Cpu");
+		 */
+	}
 }
 
 void escribir(int idProc, int cantPag){
 
 }
 
-void leer(int idProc, int cantPag) {
+void leer(int idProc, int pagIn, int PagFin) {
 
 }
 
-void finalizar(int idProc,int cantPag) {
+void finalizar(int idProc) {
 
 }

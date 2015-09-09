@@ -3,6 +3,10 @@
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
+	listaMemoria = list_create();
+	listaTLB = list_create();
+    listaTablaDePag = list_create();
+	contadorPagTP = 0;
 
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
@@ -16,6 +20,7 @@ int main(int argc, char *argv[]) {
 }
 
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
 	if (nuevaConexion) {
@@ -29,19 +34,20 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 			 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
 			 puts("Enviado al Swap");
 			 */
-			int buff, idProc, cantPag; // seria el buffer ques e deba poner
+			int buff, idProc, cantPag,nroPag,pagIn,pagFin; // seria el buffer ques e deba poner
 			switch (buff) {
 			case 1: // va a ser iniciar este
-				iniciar(idProc, cantPag);
+				pthread_mutex_lock(&mutexParaInicializado);
+				iniciar(idProc, cantPag, socketCPU);
 				break;
 			case 2: // va a ser escribir este
-				escribir(idProc, cantPag);
+				escribir(idProc, nroPag);
 				break;
 			case 3: // va a ser leer este
-				leer(idProc, cantPag);
+				leer(idProc, pagIn, pagFin);
 				break;
 			case 4: // va a ser finalizar este
-				finalizar(idProc, cantPag);
+				finalizar(idProc);
 				break;
 			}
 		}
@@ -49,5 +55,6 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 
 	}
 	return 0;
+	pthread_mutex_unlock(&mutexProcesadorMensajes);
 }
 
