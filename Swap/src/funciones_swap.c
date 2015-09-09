@@ -62,8 +62,14 @@ void crearArchivo() {
 
 }
 
-void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, l_espacioLibre* espacioLibre, pid_t pid,
-		l_procesosCargados* procesoAInsertarEnLista, l_espacioLibre* espacioLibreAInsertar) {
+void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid) {
+	l_procesosCargados* procesoAInsertarEnLista;
+	l_espacioLibre* espacioLibre;
+	l_espacioLibre* espacioLibreAInsertar;
+
+	procesoAInsertarEnLista = crearProceso();
+	espacioLibre = crearEspacioLibre();
+	espacioLibreAInsertar = crearEspacioLibre();
 	int a, paginasLibresRestantes;
 
 	int cantidadDePagLibres = 0;
@@ -99,20 +105,21 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 				//HACER ALGORITMO COMPACTACION
 			}
 
-		/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-			puts("Enviando \"respuesta de iniciar\" a Memoria");
-			enviar(atoi(socketMemoria), "OK INICIAR", strlen("OK INICIAR"));
-*/
+			/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+			 puts("Enviando \"respuesta de iniciar\" a Memoria");
+			 enviar(atoi(socketMemoria), "OK INICIAR", strlen("OK INICIAR"));
+			 */
 		}
 	} else {
 		/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-		puts("Enviando \"respuesta de iniciar\" a Memoria");
-		enviar(atoi(socketMemoria), "ERROR INICIAR", strlen("ERROR INICIAR"));*/
+		 puts("Enviando \"respuesta de iniciar\" a Memoria");
+		 enviar(atoi(socketMemoria), "ERROR INICIAR", strlen("ERROR INICIAR"));*/
 	}
 }
 
-void escribir(t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, t_escribirEnProceso* procesoAEscribir) {
-
+void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir) {
+	l_procesosCargados* unProceso;
+	unProceso = crearProceso();
 	int a, ubicacion;
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
@@ -122,13 +129,17 @@ void escribir(t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, t_
 		}
 	}
 	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, (ubicacion + procesoAEscribir->numeroPagina));
-/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-	puts("Enviando \"respuesta de escribir\" a Memoria");
-	enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
+	/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+	 puts("Enviando \"respuesta de escribir\" a Memoria");
+	 enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
 }
 
-void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_procesosCargados* procesoAleer) {
+void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	int a;
+	l_procesosCargados* unProceso;
+	l_procesosCargados* procesoAleer;
+	unProceso = crearProceso();
+	procesoAleer = crearProceso();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
 		if (unProceso->PID == procesoRecibido->PID) {
@@ -142,8 +153,12 @@ void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, l_p
 	//MANDAR A MEMORIA DATOS LEIDOS
 }
 
-void finalizar(pid_t pid, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_espacioLibre* espacioLibre, t_list* listaDeEspaciosLibres) {
+void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
 	int a;
+	l_procesosCargados* unProceso;
+	l_espacioLibre* espacioLibre;
+	espacioLibre = crearEspacioLibre();
+	unProceso = crearProceso();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
 		if (unProceso->PID == pid) {
@@ -156,16 +171,16 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, l_procesosCargados* u
 		}
 	}
 	/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-	puts("Enviando \"respuesta de finalizar\" a Memoria");
-	enviar(atoi(socketMemoria), "OK FINALIZAR", strlen("OK FINALIZAR"));*/
+	 puts("Enviando \"respuesta de finalizar\" a Memoria");
+	 enviar(atoi(socketMemoria), "OK FINALIZAR", strlen("OK FINALIZAR"));*/
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
-	espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	espacioA = crearEspacioLibre();
 	l_espacioLibre* espacioB;
-	espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	espacioB = crearEspacioLibre();
 	l_espacioLibre* espacioC;
-	espacioC = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	espacioC = crearEspacioLibre();
 	int a;
 	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 
@@ -186,9 +201,9 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
-	espacioA = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	espacioA = crearEspacioLibre();
 	l_espacioLibre* espacioB;
-	espacioB = (l_espacioLibre*) malloc(sizeof(l_espacioLibre));
+	espacioB = crearEspacioLibre();
 	int a;
 	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 

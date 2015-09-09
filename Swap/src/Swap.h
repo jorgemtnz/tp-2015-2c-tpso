@@ -75,7 +75,8 @@ typedef struct {
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
-
+l_procesosCargados* crearProceso();
+l_espacioLibre* crearEspacioLibre();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -85,11 +86,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, l_espacioLibre* espacioLibre, pid_t pid,
-		l_procesosCargados* procesoAInsertarEnLista, l_espacioLibre* espacioLibreAInsertar);
-void escribir(t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, t_escribirEnProceso* procesoAEscribir);
-void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_procesosCargados* procesoAleer);
-void finalizar(pid_t pid, t_list* listaDeProcesosCargados, l_procesosCargados* unProceso, l_espacioLibre* espacioLibre, t_list* listaDeEspaciosLibres);
+void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid);
+void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);
+void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
+void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
