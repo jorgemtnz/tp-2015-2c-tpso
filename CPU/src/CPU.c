@@ -32,6 +32,8 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 			char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
 			puts("Enviando \"correr programa\" a la Memoria");
 			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+			// de aca para abajo serian las conexiones
+
 		}
 	}
 
