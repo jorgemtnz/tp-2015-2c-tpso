@@ -89,6 +89,7 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 	if (cantidadDePagLibres >= cantidadPaginas) {
 
 		acomodarEspaciosLibres(listaDeEspaciosLibres); // POR SI QUEDARON DON BLOQUES LIBRES CONTINUOS
+
 		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 			espacioLibre = list_get(listaDeEspaciosLibres, a);
 			if (espacioLibre->cantPagsLibres >= cantidadPaginas) { // SI ENCUENTRO UN ESPACIO EN EL QE ENTRE LO METO y actualizo la lista de espacios libres
@@ -101,6 +102,7 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 				espacioLibreAInsertar->cantPagsLibres = paginasLibresRestantes;
 				espacioLibreAInsertar->ubicacion = espacioLibre->ubicacion + cantidadPaginas;
 				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
+				a = list_size(listaDeEspaciosLibres) + 1; //SI YA ENCONTRE UN ESPACIO NO BUSCO MAS
 			} else {
 				//HACER ALGORITMO COMPACTACION
 			}
@@ -115,6 +117,7 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 		 puts("Enviando \"respuesta de iniciar\" a Memoria");
 		 enviar(atoi(socketMemoria), "ERROR INICIAR", strlen("ERROR INICIAR"));*/
 	}
+
 }
 
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir) {
@@ -160,6 +163,7 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
+
 		unProceso = list_get(listaDeProcesosCargados, a);
 		if (unProceso->PID == pid) {
 			list_remove(listaDeProcesosCargados, a);
@@ -167,12 +171,15 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 			espacioLibre->ubicacion = unProceso->ubicacion;
 			espacioLibre->cantPagsLibres = unProceso->cantPagsUso;
 			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
+
 			//BORRAR DEL ESPACIO DE DATOS
+			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
 	/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
 	 puts("Enviando \"respuesta de finalizar\" a Memoria");
 	 enviar(atoi(socketMemoria), "OK FINALIZAR", strlen("OK FINALIZAR"));*/
+
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
@@ -182,38 +189,70 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	l_espacioLibre* espacioC;
 	espacioC = crearEspacioLibre();
 	int a;
-	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+	printf("LISTA LIBRES %i\n", list_size(listaDeEspaciosLibres));
+	if (list_size(listaDeEspaciosLibres) > 1) {
+		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 
-		espacioA = list_get(listaDeEspaciosLibres, a);
-		espacioB = list_get(listaDeEspaciosLibres, a + 1);
+			espacioA = list_get(listaDeEspaciosLibres, a);
+			espacioB = list_get(listaDeEspaciosLibres, a + 1);
 
-		if ((espacioA->ubicacion + espacioA->cantPagsLibres) == (espacioB->ubicacion - 1)) {
-			espacioC->ubicacion = espacioA->ubicacion;
-			espacioC->cantPagsLibres = (espacioA->cantPagsLibres + espacioB->cantPagsLibres);
-			list_remove(listaDeEspaciosLibres, a);
-			list_remove(listaDeEspaciosLibres, a + 1);
-			list_add_in_index(listaDeEspaciosLibres, a, espacioC);
-			a--;
+			if ((espacioA->ubicacion + espacioA->cantPagsLibres) == (espacioB->ubicacion - 1)) {
+				espacioC->ubicacion = espacioA->ubicacion;
+				espacioC->cantPagsLibres = (espacioA->cantPagsLibres + espacioB->cantPagsLibres);
+				list_remove(listaDeEspaciosLibres, a);
+				list_remove(listaDeEspaciosLibres, a + 1);
+				list_add_in_index(listaDeEspaciosLibres, a, espacioC);
+				a--;
+			} else {
+
+				if ((a + 3) > list_size(listaDeEspaciosLibres)) {
+
+					a = list_size(listaDeEspaciosLibres) + 1;
+				}
+			}
 		}
 	}
 
 }
 
-void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
+void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) { //REVISAR
 	l_espacioLibre* espacioA;
 	espacioA = crearEspacioLibre();
 	l_espacioLibre* espacioB;
 	espacioB = crearEspacioLibre();
 	int a;
-	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+	if (list_size(listaDeEspaciosLibres) > 1) {
+		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 
-		espacioA = list_get(listaDeEspaciosLibres, a);
-		espacioB = list_get(listaDeEspaciosLibres, a + 1);
+			espacioA = list_get(listaDeEspaciosLibres, a);
+			espacioB = list_get(listaDeEspaciosLibres, a + 1);
 
-		if ((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion - 1)) {
-			if ((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion - 1)) {
-				list_add_in_index(listaDeEspaciosLibres, a + 1, espacioLibre);
+			if ((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion - 1)) {
+
+				if ((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion - 1)) {
+					printf("en el for\n");
+					list_add_in_index(listaDeEspaciosLibres, a + 1, espacioLibre);
+					a = list_size(listaDeEspaciosLibres) + 1; //salgo del for cuando lo encuentro
+				} else {
+					if (espacioLibre->ubicacion < espacioA->ubicacion) {
+
+						list_add_in_index(listaDeEspaciosLibres, a, espacioLibre);
+						a = list_size(listaDeEspaciosLibres) + 1; //salgo del for cuando lo encuentro
+					}
+
+				}
 			}
 		}
+	} else {
+		espacioA = list_get(listaDeEspaciosLibres, 0);
+
+		if (espacioLibre->ubicacion < espacioA->ubicacion) {
+
+			list_add_in_index(listaDeEspaciosLibres, 0, espacioLibre);
+
+		} else {
+			list_add_in_index(listaDeEspaciosLibres, 1, espacioLibre);
+		}
 	}
+
 }

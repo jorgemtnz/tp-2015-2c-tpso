@@ -9,7 +9,52 @@ int main(int argc, char *argv[]) {
 
 	crearArchivo();
 
-	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
+	//empieza prueba(NO BORRAR)
+	int cantidadPaginas = 8;
+	int cantidadPaginas3 = 5;
+	int cantidadPaginas4 = 15;
+	int cantidadPaginas5 = 3;
+	int a;
+	l_procesosCargados* proceso;
+	l_espacioLibre* espacioLibre;
+	proceso = crearProceso();
+	espacioLibre = crearEspacioLibre();
+	t_list* listaDeProcesosCargados;
+	t_list* listaDeEspaciosLibres;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	pid_t pid = 2;
+	pid_t pid3 = 3;
+	pid_t pid4 = 5;
+	pid_t pid5 = 6;
+
+	iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
+	iniciar(cantidadPaginas3, listaDeEspaciosLibres, listaDeProcesosCargados, pid3);
+
+	iniciar(cantidadPaginas4, listaDeEspaciosLibres, listaDeProcesosCargados, pid4);
+	finalizar(pid3, listaDeProcesosCargados, listaDeEspaciosLibres);
+	iniciar(cantidadPaginas5, listaDeEspaciosLibres, listaDeProcesosCargados, pid5);
+	finalizar(pid5, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	printf("llega aca\n");
+
+	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
+		proceso = list_get(listaDeProcesosCargados, a);
+
+		printf("el pid :  %i\n", proceso->PID);
+		printf("cantidad paginas : %i \n", proceso->cantPagsUso);
+		printf("la ubicacion es : %i\n", proceso->ubicacion);
+	}
+	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+		espacioLibre = list_get(listaDeEspaciosLibres, a);
+		printf("empieza espacio libre\n");
+		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
+		printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
+
+	}
+
+	//termina prueba
+	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 
 //	recv(socketMemoria, &prueba, sizeof(int), 0);
 //	printf("%i\n", prueba);

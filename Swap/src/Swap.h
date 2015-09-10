@@ -40,9 +40,9 @@ typedef struct {
 
 	uint32_t puertoEscucha;
 	char* nombreSwap;
-	uint8_t cantidadPaginas;
-	uint8_t tamanioPagina;
-	uint8_t retardo;
+	uint32_t cantidadPaginas;
+	uint32_t tamanioPagina;
+	uint32_t retardo;
 	char* tamanioArchivo;
 } t_configuracion;
 
