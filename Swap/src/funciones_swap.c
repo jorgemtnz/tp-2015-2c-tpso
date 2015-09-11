@@ -129,16 +129,18 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 		if (unProceso->PID == procesoAEscribir->PID) {
 
 			ubicacion = unProceso->ubicacion;
+			a = list_size(listaDeProcesosCargados) +1; //salgo del for
 		}
 	}
-	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, (ubicacion + procesoAEscribir->numeroPagina));
+	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, (configuracion->tamanioPagina*(ubicacion + procesoAEscribir->numeroPagina)));
 	/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
 	 puts("Enviando \"respuesta de escribir\" a Memoria");
 	 enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
 }
 
-void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
+char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	int a;
+	char* datosLeidos;
 	l_procesosCargados* unProceso;
 	l_procesosCargados* procesoAleer;
 	unProceso = crearProceso();
@@ -149,10 +151,18 @@ void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 			procesoAleer->PID = unProceso->PID;
 			procesoAleer->cantPagsUso = unProceso->cantPagsUso;
 			procesoAleer->ubicacion = unProceso->ubicacion;
+			a = list_size(listaDeProcesosCargados) + 1;
 		}
 	}
-	char* datosLeidos = leerEspacioDatos(espacioDatos, (procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio),
-			(procesoAleer->ubicacion + procesoRecibido->numeroPaginaFin));
+
+	if(procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0){
+	datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) *configuracion->tamanioPagina),
+			(procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio) * configuracion->tamanioPagina);
+	}else {
+		datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio)*configuracion->tamanioPagina),
+					 configuracion->tamanioPagina);
+	}
+	return datosLeidos;
 	//MANDAR A MEMORIA DATOS LEIDOS
 }
 
@@ -189,7 +199,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 	l_espacioLibre* espacioC;
 	espacioC = crearEspacioLibre();
 	int a;
-	printf("LISTA LIBRES %i\n", list_size(listaDeEspaciosLibres));
+
 	if (list_size(listaDeEspaciosLibres) > 1) {
 		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 
@@ -215,7 +225,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
 }
 
-void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) { //REVISAR
+void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
 	l_espacioLibre* espacioA;
 	espacioA = crearEspacioLibre();
 	l_espacioLibre* espacioB;

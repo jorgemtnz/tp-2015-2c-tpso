@@ -27,6 +27,11 @@ int main(int argc, char *argv[]) {
 	pid_t pid3 = 3;
 	pid_t pid4 = 5;
 	pid_t pid5 = 6;
+	t_escribirEnProceso* procesoAEscribir;
+	procesoAEscribir = crearEscribirEnProceso();
+	t_leerDeProceso *procesoRecibido;
+	procesoRecibido = crearLeerDeProceso();
+
 
 	iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
 	iniciar(cantidadPaginas3, listaDeEspaciosLibres, listaDeProcesosCargados, pid3);
@@ -36,7 +41,25 @@ int main(int argc, char *argv[]) {
 	iniciar(cantidadPaginas5, listaDeEspaciosLibres, listaDeProcesosCargados, pid5);
 	finalizar(pid5, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	printf("llega aca\n");
+	procesoAEscribir->PID = pid4;
+	procesoAEscribir->contenido = "HOLA DON PEPITO HOLA DON JOSE";
+	procesoAEscribir->numeroPagina = 5;
+
+	escribir(listaDeProcesosCargados, procesoAEscribir) ;
+
+	procesoAEscribir->PID = pid4;
+		procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
+		procesoAEscribir->numeroPagina = 6;
+
+		escribir(listaDeProcesosCargados, procesoAEscribir) ;
+
+	procesoRecibido->PID = pid4;
+	procesoRecibido->numeroPaginaFin = 7;
+	procesoRecibido->numeroPaginaInicio = 5;
+
+	char* datosLeidos = leer(procesoRecibido,listaDeProcesosCargados);
+
+	printf("los datos leidos : %s\n", datosLeidos);
 
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);

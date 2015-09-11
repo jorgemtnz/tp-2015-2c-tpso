@@ -42,8 +42,8 @@ t_escribirEnProceso* crearEscribirEnProceso(){
 
 	t_escribirEnProceso* contenido = malloc(sizeof(t_escribirEnProceso));
 				if (contenido == NULL) {
-					perror("[ERROR] No se reservo memoria para Swap>..>espacioLibre");
-					log_error(logger, "[ERROR] No se reservo memoria para Swap>..>espacioLibre");
+					perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+					log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
 					exit(-1);
 				}
 				contenido->PID = 0;
@@ -51,4 +51,18 @@ t_escribirEnProceso* crearEscribirEnProceso(){
 				contenido->contenido = '\0';
 
 				return contenido;
+}
+
+t_leerDeProceso* crearLeerDeProceso(){
+	t_leerDeProceso* contenido = malloc(sizeof(t_leerDeProceso));
+					if (contenido == NULL) {
+						perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+						log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+						exit(-1);
+					}
+					contenido->PID = 0;
+					contenido->numeroPaginaFin = 0;
+					contenido->numeroPaginaInicio = 0;
+
+					return contenido;
 }

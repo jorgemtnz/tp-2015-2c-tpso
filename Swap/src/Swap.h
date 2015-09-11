@@ -89,7 +89,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
 void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid);
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);
-void leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
+char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
 void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
