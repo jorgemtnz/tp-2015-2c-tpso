@@ -78,7 +78,32 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	}
 }
 
-void escribir(int idProc, int cantPag){
+void escribir(int idProc, int nroPag, char* textoAEscribir, ){
+	// 1 -escribir en swap
+	// 2 -ver si estan en memoria y ponerle el bit de modificada
+
+	t_escrituraProc * escritura;
+	escritura = malloc(sizeof(t_escrituraProc));
+	int a,flag=0,tamanioTLB,tamanioTablaPag;
+
+	// 1
+	escritura->Pag = nroPag;
+	escritura->idProc = idProc;
+	escritura->texto = textoAEscribir;
+
+	/* PARTE DE ENVIAR A SWAP UN PROCESO
+	 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+	 *  puts("Enviando \"escribir paginas para tal proceso\" al Swap");
+	 enviar(atoi(socketCPU), "escribir paginas para tal proceso", strlen("escribir paginas para tal proceso));
+	 puts("Enviado al Swap");
+	 */
+
+	// 2
+	tamanioTLB=list_size(listaTLB);
+	for(a=0;a<tamanioTLB && flag ==0;a++){
+
+	}
+
 
 }
 
