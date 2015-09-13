@@ -89,8 +89,8 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 	campoTLB = malloc(sizeof(t_TLB));
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = malloc(sizeof(t_TablaDePaginas));
-	t_marco * campoMarco;
-	campoMarco = malloc(sizeof(t_marco));
+	t_marco * campoMemoria;
+	campoMemoria = malloc(sizeof(t_marco));
 
 	// 1
 	escritura->Pag = nroPag;
@@ -128,7 +128,10 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 	if(flagTLB == 1){ /* esta en TLB */
 		tamanioMemoria = list_size(listaMemoria);
 		for(a=0;a<tamanioMemoria;a++){
-
+			campoMemoria = list_get(listaMemoria,a);
+			if(campoMemoria->idProc == idProc){
+				campoMemoria->bitPagModificada = 1;
+			}
 		}
 	}
 
