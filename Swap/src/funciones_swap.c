@@ -104,7 +104,9 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
 				a = list_size(listaDeEspaciosLibres) + 1; //SI YA ENCONTRE UN ESPACIO NO BUSCO MAS
 			} else {
-				//HACER ALGORITMO COMPACTACION
+				//IN PROCESS
+				//compactarMemoria(listaDeEspaciosLibres, listaDeProcesosCargados);
+
 			}
 
 			/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
@@ -222,7 +224,24 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 			}
 		}
 	}
+	free(espacioA);
+	free(espacioB);
+	free(espacioC);
+}
 
+void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
+	l_espacioLibre* espacioLibreAux;
+	espacioLibreAux = crearEspacioLibre();
+	l_procesosCargados* espacioProcAux;
+	espacioProcAux = crearProceso();
+	acomodarEspaciosLibres(listaDeEspaciosLibres);
+	int a;
+	for (a=0; a < list_size(listaDeEspaciosLibres); a++){
+		//IN PROCESS
+	}
+
+	free(espacioLibreAux);
+	free(espacioProcAux);
 }
 
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
