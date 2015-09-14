@@ -49,7 +49,6 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 void iniciar(int idProc, int cantPag, int socketCPU) {
 	int rtaSwap,contador;
 	t_TablaDePaginas* tablaDePag;
-	tablaDePag = malloc(sizeof(tablaDePag));
 
 	/* PARTE DE ENVIAR A SWAP UN PROCESO
 	 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
@@ -58,7 +57,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	 puts("Enviado al Swap");
 	 */
 
-	if (rtaSwap) { // rtaSwap == 0, indica ok
+	if(rtaSwap) { // rtaSwap == 0, indica ok
 		for (contador = 0; contador < cantPag; contador++) {
 			contadorPagTP++;
 			tablaDePag = malloc(sizeof(tablaDePag));
@@ -76,6 +75,8 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		 puts("Enviado al Cpu");
 		 */
 	}
+
+	free(tablaDePag);
 }
 
 void escribir(int idProc, int nroPag, char* textoAEscribir, ){
@@ -133,7 +134,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 				campoMemoria->bitPagModificada = 1;
 			}
 		}
-	} else if(flagTablaPag == 1) {
+	} else if (flagTablaPag == 1) {
 		tamanioMemoria = list_size(listaMemoria);
 		for (a = 0; a < tamanioMemoria; a++) {
 			campoMemoria = list_get(listaMemoria, a);
@@ -142,7 +143,9 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 			}
 		}
 
-
+		free(campoMemoria);
+		free(campoTLB);
+		free(campoTablaDePag);
 
 
 }
