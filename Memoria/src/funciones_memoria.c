@@ -78,7 +78,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	}
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, ){
+void escribir(int idProc, int nroPag, char* textoAEscribir){
 	// 1 -escribir en swap
 	// 2 -ver si estan en memoria y ponerle el bit de modificada
 

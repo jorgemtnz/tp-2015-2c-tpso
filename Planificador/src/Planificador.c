@@ -19,9 +19,9 @@ void crearLogger() {
 }
 
 
-int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 	puts("Planificador procesar mensajes");
-	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
+	defaultProcesarMensajes(socket, header, buffer, nuevaConexion, extra, logger);
 	if(nuevaConexion) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {

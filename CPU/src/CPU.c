@@ -20,21 +20,21 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
-int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 	puts("CPU procesar mensajes");
-	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
+	defaultProcesarMensajes(socket, header, buffer, nuevaConexion, extra, logger);
 
 	if(nuevaConexion) {
 
 	} else {
 		printf("Recibi el mensaje: %s\n", buffer);
-		if(string_starts_with(buffer, "correr programa")) {
+/*		if(string_starts_with(buffer, "correr programa")) {
 			char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
 			puts("Enviando \"correr programa\" a la Memoria");
 			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
 			// de aca para abajo serian las conexiones
 
-		}
+		}*/
 	}
 
 	return 0;

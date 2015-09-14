@@ -144,7 +144,106 @@ int enviarPorSocket(int fdCliente, const void *msg, int *len) {
 	return bytes_enviados;
 }
 
-int enviar(int fdCliente, const void *msg, int len) {
+int enviar(int fdCliente, void *msg, int len) {
+
+	return enviarSimple(fdCliente, msg, len);
+}
+
+int enviarStruct(int fdCliente, char* tipoMensaje, void *estructura) {
+
+	//serializamos la estructura
+	char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
+	int longitudMensajeSerializado = strlen(estructuraSerializada);
+
+	//enviamos un header
+	enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
+
+	//enviamos la estructura serializada
+	return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
+}
+
+int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer) {
+
+	//recibimos los datos segun el header
+	void* bufferMsgSerializado = malloc(header->tamanioMensaje);
+	int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
+	if(res > 0){
+		//deserializamos la estructura
+		deserializarMensajeABuffer(header->tipoMensaje, bufferMsgSerializado, header->tamanioMensaje, buffer);
+	}
+	return res;
+}
+
+char* serializarEstructura(char* tipoMensaje, void* bufferMensaje) {
+
+	char* serializado = NULL;
+
+	if(es("HEADER", tipoMensaje)) {
+		char* HEADER_FORMAT = "tipoMensaje: %s, tamanioMensaje %d";
+		serializado = string_new();
+		t_header* header = malloc(sizeof(t_header));
+		memcpy(header, bufferMensaje, sizeof(t_header));
+		string_append_with_format(&serializado, HEADER_FORMAT, header->tipoMensaje, header->tamanioMensaje);
+	} else if(es("STRING", tipoMensaje)) {
+		serializado = bufferMensaje;
+	}
+
+	return serializado;
+}
+
+int deserializarMensajeABuffer(char* tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer) {
+	if(es("HEADER", tipoMensaje)) {
+//		serializado = string_new();
+//		t_header* header = malloc(sizeof(t_header));
+//		memcpy(header, bufferMensaje, sizeof(t_header));
+//		string_append_with_format(&serializado, HEADER_FORMAT, header->tipoMensaje, header->tamanioMensaje);
+		char* HEADER_FORMAT = "tipoMensaje: %s, tamanioMensaje %d";
+		t_header* header;
+		char tipoMensajeLeido[TAMANIO_TIPO_MENSAJE];
+		int tamanioMensaje = -1;
+		sscanf(bufferMsgSerializado, HEADER_FORMAT, &tipoMensajeLeido, tamanioMensaje);
+		header->tamanioMensaje = tamanioMensaje;
+		memcpy(header->tipoMensaje, tipoMensajeLeido, TAMANIO_TIPO_MENSAJE);
+		memcpy(buffer, &header, sizeof(t_header));
+	} else if(es("STRING", tipoMensaje)) {
+//		serializado = bufferMensaje;
+		memcpy(buffer, bufferMsgSerializado, tamanioMensaje);
+	}
+	return 0;
+}
+
+bool es(char* string1, char* string2) {
+	return string_equals_ignore_case(string1, string2);
+}
+
+int enviarHeader(int fdCliente, char* tipoMensaje, void *msg, int longitudMensaje) {
+
+	//creamos el header
+	t_header header = crearHeader(tipoMensaje, msg, longitudMensaje);
+
+	//serializamos el header
+	char* headerSerializado = serializarEstructura("HEADER", &header);
+
+	//enviamos el header serializado
+	return enviarSimple(fdCliente, headerSerializado, strlen(headerSerializado));
+}
+
+t_header crearHeader(char* tipoMensaje, void *msg, int longitudMensaje) {
+	t_header* header = malloc(sizeof(t_header));
+
+	memcpy(header->tipoMensaje, tipoMensaje, strlen(tipoMensaje));
+	header->tamanioMensaje = longitudMensaje;
+
+	return *header;
+}
+
+t_header convertirBufferAHeader(int fdCliente, char* tipoMensaje, void *msgSerializado, int longitudMensaje) {
+	t_header* header = malloc(sizeof(t_header));
+	deserializarMensajeABuffer(tipoMensaje, msgSerializado, longitudMensaje, header);
+	return *header;
+}
+
+int enviarSimple(int fdCliente, void *msg, int len) {
 
 	int bytesleft = len; // cuántos se han quedado pendientes
 	int bytes_enviados; //n
@@ -167,6 +266,8 @@ int enviar(int fdCliente, const void *msg, int len) {
 
 	return bytes_enviados;
 }
+
+
 
 
 int recibirPorSocket(int fdCliente, void *buf, int len) {
@@ -309,10 +410,10 @@ void procesarComando(char* comando, fd_set* master, int* fdmax) {
 
 }
 
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, char* buffer, bool, void*, t_log*), void* extra,  t_log* logger) {
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, bool, void*, t_log*), void* extra,  t_log* logger) {
 	fd_set master;    // master file descriptor list
 	fd_set read_fds;  // temp file descriptor list for select()
-	int fdmax;        // maximum file descriptor number
+	int fdmax = -1;        // maximum file descriptor number
 
 	int listener;     // listening socket descriptor
 	int newfd;        // newly accept()ed socket descriptor
@@ -325,16 +426,12 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	char remoteIP[INET6_ADDRSTRLEN];
 
 	int yes = 1;        // for setsockopt() SO_REUSEADDR, below
-	int i, j, rv;
+	int i, rv;
 
 	struct addrinfo hints, *ai, *p;
 
 	FD_ZERO(&master);    // clear the master and temp sets
 	FD_ZERO(&read_fds);
-
-	char* comando;
-	bool procesandoComando = false;
-	int socketComando;
 
 	bool soyServer = !string_equals_ignore_case("0", puerto);
 
@@ -349,8 +446,6 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 			fprintf(stderr, "selectserver: %s\n", gai_strerror(rv));
 			exit(1);
 		}
-
-		procesandoComando = false;
 
 		for (p = ai; p != NULL; p = p->ai_next) {
 			listener = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -441,7 +536,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						}
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
-						funcionParaProcesarMensaje(newfd, NULL, true, extra, logger);
+						t_header* header = malloc(sizeof(t_header));
+						funcionParaProcesarMensaje(newfd, header, NULL, true, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
@@ -473,7 +569,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //							printf("%d ", buf[var]);
 //						}
 //						printf("\n");
-						funcionParaProcesarMensaje(i, buf, false, extra, logger);
+						t_header* header = malloc(sizeof(t_header));
+						funcionParaProcesarMensaje(i, header, buf, false, extra, logger);
 						/*
 						//j desde listener + 1, no quiero la consola, ni el puerto de escucha
 						for (j = listener + 1; j <= fdmax; j++) {
@@ -541,7 +638,7 @@ int conectar(char* ip, char* puerto, int *sock) {
 
 }
 
-int defaultProcesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int defaultProcesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
 	if(nuevaConexion) {
 		printf("Nueva conexion desde socket %d\n", socket);

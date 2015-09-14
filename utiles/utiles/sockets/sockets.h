@@ -18,6 +18,7 @@
 #include <fcntl.h> //fcntl
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 typedef struct t_paquete {
 			int8_t tipoMensaje;
 			int16_t payloadTamanio;
@@ -28,6 +29,14 @@ typedef struct t_paquete {
 			int puerto;
 		} t_equipo;
 
+#define TAMANIO_TIPO_MENSAJE 20
+
+#pragma pack(1)
+typedef struct {
+	int tamanioMensaje;
+	char tipoMensaje[TAMANIO_TIPO_MENSAJE];
+}t_header;
+#pragma pack(0)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Funciones
 int  crearSocket();
@@ -44,6 +53,13 @@ int recibirHeader(int unSocket, Header* header) ;
 int recibirDatos(int unSocket, Header header, void** buffer);
 int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer);
 
+char* serializarEstructura(char* tipoMensaje, void* bufferMensaje);
+int deserializarMensajeABuffer(char* tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer);
+bool es(char* string1, char* string2);
+int enviarSimple(int fdCliente, void *msg, int len);
+t_header crearHeader(char* tipoMensaje, void *msg, int longitudMensaje);
+int enviarHeader(int fdCliente, char* tipoMensaje, void *msg, int longitudMensaje);
+
 
 // Solo para el servidor
 void asociarSocket(int sockfd, int puerto);
@@ -57,7 +73,7 @@ int conectar(char* ip, char* puerto, int *sock);
 
 
 // Para cliente y/o servidor
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, char* buffer, bool, void*, t_log*), void* extra,  t_log* logger);
-int defaultProcesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, bool, void*, t_log*), void* extra,  t_log* logger);
+int defaultProcesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 
 #endif /* SOCKETS_H_ */

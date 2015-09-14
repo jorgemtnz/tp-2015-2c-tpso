@@ -92,8 +92,8 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
 void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
-int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
-int procesarMensajesDeMemoria(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 
 //========================================================================================
 

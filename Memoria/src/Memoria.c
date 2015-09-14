@@ -19,10 +19,10 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 
-int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
-	defaultProcesarMensajes(socket, buffer, nuevaConexion, extra, logger);
+	defaultProcesarMensajes(socket, header, buffer, nuevaConexion, extra, logger);
 	if (nuevaConexion) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
@@ -41,7 +41,7 @@ int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, 
 				iniciar(idProc, cantPag, socketCPU);
 				break;
 			case 2: // va a ser escribir este
-				escribir(idProc, nroPag);
+//				escribir(idProc, nroPag);
 				break;
 			case 3: // va a ser leer este
 				leer(idProc, pagIn, pagFin);
