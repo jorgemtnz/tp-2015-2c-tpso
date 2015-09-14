@@ -133,7 +133,16 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 				campoMemoria->bitPagModificada = 1;
 			}
 		}
-	}
+	} else if(flagTablaPag == 1) {
+		tamanioMemoria = list_size(listaMemoria);
+		for (a = 0; a < tamanioMemoria; a++) {
+			campoMemoria = list_get(listaMemoria, a);
+			if (campoMemoria->idProc == idProc) {
+				campoMemoria->bitPagModificada = 1;
+			}
+		}
+
+
 
 
 }
