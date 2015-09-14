@@ -84,7 +84,13 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 
 	t_escrituraProc * escritura;
 	escritura = malloc(sizeof(t_escrituraProc));
-	int a,flag=0,tamanioTLB,tamanioTablaPag;
+	int a,flagTLB=0,flagTablaPag=0,tamanioTLB,tamanioTablaPag,tamanioMemoria;
+	t_TLB * campoTLB;
+	campoTLB = malloc(sizeof(t_TLB));
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = malloc(sizeof(t_TablaDePaginas));
+	t_marco * campoMemoria;
+	campoMemoria = malloc(sizeof(t_marco));
 
 	// 1
 	escritura->Pag = nroPag;
@@ -99,9 +105,34 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 	 */
 
 	// 2
-	tamanioTLB=list_size(listaTLB);
-	for(a=0;a<tamanioTLB && flag ==0;a++){
 
+	//veo si esta en un marco de memoria
+	tamanioTLB=list_size(listaTLB);
+	for(a=0;a<tamanioTLB && flagTLB ==0;a++){
+		campoTLB=list_get(listaTLB,a);
+		if(campoTLB->idProc == idProc && campoTLB->marco != -1 /*que este en un marco*/) {
+			flagTLB =1;
+		}
+	}
+
+	tamanioTablaPag = list_size(listaTablaDePag);
+	for(a=0;a<tamanioTablaPag && flagTLB == 0 && flagTablaPag == 0;a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+		if(campoTablaDePag->idProc == idProc && campoTablaDePag->marco != -1){
+			flagTablaPag = 1;
+		}
+	}
+
+	// si esta en un marco de memoria, le pongo el bit de modificada
+
+	if(flagTLB == 1){ /* esta en TLB */
+		tamanioMemoria = list_size(listaMemoria);
+		for(a=0;a<tamanioMemoria;a++){
+			campoMemoria = list_get(listaMemoria,a);
+			if(campoMemoria->idProc == idProc){
+				campoMemoria->bitPagModificada = 1;
+			}
+		}
 	}
 
 

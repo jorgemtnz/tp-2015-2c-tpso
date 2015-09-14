@@ -58,6 +58,7 @@ typedef struct {
 
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
+	int idProc;
 	char* contenido; // el texto que tendra esa posicion
 	bool libre;
 	int bitPagModificada; // si esta en memoria ver si fue modificada
