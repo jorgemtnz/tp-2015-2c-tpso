@@ -24,7 +24,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	} else {
 		t_config* archivoConfig;
 		archivoConfig = config_create(nombreArchivoConfig);
-		configuracion = malloc(sizeof(t_configuracion));
+		configuracion = iniciarArchivoConfig();
 		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
 		configuracion->puertoSwap = config_get_int_value(archivoConfig, "PUERTO_SWAP");
 		configuracion->ipSwap = strdup(config_get_string_value(archivoConfig, "IP_SWAP"));
@@ -47,7 +47,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 void iniciar(int idProc, int cantPag, int socketCPU) {
-	int rtaSwap,contador;
+	int rtaSwap, contador;
 	t_TablaDePaginas* tablaDePag;
 
 	/* PARTE DE ENVIAR A SWAP UN PROCESO
@@ -57,10 +57,10 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	 puts("Enviado al Swap");
 	 */
 
-	if(rtaSwap) { // rtaSwap == 0, indica ok
+	if (rtaSwap) { // rtaSwap == 0, indica ok
 		for (contador = 0; contador < cantPag; contador++) {
 			contadorPagTP++;
-			tablaDePag = malloc(sizeof(tablaDePag));
+			tablaDePag = iniciarTablaDePaginas();
 			tablaDePag->idProc = idProc;
 			tablaDePag->paginaEnMemoria = contadorPagTP;
 			tablaDePag->paginaDelProceso = contador + 1;
@@ -79,19 +79,19 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	free(tablaDePag);
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, ){
+void escribir(int idProc, int nroPag, char* textoAEscribir) {
 	// 1 -escribir en swap
 	// 2 -ver si estan en memoria y ponerle el bit de modificada
 
 	t_escrituraProc * escritura;
-	escritura = malloc(sizeof(t_escrituraProc));
-	int a,flagTLB=0,flagTablaPag=0,tamanioTLB,tamanioTablaPag,tamanioMemoria;
+	escritura = iniciarEscrituraProc();
+	int a, flagTLB = 0, flagTablaPag = 0, tamanioTLB, tamanioTablaPag, tamanioMemoria;
 	t_TLB * campoTLB;
-	campoTLB = malloc(sizeof(t_TLB));
+	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
-	campoTablaDePag = malloc(sizeof(t_TablaDePaginas));
+	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
-	campoMemoria = malloc(sizeof(t_marco));
+	campoMemoria = iniciarMarco();
 
 	// 1
 	escritura->Pag = nroPag;
@@ -106,31 +106,30 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 	 */
 
 	// 2
-
 	//veo si esta en un marco de memoria
-	tamanioTLB=list_size(listaTLB);
-	for(a=0;a<tamanioTLB && flagTLB ==0;a++){
-		campoTLB=list_get(listaTLB,a);
-		if(campoTLB->idProc == idProc && campoTLB->marco != -1 /*que este en un marco*/) {
-			flagTLB =1;
+	tamanioTLB = list_size(listaTLB);
+	for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
+		campoTLB = list_get(listaTLB, a);
+		if (campoTLB->idProc == idProc && campoTLB->marco != -1 /*que este en un marco*/) {
+			flagTLB = 1;
 		}
 	}
 
 	tamanioTablaPag = list_size(listaTablaDePag);
-	for(a=0;a<tamanioTablaPag && flagTLB == 0 && flagTablaPag == 0;a++){
-		campoTablaDePag = list_get(listaTablaDePag,a);
-		if(campoTablaDePag->idProc == idProc && campoTablaDePag->marco != -1){
+	for (a = 0; a < tamanioTablaPag && flagTLB == 0 && flagTablaPag == 0; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->marco != -1) {
 			flagTablaPag = 1;
 		}
 	}
 
 	// si esta en un marco de memoria, le pongo el bit de modificada
 
-	if(flagTLB == 1){ /* esta en TLB */
+	if (flagTLB == 1) { /* esta en TLB */
 		tamanioMemoria = list_size(listaMemoria);
-		for(a=0;a<tamanioMemoria;a++){
-			campoMemoria = list_get(listaMemoria,a);
-			if(campoMemoria->idProc == idProc){
+		for (a = 0; a < tamanioMemoria; a++) {
+			campoMemoria = list_get(listaMemoria, a);
+			if (campoMemoria->idProc == idProc) {
 				campoMemoria->bitPagModificada = 1;
 			}
 		}
@@ -147,13 +146,13 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, ){
 		free(campoTLB);
 		free(campoTablaDePag);
 
-
+	}
 }
 
-void leer(int idProc, int pagIn, int PagFin) {
+	void leer(int idProc, int pagIn, int PagFin) {
 
-}
+	}
 
-void finalizar(int idProc) {
+	void finalizar(int idProc) {
 
-}
+	}
