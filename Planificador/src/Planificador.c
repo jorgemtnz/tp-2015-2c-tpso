@@ -34,7 +34,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 		if(string_starts_with(buffer, "correr programa")) {
 			char* socketCPU = (char*)dictionary_get(conexiones, "CPU");
 			puts("Enviando \"correr programa\" a la CPU");
-			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+			//enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+			enviarStruct(atoi(socketCPU), "STRING", "correr programa");
 		}
 	}
 	return 0;

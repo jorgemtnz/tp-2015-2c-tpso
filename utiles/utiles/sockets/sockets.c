@@ -420,7 +420,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
 
-	char buf[256];    // buffer for client data
+	char buf[sizeof(t_header)];    // buffer for client data
 	int nbytes;
 
 	char remoteIP[INET6_ADDRSTRLEN];
@@ -548,8 +548,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 					}
 				} else {
 					// handle data from a client
-					//if ((nbytes = recv(i, buf, sizeof buf, 0)) <= 0) {
-					if ((nbytes = read(i, buf, sizeof buf)) <= 0) {
+					if ((nbytes = recv(i, buf, sizeof buf, MSG_WAITALL)) <= 0) {
+//					if ((nbytes = read(i, buf, sizeof buf)) <= 0) {
 						// got error or connection closed by client
 						if (nbytes == 0) {
 							// connection closed
@@ -569,7 +569,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //							printf("%d ", buf[var]);
 //						}
 //						printf("\n");
-						t_header* header = malloc(sizeof(t_header));
+						t_header header;
+						deserializarMensajeABuffer("HEADER", buf, sizeof(t_header), &header);
 						funcionParaProcesarMensaje(i, header, buf, false, extra, logger);
 						/*
 						//j desde listener + 1, no quiero la consola, ni el puerto de escucha
