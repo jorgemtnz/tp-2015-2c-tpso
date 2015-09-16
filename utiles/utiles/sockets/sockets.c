@@ -192,6 +192,7 @@ char* serializarEstructura(char* tipoMensaje, void* bufferMensaje) {
 }
 
 int deserializarMensajeABuffer(char* tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer) {
+
 	if(es("HEADER", tipoMensaje)) {
 //		serializado = string_new();
 //		t_header* header = malloc(sizeof(t_header));
@@ -421,6 +422,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	socklen_t addrlen;
 
 	char buf[sizeof(t_header)];    // buffer for client data
+	char textbuf[256];
 	int nbytes;
 
 	char remoteIP[INET6_ADDRSTRLEN];
@@ -536,8 +538,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						}
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
-						t_header* header = malloc(sizeof(t_header));
-						funcionParaProcesarMensaje(newfd, header, NULL, true, extra, logger);
+						funcionParaProcesarMensaje(newfd, NULL, NULL, true, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
@@ -548,7 +549,12 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 					}
 				} else {
 					// handle data from a client
-					if ((nbytes = recv(i, buf, sizeof buf, MSG_WAITALL)) <= 0) {
+					if(i == STDIN_FILENO) {
+						nbytes = read(i, textbuf, sizeof textbuf);
+					} else {
+						nbytes = recv(i, buf, sizeof buf, MSG_WAITALL);
+					}
+					if (nbytes <= 0) {
 //					if ((nbytes = read(i, buf, sizeof buf)) <= 0) {
 						// got error or connection closed by client
 						if (nbytes == 0) {
@@ -569,9 +575,13 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //							printf("%d ", buf[var]);
 //						}
 //						printf("\n");
-						t_header header;
-						deserializarMensajeABuffer("HEADER", buf, sizeof(t_header), &header);
-						funcionParaProcesarMensaje(i, header, buf, false, extra, logger);
+						if(i == STDIN_FILENO) {
+							funcionParaProcesarMensaje(i, NULL, textbuf, false, extra, logger);
+						} else {
+							t_header header;
+							deserializarMensajeABuffer("HEADER", buf, sizeof(t_header), &header);
+							funcionParaProcesarMensaje(i, &header, buf, false, extra, logger);
+						}
 						/*
 						//j desde listener + 1, no quiero la consola, ni el puerto de escucha
 						for (j = listener + 1; j <= fdmax; j++) {
