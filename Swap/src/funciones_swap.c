@@ -230,18 +230,41 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
-	l_espacioLibre* espacioLibreAux;
-	espacioLibreAux = crearEspacioLibre();
+	//ORDENAR LISTA POR UBICACION
+	//list_sort(listaDeProcesosCargados, comparador(list_get(listaDeProcesosCargados,i)));
 	l_procesosCargados* espacioProcAux;
 	espacioProcAux = crearProceso();
-	acomodarEspaciosLibres(listaDeEspaciosLibres);
+	l_procesosCargados* espacioProcSig;
+	espacioProcSig = crearProceso();
 	int a;
-	for (a=0; a < list_size(listaDeEspaciosLibres); a++){
-		//IN PROCESS
+	for (a=0;a<list_size(listaDeProcesosCargados);a++){
+		espacioProcAux= list_get(listaDeProcesosCargados,a);
+		espacioProcSig= list_get(listaDeProcesosCargados,a+1);
+		espacioProcSig->ubicacion=espacioProcAux->ubicacion+espacioProcAux->cantPagsUso;
+	}
+	/*
+	l_espacioLibre* espacioLibreAux;
+	espacioLibreAux = crearEspacioLibre();
+	acomodarEspaciosLibres(listaDeEspaciosLibres);
+	int a, i = 0, intercambiado = 1;
+	for (a=0; a < list_size(listaDeProcesosCargados); a++){
+		espacioProcAux = list_get(listaDeProcesosCargados, a);
+		espacioLibreAux = list_get(listaDeEspaciosLibres,i);
+		while (intercambiado){
+			if (espacioProcAux->cantPagsUso < espacioLibreAux->cantPagsLibres){
+				espacio
+			}
+		}
 	}
 
 	free(espacioLibreAux);
+	*/
 	free(espacioProcAux);
+}
+_Bool comparador(l_procesosCargados proc1, l_procesosCargados proc2){
+	int ub1= proc1.ubicacion;
+	int ub2= proc2.ubicacion;
+	return (ub1<ub2);
 }
 
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {
