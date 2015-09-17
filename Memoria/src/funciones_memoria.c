@@ -149,7 +149,50 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 	}
 }
 
-	void leer(int idProc, int pagIn, int PagFin) {
+void leer(int idProc, int pagIn, int pagFin) {
+	/*
+	 * Todo dentro de un for que uno por una la manda al swap
+	 * 1- una por una ir enviandola al swap despues de aplicarle el sleep con el retardo
+	 * 2- recibir respuesta del swap
+	 * 3- guardarla en el marco. Ver si sobrepasa la cantidad maxima por procesos, si es asi
+	 *    va a haber que eliminar el primero ingresado de ese proceso. Ver la cantidad
+	 *   maxima de marcos, si lo sobrepasa va a tener que eliminar el primero ingresado
+	 *4- ver si tengo tlb, ver si llena la tlb y sacar el primero ingresado si es asi
+	 *5- guardarla en la tabla de paginas ( aca no hay un maximo, ya que el maximo es la cant max de procesos en marcos)
+	 */
+	int a,cantDePag, paginaALeer, paginaARecibir;
+	t_lecturaProc * lecturaMandar;
+	lecturaMandar = iniciarLectura();
+	t_lecturaProc * lecturaRecibir;
+	lecturaRecibir = iniciarLectura();
+
+
+	lecturaMandar->idProc = idProc;
+	lecturaRecibir->idProc = idProc;
+
+	cantDePag = pagFin - pagIn;
+	for (a = 0; a < cantDePag; a++) {
+
+		//1
+		paginaALeer = pagIn + a;
+		lecturaMandar->pagIn = paginaALeer;
+		lecturaMandar->pagFin = paginaALeer + 1;
+
+		sleep(configuracion->retardoMemoria);
+		/* PARTE DE ENVIAR A SWAP UNA SOLA PAGINA
+		 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+		 *  puts("Enviando \"leer tal pagina para tal proceso\" al Swap");
+		 enviar(atoi(socketCPU), "leer tal pagina para tal proceso", strlen("leer tal pagina para tal proceso"));
+		 puts("Enviado al Swap");
+		 */
+
+		 // 2- Recibir respuesta del swap, lo hardcodeo ahora, pero tiene que estar recibido asi
+		paginaARecibir = pagIn + a;
+		lecturaRecibir->pagIn = paginaARecibir;
+		lecturaRecibir->pagFin = paginaARecibir + 1;
+
+	}
+
 
 	}
 
