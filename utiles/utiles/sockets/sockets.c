@@ -149,7 +149,7 @@ int enviar(int fdCliente, void *msg, int len) {
 	return enviarSimple(fdCliente, msg, len);
 }
 
-int enviarStruct(int fdCliente, char* tipoMensaje, void *estructura) {
+int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura) {
 
 	//serializamos la estructura
 	char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
@@ -174,39 +174,39 @@ int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer) {
 	return res;
 }
 
-char* serializarEstructura(char* tipoMensaje, void* bufferMensaje) {
+char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje) {
 
 	char* serializado = NULL;
 
-	if(es("HEADER", tipoMensaje)) {
-		char* HEADER_FORMAT = "tipoMensaje: %s, tamanioMensaje %d";
+	if(HEADER == tipoMensaje) {
+		char* HEADER_FORMAT = "tipoMensaje: %d, tamanioMensaje %d";
 		serializado = string_new();
 		t_header* header = malloc(sizeof(t_header));
 		memcpy(header, bufferMensaje, sizeof(t_header));
 		string_append_with_format(&serializado, HEADER_FORMAT, header->tipoMensaje, header->tamanioMensaje);
-	} else if(es("STRING", tipoMensaje)) {
+	} else if(STRING == tipoMensaje) {
 		serializado = bufferMensaje;
 	}
 
 	return serializado;
 }
 
-int deserializarMensajeABuffer(char* tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer) {
+int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer) {
 
-	if(es("HEADER", tipoMensaje)) {
+	if(HEADER == tipoMensaje) {
 //		serializado = string_new();
 //		t_header* header = malloc(sizeof(t_header));
 //		memcpy(header, bufferMensaje, sizeof(t_header));
 //		string_append_with_format(&serializado, HEADER_FORMAT, header->tipoMensaje, header->tamanioMensaje);
-		char* HEADER_FORMAT = "tipoMensaje: %s, tamanioMensaje %d";
+		char* HEADER_FORMAT = "tipoMensaje: %d, tamanioMensaje %d";
 		t_header* header;
-		char tipoMensajeLeido[TAMANIO_TIPO_MENSAJE];
+		t_tipo_mensaje tipoMensajeLeido;
 		int tamanioMensaje = -1;
 		sscanf(bufferMsgSerializado, HEADER_FORMAT, &tipoMensajeLeido, tamanioMensaje);
 		header->tamanioMensaje = tamanioMensaje;
-		memcpy(header->tipoMensaje, tipoMensajeLeido, TAMANIO_TIPO_MENSAJE);
+		header->tipoMensaje = tipoMensajeLeido;
 		memcpy(buffer, &header, sizeof(t_header));
-	} else if(es("STRING", tipoMensaje)) {
+	} else if(STRING == tipoMensaje) {
 //		serializado = bufferMensaje;
 		memcpy(buffer, bufferMsgSerializado, tamanioMensaje);
 	}
@@ -217,28 +217,30 @@ bool es(char* string1, char* string2) {
 	return string_equals_ignore_case(string1, string2);
 }
 
-int enviarHeader(int fdCliente, char* tipoMensaje, void *msg, int longitudMensaje) {
+int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
 
 	//creamos el header
 	t_header header = crearHeader(tipoMensaje, msg, longitudMensaje);
 
 	//serializamos el header
-	char* headerSerializado = serializarEstructura("HEADER", &header);
+	char* headerSerializado = serializarEstructura(HEADER, &header);
 
 	//enviamos el header serializado
-	return enviarSimple(fdCliente, headerSerializado, strlen(headerSerializado));
+	//return enviarSimple(fdCliente, headerSerializado, strlen(headerSerializado));
+	//por ahora enviamos el header sin serializar
+	return enviarSimple(fdCliente, &header, sizeof(t_header));
 }
 
-t_header crearHeader(char* tipoMensaje, void *msg, int longitudMensaje) {
+t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
 	t_header* header = malloc(sizeof(t_header));
 
-	memcpy(header->tipoMensaje, tipoMensaje, strlen(tipoMensaje));
+	header->tipoMensaje = tipoMensaje;
 	header->tamanioMensaje = longitudMensaje;
 
 	return *header;
 }
 
-t_header convertirBufferAHeader(int fdCliente, char* tipoMensaje, void *msgSerializado, int longitudMensaje) {
+t_header convertirBufferAHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msgSerializado, int longitudMensaje) {
 	t_header* header = malloc(sizeof(t_header));
 	deserializarMensajeABuffer(tipoMensaje, msgSerializado, longitudMensaje, header);
 	return *header;
@@ -421,7 +423,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
 
-	char buf[sizeof(t_header)];    // buffer for client data
+	void* buf;    // buffer for client data
 	char textbuf[256];
 	int nbytes;
 
@@ -552,7 +554,9 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 					if(i == STDIN_FILENO) {
 						nbytes = read(i, textbuf, sizeof textbuf);
 					} else {
-						nbytes = recv(i, buf, sizeof buf, MSG_WAITALL);
+						int tamanioBuffer = sizeof(t_header);
+						buf = malloc(tamanioBuffer);
+						nbytes = recv(i, buf, tamanioBuffer, MSG_WAITALL);
 					}
 					if (nbytes <= 0) {
 //					if ((nbytes = read(i, buf, sizeof buf)) <= 0) {
@@ -579,7 +583,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 							funcionParaProcesarMensaje(i, NULL, textbuf, false, extra, logger);
 						} else {
 							t_header header;
-							deserializarMensajeABuffer("HEADER", buf, sizeof(t_header), &header);
+							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);
+							memcpy(&header, buf, sizeof(t_header));
 							funcionParaProcesarMensaje(i, &header, buf, false, extra, logger);
 						}
 						/*

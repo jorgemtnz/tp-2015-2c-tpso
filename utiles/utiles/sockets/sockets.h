@@ -31,10 +31,15 @@ typedef struct t_paquete {
 
 #define TAMANIO_TIPO_MENSAJE 20
 
+typedef enum {
+	HEADER,
+	STRING
+} t_tipo_mensaje;
+
 #pragma pack(1)
 typedef struct {
 	int tamanioMensaje;
-	char tipoMensaje[TAMANIO_TIPO_MENSAJE];
+	t_tipo_mensaje tipoMensaje;
 }t_header;
 #pragma pack(0)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -53,12 +58,12 @@ int recibirHeader(int unSocket, Header* header) ;
 int recibirDatos(int unSocket, Header header, void** buffer);
 int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer);
 
-char* serializarEstructura(char* tipoMensaje, void* bufferMensaje);
-int deserializarMensajeABuffer(char* tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer);
+char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje);
+int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer);
 bool es(char* string1, char* string2);
 int enviarSimple(int fdCliente, void *msg, int len);
-t_header crearHeader(char* tipoMensaje, void *msg, int longitudMensaje);
-int enviarHeader(int fdCliente, char* tipoMensaje, void *msg, int longitudMensaje);
+t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
+int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
 
 
 // Solo para el servidor

@@ -27,7 +27,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 	if(nuevaConexion) {
 
 	} else {
-		printf("Recibi el mensaje: %s\n", buffer);
+		if(header->tipoMensaje == STRING) {
+
+			char* mensaje = malloc(header->tamanioMensaje);
+			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
+			printf("Recibi el mensaje: %s\n", mensaje);
+		}
+
 /*		if(string_starts_with(buffer, "correr programa")) {
 			char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
 			puts("Enviando \"correr programa\" a la Memoria");
