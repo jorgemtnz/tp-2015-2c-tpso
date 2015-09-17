@@ -116,6 +116,11 @@ void escribir(int idProc, int nroPag, char* texto);
 void leer(int idProc, int pagIn, int pagFin);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
+t_TablaDePaginas* iniciarTablaDePaginas();
+t_escrituraProc* iniciarEscrituraProc();
+t_TLB* iniciarTLB();
+t_marco * iniciarMarco();
+t_config* iniciarArchivoConfig();
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
