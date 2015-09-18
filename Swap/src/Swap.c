@@ -109,19 +109,19 @@ int main(int argc, char *argv[]) {
 	char* datosLeidos = leer(procesoRecibido, listaDeProcesosCargados);
 
 	procesoAEscribir->PID = pid4;
-	procesoAEscribir->contenido = "lalalalallalalalallaa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ";
+	procesoAEscribir->contenido = "lalalalallalalalallaa";
 	procesoAEscribir->numeroPagina = 6;
 
 	escribir(listaDeProcesosCargados, procesoAEscribir);
 
 	procesoAEscribir->PID = pid4;
-	procesoAEscribir->contenido = "nose que poneer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ";
+	procesoAEscribir->contenido = "nose que poneer";
 	procesoAEscribir->numeroPagina = 7;
 
 	escribir(listaDeProcesosCargados, procesoAEscribir);
 
 	procesoAEscribir->PID = pid4;
-	procesoAEscribir->contenido = "pepepepeppepee                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ";
+	procesoAEscribir->contenido = "pepepepeppepee";
 	procesoAEscribir->numeroPagina = 8;
 
 	escribir(listaDeProcesosCargados, procesoAEscribir);
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 
 	char* datosLeidos2 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	procesoRecibido->numeroPaginaFin = 7;
+	procesoRecibido->numeroPaginaFin = 6;
 	procesoRecibido->numeroPaginaInicio = 6;
 
 	char* datosLeidos3 = leer(procesoRecibido, listaDeProcesosCargados);

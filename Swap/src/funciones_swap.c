@@ -145,6 +145,7 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	int a,x;
 	char* datosLeidos;
+	char* datosLeidosFinal = string_new();
 	l_procesosCargados* unProceso;
 	l_procesosCargados* procesoAleer;
 	unProceso = crearProceso();
@@ -160,14 +161,20 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	}
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
+for(x =0 ; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++){
 
-		datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
-				(procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina));
+		datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) * (configuracion->tamanioPagina)),
+				 (configuracion->tamanioPagina));
+		string_append(&datosLeidosFinal, datosLeidos);
+		string_append(&datosLeidosFinal, " ");
+
+}
+
 	} else {
-		datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
+		datosLeidosFinal = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
 				configuracion->tamanioPagina);
 	}
-	return datosLeidos;
+	return datosLeidosFinal;
 	//MANDAR A MEMORIA DATOS LEIDOS
 }
 
