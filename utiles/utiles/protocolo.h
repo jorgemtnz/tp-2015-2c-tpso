@@ -33,12 +33,12 @@
 //++++++++++++++++++++++++++++++++++++++  ESTRUCTURAS   ++++++++++++++++++++++++++++++++++++++++
 
 typedef struct PaqueteEnvio{
- uint8_t tamanioMensaje;
+ uint32_t tamanioMensaje;
 	void* mensaje;
  }PaqueteEnvio;
 
 typedef struct Paquete{
-	uint8_t tipoDeMensaje;
+	uint32_t tipoDeMensaje;
 	void* payLoad;
 }Paquete;
 
