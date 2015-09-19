@@ -57,12 +57,25 @@ t_config* iniciarArchivoConfig() {
 	return archConf;
 }
 
-t_lecturaProc* iniciarLectura() {
-	t_lecturaProc* lectura = malloc(sizeof(t_lecturaProc));
+t_lecturaSwap* iniciarLectura() {
+	t_lecturaSwap* lectura = malloc(sizeof(t_lecturaSwap));
 	if (lectura == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>proceso");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
 		exit(-1);
 	}
 	return lectura;
+}
+
+
+
+t_rtaLecturaCpu* iniciarRtaLecturaCpu(){
+	t_rtaLecturaCpu* rtaLecturaCpu = malloc(sizeof(t_rtaLecturaCpu));
+			if (rtaLecturaCpu == NULL) {
+				perror("[ERROR] No se reservo memoria para Swap>..>proceso");
+				log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
+				exit(-1);
+			}
+			return rtaLecturaCpu;
+
 }
