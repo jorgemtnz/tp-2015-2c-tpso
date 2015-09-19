@@ -143,7 +143,7 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 }
 
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
-	int a,x;
+	int a, x;
 	char* datosLeidos;
 	char* datosLeidosFinal = string_new();
 	l_procesosCargados* unProceso;
@@ -161,14 +161,14 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	}
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
-for(x =0 ; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++){
+		for (x = 0; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++) {
 
-		datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) * (configuracion->tamanioPagina)),
-				 (configuracion->tamanioPagina));
-		string_append(&datosLeidosFinal, datosLeidos);
-		string_append(&datosLeidosFinal, " ");
+			datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) * (configuracion->tamanioPagina)),
+					(configuracion->tamanioPagina));
+			string_append(&datosLeidosFinal, datosLeidos);
+			string_append(&datosLeidosFinal, " ");
 
-}
+		}
 
 	} else {
 		datosLeidosFinal = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
@@ -182,6 +182,8 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 	int a, b, c;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
+	t_escribirEnProceso* procesoAEscribir;
+	procesoAEscribir = crearEscribirEnProceso();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
@@ -189,8 +191,6 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 		unProceso = list_get(listaDeProcesosCargados, a);
 
 		if (unProceso->PID == pid) {
-			printf("el pid es %i\n", unProceso->PID);
-			list_remove(listaDeProcesosCargados, a);
 
 			espacioLibre->ubicacion = unProceso->ubicacion;
 
@@ -199,16 +199,18 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
 
 			//BORRAR DEL ESPACIO DE DATOS
+			char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina); //VER ESTO , SI LO PONGO COMO ' ' ANDA
 
 			for (b = 0; b < unProceso->cantPagsUso; b++) {
+				procesoAEscribir->PID = unProceso->PID;
+				procesoAEscribir->contenido = espacioVacio;
+				procesoAEscribir->numeroPagina = b;
 
-				for (c = 0; c <= (configuracion->tamanioPagina); c++) {
+				escribir(listaDeProcesosCargados, procesoAEscribir);
 
-					escribirEnEspacioDatos(espacioDatos, "\0", unProceso->ubicacion + c);//VER ESTOO
-
-				}
 			}
 
+			list_remove(listaDeProcesosCargados, a);
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}

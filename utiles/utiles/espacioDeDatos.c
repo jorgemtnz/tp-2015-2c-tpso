@@ -73,7 +73,8 @@ char * leerEspacioDatos(char *espacioDatos, int offset, int cantidadALeer) {
 
 	int posicionAEscribir;
 	for (posicionAEscribir = 0; posicionAEscribir < cantidadALeer; posicionAEscribir++) {
-		resultado[posicionAEscribir] = espacioDatos[posicionALeer++];
+			if(espacioDatos[posicionALeer] != '\0'){
+		resultado[posicionAEscribir] = espacioDatos[posicionALeer++];}
 	}
 
 	return resultado;

@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 	espacioLibre3 = crearEspacioLibre();
 	t_list* listaDeProcesosCargados;
 	t_list* listaDeEspaciosLibres;
+
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
 	pid_t pid = 2;
@@ -95,6 +96,15 @@ int main(int argc, char *argv[]) {
 	finalizar(pid4, listaDeProcesosCargados, listaDeEspaciosLibres);
 
 	iniciar(cantidadPaginas4, listaDeEspaciosLibres, listaDeProcesosCargados, pid4);
+
+	procesoRecibido->numeroPaginaFin = 11;
+		procesoRecibido->numeroPaginaInicio = 10;
+		procesoRecibido->PID = pid4;
+
+		char* datosLeidos5 = leer(procesoRecibido, listaDeProcesosCargados);
+
+		printf("los datos leidos5 : %s\n", datosLeidos5);
+
 
 	procesoAEscribir->PID = pid4;
 	procesoAEscribir->contenido = "my name is juan";
