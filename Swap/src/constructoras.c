@@ -66,3 +66,4 @@ t_leerDeProceso* crearLeerDeProceso(){
 
 					return contenido;
 }
+

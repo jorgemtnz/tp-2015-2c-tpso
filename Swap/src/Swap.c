@@ -17,10 +17,15 @@ int main(int argc, char *argv[]) {
 	int a;
 	l_procesosCargados* proceso;
 	l_espacioLibre* espacioLibre;
+	l_espacioLibre* espacioLibre2;
+	l_espacioLibre* espacioLibre3;
 	proceso = crearProceso();
 	espacioLibre = crearEspacioLibre();
+	espacioLibre2 = crearEspacioLibre();
+	espacioLibre3 = crearEspacioLibre();
 	t_list* listaDeProcesosCargados;
 	t_list* listaDeEspaciosLibres;
+
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
 	pid_t pid = 2;
@@ -32,12 +37,36 @@ int main(int argc, char *argv[]) {
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
 
+	/*
+	 prueba para borrar el contenido mapeado cuando se va un proceso
+	 iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
+	 procesoAEscribir->PID = pid;
+	 procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
+	 procesoAEscribir->numeroPagina = 1;
+
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
+	 finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres);
+	 procesoRecibido->numeroPaginaFin = 2;
+	 procesoRecibido->numeroPaginaInicio = 1;
+	 procesoRecibido->PID = pid;
+
+
+	 char* datosLeidos4 = leer(procesoRecibido, listaDeProcesosCargados);
+
+	 printf("los datos leidos : %s\n", datosLeidos4);
+
+	 */
+
 	iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
+
 	iniciar(cantidadPaginas3, listaDeEspaciosLibres, listaDeProcesosCargados, pid3);
 
 	iniciar(cantidadPaginas4, listaDeEspaciosLibres, listaDeProcesosCargados, pid4);
+
 	finalizar(pid3, listaDeProcesosCargados, listaDeEspaciosLibres);
+
 	iniciar(cantidadPaginas5, listaDeEspaciosLibres, listaDeProcesosCargados, pid5);
+
 	finalizar(pid5, listaDeProcesosCargados, listaDeEspaciosLibres);
 
 	procesoAEscribir->PID = pid4;
@@ -64,18 +93,56 @@ int main(int argc, char *argv[]) {
 
 	escribir(listaDeProcesosCargados, procesoAEscribir);
 
+	finalizar(pid4, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	iniciar(cantidadPaginas4, listaDeEspaciosLibres, listaDeProcesosCargados, pid4);
+
+	procesoRecibido->numeroPaginaFin = 11;
+		procesoRecibido->numeroPaginaInicio = 10;
+		procesoRecibido->PID = pid4;
+
+		char* datosLeidos5 = leer(procesoRecibido, listaDeProcesosCargados);
+
+		printf("los datos leidos5 : %s\n", datosLeidos5);
+
+
+	procesoAEscribir->PID = pid4;
+	procesoAEscribir->contenido = "my name is juan";
+	procesoAEscribir->numeroPagina = 11;
+
+	escribir(listaDeProcesosCargados, procesoAEscribir);
+
 	procesoRecibido->PID = pid4;
-	procesoRecibido->numeroPaginaFin = 6;
-	procesoRecibido->numeroPaginaInicio = 5;
+	procesoRecibido->numeroPaginaFin = 12;
+	procesoRecibido->numeroPaginaInicio = 11;
 
 	char* datosLeidos = leer(procesoRecibido, listaDeProcesosCargados);
-	procesoRecibido->numeroPaginaFin = 7;
+
+	procesoAEscribir->PID = pid4;
+	procesoAEscribir->contenido = "lalalalallalalalallaa";
+	procesoAEscribir->numeroPagina = 6;
+
+	escribir(listaDeProcesosCargados, procesoAEscribir);
+
+	procesoAEscribir->PID = pid4;
+	procesoAEscribir->contenido = "nose que poneer";
+	procesoAEscribir->numeroPagina = 7;
+
+	escribir(listaDeProcesosCargados, procesoAEscribir);
+
+	procesoAEscribir->PID = pid4;
+	procesoAEscribir->contenido = "pepepepeppepee";
+	procesoAEscribir->numeroPagina = 8;
+
+	escribir(listaDeProcesosCargados, procesoAEscribir);
+
+	procesoRecibido->numeroPaginaFin = 9;
 	procesoRecibido->numeroPaginaInicio = 6;
 
 	char* datosLeidos2 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	procesoRecibido->numeroPaginaFin = 10;
-	procesoRecibido->numeroPaginaInicio = 9;
+	procesoRecibido->numeroPaginaFin = 6;
+	procesoRecibido->numeroPaginaInicio = 6;
 
 	char* datosLeidos3 = leer(procesoRecibido, listaDeProcesosCargados);
 
@@ -89,28 +156,30 @@ int main(int argc, char *argv[]) {
 	printf("los datos leidos3 : %s\n", datosLeidos3);
 	printf("los datos leidos4 : %s \n", datosLeidos4);
 
+	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);
-
+		printf("\n\n");
 		printf("el pid :  %i\n", proceso->PID);
-		printf("cantidad paginas : %i \n", proceso->cantPagsUso);
 		printf("la ubicacion es : %i\n", proceso->ubicacion);
+		printf("cantidad paginas : %i \n", proceso->cantPagsUso);
+
 	}
 	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 		espacioLibre = list_get(listaDeEspaciosLibres, a);
-		printf("empieza espacio libre\n");
-		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
+		printf("\nempieza espacio libre\n\n\n");
 		printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
+		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
 
 	}
 
 	//termina prueba
 	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 
-//	recv(socketMemoria, &prueba, sizeof(int), 0);
-//	printf("%i\n", prueba);
-//	prueba = 5;
-//	send(socketMemoria, &prueba, sizeof(int), 0);
+	//	recv(socketMemoria, &prueba, sizeof(int), 0);
+	//	printf("%i\n", prueba);
+	//	prueba = 5;
+	//	send(socketMemoria, &prueba, sizeof(int), 0);
 
 	return EXIT_SUCCESS;
 }

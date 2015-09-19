@@ -51,13 +51,9 @@ typedef struct {
 
 } t_configuracion;
 
-typedef struct {
-	t_list memoriaPrincipal;
-	int limiteMP;
-} t_MP;
-
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
+	int idProc;
 	char* contenido; // el texto que tendra esa posicion
 	bool libre;
 	int bitPagModificada; // si esta en memoria ver si fue modificada
@@ -92,7 +88,13 @@ typedef struct {
 	int idProc;
 	int pagIn;
 	int pagFin;
-}t_lecturaProc;
+}t_lecturaSwap;
+
+typedef struct {
+	int idProc;
+	char* contenido;
+	int pag;
+}t_rtaLecturaCpu;
 
 typedef struct {
 	int idProc;
@@ -111,10 +113,15 @@ typedef struct {
 //============================================================================
 void leerArchivoDeConfiguracion();
 void iniciar(int idProc, int cantPag, int socketCPU);
-void escribir(int idProc, int nroPag);
+void escribir(int idProc, int nroPag, char* texto);
 void leer(int idProc, int pagIn, int pagFin);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
+t_TablaDePaginas* iniciarTablaDePaginas();
+t_escrituraProc* iniciarEscrituraProc();
+t_TLB* iniciarTLB();
+t_marco * iniciarMarco();
+t_config* iniciarArchivoConfig();
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
