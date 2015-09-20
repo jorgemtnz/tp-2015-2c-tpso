@@ -62,9 +62,8 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 			contadorPagTP++;
 			tablaDePag = iniciarTablaDePaginas();
 			tablaDePag->idProc = idProc;
-			tablaDePag->paginaEnMemoria = contadorPagTP;
 			tablaDePag->paginaDelProceso = contador + 1;
-			tablaDePag->marco = -1; // porque no esta en algun marco en mem pcpal
+			tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
 			list_add(listaTablaDePag, tablaDePag);
 		}
 	} else { // la respuesta no fue ok
@@ -108,18 +107,20 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 
 	// 2
 	//veo si esta en un marco de memoria
+	if(configuracion->tlbHabilitada == 1){ // tiene que estar la TLB habilitada
 	tamanioTLB = list_size(listaTLB);
 	for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 		campoTLB = list_get(listaTLB, a);
-		if (campoTLB->idProc == idProc && campoTLB->marco != -1 /*que este en un marco*/) {
+		if (campoTLB->idProc == idProc && campoTLB->idMarco != -1 /*que este en un marco*/) {
 			flagTLB = 1;
 		}
+	}
 	}
 
 	tamanioTablaPag = list_size(listaTablaDePag);
 	for (a = 0; a < tamanioTablaPag && flagTLB == 0 && flagTablaPag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->marco != -1) {
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco != -1) {
 			flagTablaPag = 1;
 		}
 	}
@@ -130,7 +131,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 		tamanioMemoria = list_size(listaMemoria);
 		for (a = 0; a < tamanioMemoria; a++) {
 			campoMemoria = list_get(listaMemoria, a);
-			if (campoMemoria->idProc == idProc) {
+			if (campoMemoria->idProc == idProc && campoMemoria->paginaDelProceso == nroPag) {
 				campoMemoria->bitPagModificada = 1;
 			}
 		}
@@ -138,7 +139,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 		tamanioMemoria = list_size(listaMemoria);
 		for (a = 0; a < tamanioMemoria; a++) {
 			campoMemoria = list_get(listaMemoria, a);
-			if (campoMemoria->idProc == idProc) {
+			if (campoMemoria->idProc == idProc && campoMemoria->paginaDelProceso == nroPag) {
 				campoMemoria->bitPagModificada = 1;
 			}
 		}
@@ -160,12 +161,15 @@ void leer(int idProc, int pagIn, int pagFin) {
 	 * 3- recibir respuesta del swap
 	 * 4- guardarla en el marco. Ver si sobrepasa la cantidad maxima por procesos, si es asi
 	 *    va a haber que eliminar el primero ingresado de ese proceso. Ver la cantidad
-	 *   maxima de marcos, si lo sobrepasa va a tener que eliminar el primero ingresado
+	 *   maxima de marcos, si lo sobrepasa va a tener que eliminar el primero ingresado.
+	 *   Siempre que se elimine uno, se va a tener que verificar el bitDeModificada, si esta en
+	 *   uno se va a tener que mandar una escritura a swap de dicha pagina de ese proceso.
+	 *   Al sacarlo tengo que sacar ese proceso de la tabla de paginas y si tengo tlb tambien de la tlb
 	 *5- ver si tengo tlb, ver si llena la tlb y sacar el primero ingresado si es asi
 	 *6- guardarla en la tabla de paginas ( aca no hay un maximo, ya que el maximo es la cant max de procesos en marcos)
 	 */
-	int a,b,cantPag, paginaALeer, paginaARecibir, rtaBuscarMemoria, tamanioMemoria, flagMemoria,cantMarcosLibres,flagProcesos;
-	int contMaxProc =0;
+	int a,b,c,cantPag, paginaALeer, paginaARecibir, rtaBuscarMemoria, tamanioMemoria, flagMemoria,cantMarcosLibres,flagProcesos;
+	int contMaxProc =0,flagGuardarPrimero;
 	t_rtaLecturaCpu * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
 	t_rtaLecturaCpu * lecturaRecibirSwap;
@@ -178,8 +182,14 @@ void leer(int idProc, int pagIn, int pagFin) {
 	campoMemoriaAux = iniciarMarco();
 	t_marco * campoMemoriaAAgregar;
 	campoMemoriaAAgregar = iniciarMarco();
-	bool si;
-
+	t_marco * campoMemoriaPrimerProceso;
+	campoMemoriaPrimerProceso = iniciarMarco();
+	t_escrituraProc * mandarASwapPorTenerBitModificada;
+	mandarASwapPorTenerBitModificada = iniciarEscrituraProc();
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_TLB * campoTLB;
+	campoTLB = iniciarTLB();
 
 
 
@@ -189,7 +199,7 @@ void leer(int idProc, int pagIn, int pagFin) {
 		tamanioMemoria = list_size(listaMemoria);
 
 		//busca si esta
-		for (a = 0; a < tamanioMemoria && flagMemoria == 0; a++) {
+		for (c = 0; c < tamanioMemoria && flagMemoria == 0; c++) {
 			campoMemoria = list_get(listaMemoria, a);
 			if (idProc == campoMemoria->idProc) {
 				flagMemoria = 1;
@@ -239,6 +249,11 @@ void leer(int idProc, int pagIn, int pagFin) {
 					campoMemoriaAux = list_get(listaMemoria, b);
 					if(campoMemoriaAux->idProc == idProc){
 						contMaxProc ++;
+						if(flagGuardarPrimero == 0){ // si esta en cero es porque no tiene guardado el primero encontrado de este proceso
+							campoMemoriaPrimerProceso = campoMemoriaAux;
+							flagGuardarPrimero = 1;
+						}
+
 						if(contMaxProc >= configuracion->maximosMarcosPorProceso){ //
 							flagProcesos=1;
 						}
@@ -250,8 +265,38 @@ void leer(int idProc, int pagIn, int pagFin) {
 					campoMemoriaAAgregar->contenido;
 					campoMemoriaAAgregar->idMarco = idMarco ++;
 					campoMemoriaAAgregar->idProc = idProc;
-					campoMemoriaAAgregar->libre = si;
-					list_add(listaMemoria,campoMemoriaAAgregar);
+					list_add(listaMemoria, campoMemoriaAAgregar);
+
+					campoTablaDePag->idProc = campoMemoriaAAgregar->idProc;
+					campoTablaDePag->idMarco = campoMemoriaAAgregar->idMarco;
+					campoTablaDePag->paginaDelProceso =  a;
+					list_add(listaTablaDePag,campoTablaDePag);
+
+					AgregarParametroYSacarAlPrimeroDeLaTLB(idProc,idMarco, a);
+
+
+				} else { // aca si llego al maximo de marcos por proceso y tengo que sacar el primero ingresado
+					if (campoMemoriaPrimerProceso->bitPagModificada == 1) {
+						mandarASwapPorTenerBitModificada->Pag = a;
+						mandarASwapPorTenerBitModificada->texto = campoMemoriaPrimerProceso->contenido;
+						mandarASwapPorTenerBitModificada->idProc = campoMemoriaPrimerProceso->idProc;
+
+						/* PARTE DE ENVIAR A Swap UN Escribir UNA PAG
+						 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+						 *  puts("Enviando \"mandar a swap un escribir una pag\" al Swap");
+						 enviar(atoi(socketCPU), "mandar a swap un escribir una pag", strlen("mandar a swap un escribir una pag"));
+						 puts("Enviado al Swap");
+						 */
+
+						// ahora tengo que sacarlo de la tlb si es que esta habilitada y sacarlo de la tabla de paginas
+
+						if(configuracion->tlbHabilitada){
+
+						}
+
+
+
+					}
 				}
 
 			}
@@ -266,5 +311,9 @@ void leer(int idProc, int pagIn, int pagFin) {
 }
 
 void finalizar(int idProc) {
+
+}
+
+void AgregarParametroYSacarAlPrimeroDeLaTLB(int idProc, int idMarco,int a){
 
 }
