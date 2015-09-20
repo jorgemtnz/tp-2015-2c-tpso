@@ -93,7 +93,8 @@ typedef struct {
 typedef struct {
 	int idProc;
 	char* contenido;
-	int pag;
+	int pagIn;
+	int pagFin;
 }t_rtaLecturaCpu;
 
 typedef struct {
@@ -132,7 +133,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 t_configuracion* configuracion;
 t_log* logger;
 // ----------- Contadores -------- //
-int contadorPagTP; // contador de paginas de la tabla de paginas
+int contadorPagTP=0,idMarco =0; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;

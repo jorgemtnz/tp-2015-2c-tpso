@@ -93,6 +93,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 
+
 	// 1
 	escritura->Pag = nroPag;
 	escritura->idProc = idProc;
@@ -163,21 +164,30 @@ void leer(int idProc, int pagIn, int pagFin) {
 	 *5- ver si tengo tlb, ver si llena la tlb y sacar el primero ingresado si es asi
 	 *6- guardarla en la tabla de paginas ( aca no hay un maximo, ya que el maximo es la cant max de procesos en marcos)
 	 */
-	int a, cantPag, paginaALeer, paginaARecibir, rtaBuscarMemoria, tamanioMemoria, flagMemoria;
+	int a,b,cantPag, paginaALeer, paginaARecibir, rtaBuscarMemoria, tamanioMemoria, flagMemoria,cantMarcosLibres,flagProcesos;
+	int contMaxProc =0;
 	t_rtaLecturaCpu * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
-	t_lecturaSwap * lecturaRecibir;
-	lecturaRecibir = iniciarLectura();
+	t_rtaLecturaCpu * lecturaRecibirSwap;
+	lecturaRecibirSwap = iniciarRtaLecturaCpu();
+	t_lecturaSwap * lecturaMandarSwap;
+	lecturaMandarSwap = iniciarLectura();
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
+	t_marco * campoMemoriaAux;
+	campoMemoriaAux = iniciarMarco();
+	t_marco * campoMemoriaAAgregar;
+	campoMemoriaAAgregar = iniciarMarco();
+	bool si;
 
 
-	//1
-	flagMemoria = 0;
-	tamanioMemoria = list_size(listaMemoria);
 
 
-	for (a = pagIn; a < pagFin; a++) {
+	for (a = pagIn; a <= pagFin; a++) {
+		//1
+		flagMemoria = 0;
+		tamanioMemoria = list_size(listaMemoria);
+
 		//busca si esta
 		for (a = 0; a < tamanioMemoria && flagMemoria == 0; a++) {
 			campoMemoria = list_get(listaMemoria, a);
@@ -188,7 +198,8 @@ void leer(int idProc, int pagIn, int pagFin) {
 		if (flagMemoria == 1) { // 1 = si esta
 				lecturaMandarCpu->idProc = idProc;
 				lecturaMandarCpu->contenido = campoMemoria->contenido;
-				lecturaMandarCpu->pag = a;
+				lecturaMandarCpu->pagIn = a;
+				lecturaMandarCpu->pagFin = a;
 
 			/* PARTE DE ENVIAR A CPU UN RTA DE LEER UNA PAG
 			 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
@@ -198,6 +209,52 @@ void leer(int idProc, int pagIn, int pagFin) {
 			 */
 			}
 		else { // aca hay que empezar con el //2
+			lecturaMandarSwap->idProc = campoMemoria->idProc;
+			lecturaMandarSwap->pagIn = a;
+			lecturaMandarSwap->pagFin = a ;
+
+			sleep(configuracion->retardoMemoria);
+
+			/* PARTE DE ENVIAR A Swap UN LEER UNA PAG
+			 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+			 *  puts("Enviando \"mandar a swap un leer una pag\" al Swap");
+			 enviar(atoi(socketCPU), "mandar a swap un leer una pag", strlen("mandar a swap un leer una pag"));
+			 puts("Enviado al Swap");
+			 */
+
+			//3
+			//aca tendria que recibir de swap la rta de leer una pagina lo hardocdeo y hago de cuenta como que recibi
+			char* contenido;
+			lecturaRecibirSwap->idProc = idProc;
+			lecturaRecibirSwap->pagIn = a;
+			lecturaRecibirSwap->pagFin = a;
+			lecturaRecibirSwap->contenido = contenido;
+
+			//4
+			cantMarcosLibres = configuracion->cantidadMarcos - tamanioMemoria ;
+
+			if(cantMarcosLibres > 0){ // hay al menos un espacio disponible
+				flagProcesos = 0;
+				for(b=0;b< tamanioMemoria && flagProcesos == 0;b++){// con este for voy a ver si se llego al maximo de amrcos por proceso
+					campoMemoriaAux = list_get(listaMemoria, b);
+					if(campoMemoriaAux->idProc == idProc){
+						contMaxProc ++;
+						if(contMaxProc >= configuracion->maximosMarcosPorProceso){ //
+							flagProcesos=1;
+						}
+					}
+				}
+				// si el flag quedo en 0 es porque no se llego al maximo de marcos por proceso
+				if(flagProcesos == 0){
+					campoMemoriaAAgregar->bitPagModificada = 0;
+					campoMemoriaAAgregar->contenido;
+					campoMemoriaAAgregar->idMarco = idMarco ++;
+					campoMemoriaAAgregar->idProc = idProc;
+					campoMemoriaAAgregar->libre = si;
+					list_add(listaMemoria,campoMemoriaAAgregar);
+				}
+
+			}
 
 		}
 
