@@ -133,7 +133,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 t_configuracion* configuracion;
 t_log* logger;
 // ----------- Contadores -------- //
-int contadorPagTP=0,idMarco =0; // contador de paginas de la tabla de paginas
+int contadorPagTP,idMarco; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;

@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
 	listaTLB = list_create();
     listaTablaDePag = list_create();
 	contadorPagTP = 0;
+	idMarco = 0;
 
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
