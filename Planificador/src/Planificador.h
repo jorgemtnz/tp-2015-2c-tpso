@@ -67,7 +67,7 @@ void aplicarFuncion(int idFuncion);
 void levantarConsola();
 void mostrarComandos();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
-int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 //++++++++++++++++++++++++++++++++++++comandos +++++++++++++++++++++++++++++++++++++++
 int correrPrograma(int socket, t_header* header, char* buffer);

@@ -20,11 +20,11 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 
-int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
-	defaultProcesarMensajes(socket, header, buffer, nuevaConexion, extra, logger);
-	if (nuevaConexion) {
+	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
+	if(tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
 		printf("Recibi el mensaje: %s\n", buffer);

@@ -19,6 +19,12 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+typedef enum {
+	NEW_CONNECTION,
+	MESSAGE,
+	HANG_UP
+} t_tipo_notificacion;
+
 typedef struct t_paquete {
 			int8_t tipoMensaje;
 			int16_t payloadTamanio;
@@ -78,7 +84,7 @@ int conectar(char* ip, char* puerto, int *sock);
 
 
 // Para cliente y/o servidor
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, bool, void*, t_log*), void* extra,  t_log* logger);
-int defaultProcesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger);
+int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 
 #endif /* SOCKETS_H_ */

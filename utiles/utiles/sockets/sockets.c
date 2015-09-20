@@ -413,7 +413,7 @@ void procesarComando(char* comando, fd_set* master, int* fdmax) {
 
 }
 
-void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, bool, void*, t_log*), void* extra,  t_log* logger) {
+void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger) {
 	fd_set master;    // master file descriptor list
 	fd_set read_fds;  // temp file descriptor list for select()
 	int fdmax = -1;        // maximum file descriptor number
@@ -540,7 +540,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						}
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
-						funcionParaProcesarMensaje(newfd, NULL, NULL, true, extra, logger);
+						funcionParaProcesarMensaje(newfd, NULL, NULL, NEW_CONNECTION, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
@@ -564,6 +564,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						if (nbytes == 0) {
 							// connection closed
 							printf("selectserver: socket %d hung up\n", i);
+							funcionParaProcesarMensaje(i, NULL, NULL, HANG_UP, extra, logger);
 						} else {
 							//perror("recv");
 							perror("read");
@@ -580,12 +581,12 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //						}
 //						printf("\n");
 						if(i == STDIN_FILENO) {
-							funcionParaProcesarMensaje(i, NULL, textbuf, false, extra, logger);
+							funcionParaProcesarMensaje(i, NULL, textbuf, MESSAGE, extra, logger);
 						} else {
 							t_header header;
 							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);
 							memcpy(&header, buf, sizeof(t_header));
-							funcionParaProcesarMensaje(i, &header, buf, false, extra, logger);
+							funcionParaProcesarMensaje(i, &header, buf, MESSAGE, extra, logger);
 						}
 						/*
 						//j desde listener + 1, no quiero la consola, ni el puerto de escucha
@@ -654,9 +655,9 @@ int conectar(char* ip, char* puerto, int *sock) {
 
 }
 
-int defaultProcesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
+int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
-	if(nuevaConexion) {
+	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);
 	} else {
 //		printf("Nuevo mensaje desde socket %d\n", socket);
