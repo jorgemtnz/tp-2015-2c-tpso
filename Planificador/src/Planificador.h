@@ -84,6 +84,7 @@ t_list* getColaDeListos();
 void ejecutarPlanificadorLargoPlazo();
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
+void registrarNuevaCPU(int socket);
 //========================================================================================
 
 
