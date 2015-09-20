@@ -13,7 +13,7 @@ int abrirArchivoLecturaEscritura(char* pathArchivo, t_log* logger) {
 	int fd = open(pathArchivo, O_RDWR, mode);
 	if (fd == -1) {
 		log_error(logger, "open rw: %s", strerror(errno));
-		exit(1);
+		return fd;
 	}
 	return fd;
 }
@@ -32,7 +32,7 @@ int abrirArchivoSoloLectura(char* pathArchivo, t_log* logger) {
 	int fd = open(pathArchivo, O_RDONLY, mode);
 	if (fd == -1) {
 		log_error(logger, "open read only", strerror(errno));
-		exit(1);
+		return fd;
 	}
 	return fd;
 }
@@ -61,9 +61,9 @@ char *extraerNombreArchivo(char *text) {
 }
 
 
-struct stat describirArchivo(char* archivo, t_log* logger) {
-	struct stat sbuf;
-	if (stat(archivo, &sbuf) == -1) {
+struct stat* describirArchivo(char* archivo, t_log* logger) {
+	struct stat* sbuf = malloc(sizeof(struct stat));
+	if (stat(archivo, sbuf) == -1) {
 		log_error(logger, "stat: archivo: %s, error: %s", archivo, strerror(errno));
 		exit(1);
 	}
@@ -72,9 +72,9 @@ struct stat describirArchivo(char* archivo, t_log* logger) {
 
 
 int obtenerTamanioArchivo(char* path, t_log* logger) {
-	struct stat statArchivoEspacioDatos;
+	struct stat* statArchivoEspacioDatos;
 	statArchivoEspacioDatos = describirArchivo(path, logger);
-    return statArchivoEspacioDatos.st_size;
+    return statArchivoEspacioDatos != NULL ? statArchivoEspacioDatos->st_size:-1;
 }
 
 

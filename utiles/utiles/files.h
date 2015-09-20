@@ -28,7 +28,7 @@ int abrirArchivoLecturaEscritura(char* pathArchivo, t_log* logger);
 
 int abrirOCrearArchivoLecturaEscritura(char* pathArchivo, t_log* logger);
 
-struct stat describirArchivo(char* archivo, t_log* logger);
+struct stat* describirArchivo(char* archivo, t_log* logger);
 
 int obtenerTamanioArchivo(char* path, t_log* logger);
 
