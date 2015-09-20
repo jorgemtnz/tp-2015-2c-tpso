@@ -33,13 +33,43 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion = (t_configuracion*) malloc(sizeof(t_configuracion));
 		configuracion->puertoEscucha = strdup(config_get_string_value(archivoConfig, "PUERTO_ESCUCHA"));
 		configuracion->algorimoPlanificacion = strdup(config_get_string_value(archivoConfig, "ALGORITMO_PLANIFICACION"));
-		configuracion->quantum = config_get_int_value(archivoConfig, "QUANTUM");
+		configuracion->quantum = strdup(config_get_string_value(archivoConfig, "QUANTUM"));
+		crearPlanificacion(configuracion->algorimoPlanificacion, configuracion->quantum);
 
 		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
 		putsConsola(logMsg);
 		log_error(logger, logMsg);
 
 		config_destroy(archivoConfig);
+	}
+}
+
+void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
+	planificacion = malloc(sizeof(t_planificacion));
+
+	if(string_equals(nombreAlgoritmo, "FIFO")) {
+		planificacion->nombreAlgoritmo = nombreAlgoritmo;
+		planificacion->tamanioRafaga = 0;
+		planificacion->tieneDesalojo = false;
+	} else if(string_equals(nombreAlgoritmo, "Round Robin")) {
+		if (string_is_empty(quantum)) {
+			putsConsola("No se especifico el parametro QUANTUM en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+			exit(-1);
+		} else {
+			uint16_t tamanioRafaga = atoi(quantum);
+			if(tamanioRafaga < 1) {
+				putsConsola("No se especifico el parametro QUANTUM valido en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+				exit(-1);
+			} else {
+				planificacion->nombreAlgoritmo = nombreAlgoritmo;
+				planificacion->tamanioRafaga = tamanioRafaga;
+				planificacion->tieneDesalojo = true;
+			}
+		}
+
+	} else {
+		printConsola("No se reconoce nombre de algoritmo especificado: '%s'.\nLos algoritmos validos son FIFO y Round Robin\n");
+		exit(-1);
 	}
 }
 

@@ -22,6 +22,7 @@
 #include <utiles/sockets/sockets.h>
 #include <utiles/configExtras.h>
 #include <utiles/files.h>
+#include <utiles/protocolo.h>
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 #define NUMEROFUNCIONESCONSOLA 4
@@ -31,7 +32,7 @@
 typedef struct {
 	char* puertoEscucha;
 	char* algorimoPlanificacion;
-	uint32_t quantum;
+	char* quantum;
 } t_configuracion;
 //=======================================================================================
 
@@ -68,11 +69,18 @@ void mostrarComandos();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
+//++++++++++++++++++++++++++++++++++++comandos +++++++++++++++++++++++++++++++++++++++
 int correrPrograma(int socket, t_header* header, char* buffer);
 int correrPath(int socket, t_header* header, char* buffer);
 int finalizarPid(int socket, t_header* header, char* buffer);
 int ps(int socket, t_header* header, char* buffer);
 int cpu(int socket, t_header* header, char* buffer);
+//++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
+void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
+t_pcb* crearPcb(char* rutaArchivoMcod);
+void agregarPcbAColaDeListos(t_pcb* pcb);
+uint8_t crearPid();
+
 //========================================================================================
 
 
@@ -81,6 +89,8 @@ int cpu(int socket, t_header* header, char* buffer);
 t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
+uint8_t* proximoPid;
+t_planificacion* planificacion;
 
 //===========================================================================================
 

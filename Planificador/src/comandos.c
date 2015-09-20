@@ -40,6 +40,10 @@ int correrPath(int socket, t_header* header, char* buffer) {
 		cerrarArchivoEspacioDeDatos(fdArchivo, logger);
 	}
 
+	t_pcb* pcb = crearPcb(split[1]);
+
+	agregarPcbAColaDeListos(pcb);
+
 	return 0;
 }
 
