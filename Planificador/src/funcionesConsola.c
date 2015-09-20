@@ -3,6 +3,29 @@
 /*---------------------------------------------------------------------- CONSOLA------------------------------*/
 //========================funciones consola=====================
 
+int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
+	if(buffer != NULL) {
+//		char** split = string_split(buffer, "\n");
+//		buffer = split[0];
+	} else {
+		printConsola("Recibi el mensaje por consola: %s\n", buffer);
+	}
+	if(string_equals(buffer, "correr programa")) {
+		correrPrograma(socket, header, buffer);
+	} else if(string_starts_with(buffer, "correr")) {
+		correrPath(socket, header, buffer);
+	} else if(string_starts_with(buffer, "finalizar")) {
+		finalizarPid(socket, header, buffer);
+	} else if(string_equals(buffer, "ps")) {
+		ps(socket, header, buffer);
+	} else if(string_equals(buffer, "cpu")) {
+		cpu(socket, header, buffer);
+	} else {
+		printConsola("Comando no reconocido: %s\n", buffer);
+	}
+	return 0;
+}
+
 void mostrarComandos() {
 	char* funcionesConsola[] = { "correr_PATH", "finalizar_PID", "ps", "cpu" };
 
@@ -12,10 +35,10 @@ void mostrarComandos() {
 
 	int contador = 0;
 	while (contador <= NUMEROFUNCIONESCONSOLA - 1) {
-		printf("*------------------------------------------*\n");
-		printf("COMANDO 	= %s\n", funcionesConsola[contador]);
-		printf("DESCRIPCION = %s\n", descripcionesConsola[contador]);
-		printf("*------------------------------------------*\n");
+		printConsola("*------------------------------------------*\n");
+		printConsola("COMANDO 	= %s\n", funcionesConsola[contador]);
+		printConsola("DESCRIPCION = %s\n", descripcionesConsola[contador]);
+		printConsola("*------------------------------------------*\n");
 		contador += 1;
 	}
 }
@@ -45,22 +68,22 @@ void aplicarFuncion(int idFuncion) { //selecciona un case en base al numero que 
 // Lo que hace el enum es convertirme lo que dice en enteros
 	switch (idFuncion) {
 	case CORRER_PATH: {
-		printf("soy correr path \n");
+		printConsola("soy correr path \n");
 
 		break;
 	}
 	case FINALIZAR_PID:
-		printf("soy finalizar pid \n");
+		printConsola("soy finalizar pid \n");
 
 		break;
 
 	case PS:
-		printf("soy ps \n");
+		printConsola("soy ps \n");
 
 		break;
 
 	case CPU:
-		printf("soy cpu \n");
+		printConsola("soy cpu \n");
 
 		break;
 
@@ -72,7 +95,7 @@ void aplicarFuncion(int idFuncion) { //selecciona un case en base al numero que 
 		break;
 
 	case -1:
-		printf("--Ojo ese comando no existe!! proba con mostrarComandos \n");
+		printConsola("--Ojo ese comando no existe!! proba con mostrarComandos \n");
 
 	}
 }
@@ -84,7 +107,7 @@ void levantarConsola() {
 	mostrarComandos();
 
 	while (1) {
-		printf("Ingrese un comando >> ");
+		printConsola("Ingrese un comando >> ");
 //		fgets(comando, 50, stdin);
 		scanf("%s", comando);
 		idFunc = idFuncion(comando);

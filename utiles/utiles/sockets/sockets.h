@@ -60,7 +60,7 @@ int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer);
 
 char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje);
 int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer);
-bool es(char* string1, char* string2);
+bool string_equals(char* string1, char* string2);
 int enviarSimple(int fdCliente, void *msg, int len);
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
 int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);

@@ -48,6 +48,8 @@ typedef struct {
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 void crearLogger();
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
+int putsConsola (const char *msg);
+int printConsola(const char *formato, ...);
 //============================================================================
 
 
@@ -64,6 +66,12 @@ void levantarConsola();
 void mostrarComandos();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger);
+int procesarMensajesConsola(int socket, t_header* header, char* buffer);
+int correrPrograma(int socket, t_header* header, char* buffer);
+int correrPath(int socket, t_header* header, char* buffer);
+int finalizarPid(int socket, t_header* header, char* buffer);
+int ps(int socket, t_header* header, char* buffer);
+int cpu(int socket, t_header* header, char* buffer);
 //========================================================================================
 
 
@@ -71,6 +79,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 
 t_configuracion* configuracion;
 t_log* logger;
+t_dictionary* conexiones;
 
 //===========================================================================================
 

@@ -213,8 +213,8 @@ int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerial
 	return 0;
 }
 
-bool es(char* string1, char* string2) {
-	return string_equals_ignore_case(string1, string2);
+bool string_equals(char* string1, char* string2) {
+	return strcmp(string1, string2) == 0;
 }
 
 int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
@@ -657,9 +657,9 @@ int conectar(char* ip, char* puerto, int *sock) {
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConexion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
 	if(nuevaConexion) {
-		printf("Nueva conexion desde socket %d\n", socket);
+//		printf("Nueva conexion desde socket %d\n", socket);
 	} else {
-		printf("Nuevo mensaje desde socket %d\n", socket);
+//		printf("Nuevo mensaje desde socket %d\n", socket);
 	}
 	return 0;
 }
