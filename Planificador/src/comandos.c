@@ -19,6 +19,27 @@ int correrPrograma(int socket, t_header* header, char* buffer) {
 
 int correrPath(int socket, t_header* header, char* buffer) {
 	putsConsola("comando: correr PATH");
+
+	char** split = string_split(buffer, " ");
+
+	if(!string_equals(split[0], "correr")) {
+		printConsola("Comando no valido: %s\n", split[0]);
+		return -1;
+	}
+
+	if(!existeArchivo(split[1])) {
+		printConsola("El archivo especificado no existe: %s\n", split[1]);
+		return -1;
+	}
+
+	int fdArchivo = abrirArchivoSoloLectura(split[1], logger);
+	if(fdArchivo < 0) {
+		printConsola("El archivo especificado no se pudo abrir: %s\n", split[1]);
+		return -1;
+	} else {
+		cerrarArchivoEspacioDeDatos(fdArchivo, logger);
+	}
+
 	return 0;
 }
 

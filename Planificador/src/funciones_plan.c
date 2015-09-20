@@ -44,11 +44,11 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 int putsConsola (const char *msg) {
-	puts("putsConsola\n");
+//	puts("putsConsola\n");
 	return puts(msg);
 }
 int printConsola(const char *formato, ...){
-	puts("printConsola\n");
+//	puts("printConsola\n");
 	va_list arguments;															\
 	va_start(arguments, formato);
 	int res = vprintf(formato, arguments);
