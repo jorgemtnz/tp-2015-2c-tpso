@@ -48,7 +48,7 @@ typedef struct PCB {
 	char* rutaArchivoMcod;
 	bool tieneDesalojo;
 	uint16_t tamanioRafaga;
-	uint32_t proximaInstruccion;
+	uint16_t proximaInstruccion;
 } t_pcb;
 
 typedef struct Planificacion  {
@@ -56,6 +56,11 @@ typedef struct Planificacion  {
 	bool tieneDesalojo;
 	uint16_t tamanioRafaga;
 } t_planificacion;
+
+typedef struct CPU_REF {
+	int socket;
+	char* nombre;
+} t_cpu_ref;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++

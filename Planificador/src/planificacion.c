@@ -18,6 +18,7 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 
 void agregarPcbAColaDeListos(t_pcb* pcb) {
 	list_add(getColaDeListos(), pcb);
+	ejecutarPlanificadorLargoPlazo();
 }
 
 uint8_t crearPid() {
@@ -34,4 +35,13 @@ t_list* getColaDeListos() {
 	return colaDeListos;
 }
 
+void ejecutarPlanificadorLargoPlazo() {
+	//TODO
+	//POR AHORA ENVIAMOS DIRECTAMENTE
+	if(list_size(listaCPUs) == 0) {
+		putsConsola("No hay ningun CPU conectado\n");
+	} else {
+		putsConsola("Enviamos a ejecutar el programa\n");
+	}
+}
 
