@@ -44,33 +44,43 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	}
 }
 
+void validarYCrearFIFO(char* nombreAlgoritmo) {
+	planificacion->nombreAlgoritmo = nombreAlgoritmo;
+	planificacion->tamanioRafaga = 0;
+	planificacion->tieneDesalojo = false;
+}
+
+void validarYCrearRoundRobin(char* nombreAlgoritmo, char* quantum) {
+	if (string_is_empty(quantum)) {
+		putsConsola("No se especifico el parametro QUANTUM en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+		exit(-1);
+	} else {
+		uint16_t tamanioRafaga = atoi(quantum);
+		if (tamanioRafaga < 1) {
+			putsConsola("No se especifico el parametro QUANTUM valido en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+			exit(-1);
+		} else {
+			planificacion->nombreAlgoritmo = nombreAlgoritmo;
+			planificacion->tamanioRafaga = tamanioRafaga;
+			planificacion->tieneDesalojo = true;
+		}
+	}
+}
+
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 	planificacion = malloc(sizeof(t_planificacion));
 
 	if(string_equals(nombreAlgoritmo, "FIFO")) {
-		planificacion->nombreAlgoritmo = nombreAlgoritmo;
-		planificacion->tamanioRafaga = 0;
-		planificacion->tieneDesalojo = false;
-	} else if(string_equals(nombreAlgoritmo, "Round Robin")) {
-		if (string_is_empty(quantum)) {
-			putsConsola("No se especifico el parametro QUANTUM en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
-			exit(-1);
-		} else {
-			uint16_t tamanioRafaga = atoi(quantum);
-			if(tamanioRafaga < 1) {
-				putsConsola("No se especifico el parametro QUANTUM valido en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
-				exit(-1);
-			} else {
-				planificacion->nombreAlgoritmo = nombreAlgoritmo;
-				planificacion->tamanioRafaga = tamanioRafaga;
-				planificacion->tieneDesalojo = true;
-			}
-		}
-
+		validarYCrearFIFO(nombreAlgoritmo);
+	} else if(string_equals(nombreAlgoritmo, "RR")) {
+		validarYCrearRoundRobin(nombreAlgoritmo, quantum);
 	} else {
 		printConsola("No se reconoce nombre de algoritmo especificado: '%s'.\nLos algoritmos validos son FIFO y Round Robin\n");
 		exit(-1);
 	}
+
+	//creamos la cola de listos
+	colaDeListos = list_create();
 }
 
 int putsConsola (const char *msg) {

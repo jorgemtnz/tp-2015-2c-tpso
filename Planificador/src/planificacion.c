@@ -17,7 +17,7 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 }
 
 void agregarPcbAColaDeListos(t_pcb* pcb) {
-
+	list_add(getColaDeListos(), pcb);
 }
 
 uint8_t crearPid() {
@@ -30,5 +30,8 @@ uint8_t crearPid() {
 	return pid;
 }
 
+t_list* getColaDeListos() {
+	return colaDeListos;
+}
 
 

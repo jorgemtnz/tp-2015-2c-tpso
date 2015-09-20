@@ -80,6 +80,7 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
 void agregarPcbAColaDeListos(t_pcb* pcb);
 uint8_t crearPid();
+t_list* getColaDeListos();
 
 //========================================================================================
 
@@ -91,6 +92,7 @@ t_log* logger;
 t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
+t_list* colaDeListos;
 
 //===========================================================================================
 
