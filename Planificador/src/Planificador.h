@@ -81,7 +81,9 @@ t_pcb* crearPcb(char* rutaArchivoMcod);
 void agregarPcbAColaDeListos(t_pcb* pcb);
 uint8_t crearPid();
 t_list* getColaDeListos();
-
+void ejecutarPlanificadorLargoPlazo();
+//++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
+char* crearNombreCPU();
 //========================================================================================
 
 
@@ -93,6 +95,7 @@ t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeListos;
+t_list* listaCPUs;
 
 //===========================================================================================
 

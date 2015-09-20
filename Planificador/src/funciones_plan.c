@@ -83,6 +83,18 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 	colaDeListos = list_create();
 }
 
+void registrarNuevaCPU(int socket) {
+	t_cpu_ref* cpu = malloc(sizeof(t_cpu_ref));
+	cpu->socket = socket;
+	cpu->nombre = crearNombreCPU();
+	list_add(listaCPUs, cpu);
+}
+
+char* crearNombreCPU() {
+	int nroCPU = list_size(listaCPUs) + 1;
+	return string_from_format("CPU-%d", nroCPU);
+}
+
 int putsConsola (const char *msg) {
 //	puts("putsConsola\n");
 	return puts(msg);

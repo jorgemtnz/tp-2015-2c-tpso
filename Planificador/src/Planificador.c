@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
 
 	putsConsola("Iniciando programa");
 	crearLogger();
+	listaCPUs = list_create();
 	leerArchivoDeConfiguracion(argc, argv);
 	escucharConexiones(configuracion->puertoEscucha, 0, 0, 0, procesarMensajes, NULL, logger);
 	levantarConsola();
@@ -24,6 +25,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 	defaultProcesarMensajes(socket, header, buffer, nuevaConexion, extra, logger);
 	if(nuevaConexion) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
+		registrarNuevaCPU(socket);
 	} else {
 		if(socket == STDIN_FILENO) {
 			procesarMensajesConsola(socket, header, buffer);
