@@ -86,6 +86,7 @@ t_escribirEnProceso* crearEscribirEnProceso();
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
+void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
 void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid);
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);

@@ -35,13 +35,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, bool nuevaConex
 			 puts("Enviado al Swap");
 			 */
 			int buff, idProc, cantPag,nroPag,pagIn,pagFin; // seria el buffer ques e deba poner
+			char* textoAEscribir;
 			switch (buff) {
 			case 1: // va a ser iniciar este
 				pthread_mutex_lock(&mutexParaInicializado);
 				iniciar(idProc, cantPag, socketCPU);
 				break;
 			case 2: // va a ser escribir este
-//				escribir(idProc, nroPag);
+				escribir(idProc, nroPag, textoAEscribir);
 				break;
 			case 3: // va a ser leer este
 				leer(idProc, pagIn, pagFin);

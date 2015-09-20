@@ -51,11 +51,6 @@ typedef struct {
 
 } t_configuracion;
 
-typedef struct {
-	t_list memoriaPrincipal;
-	int limiteMP;
-} t_MP;
-
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
 	int idProc;
@@ -93,7 +88,13 @@ typedef struct {
 	int idProc;
 	int pagIn;
 	int pagFin;
-}t_lecturaProc;
+}t_lecturaSwap;
+
+typedef struct {
+	int idProc;
+	char* contenido;
+	int pag;
+}t_rtaLecturaCpu;
 
 typedef struct {
 	int idProc;

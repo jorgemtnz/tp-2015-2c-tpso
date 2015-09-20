@@ -149,10 +149,65 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 	}
 }
 
-	void leer(int idProc, int pagIn, int PagFin) {
+void leer(int idProc, int pagIn, int pagFin) {
+	/*Por cada pagina
+	 * 1- ver si esta en memoria, si esta leer y mandar de respuesta al cpu
+	 *
+	 * Si no esta
+	 *
+	 * 2- enviar al swap aplicandole el sleep
+	 * 3- recibir respuesta del swap
+	 * 4- guardarla en el marco. Ver si sobrepasa la cantidad maxima por procesos, si es asi
+	 *    va a haber que eliminar el primero ingresado de ese proceso. Ver la cantidad
+	 *   maxima de marcos, si lo sobrepasa va a tener que eliminar el primero ingresado
+	 *5- ver si tengo tlb, ver si llena la tlb y sacar el primero ingresado si es asi
+	 *6- guardarla en la tabla de paginas ( aca no hay un maximo, ya que el maximo es la cant max de procesos en marcos)
+	 */
+	int a, cantPag, paginaALeer, paginaARecibir, rtaBuscarMemoria, tamanioMemoria, flagMemoria;
+	t_rtaLecturaCpu * lecturaMandarCpu;
+	lecturaMandarCpu = iniciarRtaLecturaCpu();
+	t_lecturaSwap * lecturaRecibir;
+	lecturaRecibir = iniciarLectura();
+	t_marco * campoMemoria;
+	campoMemoria = iniciarMarco();
+
+
+	//1
+	flagMemoria = 0;
+	tamanioMemoria = list_size(listaMemoria);
+
+
+	for (a = pagIn; a < pagFin; a++) {
+		//busca si esta
+		for (a = 0; a < tamanioMemoria && flagMemoria == 0; a++) {
+			campoMemoria = list_get(listaMemoria, a);
+			if (idProc == campoMemoria->idProc) {
+				flagMemoria = 1;
+			}
+		}
+		if (flagMemoria == 1) { // 1 = si esta
+				lecturaMandarCpu->idProc = idProc;
+				lecturaMandarCpu->contenido = campoMemoria->contenido;
+				lecturaMandarCpu->pag = a;
+
+			/* PARTE DE ENVIAR A CPU UN RTA DE LEER UNA PAG
+			 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+			 *  puts("Enviando \"mandar a cpu un rta de leer una pag\" al Swap");
+			 enviar(atoi(socketCPU), "mandar a cpu un rta de leer una pag", strlen("mandar a cpu un rta de leer una pag"));
+			 puts("Enviado al Swap");
+			 */
+			}
+		else { // aca hay que empezar con el //2
+
+		}
+
 
 	}
 
-	void finalizar(int idProc) {
 
-	}
+
+}
+
+void finalizar(int idProc) {
+
+}
