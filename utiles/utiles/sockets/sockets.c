@@ -152,31 +152,43 @@ int enviar(int fdCliente, void *msg, int len) {
 int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura) {
 
 	//serializamos la estructura
-	char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
-	int longitudMensajeSerializado = strlen(estructuraSerializada);
+	if(existeSerializacion(tipoMensaje)) {
+		return enviarSerializado(fdCliente, tipoMensaje, estructura);
+	} else {
+		char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
+		int longitudMensajeSerializado = strlen(estructuraSerializada);
 
-	//enviamos un header
-	enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
+		//enviamos un header
+		enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
 
-	//enviamos la estructura serializada
-	return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
+		//enviamos la estructura serializada
+		return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
+	}
 }
 
 int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer) {
 
 	//recibimos los datos segun el header
-	void* bufferMsgSerializado = malloc(header->tamanioMensaje);
-	int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
-	if(res > 0){
-		//deserializamos la estructura
-		deserializarMensajeABuffer(header->tipoMensaje, bufferMsgSerializado, header->tamanioMensaje, buffer);
+
+	//deserializamos la estructura
+	if(existeSerializacion(header->tipoMensaje)) {
+		return recibirSerializado(fdCliente, header->tipoMensaje, buffer);
+	} else {
+		void* bufferMsgSerializado = malloc(header->tamanioMensaje);
+		int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
+		if(res > 0){
+			//deserializamos la estructura
+			deserializarMensajeABuffer(header->tipoMensaje, bufferMsgSerializado, header->tamanioMensaje, buffer);
+		}
+		return res;
 	}
-	return res;
 }
 
 char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje) {
 
 	char* serializado = NULL;
+
+
 
 	if(HEADER == tipoMensaje) {
 		char* HEADER_FORMAT = "tipoMensaje: %d, tamanioMensaje %d";
@@ -664,3 +676,63 @@ int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_n
 	}
 	return 0;
 }
+
+t_dictionary* registroSerializadores;
+
+void inicializarRegistroSerializadores() {
+	if(registroSerializadores == NULL) {
+		registroSerializadores = dictionary_create();
+
+		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
+
+	}
+}
+
+bool existeSerializacion(t_tipo_mensaje tipoMensaje) {
+	inicializarRegistroSerializadores();
+	char* keySerializacion = generarKeySerializacion(tipoMensaje);
+	return dictionary_has_key(registroSerializadores, keySerializacion);
+}
+
+char* generarKeySerializacion(t_tipo_mensaje tipoMensaje) {
+	return string_from_format("serializacion(%d)", tipoMensaje);
+}
+
+t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje) {
+	inicializarRegistroSerializadores();
+	char* keySerializacion = generarKeySerializacion(tipoMensaje);
+	return (t_registro_serializacion*) dictionary_get(registroSerializadores, keySerializacion);
+}
+
+void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion) {
+	char* keySerializacion = generarKeySerializacion(tipoMensaje);
+	t_registro_serializacion* registroSerializacion = malloc(sizeof(t_registro_serializacion));
+	registroSerializacion->tipoMensaje = tipoMensaje;
+	registroSerializacion->descripcion = descripcion;
+	registroSerializacion->funcionSerializacion = funcionSerializacion;
+	registroSerializacion->funcionDeserializacion = funcionDeserializacion;
+	dictionary_put(registroSerializadores, keySerializacion, registroSerializacion);
+}
+
+int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
+
+	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
+
+	void* funcion = serializacion->funcionSerializacion;
+	return ejecutarFuncion(funcion, fdCliente, tipoMensaje, estructura);
+}
+
+int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
+
+	void* funcion = serializacion->funcionDeserializacion;
+	return ejecutarFuncion(funcion, fdCliente, tipoMensaje, estructura);
+}
+
+int ejecutarFuncion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	(int*)funcion(fdCliente, tipoMensaje, estructura);
+	//TODO
+	return 0;
+}
+

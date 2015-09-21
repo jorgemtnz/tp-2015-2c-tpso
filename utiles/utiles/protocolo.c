@@ -28,3 +28,10 @@ Paquete* deserializar(void* buffer, int tamnioMensaje) {
 	return paqueteDeserial;
 }
 
+void* serializar_CONTEXTO_MPROC() {
+	puts("Serializando serializar_CONTEXTO_MPROC");
+	return 0;
+}
+void* deserializar_CONTEXTO_MPROC() {
+	puts("Deserializando serializar_CONTEXTO_MPROC");
+}

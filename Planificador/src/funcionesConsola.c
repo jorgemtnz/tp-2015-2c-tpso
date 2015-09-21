@@ -5,8 +5,12 @@
 
 int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 	if(buffer != NULL && strstr(buffer, "\n")) {
-		char** split = string_split(buffer, "\n");
-		buffer = split[0];
+		if(string_starts_with(buffer, "\n")){
+			buffer = "";
+		} else {
+			char** split = string_split(buffer, "\n");
+			buffer = split[0];
+		}
 	} else {
 		printConsola("Recibi el mensaje por consola: %s\n", buffer);
 	}

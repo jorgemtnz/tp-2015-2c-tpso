@@ -24,31 +24,30 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	puts("CPU procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 
-	if(tipoNotificacion == NEW_CONNECTION) {
+	if (tipoNotificacion == NEW_CONNECTION) {
 
-	} else {
-		if(socket == STDIN_FILENO) {
-			if(string_starts_with(buffer, "cp")) {
-				int socketPlanificador;
-				conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
-				dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
-			}
-		} else {
-			if(header->tipoMensaje == STRING) {
-
-				char* mensaje = malloc(header->tamanioMensaje);
-				recibirPorSocket(socket, mensaje, header->tamanioMensaje);
-				printf("Recibi el mensaje: %s\n", mensaje);
-			}
-
-/*		if(string_starts_with(buffer, "correr programa")) {
-			char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
-			puts("Enviando \"correr programa\" a la Memoria");
-			enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-			// de aca para abajo serian las conexiones
-
-		}*/
+	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
+		if (string_starts_with(buffer, "cp")) {
+			int socketPlanificador;
+			conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
+			dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		}
+	} else if (tipoNotificacion == MESSAGE) {
+		recibirStructSegunHeader(socket, header, buffer);
+//		if (header->tipoMensaje == STRING) {
+//
+//			char* mensaje = malloc(header->tamanioMensaje);
+//			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
+//			printf("Recibi el mensaje: %s\n", mensaje);
+//		}
+		/*		if(string_starts_with(buffer, "correr programa")) {
+		 char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
+		 puts("Enviando \"correr programa\" a la Memoria");
+		 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+		 // de aca para abajo serian las conexiones
+
+		 }*/
+	} else if (tipoNotificacion == HANG_UP) {
 
 	}
 

@@ -43,8 +43,22 @@ void ejecutarPlanificadorLargoPlazo() {
 	} else {
 		putsConsola("Enviamos a ejecutar el programa\n");
 	}
+
+	//TODO
+	//POR AHORA TOMAMOS EL PRIMERO DE LA COLA DE LISTOS Y LO MANDAMOS A EJECUTAR
+	t_pcb* pcb = list_get(colaDeListos, 0);
+	t_cpu_ref* cpu = obtenerCPUDisponible();
+	correrProcesoEnCpu(pcb, cpu);
 }
 
 bool cpuDesconectada(void *cpu) {
 	return ((t_cpu_ref *)cpu)->conectada == false;
+}
+
+t_cpu_ref* obtenerCPUDisponible() {
+	return (t_cpu_ref*)list_get(listaCPUs, 0);
+}
+
+void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu) {
+	enviarStruct(cpu->socket, CONTEXTO_MPROC, pcb);
 }

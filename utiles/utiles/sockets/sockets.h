@@ -7,6 +7,8 @@
 #include <string.h>     //memset
 #include <commons/log.h>
 #include <commons/string.h>
+#include <commons/collections/dictionary.h>
+#include "../protocolo.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
@@ -40,7 +42,20 @@ typedef struct t_paquete {
 
 typedef enum {
 	HEADER,
-	STRING
+	STRING,
+
+	CONTEXTO_MPROC,
+	RESUL_INSTR_EJEC,
+	INICIAR_PROC,
+	LEER,
+	ESCRIBIR,
+	FIN_PROCESO,
+	RESUL_OK,
+	RESUL_ERROR,
+	RESUL_INICIAR_PROC,
+	RESUL_ESCRIBIR,
+	RESUL_LEER,
+	RESUL_FIN,
 } t_tipo_mensaje;
 
 #pragma pack(1)
@@ -49,6 +64,15 @@ typedef struct {
 	t_tipo_mensaje tipoMensaje;
 }t_header;
 #pragma pack(0)
+
+
+typedef struct {
+	t_tipo_mensaje tipoMensaje;
+	char* descripcion;
+	void* funcionSerializacion;
+	void* funcionDeserializacion;
+} t_registro_serializacion;
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Funciones
 int  crearSocket();
@@ -88,4 +112,11 @@ int conectar(char* ip, char* puerto, int *sock);
 void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger);
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 
+//++++++++++++++++++++++++++++++++++++serializacion +++++++++++++++++++++++++++++++++++++++
+void inicializarRegistroSerializadores();
+bool existeSerializacion(t_tipo_mensaje tipoMensaje);
+char* generarKeySerializacion(t_tipo_mensaje tipoMensaje);
+t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje);
+void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion);
+int ejecutarFuncion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 #endif /* SOCKETS_H_ */
