@@ -51,7 +51,7 @@ int interpretaInstruccion(char** instrucciones){
 	t_instruccion* instruccion = creaInstruccion();
 do{
 instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
-
+ leeInstruccion(instruccion);
 
 }while(recorre !=NULL);
 
