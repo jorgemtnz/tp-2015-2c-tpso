@@ -87,7 +87,32 @@ void registrarNuevaCPU(int socket) {
 	t_cpu_ref* cpu = malloc(sizeof(t_cpu_ref));
 	cpu->socket = socket;
 	cpu->nombre = crearNombreCPU();
+	cpu->conectada = true;
 	list_add(listaCPUs, cpu);
+}
+
+void desregistrarCPUConectada(int socket) {
+	t_cpu_ref* cpu = NULL;
+
+	int var;
+
+	int listaCPUsCount = list_size(listaCPUs);
+	for (var = 0; var < listaCPUsCount && cpu == NULL ; var++) {
+		t_cpu_ref* cpu_actual = list_get(listaCPUs, var);
+		if(cpu_actual->socket == socket) {
+			cpu = cpu_actual;
+		}
+	}
+
+	if(cpu != NULL) {
+		cpu->conectada = false;
+	} else {
+		printConsola("No se pudo registrar la desconexion de la CPU conectada por el socket: %d\n", socket);
+	}
+}
+
+bool cpuConSocket(void *cpu, int socket) {
+	return ((t_cpu_ref *)cpu)->socket == socket;
 }
 
 char* crearNombreCPU() {

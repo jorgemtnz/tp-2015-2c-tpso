@@ -38,10 +38,13 @@ t_list* getColaDeListos() {
 void ejecutarPlanificadorLargoPlazo() {
 	//TODO
 	//POR AHORA ENVIAMOS DIRECTAMENTE
-	if(list_size(listaCPUs) == 0) {
+	if(list_all_satisfy(listaCPUs, cpuDesconectada)) {
 		putsConsola("No hay ningun CPU conectado\n");
 	} else {
 		putsConsola("Enviamos a ejecutar el programa\n");
 	}
 }
 
+bool cpuDesconectada(void *cpu) {
+	return ((t_cpu_ref *)cpu)->conectada == false;
+}

@@ -60,6 +60,7 @@ typedef struct Planificacion  {
 typedef struct CPU_REF {
 	int socket;
 	char* nombre;
+	bool conectada;
 } t_cpu_ref;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -21,6 +21,7 @@
 
 typedef enum {
 	NEW_CONNECTION,
+	TERMINAL_MESSAGE,
 	MESSAGE,
 	HANG_UP
 } t_tipo_notificacion;

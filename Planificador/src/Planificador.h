@@ -52,6 +52,7 @@ void crearLogger();
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 int putsConsola (const char *msg);
 int printConsola(const char *formato, ...);
+bool cpuDesconectada(void *cpu);
 //============================================================================
 
 
@@ -85,6 +86,8 @@ void ejecutarPlanificadorLargoPlazo();
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket);
+bool cpuConSocket(void *cpu, int socket);
+void desregistrarCPUConectada(int socket);
 //========================================================================================
 
 
