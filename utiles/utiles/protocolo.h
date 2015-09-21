@@ -33,6 +33,24 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++  ESTRUCTURAS   ++++++++++++++++++++++++++++++++++++++++
 
+typedef enum {
+	HEADER,
+	STRING,
+
+	CONTEXTO_MPROC,
+	RESUL_INSTR_EJEC,
+	INICIAR_PROC,
+	LEER,
+	ESCRIBIR,
+	FIN_PROCESO,
+	RESUL_OK,
+	RESUL_ERROR,
+	RESUL_INICIAR_PROC,
+	RESUL_ESCRIBIR,
+	RESUL_LEER,
+	RESUL_FIN,
+} t_tipo_mensaje;
+
 typedef struct PaqueteEnvio{
  uint32_t tamanioMensaje;
 	void* mensaje;
@@ -69,7 +87,16 @@ typedef struct CPU_REF {
 PaqueteEnvio* serializar(int tipoDeMensaje, void* payLoad, int tamanioPayLoad);
 Paquete* deserializar(void* buffer,int tamanioMensaje);
 
-void* serializar_CONTEXTO_MPROC();
-void* deserializar_CONTEXTO_MPROC();
+void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura);
+t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_string(int fdCliente, char* estructura);
+char* deserializar_string(int fdCliente);
+
+void* serializar_int16_t(int fdCliente, int16_t estructura);
+int16_t deserializar_int16_t(int fdCliente);
 
 #endif /* UTILES_PROTOCOLO_H_ */

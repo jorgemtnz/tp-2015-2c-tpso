@@ -720,19 +720,24 @@ int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructur
 	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
 
 	void* funcion = serializacion->funcionSerializacion;
-	return ejecutarFuncion(funcion, fdCliente, tipoMensaje, estructura);
+	return ejecutarSerializacion(funcion, fdCliente, tipoMensaje, estructura);
 }
 
 int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 
 	void* funcion = serializacion->funcionDeserializacion;
-	return ejecutarFuncion(funcion, fdCliente, tipoMensaje, estructura);
+	return ejecutarDeserializacion(funcion, fdCliente, tipoMensaje);
 }
 
-int ejecutarFuncion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	(int*)funcion(fdCliente, tipoMensaje, estructura);
 	//TODO
 	return 0;
 }
 
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje) {
+	(int*)funcion(fdCliente, tipoMensaje);
+	//TODO
+	return 0;
+}

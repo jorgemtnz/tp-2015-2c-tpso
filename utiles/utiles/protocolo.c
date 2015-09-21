@@ -28,10 +28,44 @@ Paquete* deserializar(void* buffer, int tamnioMensaje) {
 	return paqueteDeserial;
 }
 
-void* serializar_CONTEXTO_MPROC() {
+void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_CONTEXTO_MPROC");
+	serializar_t_pcb(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-void* deserializar_CONTEXTO_MPROC() {
+void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_pcb* estructura = deserializar_t_pcb(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_CONTEXTO_MPROC");
+	return 0;
+}
+
+void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura) {
+	serializar_string(fdCliente, estructura->rutaArchivoMcod);
+	return 0;
+}
+t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_pcb* estructura = malloc(sizeof(t_pcb));
+	char* string = deserializar_string(fdCliente);
+	estructura->rutaArchivoMcod = string;
+}
+
+void* serializar_string(int fdCliente, char* estructura) {
+	int16_t tamanioString = strlen(estructura);
+	serializar_int16_t(fdCliente, tamanioString);
+	enviarSimple(fdCliente, estructura, tamanioString);
+}
+char* deserializar_string(int fdCliente) {
+	int16_t tamanioString = deserializar_int16_t(fdCliente);
+	char* string = malloc(tamanioString);
+	recibirPorSocket(fdCliente, string, tamanioString);
+	return string;
+}
+
+void* serializar_int16_t(int fdCliente, int16_t estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(int16_t));
+}
+int16_t deserializar_int16_t(int fdCliente) {
+	int16_t* res = malloc(sizeof(int16_t));
+	recibirPorSocket(fdCliente, res, sizeof(int16_t));
+	return *res;
 }

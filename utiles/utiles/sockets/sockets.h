@@ -40,24 +40,6 @@ typedef struct t_paquete {
 
 #define TAMANIO_TIPO_MENSAJE 20
 
-typedef enum {
-	HEADER,
-	STRING,
-
-	CONTEXTO_MPROC,
-	RESUL_INSTR_EJEC,
-	INICIAR_PROC,
-	LEER,
-	ESCRIBIR,
-	FIN_PROCESO,
-	RESUL_OK,
-	RESUL_ERROR,
-	RESUL_INICIAR_PROC,
-	RESUL_ESCRIBIR,
-	RESUL_LEER,
-	RESUL_FIN,
-} t_tipo_mensaje;
-
 #pragma pack(1)
 typedef struct {
 	int tamanioMensaje;
@@ -118,5 +100,6 @@ bool existeSerializacion(t_tipo_mensaje tipoMensaje);
 char* generarKeySerializacion(t_tipo_mensaje tipoMensaje);
 t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje);
 void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion);
-int ejecutarFuncion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje);
 #endif /* SOCKETS_H_ */
