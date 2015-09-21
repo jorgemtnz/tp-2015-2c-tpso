@@ -54,20 +54,20 @@ typedef struct {
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
 	int idProc;
-	int paginaDelProceso;
+	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	char* contenido; // el texto que tendra esa posicion
 	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_marco;
 
 typedef struct {
 	int idProc;
-	int paginaDelProc;
+	int paginaDelProc;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 } t_TLB;
 
 typedef struct {
 	int idProc;
-	int paginaDelProceso;
+	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 } t_TablaDePaginas;
 
@@ -121,7 +121,6 @@ t_escrituraProc* iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 t_config* iniciarArchivoConfig();
-void AgregarParametroYSacarAlPrimeroDeLaTLB(int idProc, int idMarco,int a);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
