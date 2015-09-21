@@ -581,7 +581,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //						}
 //						printf("\n");
 						if(i == STDIN_FILENO) {
-							funcionParaProcesarMensaje(i, NULL, textbuf, MESSAGE, extra, logger);
+							funcionParaProcesarMensaje(i, NULL, textbuf, TERMINAL_MESSAGE, extra, logger);
 						} else {
 							t_header header;
 							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);

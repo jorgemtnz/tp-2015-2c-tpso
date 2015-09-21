@@ -25,11 +25,15 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	if(tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
+		//falta reconocer si ya estuvo conectada y es una reconexion
 		registrarNuevaCPU(socket);
-	} else {
-		if(socket == STDIN_FILENO) {
-			procesarMensajesConsola(socket, header, buffer);
-		}
+
+	} else if(tipoNotificacion == TERMINAL_MESSAGE) {
+		procesarMensajesConsola(socket, header, buffer);
+	} else if(tipoNotificacion == MESSAGE) {
+
+	} else if(tipoNotificacion == HANG_UP) {
+		desregistrarCPUConectada(socket);
 	}
 	return 0;
 }
