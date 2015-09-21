@@ -39,7 +39,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			char* textoAEscribir;
 			switch (buff) {
 			case 1: // va a ser iniciar este
-				pthread_mutex_lock(&mutexParaInicializado);
 				iniciar(idProc, cantPag, socketCPU);
 				break;
 			case 2: // va a ser escribir este
