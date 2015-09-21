@@ -1,6 +1,18 @@
 #include "CPU.h"
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //-----------------------------------FUNCIONES CONTRUCTORAS-------------------------
+t_instruccion* creaInstruccion(){
+	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
+	if (instruccion==NULL){
+		perror("[ERROR] No se reservo memoria para CPU>..>instruccion");
+				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>instruccion");
+				exit(-1);
+	}
+	instruccion->ptrParteLeida='\0';
+	instruccion->ptrComienzoInstruccion='\0';
+	return instruccion;
+}
+
 t_map* crearMapeo() {
 	t_map* map = malloc(sizeof(t_map));
 	if (map == NULL) {
@@ -114,4 +126,8 @@ void destHiloCPU(t_cpu* unHiloCPU){
 void destProcCPU(t_ProcCPU* unCPU){
 	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*)destHiloCPU);
 	free(unCPU);
+}
+
+void destInstruccion(t_instruccion* unaInstruccion){
+//	free(unaInstruccion);
 }

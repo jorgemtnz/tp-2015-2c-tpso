@@ -27,7 +27,7 @@ void leerArchivoDeConfiguracion() {
 
 }
 // se debe agregar instruccion que mape el archivo -> devuelva estructura
-void cargaPorcesoaCPU(char* dirArchivo) {
+void cargaPorcesoaCPU(char* dirArchivo) {//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
 	fdmCod = abreArchivo(dirArchivo);
 	mCodCPU->ptrTamPagina = tamanio_archivo(fdmCod);
@@ -36,6 +36,29 @@ void cargaPorcesoaCPU(char* dirArchivo) {
 }
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
+t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion* instruccion){
+
+//	instruccion.instruccion_separada  = string_split(instruccionCompleta, " ");  // separo por espacio, cada elemento tiene una palabra, la primera es el token
+//    instruccion.ptrComienzoInstruccion = instruccion.instruccion_separada;  // el nombre del arreglo es la direccion al primer elemento
+//    instruccion.ptrParteLeida = instruccion. instruccion_separada;  // apunto al primer elemento
+	return   instruccion;
+}
+
+int interpretaInstruccion(char** instrucciones){
+
+	char* recorreInstrucciones;
+	int  recorre=0;
+	t_instruccion* instruccion = creaInstruccion();
+do{
+//instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
+// leeInstruccion(instruccion);
+
+}while(recorre !=NULL);
+
+
+	return EXIT_SUCCESS;
+}
+
 
 //se debe agregar funcion que envie mensaje.
 
