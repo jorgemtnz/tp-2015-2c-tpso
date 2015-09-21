@@ -30,6 +30,8 @@
 #include <utiles/configExtras.h>
 #include<utiles/espacioDeDatos.h>
 #include<utiles/mapeoAMemoria.h>
+#include<utiles/protocolo.h>
+
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
 #define DISPONIBLE 1
@@ -40,7 +42,13 @@
 
 //--------------------------------estructura para manejar las instrucciones en el CPU----------------
 typedef struct{
-	char** bufferInstrucciones; //
+	char** instruccion_separada;  //arreglo de instruccion separa en palabras
+	char* ptrParteLeida;  // puntero para manejar el recorrido del arreglo
+	char* ptrComienzoInstruccion;  // puntero al comienzo de la instruccion
+}t_instruccion;
+
+typedef struct{
+	char** bufferInstrucciones; // son toas las instrucciones ya separadas por barra n
 	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
 	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
 }t_map;
@@ -92,9 +100,10 @@ t_PCB* crearPCB() ;
 t_mProc* crear_mProc();
 t_cpu* crearCPU();
 t_ProcCPU* crearProcCPU();
-
+t_instruccion* creaInstruccion();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
+void destInstruccion(t_instruccion instruccion);
 void destMap(t_map* unMap) ;
 void destConfig(t_configuracion* unaConfig);
 void destPCB(t_PCB* unPCB);
@@ -107,6 +116,7 @@ void leerArchivoDeConfiguracion();
 void cargaPorcesoaCPU(char* dirArchivo);
 void levantarHilosCPU() ;
 int hiloCPU();
+separaInstruccion(char* instruccionCompleta, t_instruccion instruccion);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
@@ -118,6 +128,8 @@ t_configuracion* configuracion;
 t_log* logger; //VG del logger
 t_cpu* cpu;
 t_map* mCodCPU; // para manejar las instrucciones en el cpu
+
+t_equipo* un;
 
 
 #endif /* CPU_H_ */
