@@ -36,11 +36,11 @@ void cargaPorcesoaCPU(char* dirArchivo) {//solo hay un CPU en este hilo por lo q
 }
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
-t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion instruccion){
+t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion* instruccion){
 
-	instruccion.instruccion_separada  = string_split(instruccionCompleta, " ");  // separo por espacio, cada elemento tiene una palabra, la primera es el token
-    instruccion.ptrComienzoInstruccion = instruccion.instruccion_separada;  // el nombre del arreglo es la direccion al primer elemento
-    instruccion.ptrParteLeida = instruccion. instruccion_separada;  // apunto al primer elemento
+//	instruccion.instruccion_separada  = string_split(instruccionCompleta, " ");  // separo por espacio, cada elemento tiene una palabra, la primera es el token
+//    instruccion.ptrComienzoInstruccion = instruccion.instruccion_separada;  // el nombre del arreglo es la direccion al primer elemento
+//    instruccion.ptrParteLeida = instruccion. instruccion_separada;  // apunto al primer elemento
 	return   instruccion;
 }
 
@@ -50,8 +50,8 @@ int interpretaInstruccion(char** instrucciones){
 	int  recorre=0;
 	t_instruccion* instruccion = creaInstruccion();
 do{
-instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
- leeInstruccion(instruccion);
+//instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
+// leeInstruccion(instruccion);
 
 }while(recorre !=NULL);
 

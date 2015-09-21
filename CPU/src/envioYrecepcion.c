@@ -19,7 +19,7 @@ void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
 
 		break;
 	}
-	default:
+
 	}
 
 }
@@ -73,7 +73,7 @@ void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) {
 		break;
 	}
 
-	default:
+
 	}
 
 	return result;

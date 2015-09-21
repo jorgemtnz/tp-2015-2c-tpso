@@ -5,7 +5,7 @@ t_instruccion* creaInstruccion(){
 	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
 	if (instruccion==NULL){
 		perror("[ERROR] No se reservo memoria para CPU>..>instruccion");
-				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>map");
+				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>instruccion");
 				exit(-1);
 	}
 	instruccion->ptrParteLeida='\0';
@@ -128,6 +128,6 @@ void destProcCPU(t_ProcCPU* unCPU){
 	free(unCPU);
 }
 
-void destInstruccion(t_instruccion instruccion){
-	free(instruccion);
+void destInstruccion(t_instruccion* unaInstruccion){
+//	free(unaInstruccion);
 }

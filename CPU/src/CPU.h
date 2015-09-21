@@ -103,7 +103,7 @@ t_ProcCPU* crearProcCPU();
 t_instruccion* creaInstruccion();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
-void destInstruccion(t_instruccion instruccion);
+void destInstruccion(t_instruccion* instruccion);
 void destMap(t_map* unMap) ;
 void destConfig(t_configuracion* unaConfig);
 void destPCB(t_PCB* unPCB);
@@ -116,7 +116,10 @@ void leerArchivoDeConfiguracion();
 void cargaPorcesoaCPU(char* dirArchivo);
 void levantarHilosCPU() ;
 int hiloCPU();
-separaInstruccion(char* instruccionCompleta, t_instruccion instruccion);
+t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion* instruccion);
+void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
+void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
+void* recibir(int fdReceptor) ;
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
