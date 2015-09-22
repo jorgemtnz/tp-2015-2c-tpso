@@ -62,7 +62,7 @@ void crearArchivo() {
 
 }
 
-void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid) {
+void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
@@ -86,23 +86,23 @@ void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDe
 		espacioLibre->cantPagsLibres = configuracion->cantidadPaginas;
 		list_add(listaDeEspaciosLibres, espacioLibre);
 	}
-	if (cantidadDePagLibres >= cantidadPaginas) {
+	if (cantidadDePagLibres >= estructuraIniciar->cantidadPaginas) {
 
 		acomodarEspaciosLibres(listaDeEspaciosLibres); // POR SI QUEDARON DON BLOQUES LIBRES CONTINUOS
 
 		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 			espacioLibre = list_get(listaDeEspaciosLibres, a);
 
-			if (espacioLibre->cantPagsLibres >= cantidadPaginas) { // SI ENCUENTRO UN ESPACIO EN EL QE ENTRE LO METO y actualizo la lista de espacios libres
+			if (espacioLibre->cantPagsLibres >= estructuraIniciar->cantidadPaginas) { // SI ENCUENTRO UN ESPACIO EN EL QE ENTRE LO METO y actualizo la lista de espacios libres
 
-				procesoAInsertarEnLista->PID = pid;
+				procesoAInsertarEnLista->PID = estructuraIniciar->PID;
 				procesoAInsertarEnLista->ubicacion = espacioLibre->ubicacion;
-				procesoAInsertarEnLista->cantPagsUso = cantidadPaginas;
+				procesoAInsertarEnLista->cantPagsUso = estructuraIniciar->cantidadPaginas;
 				list_add(listaDeProcesosCargados, procesoAInsertarEnLista);
-				paginasLibresRestantes = espacioLibre->cantPagsLibres - cantidadPaginas;
+				paginasLibresRestantes = espacioLibre->cantPagsLibres - estructuraIniciar->cantidadPaginas;
 				list_remove(listaDeEspaciosLibres, a);
 				espacioLibreAInsertar->cantPagsLibres = paginasLibresRestantes;
-				espacioLibreAInsertar->ubicacion = espacioLibre->ubicacion + cantidadPaginas;
+				espacioLibreAInsertar->ubicacion = espacioLibre->ubicacion + estructuraIniciar->cantidadPaginas;
 				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
 				a = list_size(listaDeEspaciosLibres) + 1; //SI YA ENCONTRE UN ESPACIO NO BUSCO MAS
 			} else {

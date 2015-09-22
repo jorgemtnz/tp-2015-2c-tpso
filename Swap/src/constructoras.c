@@ -67,3 +67,16 @@ t_leerDeProceso* crearLeerDeProceso(){
 					return contenido;
 }
 
+t_iniciar_swap* crearEstructuraIniciar(){
+	t_iniciar_swap* contenido = malloc(sizeof(t_iniciar_swap));
+						if (contenido == NULL) {
+							perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+							log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+							exit(-1);
+						}
+						contenido->PID = 0;
+						contenido->cantidadPaginas = 0;
+
+
+						return contenido;
+	}

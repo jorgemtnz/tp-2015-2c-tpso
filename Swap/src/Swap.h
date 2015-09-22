@@ -58,18 +58,6 @@ typedef struct {
 
 } l_procesosCargados;
 
-//POSIBLE ESTRUCTURA ENTRE MEMORIA Y SWAP
-typedef struct {
-	pid_t PID;
-	char* contenido;
-	int numeroPagina;
-} t_escribirEnProceso;
-
-typedef struct {
-	pid_t PID;
-	int numeroPaginaInicio;
-	int numeroPaginaFin;
-} t_leerDeProceso;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -88,7 +76,7 @@ void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-void iniciar(int cantidadPaginas, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, pid_t pid);
+void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
 void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);

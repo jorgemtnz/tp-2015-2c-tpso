@@ -81,6 +81,27 @@ typedef struct CPU_REF {
 	bool conectada;
 } t_cpu_ref;
 
+
+//SWAP Y MEMORIA
+
+typedef struct IniciarSwap {
+	pid_t PID;
+	int cantidadPaginas;
+} t_iniciar_swap;
+
+typedef struct {
+	pid_t PID;
+	char* contenido;
+	int numeroPagina;
+} t_escribirEnProceso;
+
+typedef struct {
+	pid_t PID;
+	int numeroPaginaInicio;
+	int numeroPaginaFin;
+} t_leerDeProceso;
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
 
