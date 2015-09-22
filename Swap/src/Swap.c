@@ -72,11 +72,11 @@ int main(int argc, char *argv[]) {
 
 	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	finalizar(estructuraIniciar3->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	finalizar(&estructuraIniciar3->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
 	iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	finalizar(estructuraIniciar5->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	finalizar(&estructuraIniciar5->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
 	procesoAEscribir->PID = estructuraIniciar4->PID;
 	procesoAEscribir->contenido = "HOLA DON PEPITO HOLA DON JOSE";
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
 	escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	finalizar(estructuraIniciar4->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	finalizar(&estructuraIniciar4->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
 	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
 
@@ -219,7 +219,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					leer(procesoRecibido, listaDeProcesosCargados);
 				} else {
 					if (header->tipoMensaje == FIN_PROCESO) {
-						pid_t pid = buffer;
+						pid_t* pid = (pid_t *)buffer;
 						finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres);
 					}
 				}

@@ -178,7 +178,7 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	//MANDAR A MEMORIA DATOS LEIDOS
 }
 
-void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
+void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -190,7 +190,7 @@ void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaci
 
 		unProceso = list_get(listaDeProcesosCargados, a);
 
-		if (unProceso->PID == pid) {
+		if (unProceso->PID == (*pid)) {
 
 			espacioLibre->ubicacion = unProceso->ubicacion;
 

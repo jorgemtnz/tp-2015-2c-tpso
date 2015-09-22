@@ -79,7 +79,7 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
-void finalizar(pid_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
+void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
