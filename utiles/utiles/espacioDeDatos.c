@@ -55,11 +55,11 @@ void cerrarArchivoEspacioDeDatos(int fd, t_log* logger) {
 	}
 }
 
-void escribirEnEspacioDatos(char* espacioDatos, char* contenido, int offset) {
+void escribirEnEspacioDatos(char* espacioDatos, char* contenido, int offset, int longitudAEscribir) {
 	int posicionAEscribir = offset;
 	int posicionALeer;
-	int limit = string_length(contenido);
-	for (posicionALeer = 0; posicionALeer < limit; posicionALeer++) {
+	//int limit = string_length(contenido);
+	for (posicionALeer = 0; posicionALeer < longitudAEscribir; posicionALeer++) {
 		espacioDatos[posicionAEscribir++] = contenido[posicionALeer];
 	}
 }

@@ -57,8 +57,9 @@ void crearArchivo() {
 
 	espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
 
-	char *contenido = "\0";
-	escribirEnEspacioDatos(espacioDatos, contenido, offset);
+
+	char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
+	escribirEnEspacioDatos(espacioDatos, espacioVacio, offset,  configuracion->tamanioPagina);
 
 }
 
@@ -136,8 +137,16 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
 		}
 	}
-	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)));
-	/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+	if(string_length(procesoAEscribir->contenido) == 0){
+	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),configuracion->tamanioPagina);
+	}else{
+		int longitud = string_length(procesoAEscribir->contenido);
+		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),longitud);
+
+	}
+
+		/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
+	}
 	 puts("Enviando \"respuesta de escribir\" a Memoria");
 	 enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
 }
@@ -199,7 +208,7 @@ void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspac
 			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
 
 			//BORRAR DEL ESPACIO DE DATOS
-			char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina); //VER ESTO , SI LO PONGO COMO ' ' ANDA
+			char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
 
 			for (b = 0; b < unProceso->cantPagsUso; b++) {
 				procesoAEscribir->PID = unProceso->PID;

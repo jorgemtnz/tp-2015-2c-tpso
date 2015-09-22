@@ -33,7 +33,7 @@ struct stat describirArchivoEspacioDatos(char* archivoMmap, t_log* logger);
 
 void cerrarArchivoEspacioDeDatos(int fd, t_log* logger);
 
-void escribirEnEspacioDatos(char* espacioDatos, char* contenido, int offset);
+void escribirEnEspacioDatos(char* espacioDatos, char* contenido, int offset, int longitudAEscribir);
 
 char * leerEspacioDatos(char *espacioDatos, int offset, int cantidadALeer) ;
 
