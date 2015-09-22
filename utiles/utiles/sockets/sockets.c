@@ -166,13 +166,13 @@ int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura) {
 	}
 }
 
-int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer) {
+int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer, t_resultado_serializacion* resultadoSerializacion) {
 
 	//recibimos los datos segun el header
 
 	//deserializamos la estructura
 	if(existeSerializacion(header->tipoMensaje)) {
-		return recibirSerializado(fdCliente, header->tipoMensaje, buffer);
+		return recibirSerializado(fdCliente, header->tipoMensaje, buffer, resultadoSerializacion);
 	} else {
 		void* bufferMsgSerializado = malloc(header->tamanioMensaje);
 		int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
@@ -598,6 +598,12 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 							t_header header;
 							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);
 							memcpy(&header, buf, sizeof(t_header));
+
+							t_resultado_serializacion resultadoSerializacion;
+							recibirStructSegunHeader(i, &header, buf, &resultadoSerializacion);
+							if(resultadoSerializacion.resultado != NULL) {
+								buf = resultadoSerializacion.resultado;
+							}
 							funcionParaProcesarMensaje(i, &header, buf, MESSAGE, extra, logger);
 						}
 						/*
@@ -723,11 +729,11 @@ int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructur
 	return ejecutarSerializacion(funcion, fdCliente, tipoMensaje, estructura);
 }
 
-int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion) {
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 
 	void* funcion = serializacion->funcionDeserializacion;
-	return ejecutarDeserializacion(funcion, fdCliente, tipoMensaje);
+	return ejecutarDeserializacion(funcion, fdCliente, tipoMensaje, resultadoSerializacion);
 }
 
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
@@ -736,8 +742,9 @@ int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCl
 	return 0;
 }
 
-int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje) {
-	(int*)funcion(fdCliente, tipoMensaje);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion) {
+	void* resultado = funcion(fdCliente, tipoMensaje);
+	resultadoDeserializacion -> resultado = resultado;
 	//TODO
 	return 0;
 }

@@ -55,6 +55,10 @@ typedef struct {
 	void* funcionDeserializacion;
 } t_registro_serializacion;
 
+typedef struct {
+	void* resultado;
+} t_resultado_serializacion;
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Funciones
 int  crearSocket();
@@ -69,6 +73,7 @@ struct sockaddr_in especificarSocketInfo(char* direccion, int puerto);
 int recibirMensaje(int unSocket, void** buffer);
 int recibirHeader(int unSocket, Header* header) ;
 int recibirDatos(int unSocket, Header header, void** buffer);
+int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer, t_resultado_serializacion* resultadoSerializacion);
 int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer);
 
 char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje);
@@ -101,5 +106,6 @@ char* generarKeySerializacion(t_tipo_mensaje tipoMensaje);
 t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje);
 void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion);
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion);
+int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion);
 #endif /* SOCKETS_H_ */

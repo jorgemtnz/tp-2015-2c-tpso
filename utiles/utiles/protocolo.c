@@ -36,7 +36,7 @@ void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje, void*
 void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_pcb* estructura = deserializar_t_pcb(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_CONTEXTO_MPROC");
-	return 0;
+	return estructura;
 }
 
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura) {
@@ -47,6 +47,7 @@ t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_pcb* estructura = malloc(sizeof(t_pcb));
 	char* string = deserializar_string(fdCliente);
 	estructura->rutaArchivoMcod = string;
+	return estructura;
 }
 
 void* serializar_string(int fdCliente, char* estructura) {

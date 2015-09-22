@@ -27,13 +27,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	if (tipoNotificacion == NEW_CONNECTION) {
 
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
+		//comando auxiliar para reconectar al planificador manualmente
+		//escribir cp en la terminal y enter (cp= conectar planificador)
 		if (string_starts_with(buffer, "cp")) {
 			int socketPlanificador;
 			conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
 			dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		}
 	} else if (tipoNotificacion == MESSAGE) {
-		recibirStructSegunHeader(socket, header, buffer);
+
+		if(header->tipoMensaje == CONTEXTO_MPROC) {
+			t_pcb* pcbPlanificador = (t_pcb*) buffer;
+			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
+		}
 //		if (header->tipoMensaje == STRING) {
 //
 //			char* mensaje = malloc(header->tamanioMensaje);
