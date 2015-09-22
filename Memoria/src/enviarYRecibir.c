@@ -49,36 +49,35 @@ void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) {
 	void* result; // estructura que espero recibir
 
 	switch (unPaquete->tipoDeMensaje) {
-	case (RESUL_ERROR): {
+		case (RESUL_ERROR): {
 
-	}
-		break;
+			break;
+		}
 
-	case (RESUL_ESCRIBIR): {
+		case (RESUL_ESCRIBIR): {
 
-		break;
-	}
-	case (RESUL_FIN): {
+			break;
+		}
+		case (RESUL_FIN): {
 
-		break;
-	}
-	case (RESUL_INICIAR_PROC): {
+			break;
+		}
+		case (RESUL_INICIAR_PROC): {
 
-		break;
-	}
-	case (RESUL_INSTR_EJEC): {
+			break;
+		}
+		case (RESUL_INSTR_EJEC): {
 
-		break;
-	}
-	case (RESUL_LEER): {
+			break;
+		}
+		case (RESUL_LEER): {
 
-		break;
-	}
-	case (RESUL_OK): {
+			break;
+		}
+		case (RESUL_OK): {
 
-		break;
-	}
-
+			break;
+		}
 
 	}
 

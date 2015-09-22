@@ -121,6 +121,7 @@ t_escrituraProc* iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 t_config* iniciarArchivoConfig();
+void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
