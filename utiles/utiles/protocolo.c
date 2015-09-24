@@ -50,6 +50,30 @@ t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return estructura;
 }
 
+void* serializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_INICIAR_PROC_SWAP");
+	serializar_t_iniciar_swap(fdCliente, tipoMensaje, estructura);
+	return 0;
+}
+void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_iniciar_swap* estructura = deserializar_t_iniciar_swap(fdCliente, tipoMensaje);
+	puts("Deserializando serializar_INICIAR_PROC_SWAP");
+	return estructura;
+}
+
+void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura) {
+	serializar_pid_t(fdCliente, estructura->PID);
+	serializar_int16_t(fdCliente, estructura->cantidadPaginas);
+	return 0;
+}
+t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
+	pid_t pid = deserializar_pid_t(fdCliente);
+	estructura->PID = pid;
+	uint16_t cantidadPaginas = deserializar_int16_t(fdCliente);
+	estructura->cantidadPaginas = cantidadPaginas;
+	return estructura;
+}
 void* serializar_string(int fdCliente, char* estructura) {
 	int16_t tamanioString = strlen(estructura);
 	serializar_int16_t(fdCliente, tamanioString);
@@ -68,5 +92,14 @@ void* serializar_int16_t(int fdCliente, int16_t estructura) {
 int16_t deserializar_int16_t(int fdCliente) {
 	int16_t* res = malloc(sizeof(int16_t));
 	recibirPorSocket(fdCliente, res, sizeof(int16_t));
+	return *res;
+}
+
+void* serializar_pid_t(int fdCliente, pid_t estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(pid_t));
+}
+pid_t deserializar_pid_t(int fdCliente) {
+	pid_t* res = malloc(sizeof(pid_t));
+	recibirPorSocket(fdCliente, res, sizeof(pid_t));
 	return *res;
 }

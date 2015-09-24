@@ -206,19 +206,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 	} else if (tipoNotificacion == MESSAGE) {
 
-		if (header->tipoMensaje == INICIAR_PROC) {
+		if (header->tipoMensaje == INICIAR_PROC_SWAP) {
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 		} else {
-			if (header->tipoMensaje == ESCRIBIR) {
+			if (header->tipoMensaje == ESCRIBIR_SWAP) {
 				t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
 				escribir(listaDeProcesosCargados, procesoAEscribir);
 			} else {
-				if (header->tipoMensaje == LEER) {
+				if (header->tipoMensaje == LEER_SWAP) {
 					t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
 					leer(procesoRecibido, listaDeProcesosCargados);
 				} else {
-					if (header->tipoMensaje == FIN_PROCESO) {
+					if (header->tipoMensaje == FIN_PROCESO_SWAP) {
 						pid_t* pid = (pid_t *)buffer;
 						finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres);
 					}

@@ -690,9 +690,12 @@ void inicializarRegistroSerializadores() {
 		registroSerializadores = dictionary_create();
 
 		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
+		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
 
 	}
 }
+
+
 
 bool existeSerializacion(t_tipo_mensaje tipoMensaje) {
 	inicializarRegistroSerializadores();

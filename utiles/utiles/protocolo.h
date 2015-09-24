@@ -39,10 +39,10 @@ typedef enum {
 
 	CONTEXTO_MPROC,
 	RESUL_INSTR_EJEC,
-	INICIAR_PROC,
-	LEER,
-	ESCRIBIR,
-	FIN_PROCESO,
+	INICIAR_PROC_SWAP,
+	LEER_SWAP,
+	ESCRIBIR_SWAP,
+	FIN_PROCESO_SWAP,
 	RESUL_OK,
 	RESUL_ERROR,
 	RESUL_INICIAR_PROC,
@@ -86,7 +86,7 @@ typedef struct CPU_REF {
 
 typedef struct IniciarSwap {
 	pid_t PID;
-	int cantidadPaginas;
+	uint16_t cantidadPaginas;
 } t_iniciar_swap;
 
 typedef struct {
@@ -119,5 +119,15 @@ char* deserializar_string(int fdCliente);
 
 void* serializar_int16_t(int fdCliente, int16_t estructura);
 int16_t deserializar_int16_t(int fdCliente);
+
+void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura);
+t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_pid_t(int fdCliente, pid_t estructura);
+pid_t deserializar_pid_t(int fdCliente);
+
+void* serializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+
 
 #endif /* UTILES_PROTOCOLO_H_ */
