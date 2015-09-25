@@ -53,22 +53,21 @@ typedef struct {
 
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
-	int idProc;
-	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	char* contenido; // el texto que tendra esa posicion
-	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_marco;
 
 typedef struct {
 	int idProc;
-	int paginaDelProc;// supongo que las paginas del proceso arrancan desde 1
+	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
+	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TLB;
 
 typedef struct {
 	int idProc;
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
+	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TablaDePaginas;
 
 typedef struct {
@@ -122,7 +121,8 @@ t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 t_config* iniciarArchivoConfig();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
-
+int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
+void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================

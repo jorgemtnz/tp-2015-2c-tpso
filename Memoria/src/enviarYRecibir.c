@@ -9,23 +9,6 @@
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
 
 	switch (tipoDeMensaje) {
-	case (INICIAR_PROC): {
-
-		break;
-	}
-	case (ESCRIBIR): {
-
-		break;
-	}
-	case (LEER): {
-
-		break;
-	}
-	case (FIN_PROCESO): {
-
-		break;
-	}
-
 	}
 
 }
