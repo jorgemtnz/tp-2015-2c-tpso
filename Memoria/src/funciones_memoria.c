@@ -134,7 +134,7 @@ void leer(int idProc, int pagIn, int pagFin) {
 		if (respuesta == -1) {
 			lecturaSwap = traerDeSwapUnaPaginaDeUnProceso(idProc, a); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 
-			if (llegoAlMaximoDelProceso(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 				sacarAlPrimeroDeMemoriaDelProceso(idProc);
 				cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
 
@@ -264,8 +264,32 @@ void cargarNuevoMarcoAMemoria(char* contenido){
 	free(campoAux);
 }
 
-bool llegoAlMaximoDelProceso(int idProc){
+bool llegoAlMaximoDelProcesoLaMemoria(int idProc){
 	bool respuesta;
+	int tamanioMemoria,a,tamanioTablaDePag,contadorMarcosEnMemoria,flag = 0;
+	tamanioMemoria = list_size(listaMemoria);
+	tamanioTablaDePag = list_size(listaTablaDePag);
+	t_marco* campoAux;
+	campoAux = iniciarMarco();
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+
+	for(a=0;a<tamanioTablaDePag;a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+		if(campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco != -1 && flag == 0 ){ // o sea esta en memoria
+			contadorMarcosEnMemoria ++;
+			if(contadorMarcosEnMemoria == configuracion->cantidadMarcos ){
+				flag =1;
+			}
+		}
+	}
+
+	if(flag == 0){
+		respuesta = false;
+	} else{
+		respuesta = true;
+	}
+
 
 	return respuesta;
 }
@@ -273,7 +297,6 @@ bool llegoAlMaximoDelProceso(int idProc){
 bool estaLlenaLaMemoria(){
 	bool respuesta;
 	int tamanioMemoria;
-
 	tamanioMemoria = list_size(listaMemoria);
 
 	if(tamanioMemoria <configuracion->cantidadMarcos){

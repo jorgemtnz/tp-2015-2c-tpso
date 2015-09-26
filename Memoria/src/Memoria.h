@@ -127,7 +127,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag);
 void cargarNuevoMarcoAMemoria(char* contenido);
-bool llegoAlMaximoDelProceso(int idProc);
+bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc);
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
