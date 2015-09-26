@@ -41,7 +41,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		puts(logMsg);
 		log_error(logger, logMsg);
 
-		config_destroy(archivoConfig);
+		//config_destroy(archivoConfig);
+
 	}
 
 }
@@ -396,5 +397,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido){
 			free(campoTLB);
 			free(campoTablaDePag);
 }
-
+void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap){
+	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
+}
 

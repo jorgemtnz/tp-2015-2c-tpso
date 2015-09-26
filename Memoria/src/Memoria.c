@@ -10,15 +10,24 @@ int main(int argc, char *argv[]) {
 	idMarco = 0;
 
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
+
 	leerArchivoDeConfiguracion(argc, argv);
+
 
 	int socketSwap;
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap), &socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
-	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketSwap, procesarMensajes, NULL, logger);
+	t_iniciar_swap* estructura;
+	estructura = crearEstructuraIniciar();
+	estructura->PID = 2;
+	estructura->cantidadPaginas = 14;
+	enviarIniciarASwap(estructura, socketSwap);
+	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketSwap, procesarMensajes, NULL, logger);
 
 	return EXIT_SUCCESS;
 }
+
+
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	pthread_mutex_lock(&mutexProcesadorMensajes);

@@ -82,7 +82,7 @@ bool string_equals(char* string1, char* string2);
 int enviarSimple(int fdCliente, void *msg, int len);
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
 int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
-
+int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura);
 
 // Solo para el servidor
 void asociarSocket(int sockfd, int puerto);

@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
 
+	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 	/*
 	 prueba para borrar el contenido mapeado cuando se va un proceso
 	 iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
 	 printf("los datos leidos : %s\n", datosLeidos4);
 
 	 */
-
+/*
 	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 
 	iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
@@ -163,7 +164,7 @@ int main(int argc, char *argv[]) {
 	printf("los datos leidos2 : %s\n", datosLeidos2);
 	printf("los datos leidos3 : %s\n", datosLeidos3);
 	printf("los datos leidos4 : %s \n", datosLeidos4);
-
+*/
 	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);
@@ -182,12 +183,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	//termina prueba
-	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 
-	//	recv(socketMemoria, &prueba, sizeof(int), 0);
-	//	printf("%i\n", prueba);
-	//	prueba = 5;
-	//	send(socketMemoria, &prueba, sizeof(int), 0);
+
 
 	return EXIT_SUCCESS;
 }
@@ -208,7 +205,38 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 		if (header->tipoMensaje == INICIAR_PROC_SWAP) {
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
+			printf("el pid recinido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+			//EMPIEZA PRUEBA
+			int a;
+				l_procesosCargados* proceso;
+				l_espacioLibre* espacioLibre;
+
+
+				espacioLibre = crearEspacioLibre();
+
+
+			printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
+
+				for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
+					proceso = list_get(listaDeProcesosCargados, a);
+					printf("\n\n");
+					printf("el pid :  %i\n", proceso->PID);
+					printf("la ubicacion es : %i\n", proceso->ubicacion);
+					printf("cantidad paginas : %i \n", proceso->cantPagsUso);
+
+				}
+				printf("lista %i \n",list_size(listaDeEspaciosLibres));
+				for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+					espacioLibre = list_get(listaDeEspaciosLibres, a);
+
+					printf("\nempieza espacio libre\n\n\n");
+					printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
+					printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
+
+				}
+				//TERMINA PRUEBA
 		} else {
 			if (header->tipoMensaje == ESCRIBIR_SWAP) {
 				t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
