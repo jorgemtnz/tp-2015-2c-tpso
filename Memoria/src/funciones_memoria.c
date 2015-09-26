@@ -85,7 +85,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 
 	t_escrituraProc * escritura;
 	escritura = iniciarEscrituraProc();
-	int a, flagTLB = 0, flagTablaPag = 0, tamanioTLB, tamanioTablaPag, tamanioMemoria, respuesta;
+	int idMarco;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_marco * campoMemoria;
@@ -251,7 +251,17 @@ void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap){
 
 
 void cargarNuevoMarcoAMemoria(char* contenido){
+	t_marco* campoAux;
+	campoAux = iniciarMarco();
 
+	variableIdMarco ++;
+
+	campoAux->idMarco = variableIdMarco;
+	campoAux->contenido = contenido;
+
+	list_add(listaMemoria,campoAux);
+
+	free(campoAux);
 }
 
 bool llegoAlMaximoDelProceso(int idProc){
