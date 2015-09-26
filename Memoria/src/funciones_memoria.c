@@ -272,6 +272,15 @@ bool llegoAlMaximoDelProceso(int idProc){
 
 bool estaLlenaLaMemoria(){
 	bool respuesta;
+	int tamanioMemoria;
+
+	tamanioMemoria = list_size(listaMemoria);
+
+	if(tamanioMemoria <configuracion->cantidadMarcos){
+		respuesta = false;
+	} else {
+		respuesta = true;
+	}
 
 	return respuesta;
 }
