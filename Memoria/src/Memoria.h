@@ -133,7 +133,7 @@ void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
 void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(int idMarco);
+void verificarBitDeModificada(int idMarco,char* contenido);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);

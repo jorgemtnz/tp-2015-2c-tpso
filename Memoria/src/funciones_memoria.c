@@ -171,7 +171,7 @@ void finalizar(int idProc) {
 
 
 int buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	int tamanioTLB, a, tamanioTablaPag;
+	int tamanioTLB, a, tamanioTablaPag,idMarco;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
@@ -182,7 +182,9 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		for (a = 0; a < tamanioTLB; a++) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idProc == idProc && campoTLB->paginaDelProceso == nroPag /*que este en un marco*/) {
-				return campoTLB->idMarco;
+				idMarco = campoTLB->idMarco;
+							free(campoTLB);
+							return idMarco;
 			}
 		}
 	}
@@ -192,11 +194,15 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	for (a = 0; a < tamanioTablaPag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
-			return campoTablaDePag->idMarco;
+			idMarco = campoTablaDePag->idMarco;
+			free(campoTablaDePag);
+			return idMarco;
 		}
 	}
 
 	// si llego aca es porque no esta entonces devuelve - 1
+	free(campoTLB);
+	free(campoTablaDePag);
 
 	return -1;
 }
@@ -266,11 +272,8 @@ void cargarNuevoMarcoAMemoria(char* contenido){
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc){
 	bool respuesta;
-	int tamanioMemoria,a,tamanioTablaDePag,contadorMarcosEnMemoria,flag = 0;
-	tamanioMemoria = list_size(listaMemoria);
+	int a,tamanioTablaDePag,contadorMarcosEnMemoria,flag = 0;
 	tamanioTablaDePag = list_size(listaTablaDePag);
-	t_marco* campoAux;
-	campoAux = iniciarMarco();
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
@@ -289,6 +292,8 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc){
 	} else{
 		respuesta = true;
 	}
+
+	free(campoTablaDePag);
 
 
 	return respuesta;
@@ -317,15 +322,52 @@ void sacarAlPrimeroDeMemoria(){
 	campoMemoria = iniciarMarco();
 	list_remove(listaMemoria,0);
 
-	verificarBitDeModificada(campoMemoria->idMarco);
+	verificarBitDeModificada(campoMemoria->idMarco,campoMemoria->contenido);
+
+	free(campoMemoria);
 
 }
 
-void verificarBitDeModificada(int idMarco){
+void verificarBitDeModificada(int idMarco,char* contenido){
+	int tamanioTLB,tamanioTablaDePag,a,flagTLB,flagTablaDePag,pagina,idProc;/* teoricamente si esta en TLB el bit de modif de un proceso tamb esta en TAbla de pag,
+	lo hago para verificar nada mas*/
+	tamanioTLB= list_size(listaTLB);
+	tamanioTablaDePag= list_size(listaTablaDePag);
+	t_TLB* campoTLB;
+	campoTLB = iniciarTLB();
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+
+	for(a=0;a<tamanioTLB && flagTLB==0;a++){
+		campoTLB = list_get(listaTLB,a);
+		if(campoTLB->idMarco == idMarco){
+			flagTLB =1;
+			list_remove(listaTLB,a);
+		}
+	}
+
+	for(a=0;a<tamanioTablaDePag && flagTablaDePag==0;a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+			if(campoTablaDePag->idMarco == idMarco){
+				flagTablaDePag =1;
+				list_remove(listaTablaDePag,a);
+			}
+		}
+
+	if(campoTablaDePag->bitPagModificada == 1 && campoTLB->bitPagModificada == 1 ){ // teoricamente los dos tienen que estar en uno
+		pagina= campoTablaDePag->paginaDelProceso;
+		idProc = campoTablaDePag->idProc;
+
+		enviarASwapContenidoPaginaDesactualizada(idProc,pagina,contenido);
+	}
+
+	free(campoTLB);
+	free(campoTablaDePag);
 
 }
 
 char* traerContenidoDeMarco(int idMarco){
+	char* contenido;
 	int tamanioMemoria, a, flag = 0;
 	tamanioMemoria= list_size(listaMemoria);
 	t_marco* campoMemoria;
@@ -337,8 +379,14 @@ char* traerContenidoDeMarco(int idMarco){
 			flag = 1;
 		}
 	}
+	contenido = campoMemoria->contenido;
+	free (campoMemoria);
 
-	return campoMemoria->contenido;
+	return contenido;
+}
+
+void enviarASwapContenidoPaginaDesactualizada(int idProc,int pagina,char* contenido){
+
 }
 
 void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu){
