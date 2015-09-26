@@ -317,9 +317,19 @@ void sacarAlPrimeroDeMemoria(){
 }
 
 char* traerContenidoDeMarco(int idMarco){
-	char* contenido;
+	int tamanioMemoria, a, flag = 0;
+	tamanioMemoria= list_size(listaMemoria());
+	t_marco* campoMemoria;
+	campoMemoria = iniciarMarco();
 
-	return contenido;
+	for(a=0;a<tamanioMemoria && flag ==0;a++){
+		campoMemoria = list_get(listaMemoria);
+		if(campoMemoria->idMarco == idMarco){
+			flag = 1;
+		}
+	}
+
+	return campoMemoria->contenido;
 }
 
 void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu){
