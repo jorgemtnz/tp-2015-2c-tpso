@@ -85,6 +85,7 @@ typedef struct {
 	int idProc;
 	int pagIn;
 	int pagFin;
+	char* contenido;
 }t_lecturaSwap;
 
 typedef struct {
@@ -124,6 +125,15 @@ void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
+t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag);
+void cargarNuevoMarcoAMemoria(char* contenido);
+bool llegoAlMaximoDelProceso(int idProc);
+void sacarAlPrimeroDeMemoriaDelProceso(int idProc);
+void sacarAlPrimeroDeMemoria();
+char* traerContenidoDeMarco(int idMarco);
+void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu);
+bool estaLlenaLaMemoria();
+
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
