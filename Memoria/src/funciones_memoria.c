@@ -313,17 +313,26 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc){
 }
 
 void sacarAlPrimeroDeMemoria(){
+	t_marco* campoMemoria;
+	campoMemoria = iniciarMarco();
+	list_remove(listaMemoria,0);
+
+	verificarBitDeModificada(campoMemoria->idMarco);
+
+}
+
+void verificarBitDeModificada(int idMarco){
 
 }
 
 char* traerContenidoDeMarco(int idMarco){
 	int tamanioMemoria, a, flag = 0;
-	tamanioMemoria= list_size(listaMemoria());
+	tamanioMemoria= list_size(listaMemoria);
 	t_marco* campoMemoria;
 	campoMemoria = iniciarMarco();
 
 	for(a=0;a<tamanioMemoria && flag ==0;a++){
-		campoMemoria = list_get(listaMemoria);
+		campoMemoria = list_get(listaMemoria,a);
 		if(campoMemoria->idMarco == idMarco){
 			flag = 1;
 		}
