@@ -315,7 +315,47 @@ bool estaLlenaLaMemoria(){
 
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc){
 
+	// voy a guardar todos los marcos del idProc que encuentre y voy a ir comparando  los idMarco hasta encomtrar
+	// al primero
+
+	// va a ir sacando los marcos y ver si coincide el id con el del proceso, el primer id que coincida va a ser
+	// el que va a sacar
+	int a,b,id,tamanioMemoria,tamanioListaId,flag =0;
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_list* listaIdMarco;
+	listaIdMarco = list_create();
+
+	tamanioMemoria = list_size(listaMemoria);
+	for(a=0;a<tamanioMemoria;a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+		if(campoTablaDePag->idProc == idProc){
+			list_add(listaIdMarco,campoTablaDePag->idMarco);
+		}
+	}
+
+	tamanioMemoria= list_size(listaMemoria);
+	for(a=0;a<tamanioMemoria && flag==0;a++){
+		campoMarco= list_get(listaMemoria,a);
+		tamanioListaId = list_size(listaIdMarco);
+		for(b=0;b<tamanioListaId && flag ==0;b++){
+			id = list_get(listaIdMarco,b);
+			if(id == campoMarco->idMarco){
+				flag = 1;
+			}
+			list_remove(listaMemoria,a);
+			verificarBitDeModificada(campoMarco->idMarco,campoMarco->contenido);
+		}
+	}
+
+	free(campoMarco);
+	free(campoTablaDePag);
+
+
 }
+
 
 void sacarAlPrimeroDeMemoria(){
 	t_marco* campoMemoria;
