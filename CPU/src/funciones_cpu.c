@@ -35,30 +35,36 @@ void cargaPorcesoaCPU(char* dirArchivo) {//solo hay un CPU en este hilo por lo q
 	mCodCPU->bufferInstrucciones = string_split(mCodCPU->ptrCMemoriaMap, "\n");
 }
 
-// se debe agregar funcion que intreprente instruccion ya mapeada
-t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion* instruccion){
+
+t_instruccion* separaInstruccion(char* instruccionCompleta){
+	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
 
 //	instruccion.instruccion_separada  = string_split(instruccionCompleta, " ");  // separo por espacio, cada elemento tiene una palabra, la primera es el token
 //    instruccion.ptrComienzoInstruccion = instruccion.instruccion_separada;  // el nombre del arreglo es la direccion al primer elemento
 //    instruccion.ptrParteLeida = instruccion. instruccion_separada;  // apunto al primer elemento
 	return   instruccion;
 }
-
+// se debe agregar funcion que intreprente instruccion ya mapeada
 int interpretaInstruccion(char** instrucciones){
 
-	char* recorreInstrucciones;
-	int  recorre=0;
-	t_instruccion* instruccion = creaInstruccion();
-do{
-//instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
-// leeInstruccion(instruccion);
-
-}while(recorre !=NULL);
+//	char* recorreInstrucciones;
+//	int  recorre=0;
+//	t_instruccion* instruccion = creaInstruccion();
+//do{
+////instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
+//// leeInstruccion(instruccion);
+//
+//}while(recorre !=NULL);
 
 
 	return EXIT_SUCCESS;
 }
 
+//funcion que ejecuta la instruccion
+int ejecutaInstruccion(){
 
-//se debe agregar funcion que envie mensaje.
+	return EXIT_SUCCESS;
+}
+
+
 

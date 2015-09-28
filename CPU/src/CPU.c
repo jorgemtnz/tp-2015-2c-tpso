@@ -9,10 +9,20 @@ int main(void) {
 
 	int socketPlanificador;
 	int socketMemoria;
+	int resultConexion_mem = 0;
+	int resultConexion_planif = 0;
 
-	conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
+	resultConexion_planif = conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
+	if (resultConexion_planif == -1)
+		log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
+
 	dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
-	conectar(configuracion->vg_ipMemoria, string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
+
+	resultConexion_mem = conectar(configuracion->vg_ipMemoria, string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
+	if (resultConexion_mem == -1)
+			log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
+
+
 	dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 
 	escucharConexiones("0", socketPlanificador, socketMemoria, 0, procesarMensajes, NULL, logger);
@@ -21,6 +31,8 @@ int main(void) {
 }
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
+	int resultConexion_planif=0;
+
 	puts("CPU procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 
@@ -31,12 +43,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		//escribir cp en la terminal y enter (cp= conectar planificador)
 		if (string_starts_with(buffer, "cp")) {
 			int socketPlanificador;
-			conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
+			resultConexion_planif = conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
+			if (resultConexion_planif == -1)
+					log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
 			dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		}
 	} else if (tipoNotificacion == MESSAGE) {
 
-		if(header->tipoMensaje == CONTEXTO_MPROC) {
+		if (header->tipoMensaje == CONTEXTO_MPROC) {
 			t_pcb* pcbPlanificador = (t_pcb*) buffer;
 			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
 		}
@@ -59,5 +73,4 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 	return 0;
 }
-
 

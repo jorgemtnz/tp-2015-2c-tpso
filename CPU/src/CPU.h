@@ -37,6 +37,11 @@
 #define DISPONIBLE 1
 #define NO_DISPONIBLE 0
 #define CANT_RUTA 256
+#define INST_INICIAR 1
+#define INST_ESCRIBIR 2
+#define INST_LEER 3
+#define INST_ENTRADA-SALIDA 4
+#define INST_FINALIZAR 5
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 
@@ -116,7 +121,7 @@ void leerArchivoDeConfiguracion();
 void cargaPorcesoaCPU(char* dirArchivo);
 void levantarHilosCPU() ;
 int hiloCPU();
-t_instruccion* separaInstruccion(char* instruccionCompleta, t_instruccion* instruccion);
+t_instruccion* separaInstruccion(char* instruccionCompleta);
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
 void* recibir(int fdReceptor) ;

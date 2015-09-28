@@ -3,19 +3,19 @@
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
 
 	switch (tipoDeMensaje) {
-	case (INICIAR_PROC): {
+	case (INICIAR_PROCESO_MEM): {
 
 		break;
 	}
-	case (ESCRIBIR): {
+	case (ESCRIBIR_MEM): {
 
 		break;
 	}
-	case (LEER): {
+	case (LEER_MEM): {
 
 		break;
 	}
-	case (FIN_PROCESO): {
+	case (FIN_PROCESO_MEM): {
 
 		break;
 	}
