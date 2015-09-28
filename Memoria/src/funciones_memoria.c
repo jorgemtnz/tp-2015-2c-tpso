@@ -166,6 +166,17 @@ void leer(int idProc, int pagIn, int pagFin) {
 
 
 void finalizar(int idProc) {
+	int a,tamanioListaId,id;
+	t_list * listaDeId;
+	listaDeId = buscarLosIdDeProceso(idProc);
+	tamanioListaId = list_size(listaDeId);
+
+	for(a=0;a<tamanioListaId;a++){
+		id= list_get(listaDeId,a);
+		eliminarDeMemoria(id);
+	}
+
+	enviarASwapEliminarProceso(idProc);
 
 }
 
