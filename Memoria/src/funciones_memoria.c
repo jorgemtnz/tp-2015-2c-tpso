@@ -180,3 +180,22 @@ void finalizar(int idProc) {
 
 }
 
+
+void* enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
+	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
+
+
+}
+
+
+void enviarASwapContenidoDePaginaDesactualizada(int idProc, int pagina, char* contenido) {
+
+}
+
+void enviarACPUContenidoDePaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
+
+}
+
+t_lecturaSwap* traerDeSwapUnaPaginaDesdeUnProceso(int idProc, int nroDePag) {
+
+}
