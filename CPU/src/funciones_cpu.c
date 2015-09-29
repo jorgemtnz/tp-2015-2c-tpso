@@ -42,15 +42,13 @@ return mCodCPU;
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
 int interpretaInstruccion(char* instruccion_origen){
-	int token=0;
+	int resultado=0;
 	t_instruccion* instruccion = creaInstruccion();
 
 instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada;
 instruccion->ptrParteLeida = instruccion->instruccion_separada;
- token = leerInstruccion(instruccion);
-
-
+ resultado = leerInstruccion(instruccion->instruccion_separada);
 
 	return EXIT_SUCCESS;
 }

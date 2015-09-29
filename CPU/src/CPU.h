@@ -117,16 +117,24 @@ void destHiloCPU(t_cpu* unHiloCPU);
 void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
-void leerArchivoDeConfiguracion();
-t_map*  cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU);
-void levantarHilosCPU() ;
-int hiloCPU();
+
 char** separaInstruccion(char* instruccionCompleta);
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
 void* recibir(int fdReceptor) ;
+int leerInstruccion(char** instruccion);
+int ejecutar(int token,char* separada_instruccion);
+int reconoceTokenInstruccion(char* string);
+// +++++++++++++++++++++++++++++++++++Funciones
+//============================================================================
 
-int leerInstruccion(char* instruccion);
+void leerArchivoDeConfiguracion();
+t_map*  cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU);
+void levantarHilosCPU() ;
+int hiloCPU();
+int ejecutaInstrucciones(char** buffer_instrucciones);
+int interpretaInstruccion(char* instruccion_origen);
+int ejecutaInstruccion();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================

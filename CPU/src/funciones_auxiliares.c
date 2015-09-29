@@ -21,43 +21,39 @@ char** separaInstruccion(char* instruccionCompleta) {
 	return vector_Instruccion;
 }
 
-int ejecutar(int token,char* separada_instruccion){
+int ejecutar(int token, char* separada_instruccion) {
 
 	switch (token) {
-		case (INICIAR_PROCESO_MEM): {
+	case (INICIAR_PROCESO_MEM): {
 
-			break;
-		}
-		case (ESCRIBIR_MEM): {
+		break;
+	}
+	case (ESCRIBIR_MEM): {
 
-			break;
-		}
-		case (LEER_MEM): {
+		break;
+	}
+	case (LEER_MEM): {
 
-			break;
-		}
-		case (FIN_PROCESO_MEM): {
+		break;
+	}
+	case (FIN_PROCESO_MEM): {
 
-			break;
-		}
-		case (ENTRADA_SALIDA):{
+		break;
+	}
+	case (ENTRADA_SALIDA): {
 
+	}
 
-		}
-
-		}
+	}
 
 	return EXIT_SUCCESS;
 }
 //recibe la instruccion que se debe interpretar como una cadena de char
-int leerInstruccion(char* instruccion){
-	int i=0;
-char** vector_Instruccion;
-int token;
+int leerInstruccion(char** instruccion) {
+	int i = 0;
+	int token;
 
-vector_Instruccion= separaInstruccion(instruccion);
-token = reconoceTokenInstruccion(vector_Instruccion[i]);
-
-ejecutar(token, vector_Instruccion[i+1]);
+	token = reconoceTokenInstruccion(instruccion[i]);
+	ejecutar(token, instruccion[i + 1]);
 	return EXIT_SUCCESS;
 }

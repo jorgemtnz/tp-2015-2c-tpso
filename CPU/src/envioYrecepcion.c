@@ -40,7 +40,7 @@ void* recibir(int fdReceptor) {
 }
 //agregar comportamiento en cada break
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) {
-	void* result; // estructura que espero recibir
+	void* result=NULL; // estructura que espero recibir
 
 	switch (unPaquete->tipoDeMensaje) {
 	case (RESUL_ERROR): {
