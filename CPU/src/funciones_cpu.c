@@ -27,34 +27,46 @@ void leerArchivoDeConfiguracion() {
 
 }
 // se debe agregar instruccion que mape el archivo -> devuelva estructura
-void cargaPorcesoaCPU(char* dirArchivo) {//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
+t_map* cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU) {//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
+
 	fdmCod = abreArchivo(dirArchivo);
 	mCodCPU->ptrTamPagina = tamanio_archivo(fdmCod);
 	mCodCPU->ptrCMemoriaMap = (char*) crearEspacioDeDatos(fdmCod, mCodCPU->ptrTamPagina, logger);
 	mCodCPU->bufferInstrucciones = string_split(mCodCPU->ptrCMemoriaMap, "\n");
+	if (mCodCPU->bufferInstrucciones==NULL)
+		log_error(logger, "[ERROR] al cargar las instrucciones en CPU>..>bufferInstrucciones");
+return mCodCPU;
+
 }
 
-
-t_instruccion* separaInstruccion(char* instruccionCompleta){
-	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
-
-//	instruccion.instruccion_separada  = string_split(instruccionCompleta, " ");  // separo por espacio, cada elemento tiene una palabra, la primera es el token
-//    instruccion.ptrComienzoInstruccion = instruccion.instruccion_separada;  // el nombre del arreglo es la direccion al primer elemento
-//    instruccion.ptrParteLeida = instruccion. instruccion_separada;  // apunto al primer elemento
-	return   instruccion;
-}
 // se debe agregar funcion que intreprente instruccion ya mapeada
-int interpretaInstruccion(char** instrucciones){
+int interpretaInstruccion(char* instruccion_origen){
+	int token=0;
+	t_instruccion* instruccion = creaInstruccion();
 
-//	char* recorreInstrucciones;
-//	int  recorre=0;
-//	t_instruccion* instruccion = creaInstruccion();
-//do{
-////instruccion = separaInstruccion(	instrucciones[recorre], instruccion);
-//// leeInstruccion(instruccion);
-//
-//}while(recorre !=NULL);
+instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
+instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada;
+instruccion->ptrParteLeida = instruccion->instruccion_separada;
+ token = leerInstruccion(instruccion);
+
+
+
+	return EXIT_SUCCESS;
+}
+
+int ejecutaInstrucciones(char** buffer_instrucciones){
+	int i=0;
+	int result;
+while(buffer_instrucciones[i]!=NULL){
+	result = interpretaInstruccion(buffer_instrucciones[i]);
+	if(result !=EXIT_SUCCESS){
+		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
+				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
+				exit(-1);
+	}
+	i++;
+}
 
 
 	return EXIT_SUCCESS;

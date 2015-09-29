@@ -129,5 +129,9 @@ void destProcCPU(t_ProcCPU* unCPU){
 }
 
 void destInstruccion(t_instruccion* unaInstruccion){
-//	free(unaInstruccion);
+	free(unaInstruccion);
+}
+
+void destVectorInstruccion(char** vectorInstruccion){
+	free ( vectorInstruccion);
 }

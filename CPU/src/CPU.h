@@ -40,14 +40,14 @@
 #define INST_INICIAR 1
 #define INST_ESCRIBIR 2
 #define INST_LEER 3
-#define INST_ENTRADA-SALIDA 4
+#define INST_ENTRADA_SALIDA 4
 #define INST_FINALIZAR 5
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 
 //--------------------------------estructura para manejar las instrucciones en el CPU----------------
 typedef struct{
-	char** instruccion_separada;  //arreglo de instruccion separa en palabras
+	char** instruccion_separada;  //arreglo de instruccion separada en palabras
 	char* ptrParteLeida;  // puntero para manejar el recorrido del arreglo
 	char* ptrComienzoInstruccion;  // puntero al comienzo de la instruccion
 }t_instruccion;
@@ -118,13 +118,15 @@ void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
-void cargaPorcesoaCPU(char* dirArchivo);
+t_map*  cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU);
 void levantarHilosCPU() ;
 int hiloCPU();
-t_instruccion* separaInstruccion(char* instruccionCompleta);
+char** separaInstruccion(char* instruccionCompleta);
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
 void* recibir(int fdReceptor) ;
+
+int leerInstruccion(char* instruccion);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
