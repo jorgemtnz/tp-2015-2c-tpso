@@ -40,13 +40,20 @@ void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
 }
 
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura) {
+	serializar_int8_t(fdCliente, estructura->pid);
 	serializar_string(fdCliente, estructura->rutaArchivoMcod);
+	serializar_bool(fdCliente, estructura->tieneDesalojo);
+	serializar_int16_t(fdCliente, estructura->tamanioRafaga);
+	serializar_int16_t(fdCliente, estructura->proximaInstruccion);
 	return 0;
 }
 t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_pcb* estructura = malloc(sizeof(t_pcb));
-	char* string = deserializar_string(fdCliente);
-	estructura->rutaArchivoMcod = string;
+	estructura->pid = deserializar_int8_t(fdCliente);
+	estructura->rutaArchivoMcod = deserializar_string(fdCliente);
+	estructura->tieneDesalojo = deserializar_bool(fdCliente);
+	estructura->tamanioRafaga = deserializar_int16_t(fdCliente);
+	estructura->proximaInstruccion = deserializar_int16_t(fdCliente);
 	return estructura;
 }
 
@@ -76,13 +83,15 @@ t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMe
 }
 void* serializar_string(int fdCliente, char* estructura) {
 	int16_t tamanioString = strlen(estructura);
+	int tamanioAlter = strlen(estructura);
 	serializar_int16_t(fdCliente, tamanioString);
 	enviarSimple(fdCliente, estructura, tamanioString);
 }
 char* deserializar_string(int fdCliente) {
 	int16_t tamanioString = deserializar_int16_t(fdCliente);
-	char* string = malloc(tamanioString);
+	char* string = malloc(tamanioString + 1);
 	recibirPorSocket(fdCliente, string, tamanioString);
+	string[tamanioString] = '\0';
 	return string;
 }
 
@@ -92,6 +101,24 @@ void* serializar_int16_t(int fdCliente, int16_t estructura) {
 int16_t deserializar_int16_t(int fdCliente) {
 	int16_t* res = malloc(sizeof(int16_t));
 	recibirPorSocket(fdCliente, res, sizeof(int16_t));
+	return *res;
+}
+
+void* serializar_int8_t(int fdCliente, int8_t estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(int8_t));
+}
+int8_t deserializar_int8_t(int fdCliente) {
+	int8_t* res = malloc(sizeof(int8_t));
+	recibirPorSocket(fdCliente, res, sizeof(int8_t));
+	return *res;
+}
+
+void* serializar_bool(int fdCliente, bool estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(bool));
+}
+bool deserializar_bool(int fdCliente) {
+	bool* res = malloc(sizeof(bool));
+	recibirPorSocket(fdCliente, res, sizeof(bool));
 	return *res;
 }
 
