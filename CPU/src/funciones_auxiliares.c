@@ -57,3 +57,8 @@ int leerInstruccion(char** instruccion) {
 	ejecutar(token, instruccion[i + 1]);
 	return EXIT_SUCCESS;
 }
+ //desmapea el mCod cargado par CPU
+int descargaProcesoCPU(t_map* mCod){
+	eliminarEspacioDeDatos(mCod->ptrCMemoriaMap, mCod->ptrTamPagina, logger);
+	return EXIT_SUCCESS;
+}

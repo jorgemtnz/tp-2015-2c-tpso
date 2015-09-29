@@ -129,7 +129,7 @@ int reconoceTokenInstruccion(char* string);
 //============================================================================
 
 void leerArchivoDeConfiguracion();
-t_map*  cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU);
+t_map*  cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
 void levantarHilosCPU() ;
 int hiloCPU();
 int ejecutaInstrucciones(char** buffer_instrucciones);

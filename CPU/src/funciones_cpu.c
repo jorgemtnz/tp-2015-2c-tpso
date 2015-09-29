@@ -27,7 +27,7 @@ void leerArchivoDeConfiguracion() {
 
 }
 // se debe agregar instruccion que mape el archivo -> devuelva estructura
-t_map* cargaPorcesoaCPU(char* dirArchivo, t_map* mCodCPU) {//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
+t_map* cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
 
 	fdmCod = abreArchivo(dirArchivo);
@@ -59,8 +59,8 @@ int ejecutaInstrucciones(char** buffer_instrucciones){
 while(buffer_instrucciones[i]!=NULL){
 	result = interpretaInstruccion(buffer_instrucciones[i]);
 	if(result !=EXIT_SUCCESS){
-		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
-				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
+		perror("[ERROR] al interpretar la instruccion en CPU");
+				log_error(logger, "[ERROR] al interpretar la instruccion en CPU");
 				exit(-1);
 	}
 	i++;

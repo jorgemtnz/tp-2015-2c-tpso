@@ -16,7 +16,7 @@ char* nuevoEspacioDeDatos(char* path, char* tamanioEspacioDatos, t_log* logger) 
 	int tamanioArchivoEspacioDatos = statArchivoEspacioDatos.st_size;
 	return crearEspacioDeDatos(fdEspacioDatos, tamanioArchivoEspacioDatos, logger);
 }
-
+//mapea un archivo a memoria, fd -> el archivo, data es el puntero al vector char* mapeado
 char* crearEspacioDeDatos(int fd, int tamanioEspacioDatos, t_log* logger) {
 	char* data = (char *) mmap((caddr_t) 0, tamanioEspacioDatos, PROT_WRITE, MAP_SHARED, fd, 0);
 	if (data == (caddr_t) (-1)) {
