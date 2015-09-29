@@ -309,19 +309,4 @@ t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag) {
 
 }
 
-void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap) {
-	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
-}
-
-void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) {
-
-}
-
-void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
-
-}
-
-t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag) {
-
-}
 

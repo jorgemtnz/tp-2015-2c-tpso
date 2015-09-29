@@ -128,6 +128,12 @@ char* deserializar_string(int fdCliente);
 void* serializar_int16_t(int fdCliente, int16_t estructura);
 int16_t deserializar_int16_t(int fdCliente);
 
+void* serializar_int8_t(int fdCliente, int8_t estructura);
+int8_t deserializar_int8_t(int fdCliente);
+
+void* serializar_bool(int fdCliente, bool estructura);
+bool deserializar_bool(int fdCliente);
+
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura);
 t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
 

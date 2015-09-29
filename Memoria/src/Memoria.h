@@ -124,7 +124,7 @@ t_config* iniciarArchivoConfig();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
-void* enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
+void* enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
 t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag);
 void cargarNuevoMarcoAMemoria(char* contenido);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
@@ -137,6 +137,7 @@ void verificarBitDeModificada(int idMarco,char* contenido);
 t_list* buscarLosIdDeProceso(int idProc);
 void eliminarDeMemoria(int id);
 void enviarASwapEliminarProceso(int idProc);
+void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) ;
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
