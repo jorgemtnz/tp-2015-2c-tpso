@@ -197,6 +197,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
 
+
 	if (tipoNotificacion == NEW_CONNECTION) {
 
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
@@ -206,7 +207,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		if (header->tipoMensaje == INICIAR_PROC_SWAP) {
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
-			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
 			//EMPIEZA PRUEBA
 			int a;
 				l_procesosCargados* proceso;
@@ -243,8 +244,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			} else {
 				if (header->tipoMensaje == LEER_SWAP) {
 					t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
-					leer(procesoRecibido, listaDeProcesosCargados);
-					//ENVIAR A MEMORIA LOS DATOS LEIDOS
+					leer(procesoRecibido, listaDeProcesosCargados, socket);
 				} else {
 					if (header->tipoMensaje == FIN_PROCESO_SWAP) {
 						pid_t* pid = (pid_t *)buffer;
