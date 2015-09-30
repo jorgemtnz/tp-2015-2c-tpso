@@ -117,22 +117,31 @@ void destHiloCPU(t_cpu* unHiloCPU);
 void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
-
+int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
+int ejecutar(int token,char* separada_instruccion);
+int leerInstruccion(char** instruccion);
+int descargaProcesoCPU(t_map* mCod);
+char* pedirRutaArchivo() ;
+int devuelveCantidadElementosArreglo(char** arreglo) ;
+int ejecutaIniciarProceso();
+int ejecutaEscribirMemoria();
+int ejecutaLeerMemoria();
+int ejecutaFinProcesoMemoria() ;
+int ejecutaEntradaSalida() ;
+
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
 void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
 void* recibir(int fdReceptor) ;
-int leerInstruccion(char** instruccion);
-int ejecutar(int token,char* separada_instruccion);
-int reconoceTokenInstruccion(char* string);
+
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
 void leerArchivoDeConfiguracion();
-t_map*  cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
+int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
 void levantarHilosCPU() ;
 int hiloCPU();
-int ejecutaInstrucciones(char** buffer_instrucciones);
+int ejecutaInstrucciones(t_map* mCodCPU, t_PCB* pcbCPU);
 int interpretaInstruccion(char* instruccion_origen);
 int ejecutaInstruccion();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++

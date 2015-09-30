@@ -8,6 +8,7 @@ t_instruccion* creaInstruccion(){
 				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>instruccion");
 				exit(-1);
 	}
+	instruccion->instruccion_separada[0]=NULL;
 	instruccion->ptrParteLeida='\0';
 	instruccion->ptrComienzoInstruccion='\0';
 	return instruccion;
@@ -22,7 +23,7 @@ t_map* crearMapeo() {
 	}
 	map->ptrCMemoriaMap = '\0';
 	map->ptrTamPagina = 0;
-
+    map->bufferInstrucciones[0]=NULL;
 	return map;
 }
 
