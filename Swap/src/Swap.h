@@ -76,10 +76,10 @@ void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
-void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir);
+void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
+void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
-void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
+void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);

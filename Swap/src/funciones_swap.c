@@ -57,13 +57,12 @@ void crearArchivo() {
 
 	espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
 
-
 	char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
-	escribirEnEspacioDatos(espacioDatos, espacioVacio, offset,  configuracion->tamanioPagina);
+	escribirEnEspacioDatos(espacioDatos, espacioVacio, offset, configuracion->tamanioPagina);
 
 }
 
-void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
+void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
@@ -112,20 +111,19 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 			}
 
-			/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-			 puts("Enviando \"respuesta de iniciar\" a Memoria");
-			 enviar(atoi(socketMemoria), "OK INICIAR", strlen("OK INICIAR"));
-			 */
+			enviarHeader(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR", strlen("OK_INICIAR"));
+			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
+
 		}
 	} else {
-		/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-		 puts("Enviando \"respuesta de iniciar\" a Memoria");
-		 enviar(atoi(socketMemoria), "ERROR INICIAR", strlen("ERROR INICIAR"));*/
+		enviarHeader(socket, RESUL_INICIAR_PROC_ERROR, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
+		enviarSimple(socket, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
+
 	}
 
 }
 
-void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir) {
+void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket) {
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
 	int a, ubicacion;
@@ -137,18 +135,18 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
 		}
 	}
-	if(string_length(procesoAEscribir->contenido) == 0){
-	escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),configuracion->tamanioPagina);
-	}else{
+	if (string_length(procesoAEscribir->contenido) == 0) {
+		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),
+				configuracion->tamanioPagina);
+	} else {
 		int longitud = string_length(procesoAEscribir->contenido);
-		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),longitud);
+		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, ((configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina)),
+				longitud);
 
 	}
 
-		/*	char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-	}
-	 puts("Enviando \"respuesta de escribir\" a Memoria");
-	 enviar(atoi(socketMemoria), "OK ESCRIBIR", strlen("OK ESCRIBIR"));*/
+	enviarHeader(socket, RESUL_ESCRIBIR, "RESUL_ESCRIBIR", strlen("RESUL_ESCRIBIR"));
+	enviarSimple(socket, "RESUL_ESCRIBIR", strlen("RESUL_ESCRIBIR"));
 }
 
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
@@ -187,7 +185,7 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	//MANDAR A MEMORIA DATOS LEIDOS
 }
 
-void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
+void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -215,7 +213,7 @@ void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspac
 				procesoAEscribir->contenido = espacioVacio;
 				procesoAEscribir->numeroPagina = b;
 
-				escribir(listaDeProcesosCargados, procesoAEscribir);
+				escribir(listaDeProcesosCargados, procesoAEscribir,socket);
 
 			}
 
@@ -223,9 +221,8 @@ void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspac
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
-	/*char* socketMemoria = (char*) dictionary_get(conexiones, "Memoria");
-	 puts("Enviando \"respuesta de finalizar\" a Memoria");
-	 enviar(atoi(socketMemoria), "OK FINALIZAR", strlen("OK FINALIZAR"));*/
+	enviarHeader(socket, RESUL_FIN, "RESUL_FIN", strlen("RESUL_FIN"));
+	enviarSimple(socket, "RESUL_FIN", strlen("RESUL_FIN"));
 
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
@@ -285,18 +282,18 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	int a;
 	espacioProcAux = list_get(listaDeProcesosCargados, 0);
 	espacioProcAux->ubicacion = 0;
-	list_replace(listaDeProcesosCargados,0,espacioProcAux);
+	list_replace(listaDeProcesosCargados, 0, espacioProcAux);
 	for (a = 1; a < list_size(listaDeProcesosCargados); a++) {
 		espacioProcSig = list_get(listaDeProcesosCargados, a);
 		espacioProcSig->ubicacion = espacioProcAux->ubicacion + espacioProcAux->cantPagsUso;
-		list_replace(listaDeEspaciosLibres,a,espacioProcSig);
+		list_replace(listaDeEspaciosLibres, a, espacioProcSig);
 		espacioProcAux = list_get(listaDeProcesosCargados, a);
 	}
-	int ultimoLugarOcupado = espacioProcAux-> ubicacion + espacioProcAux->cantPagsUso;
-	nuevoEspacioLibre->ubicacion=ultimoLugarOcupado+1;
-	nuevoEspacioLibre->cantPagsLibres=configuracion->cantidadPaginas-ultimoLugarOcupado;
+	int ultimoLugarOcupado = espacioProcAux->ubicacion + espacioProcAux->cantPagsUso;
+	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado + 1;
+	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 	list_clean(listaDeEspaciosLibres);
-	list_add(listaDeEspaciosLibres,nuevoEspacioLibre);
+	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 	free(espacioProcAux);
 	free(espacioProcSig);
 	free(nuevoEspacioLibre);

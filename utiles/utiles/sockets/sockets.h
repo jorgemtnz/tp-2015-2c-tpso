@@ -83,7 +83,7 @@ int enviarSimple(int fdCliente, void *msg, int len);
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
 int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
 int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura);
-
+int enviar(int fdCliente, void *msg, int len);
 // Solo para el servidor
 void asociarSocket(int sockfd, int puerto);
 void escucharSocket(int sockfd, int conexionesEntrantesPermitidas);
