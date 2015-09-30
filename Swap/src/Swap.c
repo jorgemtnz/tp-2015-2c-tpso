@@ -205,7 +205,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 		if (header->tipoMensaje == INICIAR_PROC_SWAP) {
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
-			printf("el pid recinido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
+			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 
 			//EMPIEZA PRUEBA
