@@ -46,17 +46,19 @@
 //=======================================================================================
 
 //--------------------------------estructura para manejar las instrucciones en el CPU----------------
-typedef struct{
+typedef struct {
 	char** instruccion_separada;  //arreglo de instruccion separada en palabras
 	char* ptrParteLeida;  // puntero para manejar el recorrido del arreglo
 	char* ptrComienzoInstruccion;  // puntero al comienzo de la instruccion
-}t_instruccion;
 
-typedef struct{
+} t_instruccion;
+
+typedef struct {
 	char** bufferInstrucciones; // son toas las instrucciones ya separadas por barra n
-	char* ptrCMemoriaMap;// puntero al comienzo de la memoria mapeada
+	char* ptrCMemoriaMap; // puntero al comienzo de la memoria mapeada
 	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
-}t_map;
+	uint8_t cantidadInstrucciones;
+} t_map;
 
 //--------------------estructura para levantar del archivo de config -----------------------------------------
 typedef struct {
@@ -90,10 +92,10 @@ typedef struct {
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
-typedef struct{
-uint8_t  contadorIdCPU;
-t_list* listaCPU;
-}t_ProcCPU;
+typedef struct {
+	uint8_t contadorIdCPU;
+	t_list* listaCPU;
+} t_ProcCPU;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -101,50 +103,49 @@ t_list* listaCPU;
 //============================================================
 t_map* crearMapeo();
 t_configuracion* crearConfiguracion();
-t_PCB* crearPCB() ;
-t_mProc* crear_mProc();
 t_cpu* crearCPU();
 t_ProcCPU* crearProcCPU();
 t_instruccion* creaInstruccion();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 void destInstruccion(t_instruccion* instruccion);
-void destMap(t_map* unMap) ;
-void destConfig(t_configuracion* unaConfig);
-void destPCB(t_PCB* unPCB);
-void dest_mProc(t_mProc* un_mProc);
+void destMap(t_map* unMap);
 void destHiloCPU(t_cpu* unHiloCPU);
 void destProcCPU(t_ProcCPU* unCPU);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
-int ejecutar(int token,char* separada_instruccion);
-int leerInstruccion(char** instruccion);
+int ejecutar(int token, char* separada_instruccion, t_pcb*  pcbPlanificador, int socket);
+int leerInstruccion(char** instruccion, t_pcb* pcbPlanificador, int socket);
 int descargaProcesoCPU(t_map* mCod);
-char* pedirRutaArchivo() ;
-int devuelveCantidadElementosArreglo(char** arreglo) ;
-int ejecutaIniciarProceso();
-int ejecutaEscribirMemoria();
-int ejecutaLeerMemoria();
-int ejecutaFinProcesoMemoria() ;
-int ejecutaEntradaSalida() ;
+char* pedirRutaArchivo();
+int devuelveCantidadElementosArreglo(char** arreglo);
 
-void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
+int ejecutaIniciarProceso(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaEscribirMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaLeerMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket) ;
+int ejecutaEntradaSalida(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+
+void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 //TODO Conflictua con sockets.h
 //void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
-void* recibir(int fdReceptor) ;
+void* recibir(int fdReceptor);
 
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
 void leerArchivoDeConfiguracion();
 int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
-void levantarHilosCPU() ;
+void levantarHilosCPU();
 int hiloCPU();
-int ejecutaInstrucciones(t_map* mCodCPU, t_PCB* pcbCPU);
-int interpretaInstruccion(char* instruccion_origen);
-int ejecutaInstruccion();
+int ejecutaInstrucciones(t_map* mCodCPU, t_pcb* pcbPlanificador, int socket);
+int interpretaInstruccion(char* instruccion_origen, t_pcb* pcbPlanificador, int socket);
+int ejecutaInstruccion(int token, char* separada_instruccion, t_pcb* pcbPlanificador, int socket);
+int preparaCPU(t_pcb* pcbPlanificador, int socket);
+int procesaCodigo(t_pcb* pcbPlanificador, int socket);
+
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
@@ -158,6 +159,5 @@ t_cpu* cpu;
 t_map* mCodCPU; // para manejar las instrucciones en el cpu
 
 t_equipo* un;
-
 
 #endif /* CPU_H_ */

@@ -23,27 +23,27 @@ char** separaInstruccion(char* instruccionCompleta) {
 	return vector_Instruccion;
 }
 
-int ejecutar(int token, char* separada_instruccion) {
+int ejecutar(int token, char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
 
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
-		ejecutaIniciarProceso();
+		ejecutaIniciarProceso( separada_instruccion, pcbPlanificador, socket );
 		break;
 	}
 	case (ESCRIBIR_MEM): {
-		ejecutaEscribirMemoria();
+		ejecutaEscribirMemoria(separada_instruccion, pcbPlanificador, socket );
 		break;
 	}
 	case (LEER_MEM): {
-		ejecutaLeerMemoria();
+		ejecutaLeerMemoria(separada_instruccion, pcbPlanificador, socket );
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
-		ejecutaFinProcesoMemoria();
+		ejecutaFinProcesoMemoria(separada_instruccion, pcbPlanificador, socket );
 		break;
 	}
 	case (ENTRADA_SALIDA): {
-		ejecutaEntradaSalida();
+		ejecutaEntradaSalida(separada_instruccion, pcbPlanificador, socket );
 	}
 
 	}
@@ -51,12 +51,12 @@ int ejecutar(int token, char* separada_instruccion) {
 	return EXIT_SUCCESS;
 }
 //recibe la instruccion que se debe interpretar como una cadena de char
-int leerInstruccion(char** instruccion) {
+int leerInstruccion(char** instruccion,   t_pcb* pcbPlanificador, int socket) {
 	int i = 0;
 	int token;
 
 	token = reconoceTokenInstruccion(instruccion[i]);
-	ejecutaInstruccion(token, instruccion[i + 1]);
+	ejecutaInstruccion(token, instruccion[i + 1],  pcbPlanificador, socket);
 	return EXIT_SUCCESS;
 }
 //desmapea el mCod cargado para CPU
@@ -89,28 +89,28 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 
 	return contador;
 }
-
-int ejecutaIniciarProceso() {
-
-	return EXIT_SUCCESS;
-}
-
-int ejecutaEscribirMemoria() {
+//debe mandar el inicio a memoria con serializacion correspondiente
+int ejecutaIniciarProceso(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
 
 	return EXIT_SUCCESS;
 }
-
-int ejecutaLeerMemoria() {
-
-	return EXIT_SUCCESS;
-}
-
-int ejecutaFinProcesoMemoria() {
+//mandar comando a memoria con los datos y la pagina donde debe ser escrita
+int ejecutaEscribirMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
 
 	return EXIT_SUCCESS;
 }
+//mandar comando a memoria y  el numero de pagina que se debe leer
+int ejecutaLeerMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
 
-int ejecutaEntradaSalida() {
+	return EXIT_SUCCESS;
+}
+//mandar el comando de finalizar y el respectivo PID IP del proceso
+int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
+
+	return EXIT_SUCCESS;
+}
+// mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
+int ejecutaEntradaSalida(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket ) {
 
 	return EXIT_SUCCESS;
 }

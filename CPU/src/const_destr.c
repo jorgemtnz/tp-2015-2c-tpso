@@ -24,6 +24,7 @@ t_map* crearMapeo() {
 	map->ptrCMemoriaMap = '\0';
 	map->ptrTamPagina = 0;
     map->bufferInstrucciones[0]=NULL;
+    map->cantidadInstrucciones =0;
 	return map;
 }
 
@@ -44,36 +45,6 @@ t_configuracion* crearConfiguracion() {
 	return configuracion;
 }
 
-t_PCB* crearPCB() {
-	int i;
-	t_PCB* pcb = malloc(sizeof(t_PCB));
-	if (pcb == NULL) {
-		perror("[ERROR] No se reservo memoria para CPU>..>pcb");
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>pcb");
-		exit(-1);
-	}
-	pcb->cantInstruc = 0;
-	pcb->ptr_proximaInstruccion = NULL;
-	for (i = 0; i < CANT_RUTA; i++)
-		pcb->path[i] = '\0';
-
-	return pcb;
-}
-
-t_mProc* crear_mProc() {
-	t_mProc* mProc = malloc(sizeof(t_mProc));
-	if (mProc == NULL) {
-		perror("[ERROR] No se reservo memoria para CPU>..>mProc");
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mProc");
-		exit(-1);
-	}
-	mProc->idProc = 0;
-	mProc->pcb = crearPCB();
-	mProc->tiempoEjec = 0;
-
-	return mProc;
-}
-
 t_cpu* crearCPU() {
 	t_cpu* CPUHilo = malloc(sizeof(t_cpu));
 	if (CPUHilo == NULL) {
@@ -82,7 +53,6 @@ t_cpu* crearCPU() {
 		exit(-1);
 	}
 	CPUHilo->idCPU = 0;
-	CPUHilo->proceso = crear_mProc();
 	CPUHilo->estado = DISPONIBLE;
 
 	return CPUHilo;

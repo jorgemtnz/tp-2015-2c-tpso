@@ -20,8 +20,7 @@ int main(void) {
 
 	resultConexion_mem = conectar(configuracion->vg_ipMemoria, string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
 	if (resultConexion_mem == -1)
-			log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
-
+		log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
 
 	dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 
@@ -31,13 +30,13 @@ int main(void) {
 }
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-	int resultConexion_planif=0;
+	int resultConexion_planif = 0;
 
 	puts("CPU procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 
 	if (tipoNotificacion == NEW_CONNECTION) {
-
+		log_info(logger, "se realizo nueva conección");
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
 		//comando auxiliar para reconectar al planificador manualmente
 		//escribir cp en la terminal y enter (cp= conectar planificador)
@@ -45,15 +44,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			int socketPlanificador;
 			resultConexion_planif = conectar(configuracion->vg_ipPlanificador, string_itoa(configuracion->vg_puertoPlanificador), &socketPlanificador);
 			if (resultConexion_planif == -1)
-					log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
+				log_error(logger, "[ERROR]no se reconecto el CPU al Planificador");
 			dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		}
 	} else if (tipoNotificacion == MESSAGE) {
 
 		if (header->tipoMensaje == CONTEXTO_MPROC) {
+			log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 			t_pcb* pcbPlanificador = (t_pcb*) buffer;
 			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
-			preparaCPU(pcbPlanificador);
+			preparaCPU(pcbPlanificador, socket);
 		}
 //		if (header->tipoMensaje == STRING) {
 //
