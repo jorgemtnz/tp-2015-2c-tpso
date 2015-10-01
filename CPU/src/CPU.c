@@ -53,6 +53,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		if (header->tipoMensaje == CONTEXTO_MPROC) {
 			t_pcb* pcbPlanificador = (t_pcb*) buffer;
 			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
+			preparaCPU(pcbPlanificador);
 		}
 //		if (header->tipoMensaje == STRING) {
 //

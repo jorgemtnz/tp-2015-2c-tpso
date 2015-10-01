@@ -27,13 +27,14 @@ void leerArchivoDeConfiguracion() {
 
 }
 
-int preparaCPU() {
+int preparaCPU(t_pcb* pcbPlanificador) {
 	t_cpu* cpu = crearCPU();
 
 	//recibe la info del sockect
 	//procesa la info del sockect
 
 	//llama a procesa codigo
+	procesaCodigo(pcbPlanificador->rutaArchivoMcod);
 
 	return EXIT_SUCCESS;
 
