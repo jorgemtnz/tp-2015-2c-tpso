@@ -113,15 +113,21 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 			}
 
 			enviarHeader(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR", strlen("OK_INICIAR"));
+			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
 			string_append(&msjDeRta,"mProc ");
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
 			string_append(&msjDeRta," - Iniciado");
-			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
+			puts(msjDeRta);
 
 		}
 	} else {
 		enviarHeader(socket, RESUL_INICIAR_PROC_ERROR, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
 		enviarSimple(socket, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
+
+		string_append(&msjDeRta,"mProc ");
+		string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
+		string_append(&msjDeRta," - Fallido");
+		puts(msjDeRta);
 
 	}
 
@@ -151,6 +157,8 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 	}
 
 	enviarHeader(socket, RESUL_ESCRIBIR, "RESUL_ESCRIBIR", strlen("RESUL_ESCRIBIR"));
+	enviarSimple(socket,procesoAEscribir->contenido, strlen(procesoAEscribir->contenido));
+
 	string_append(&msjDeRta,"Mproc ");
 	string_append(&msjDeRta,string_itoa(unProceso->PID));
 	string_append(&msjDeRta," - Pagina ");
@@ -159,7 +167,6 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 	string_append(&msjDeRta,procesoAEscribir->contenido);
 	puts(msjDeRta);
 
-	enviarSimple(socket,"RESUL_ESCRIBIR", strlen("RESUL_ESCRIBIR"));
 }
 
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
@@ -194,7 +201,10 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 		datosLeidosFinal = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
 				configuracion->tamanioPagina);
 	}
-	enviarSerializado(socket, RESUL_LEER, datosLeidosFinal);
+
+	enviarHeader(socket, RESUL_LEER,"RESUL_LEER",strlen("RESUL_LEER"));
+	enviarSimple(socket, datosLeidosFinal, strlen(datosLeidosFinal));
+
 	return datosLeidosFinal;
 }
 
@@ -235,7 +245,7 @@ void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspac
 		}
 	}
 	enviarHeader(socket, RESUL_FIN, "RESUL_FIN", strlen("RESUL_FIN"));
-	enviarSimple(socket, "RESUL_FIN", strlen("RESUL_FIN"));
+	enviarSimple(socket, string_itoa(*pid), strlen(string_itoa(*pid)));
 
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
