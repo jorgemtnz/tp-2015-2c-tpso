@@ -43,7 +43,7 @@ int preparaCPU(t_pcb* pcbPlanificador) {
 int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
 
-	fdmCod = abreArchivo(dirArchivo);
+	fdmCod = abrirArchivoLecturaEscritura(dirArchivo, logger);
 	mCodCPU->ptrTamPagina = tamanio_archivo(fdmCod);
 	mCodCPU->ptrCMemoriaMap = (char*) crearEspacioDeDatos(fdmCod, mCodCPU->ptrTamPagina, logger);
 	mCodCPU->bufferInstrucciones = string_split(mCodCPU->ptrCMemoriaMap, "\n");
