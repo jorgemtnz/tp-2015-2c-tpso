@@ -1,28 +1,29 @@
 #include "CPU.h"
 //agregar comportamiento en cada break
-void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
-
-	switch (tipoDeMensaje) {
-	case (INICIAR_PROCESO_MEM): {
-
-		break;
-	}
-	case (ESCRIBIR_MEM): {
-
-		break;
-	}
-	case (LEER_MEM): {
-
-		break;
-	}
-	case (FIN_PROCESO_MEM): {
-
-		break;
-	}
-
-	}
-
-}
+//TODO conflictua con sockets.h
+//void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
+//
+//	switch (tipoDeMensaje) {
+//	case (INICIAR_PROCESO_MEM): {
+//
+//		break;
+//	}
+//	case (ESCRIBIR_MEM): {
+//
+//		break;
+//	}
+//	case (LEER_MEM): {
+//
+//		break;
+//	}
+//	case (FIN_PROCESO_MEM): {
+//
+//		break;
+//	}
+//
+//	}
+//
+//}
 
 void* recibir(int fdReceptor) {
 	size_t tamanioMensaje;

@@ -131,7 +131,8 @@ int ejecutaFinProcesoMemoria() ;
 int ejecutaEntradaSalida() ;
 
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor) ;
-void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
+//TODO Conflictua con sockets.h
+//void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
 void* recibir(int fdReceptor) ;
 
 // +++++++++++++++++++++++++++++++++++Funciones

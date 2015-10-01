@@ -6,12 +6,13 @@
  */
 #include "Memoria.h"
 //agregar comportamiento en cada break
-void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
-
-	switch (tipoDeMensaje) {
-	}
-
-}
+//TODO conflictua con sockets.h
+//void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
+//
+//	switch (tipoDeMensaje) {
+//	}
+//
+//}
 
 void* recibir(int fdReceptor) {
 	size_t tamanioMensaje;
