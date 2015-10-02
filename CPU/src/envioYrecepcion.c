@@ -93,8 +93,6 @@ int recibirMensajeVarios(int socket, int token) {
 	}
 	
 	case(STRING):{
-		if (header->tipoMensaje == STRING) {
-//
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
 //			printf("Recibi el mensaje: %s\n", mensaje);
