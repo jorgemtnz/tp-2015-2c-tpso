@@ -82,14 +82,6 @@ void destConfig(t_configuracion* unaConfig) {
 	free(unaConfig);
 }
 
-void destPCB(t_PCB* unPCB){
-	free(unPCB);
-}
-
-void dest_mProc(t_mProc* un_mProc){
-	free(un_mProc);
-}
-
 void destHiloCPU(t_cpu* unHiloCPU){
    free(unHiloCPU);
 }

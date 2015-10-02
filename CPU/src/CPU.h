@@ -42,6 +42,8 @@
 #define INST_LEER 3
 #define INST_ENTRADA_SALIDA 4
 #define INST_FINALIZAR 5
+#define USO 1
+#define NO_USO 0
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 
@@ -54,10 +56,10 @@ typedef struct {
 } t_instruccion;
 
 typedef struct {
-	char** bufferInstrucciones; // son toas las instrucciones ya separadas por barra n
+	char** bufferInstrucciones; // son todas las instrucciones ya separadas por barra n
 	char* ptrCMemoriaMap; // puntero al comienzo de la memoria mapeada
 	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
-	uint8_t cantidadInstrucciones;
+	uint8_t cantidadInstrucciones;  // cantidad de instrucciones a ejecutar
 } t_map;
 
 //--------------------estructura para levantar del archivo de config -----------------------------------------
@@ -71,24 +73,15 @@ typedef struct {
 } t_configuracion;
 
 //----------------------------------------------estructura del PCB del proceso------------------
-typedef struct {
-	char path[CANT_RUTA];
-	uint8_t* ptr_proximaInstruccion;
-	uint8_t cantInstruc; // cantidad de instrucciones a ejecutar
-} t_PCB;
-
-//---------------------------------------------estructura de un proceso-------------------------
-typedef struct {
-	uint8_t idProc;
-	t_PCB* pcb;
-	uint8_t tiempoEjec; // tiempo de ejecucion indicado para este proceso
-} t_mProc;
+//debe llegar desde el planificador en t_pcb
 
 //---------------------------------------------estructura de una CPU, seria la de un hilo--------
 typedef struct {
 	uint8_t idCPU;
-	uint8_t estado;
-	t_mProc* proceso;
+	uint8_t estado; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
+	t_pcb* pcbPlanificador;
+	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
+	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
