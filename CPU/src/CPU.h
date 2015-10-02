@@ -152,7 +152,7 @@ int ejecutaEntradaSalida(char* separada_instruccion,  t_pcb*pcbPlanificador, int
 
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
-int recibirMensajeVarios(int socket, int token);
+int recibirMensajeVarios(int socket, int token,  char*   buffer ,void* extra );
 int ejecutaResultError(int socket);
 int  ejecutaResultEscribir(int socket);
 int  ejecutaResulFin(int socket);
