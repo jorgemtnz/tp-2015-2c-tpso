@@ -1,29 +1,5 @@
 #include "CPU.h"
 //agregar comportamiento en cada break
-//TODO conflictua con sockets.h
-//void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario) {
-//
-//	switch (tipoDeMensaje) {
-//	case (INICIAR_PROCESO_MEM): {
-//
-//		break;
-//	}
-//	case (ESCRIBIR_MEM): {
-//
-//		break;
-//	}
-//	case (LEER_MEM): {
-//
-//		break;
-//	}
-//	case (FIN_PROCESO_MEM): {
-//
-//		break;
-//	}
-//
-//	}
-//
-//}
 
 int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
 
@@ -126,7 +102,7 @@ int recibirMensajeVarios(int socket, int token) {
 	}
 	return EXIT_SUCCESS;
 }
-
+// todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
 int ejecutaResultError(int socket){
 	return EXIT_SUCCESS;
 }
@@ -155,7 +131,7 @@ int  ejecutaResulOk(int socket){
 	return EXIT_SUCCESS;
 }
 
-
+// en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
 int ejecutaIniciarProceso(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
 
