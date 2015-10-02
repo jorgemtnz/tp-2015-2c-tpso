@@ -29,22 +29,27 @@ int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int s
 
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
+		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
 		ejecutaIniciarProceso(separada_instruccion, pcbPlanificador, socket);
 		break;
 	}
 	case (ESCRIBIR_MEM): {
+		log_info(logger, "se va a ejecutar escribir memoria");
 		ejecutaEscribirMemoria(separada_instruccion, pcbPlanificador, socket);
 		break;
 	}
 	case (LEER_MEM): {
+		log_info(logger, "se va a ejecutar leer memoria ");
 		ejecutaLeerMemoria(separada_instruccion, pcbPlanificador, socket);
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
+		log_info(logger, "se va a ejecutar fin proceso memoria ");
 		ejecutaFinProcesoMemoria(separada_instruccion, pcbPlanificador, socket);
 		break;
 	}
 	case (ENTRADA_SALIDA): {
+		log_info(logger, "se va a ejecutar entrada salida ");
 		ejecutaEntradaSalida(separada_instruccion, pcbPlanificador, socket);
 		break;
 	}
@@ -57,32 +62,40 @@ int recibirMensajeVarios(int socket, int token) {
 
 	switch (token) {
 	case (RESUL_ERROR): {
+		log_info(logger, "se va a ejecutar result error");
 		ejecutaResultError(socket);
 
 		break;
 	}
 	case (RESUL_ESCRIBIR): {
+		log_info(logger, "se va a ejecutar result escribir ");
 		ejecutaResultEscribir(socket);
 		break;
 	}
 	case (RESUL_FIN): {
+		log_info(logger, "se va a ejecutar result fin de proceso ");
 		ejecutaResulFin(socket);
 		break;
 	}
 	case (RESUL_INICIAR_PROC): {
+		log_info(logger, "se va a ejecutar result iniciar proceso ");
 		ejecutaResulIniciarProc(socket);
 		break;
 	}
 	case (RESUL_INSTR_EJEC): {
+		log_info(logger, "se va a ejecutar result instruccion ejecutar ");
 		ejecutaResulInstrEjec(socket);
 		break;
 	}
 	case (RESUL_LEER): {
+		log_info(logger, "se va a ejecutar resultLeer ");
 		ejecutaResultLeer(socket);
 		break;
 	}
 	case (RESUL_OK): {
+		log_info(logger, "se va a ejecutar resultOK ");
 		ejecutaResulOk(socket);
+		
 		break;
 	}
 	case (CONTEXTO_MPROC):{
@@ -93,6 +106,7 @@ int recibirMensajeVarios(int socket, int token) {
 	}
 	
 	case(STRING):{
+			log_info(logger, "se va a recibir un string ");
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
 //			printf("Recibi el mensaje: %s\n", mensaje);
