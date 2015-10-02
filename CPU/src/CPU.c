@@ -31,7 +31,8 @@ int main(void) {
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	int resultConexion_planif = 0;
-
+        int resultConexion_Memoria = 0;
+        int resultadoMensajeToken = 3 ; 
 	puts("CPU procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 
@@ -47,14 +48,25 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				log_error(logger, "[ERROR]no se reconecto el CPU al Planificador");
 			dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		}
-	} else if (tipoNotificacion == MESSAGE) {
-
-		if (header->tipoMensaje == CONTEXTO_MPROC) {
-			log_info(logger, "llega mensaje CONTEXTO_MPROC ");
-			t_pcb* pcbPlanificador = (t_pcb*) buffer;
-			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
-			preparaCPU(pcbPlanificador, socket);
+		
+		if (string_starts_with(buffer, "cm")) {
+			int socketMemoria;
+			resultConexion_Memoria = conectar(configuracion->vg_ipMemoria, string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
+			if (resultConexion_Memoria == -1)
+				log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
+			dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 		}
+		
+	} else if (tipoNotificacion == MESSAGE) {
+		
+		//como espero varios resultados, entonces los deje en una sola fucnion
+		// sino es un resultado no devuelve  EXIT_SUCCES entonces es otra cosa
+		// se encuentra en enviaryrecibir.c
+		resultadoMensajeToken = recibirMensajeVarios(socket,header->tipoMensaje )
+		
+		 (resultadoMensajeToken != EXIT_SUCCESS)
+		 log_error(logger, "[ERROR] el Tipo Mensaje no corresponde");
+		
 //		if (header->tipoMensaje == STRING) {
 //
 //			char* mensaje = malloc(header->tamanioMensaje);
