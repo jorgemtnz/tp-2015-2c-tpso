@@ -1,6 +1,7 @@
 #include "CPU.h"
 
 void levantarHilosCPU() {
+	log_info(logger, "se va a levantar un HILO ");
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
 	pthread_attr_t atributos[configuracion->cantidad_hilos];
 	int i;
@@ -20,6 +21,7 @@ void levantarHilosCPU() {
 }
 
 int hiloCPU(){
+	log_info(logger, "comienza ejecucion de un HILO ");
 	//agregar comportamiento para cada CPU. se debe reiniciar cada vez que se levante una CPU
 	//se pondran algunas cosas de lo que actualmente esta en el main
 	return 0;
