@@ -1,8 +1,8 @@
 #include "CPU.h"
 //agregar comportamiento en cada break
-
+//ejecutar todo tipo de comandos del mCod
 int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-
+        log_info(logger, "se va a ejecutar la funcion ejecutar");
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
@@ -35,7 +35,7 @@ int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int s
 }
 //recibe las respuestas
 int recibirMensajeVarios(int socket, int token) {
-
+        log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	switch (token) {
 	case (RESUL_ERROR): {
 		log_info(logger, "se va a ejecutar result error");
