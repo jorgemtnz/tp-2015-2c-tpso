@@ -62,6 +62,8 @@ int interpretaInstruccion(char* instruccion_origen,   t_pcb* pcbPlanificador, in
 	instruccion->ptrComienzoInstruccion = &instruccion->instruccion_separada[0];
 //	instruccion->ptrParteLeida = &instruccion->instruccion_separada[0];
 	resultado = leerInstruccion(instruccion->instruccion_separada,    pcbPlanificador, socket);
+	if (resultado== -1)
+	log_error(logger, "[ERROR] al leer instruccion en CPU");
 
 	return EXIT_SUCCESS;
 }

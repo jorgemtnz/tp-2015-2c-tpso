@@ -112,6 +112,7 @@ void destInstruccion(t_instruccion* instruccion);
 void destMap(t_map* unMap);
 void destHiloCPU(t_cpu* unHiloCPU);
 void destProcCPU(t_ProcCPU* unCPU);
+void destConfig(t_configuracion* unaConfig);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 int reconoceTokenInstruccion(char* string);
@@ -121,12 +122,6 @@ int leerInstruccion(char** instruccion, t_pcb* pcbPlanificador, int socket);
 int descargaProcesoCPU(t_map* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
-
-int ejecutaIniciarProceso(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
-int ejecutaEscribirMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
-int ejecutaLeerMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
-int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket) ;
-int ejecutaEntradaSalida(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
 
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 //TODO Conflictua con sockets.h
@@ -148,7 +143,23 @@ int procesaCodigo(t_pcb* pcbPlanificador, int socket);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
+int ejecutaIniciarProceso(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaEscribirMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaLeerMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket) ;
+int ejecutaEntradaSalida(char* separada_instruccion,  t_pcb*pcbPlanificador, int socket );
+
+
 //========================================================================================
+//++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
+int recibirResult(int socket, int token);
+int ejecutaResultError(int socket);
+int  ejecutaResultEscribir(int socket);
+int  ejecutaResulFin(int socket);
+int  ejecutaResulIniciarProc(int socket);
+int  ejecutaResulInstrEjec(int socket);
+int  ejecutaResultLeer(int socket);
+int  ejecutaResulOk(int socket);
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
