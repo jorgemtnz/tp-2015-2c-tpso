@@ -77,9 +77,10 @@ int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
 	case (CONTEXTO_MPROC):{
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		t_pcb* pcbPlanificador;
--			pcbPlanificador = (t_pcb*) buffer;
--			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
--			preparaCPU(pcbPlanificador, socket);
+			pcbPlanificador = (t_pcb*) buffer;
+			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
+			preparaCPU(pcbPlanificador, socket);
+			break;
 	}
 	
 	case(STRING):{
