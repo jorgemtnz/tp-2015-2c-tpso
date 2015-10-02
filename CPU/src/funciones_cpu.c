@@ -1,11 +1,10 @@
 #include "CPU.h"
-//escribir las funciones aqui
-
+//lee el archivo de configuracion
 void leerArchivoDeConfiguracion() {
 	char* nombreArchivoConfig;
 	t_config* archivoConfig = NULL;
 	int result = 0;
-
+        log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
 	nombreArchivoConfig = strdup("/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
@@ -26,8 +25,9 @@ void leerArchivoDeConfiguracion() {
 	config_destroy(archivoConfig);
 
 }
-
+//es la funcion madre para cuando llega el Contexto de un proceso. Se inicia todo el circuito de mCod
 int preparaCPU(t_pcb* pcbPlanificador, int socket) {
+	log_info(logger, "se va a ejecutar preparaCPU");
 	t_cpu* cpu = crearCPU();
 
 	//recibe la info del sockect
@@ -42,7 +42,7 @@ int preparaCPU(t_pcb* pcbPlanificador, int socket) {
 // se debe agregar instruccion que mape el archivo -> devuelva estructura
 int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
-
+        log_info(logger, "se va a ejecutar cargaProcesoaCPU "); 
 	fdmCod = abrirArchivoLecturaEscritura(dirArchivo, logger);
 	mCodCPU->ptrTamPagina = tamanio_archivo(fdmCod);
 	mCodCPU->ptrCMemoriaMap = (char*) crearEspacioDeDatos(fdmCod, mCodCPU->ptrTamPagina, logger);
@@ -57,7 +57,8 @@ int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en es
 int interpretaInstruccion(char* instruccion_origen,   t_pcb* pcbPlanificador, int socket) {
 	int resultado = 0;
 	t_instruccion* instruccion = creaInstruccion();
-
+        
+        log_info(logger, "se va a ejecutar interpretaInstruccion ");
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 	instruccion->ptrComienzoInstruccion = &instruccion->instruccion_separada[0];
 //	instruccion->ptrParteLeida = &instruccion->instruccion_separada[0];
@@ -67,10 +68,11 @@ int interpretaInstruccion(char* instruccion_origen,   t_pcb* pcbPlanificador, in
 
 	return EXIT_SUCCESS;
 }
-
+// ejecuta las instrucciones del mCod
 int ejecutaInstrucciones(t_map* mCodCPU, t_pcb* pcbPlanificador, int socket) {
 	int i = 0;
 	int result;
+	log_info(logger, "se va a ejecutar ejecutaInstrucciones");
 	while (mCodCPU->bufferInstrucciones[i] != NULL) {
 		result = interpretaInstruccion( mCodCPU->bufferInstrucciones[i],  pcbPlanificador, socket );
 		if (result != EXIT_SUCCESS) {
@@ -89,6 +91,7 @@ int procesaCodigo(t_pcb* pcbPlanificador, int socket) {
 
 	t_map* mCodCPU = crearMapeo();
 
+        log_info(logger, "se va a ejecutar procesaCodigo");
 	cargaProcesoaCPU(pcbPlanificador->rutaArchivoMcod, mCodCPU);
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(mCodCPU->bufferInstrucciones);
 	ejecutaInstrucciones(mCodCPU, pcbPlanificador, socket);
@@ -98,6 +101,8 @@ int procesaCodigo(t_pcb* pcbPlanificador, int socket) {
 //funcion que ejecuta la instruccion
 int ejecutaInstruccion(int token, char* separada_instruccion,   t_pcb* pcbPlanificador, int socket) {
 
+
+          log_info(logger, "se va a ejecutar ejecutaInstruccion ");
 	if (ejecutar(token, separada_instruccion,pcbPlanificador, socket ) != EXIT_SUCCESS) {
 		perror("[ERROR] al ejecutar la instruccion CPU");
 		log_error(logger, "[ERROR] al ejecutar la instruccion CPU");
