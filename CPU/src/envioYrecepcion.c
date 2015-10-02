@@ -53,7 +53,7 @@ int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int s
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirResult(int socket, int token) {
+int recibirMensajeVarios(int socket, int token) {
 
 	switch (token) {
 	case (RESUL_ERROR): {
@@ -85,6 +85,32 @@ int recibirResult(int socket, int token) {
 		ejecutaResulOk(socket);
 		break;
 	}
+	case (CONTEXTO_MPROC):{
+		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
+-			t_pcb* pcbPlanificador = (t_pcb*) buffer;
+-			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
+-			preparaCPU(pcbPlanificador, socket);
+	}
+	
+	case(STRING):{
+		if (header->tipoMensaje == STRING) {
+//
+//			char* mensaje = malloc(header->tamanioMensaje);
+//			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
+//			printf("Recibi el mensaje: %s\n", mensaje);
+//		}
+		/*		if(string_starts_with(buffer, "correr programa")) {
+		 char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
+		 puts("Enviando \"correr programa\" a la Memoria");
+		 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+		 // de aca para abajo serian las conexiones
+		 }*/
+	}
+	
+	case(TIEMPO_CPU):{
+			log_info(logger, "llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
+	}
+	
 	}
 	return EXIT_SUCCESS;
 }
