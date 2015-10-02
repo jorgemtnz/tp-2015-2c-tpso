@@ -34,7 +34,7 @@ int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int s
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios(int socket, int token) {
+int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
         log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	switch (token) {
 	case (RESUL_ERROR): {
