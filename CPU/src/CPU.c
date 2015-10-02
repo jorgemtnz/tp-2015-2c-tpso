@@ -81,7 +81,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 		 }*/
 	} else if (tipoNotificacion == HANG_UP) {
-
+           log_error(logger, "[ERROR] se desconecto un proceso");
 	}
 
 	return 0;
