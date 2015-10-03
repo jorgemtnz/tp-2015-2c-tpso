@@ -22,22 +22,28 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 	line = string_split(separada_instruccion, ";");
 	buffer = string_split(line[0], " ");
 
-	if (buffer==NULL){
+	if (buffer == NULL) {
 		log_error(logger, "[ERROR] al crear buffer de instruccion en ejecuta_EscribirMemoria");
 		exit(-1);
 	}
-	estructura->pagina =atoi(buffer[0]);
-    estructura->texto = buffer[1];
+	estructura->pagina = atoi(buffer[0]);
+	estructura->texto = buffer[1];
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }
-//devuelve
-void* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	void* retorno = NULL;
-
-	return retorno;
-
+//devuelve la estructura de leerMemoria
+t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
+	t_leerMem* estructura = malloc(sizeof(t_leerMem));
+	char** buffer;
+	estructura = NULL;
+	cpu->estadoEjecucion = USO;
+	cpu->cantInstEjecutadas += 1;
+	buffer = string_split(separada_instruccion, " ");
+	estructura->pagina = atoi(buffer[0]);
+	estructura->PID = cpu->pcbPlanificador->pid;
+	cpu->estadoEjecucion = NO_USO;
+	return estructura;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 int ejecuta_FinProcesoMemoria(t_cpu* cpu) {
