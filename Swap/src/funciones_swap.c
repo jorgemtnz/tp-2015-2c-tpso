@@ -365,6 +365,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
+	sleep(configuracion->retardo_compactacion);
 	log_error(logger, "ERROR: La memoria será compactada por fragmentación externa");
 	//ORDENAR LISTA POR UBICACION
 	//list_sort(listaDeProcesosCargados, comparador(list_get(listaDeProcesosCargados,i)));

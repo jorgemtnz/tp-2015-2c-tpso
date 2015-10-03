@@ -41,10 +41,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				if (header->tipoMensaje == RESUL_INICIAR_PROC_ERROR) {
 					//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA EN ERROR EL INICIAR EN SWAP
 				} else {
-					if (header->tipoMensaje == RESUL_ESCRIBIR) {
+					if (header->tipoMensaje == RESUL_ESCRIBIR_OK) {
 						//ACA VA LO QUE TIENE QUE HACER MEMORIA CUANDO SWAP LE DICE QUE ESCRIBIR SE HIZO BIEN
 					} else {
-						if (header->tipoMensaje == RESUL_FIN) {
+						if (header->tipoMensaje == RESUL_FIN_OK) {
 							//ACA VA LO QUE TIENE QUE HACER MEMORIA CUANDO SWAP LE DICE QUE FINALIZO EL PROCESO(LO BORRO)
 						} else {
 							if (header->tipoMensaje == INICIAR_PROC_SWAP) {//TODO HACK usar un tipo de mensaje especifico
@@ -52,12 +52,22 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 								//TODO HACK usar un tipo especifico
 								t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 
-								t_iniciar_swap* estructura;
-								estructura = crearEstructuraIniciar();
-								estructura->PID = datosDesdeCPU->PID;
-								estructura->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
+								t_iniciar_swap* estructuraIniciar;
+								estructuraIniciar = crearEstructuraIniciar();
+								estructuraIniciar->PID = datosDesdeCPU->PID;
+								estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
 								int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-								enviarIniciarASwap(estructura, socketSwap);
+								enviarIniciarASwap(estructuraIniciar, socketSwap);
+							}
+							else {
+								if (header->tipoMensaje == FIN_PROCESO_MEM){
+									t_finalizar_swap* datosDesdeCPU = (t_finalizar_swap*) buffer;
+									t_finalizar_swap* estructuraFinalizar;
+									estructuraFinalizar = crearEstructuraFinalizar();
+									estructuraFinalizar->PID=datosDesdeCPU->PID;
+									int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+									enviarFinalizarASwap(estructuraFinalizar, socketSwap);
+								}
 							}
 						}
 					}

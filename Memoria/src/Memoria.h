@@ -104,6 +104,7 @@ typedef struct {
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
 t_iniciar_swap* crearEstructuraIniciar();
+t_finalizar_swap* crearEstructuraFinalizar();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -124,7 +125,8 @@ t_config* iniciarArchivoConfig();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
-void* enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
+void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
+void enviarFinalizarASwap(t_finalizar_swap *estructura, int socketSwap);
 t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag);
 void cargarNuevoMarcoAMemoria(char* contenido);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);

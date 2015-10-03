@@ -181,10 +181,8 @@ void finalizar(int idProc) {
 }
 
 
-void* enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
+void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
-
-
 }
 
 

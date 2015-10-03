@@ -96,6 +96,10 @@ typedef struct IniciarSwap {
 	uint16_t cantidadPaginas;
 } t_iniciar_swap;
 
+typedef struct {
+	uint8_t PID;
+} t_finalizar_swap;
+
 typedef struct{
 	uint8_t PID;
 }t_respuesta_iniciar;

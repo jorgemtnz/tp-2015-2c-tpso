@@ -9,12 +9,12 @@
 
 t_TablaDePaginas* iniciarTablaDePaginas(){
 	t_TablaDePaginas* tablaDePag = malloc(sizeof(t_TablaDePaginas));
-		if (tablaDePag == NULL) {
-			perror("[ERROR] No se reservo memoria para Swap>..>proceso");
-			log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
-			exit(-1);
-		}
-		return tablaDePag;
+	if (tablaDePag == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>proceso");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
+		exit(-1);
+	}
+	return tablaDePag;
 }
 
 t_escrituraProc* iniciarEscrituraProc() {
@@ -71,24 +71,35 @@ t_lecturaSwap* iniciarLectura() {
 
 t_rtaLecturaCpu* iniciarRtaLecturaCpu(){
 	t_rtaLecturaCpu* rtaLecturaCpu = malloc(sizeof(t_rtaLecturaCpu));
-			if (rtaLecturaCpu == NULL) {
-				perror("[ERROR] No se reservo memoria para Swap>..>proceso");
-				log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
-				exit(-1);
-			}
-			return rtaLecturaCpu;
+	if (rtaLecturaCpu == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>proceso");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>proceso");
+		exit(-1);
+	}
+	return rtaLecturaCpu;
 
 }
 t_iniciar_swap* crearEstructuraIniciar(){
 	t_iniciar_swap* contenido = malloc(sizeof(t_iniciar_swap));
-						if (contenido == NULL) {
-							perror("[ERROR] No se reservo memoria para Swap>..>contenido");
-							log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
-							exit(-1);
-						}
-						contenido->PID = 0;
-						contenido->cantidadPaginas = 0;
-
-
-						return contenido;
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
 	}
+	contenido->PID = 0;
+	contenido->cantidadPaginas = 0;
+
+
+	return contenido;
+}
+
+t_finalizar_swap* crearEstructuraFinalizar(){
+	t_finalizar_swap* contenido = malloc(sizeof(t_finalizar_swap));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
+	}
+	contenido->PID = 0;
+	return contenido;
+}
