@@ -117,12 +117,18 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
 				a = list_size(listaDeEspaciosLibres) + 1; //SI YA ENCONTRE UN ESPACIO NO BUSCO MAS
 			} else {
-				//EN TESTING
 				compactarMemoria(listaDeEspaciosLibres, listaDeProcesosCargados);
-
+				procesoAInsertarEnLista->PID = estructuraIniciar->PID;
+				procesoAInsertarEnLista->ubicacion = espacioLibre->ubicacion;
+				procesoAInsertarEnLista->cantPagsUso = estructuraIniciar->cantidadPaginas;
+				list_add(listaDeProcesosCargados, procesoAInsertarEnLista);
+				paginasLibresRestantes = espacioLibre->cantPagsLibres - estructuraIniciar->cantidadPaginas;
+				list_remove(listaDeEspaciosLibres, a);
+				espacioLibreAInsertar->cantPagsLibres = paginasLibresRestantes;
+				espacioLibreAInsertar->ubicacion = espacioLibre->ubicacion + estructuraIniciar->cantidadPaginas;
+				list_add_in_index(listaDeEspaciosLibres, a, espacioLibreAInsertar);
+				a = list_size(listaDeEspaciosLibres) + 1;
 			}
-
-
 
 			estructura->PID = procesoAInsertarEnLista->PID;
 			enviarResultadoIniciarOK(socket, estructura);
@@ -131,6 +137,7 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
 			string_append(&msjDeRta," - Iniciado");
 			puts(msjDeRta);
+			log_info(logger, msjDeRta);
 
 		}
 	} else {
@@ -141,6 +148,7 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 		string_append(&msjDeRta,string_itoa(estructuraIniciar->PID));
 		string_append(&msjDeRta," - Fallido");
 		puts(msjDeRta);
+		log_error(logger, msjDeRta);
 
 	}
 
@@ -259,6 +267,8 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 	enviarStruct(socket, RESUL_FIN, "RESUL_FIN");
 
 
+
+
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
@@ -306,13 +316,13 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
+	log_error(logger, "ERROR: La memoria será compactada por fragmentación externa");
 	//ORDENAR LISTA POR UBICACION
 	//list_sort(listaDeProcesosCargados, comparador(list_get(listaDeProcesosCargados,i)));
 	l_procesosCargados* espacioProcAux;
 	espacioProcAux = crearProceso();
 	l_procesosCargados* espacioProcSig;
 	espacioProcSig = crearProceso();
-	t_list* nuevaListaProcesos = list_create();
 	l_espacioLibre* nuevoEspacioLibre = crearEspacioLibre();
 	int a;
 	espacioProcAux = list_get(listaDeProcesosCargados, 0);
@@ -329,6 +339,7 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 	list_clean(listaDeEspaciosLibres);
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
+	log_info(logger, "Memoria compactada correctamente");
 	free(espacioProcAux);
 	free(espacioProcSig);
 	free(nuevoEspacioLibre);
