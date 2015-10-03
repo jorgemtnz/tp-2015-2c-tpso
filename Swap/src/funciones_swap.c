@@ -122,8 +122,7 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 		}
 	} else {
-		enviarHeader(socket, RESUL_INICIAR_PROC_ERROR, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
-		enviarSimple(socket, "ERROR_INICIAR", strlen("ERROR_INICIAR"));
+		enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, "ERROR_INICIAR");
 
 		string_append(&msjDeRta,"mProc ");
 		string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
@@ -157,9 +156,8 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, longitud);
 	}
 
-	enviarHeader(socket, RESUL_ESCRIBIR, "RESUL_ESCRIBIR", strlen("RESUL_ESCRIBIR"));
-	enviarSimple(socket,procesoAEscribir->contenido, strlen(procesoAEscribir->contenido));
 
+	enviarStruct(socket, RESUL_ESCRIBIR, "RESUL_ESCRIBIR");
 	string_append(&msjDeRta,"Mproc ");
 	string_append(&msjDeRta,string_itoa(unProceso->PID));
 	string_append(&msjDeRta," - Pagina ");
@@ -203,8 +201,8 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 				configuracion->tamanioPagina);
 	}
 
-	enviarHeader(socket, RESUL_LEER,"RESUL_LEER",strlen("RESUL_LEER"));
-	enviarSimple(socket, datosLeidosFinal, strlen(datosLeidosFinal));
+	enviarStruct(socket, RESUL_LEER, datosLeidosFinal);
+
 
 	return datosLeidosFinal;
 }
@@ -245,8 +243,8 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
-	enviarHeader(socket, RESUL_FIN, "RESUL_FIN", strlen("RESUL_FIN"));
-	enviarSimple(socket, string_itoa(*pid), strlen(string_itoa(*pid)));
+	enviarStruct(socket, RESUL_FIN, "RESUL_FIN");
+
 
 }
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
