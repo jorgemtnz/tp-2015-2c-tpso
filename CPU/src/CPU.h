@@ -109,8 +109,8 @@ void destConfig(t_configuracion* unaConfig);
 //============================================================================
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
-int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu, int socket);
-int leerInstruccion(char** instruccion, t_cpu* cpu, int socket);
+int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
+int leerInstruccion(char** instruccion, t_cpu* cpu);
 int descargaProcesoCPU(t_map* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
@@ -121,11 +121,11 @@ int  ejecutaResul_Fin();
 int  ejecutaResul_InstrEjec();
 int  ejecutaResult_Leer();
 int  ejecutaResul_Ok();
-int ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu, int socket);
-void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket);
-int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket);
-int ejecuta_FinProcesoMemoria(char* separada_instruccion, t_cpu* cpu, int socket);
-int ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu, int socket);
+int ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
+void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
+int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
+int ejecuta_FinProcesoMemoria(t_cpu* cpu);
+int ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 
 
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
@@ -140,31 +140,31 @@ void leerArchivoDeConfiguracion();
 int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
-int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu, int socket);
-int interpretaInstruccion(char* instruccion_origen, t_cpu* cpu, int socket);
-int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu, int socket);
-int preparaCPU(t_pcb* pcbPlanificador, int socket);
-int procesaCodigo(t_cpu* cpu, int socket);
+int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu);
+int interpretaInstruccion(char* instruccion_origen, t_cpu* cpu);
+int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu);
+int preparaCPU(t_pcb* pcbPlanificador);
+int procesaCodigo(t_cpu* cpu);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
-int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu, int socket );
-int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu, int socket );
-int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu, int socket );
-int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_cpu* cpu, int socket) ;
-int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu, int socket );
+int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu );
+int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu);
+int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu);
+int ejecutaFinProcesoMemoria( t_cpu* cpu) ;
+int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu);
 
 
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
-int recibirMensajeVarios(int socket, int token,  char*   buffer ,void* extra );
-int ejecutaResultError(int socket);
-int  ejecutaResultEscribir(int socket);
-int  ejecutaResulFin(int socket);
-int  ejecutaResulIniciarProc(int socket);
-int  ejecutaResulInstrEjec(int socket);
-int  ejecutaResultLeer(int socket);
-int  ejecutaResulOk(int socket);
+int recibirMensajeVarios( int token,  char*   buffer ,void* extra );
+int ejecutaResultError();
+int  ejecutaResultEscribir();
+int  ejecutaResulFin();
+int  ejecutaResulIniciarProc();
+int  ejecutaResulInstrEjec();
+int  ejecutaResultLeer();
+int  ejecutaResulOk();
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================

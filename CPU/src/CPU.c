@@ -62,7 +62,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		//como espero varios resultados, entonces los deje en una sola fucnion
 		// sino es un resultado no devuelve  EXIT_SUCCES entonces es otra cosa
 		// se encuentra en enviaryrecibir.c
-		resultadoMensajeToken = recibirMensajeVarios(socket,header->tipoMensaje, buffer , extra );
+		resultadoMensajeToken = recibirMensajeVarios(header->tipoMensaje, buffer , extra );
 		
 		 if(resultadoMensajeToken != EXIT_SUCCESS)
 		 log_error(logger, "[ERROR] el Tipo Mensaje no corresponde");
