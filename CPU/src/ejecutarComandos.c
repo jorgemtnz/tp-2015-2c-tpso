@@ -6,9 +6,10 @@ int ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu, int socket) {
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
-int ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+void* retorno = NULL;
 
-	return EXIT_SUCCESS;
+	return retorno;
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
