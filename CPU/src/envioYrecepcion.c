@@ -148,27 +148,27 @@ int  ejecutaResulOk(int socket){
 
 // en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
-int ejecutaIniciarProceso(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
+int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu, int socket) {
 
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
-int ejecutaEscribirMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-	ejecuta_EscribirMemoria(separada_instruccion, pcbPlanificador,socket);
+int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+	ejecuta_EscribirMemoria(separada_instruccion, cpu,socket);
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
-int ejecutaLeerMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-	ejecuta_LeerMemoria( separada_instruccion, pcbPlanificador, socket);
+int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+	ejecuta_LeerMemoria( separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
-int ejecutaFinProcesoMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-	ejecuta_FinProcesoMemoria(separada_instruccion, pcbPlanificador, socket);
+int ejecutaFinProcesoMemoria(char* separada_instruccion,t_cpu* cpu, int socket) {
+	ejecuta_FinProcesoMemoria(separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-int ejecutaEntradaSalida(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-	ejecuta_EntradaSalida( separada_instruccion, pcbPlanificador, socket);
+int ejecutaEntradaSalida(char* separada_instruccion,t_cpu* cpu, int socket) {
+	ejecuta_EntradaSalida( separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
