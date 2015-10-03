@@ -2,7 +2,7 @@
 
 t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	cpu->estadoEjecucion = USO;
-	cpu->cantInstEjecutadas += cpu->cantInstEjecutadas + 1;
+	cpu->cantInstEjecutadas += 1;
 
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura = NULL;
@@ -12,10 +12,25 @@ t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	return estructura;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
-void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-	void* retorno = NULL;
+t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
+	t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
+	estructura = NULL;
+	char** buffer;
+	char** line;
+	cpu->estadoEjecucion = USO;
+	cpu->cantInstEjecutadas += 1;
+	line = string_split(separada_instruccion, ";");
+	buffer = string_split(line[0], " ");
 
-	return retorno;
+	if (buffer==NULL){
+		log_error(logger, "[ERROR] al crear buffer de instruccion en ejecuta_EscribirMemoria");
+		exit(-1);
+	}
+	estructura->pagina =atoi(buffer[0]);
+    estructura->texto = buffer[1];
+	estructura->PID = cpu->pcbPlanificador->pid;
+	cpu->estadoEjecucion = NO_USO;
+	return estructura;
 }
 //devuelve
 void* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {

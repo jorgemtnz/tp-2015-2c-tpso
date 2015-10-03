@@ -158,9 +158,9 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
 int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
-	estructura->PID = cpu->pcbPlanificador->pid;
-	estructura = (t_escribirMem*) ejecuta_EscribirMemoria(separada_instruccion, cpu);
+	t_escribirMem* estructura;
+
+	estructura =  ejecuta_EscribirMemoria(separada_instruccion, cpu);
 
 	if (estructura == NULL) {
 		log_error(logger, "[ERROR] no se genero la estructura para enviar EscribirMemoria");
