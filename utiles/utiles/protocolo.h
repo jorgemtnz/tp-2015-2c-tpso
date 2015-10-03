@@ -25,7 +25,7 @@
 //++++++++++++++++++++++++++++++++++++++  ESTRUCTURAS   ++++++++++++++++++++++++++++++++++++++++
 
 typedef enum {
-	HEADER,
+	HEADER=1,
 	STRING,
 
 	CONTEXTO_MPROC,
