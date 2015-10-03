@@ -12,9 +12,11 @@ void* retorno = NULL;
 	return retorno;
 }
 //devuelve
-int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
+void* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
+	void* retorno = NULL;
 
-	return EXIT_SUCCESS;
+		return retorno;
+
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 int ejecuta_FinProcesoMemoria(t_cpu* cpu) {
