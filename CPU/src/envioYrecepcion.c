@@ -195,6 +195,7 @@ int ejecutaFinProcesoMemoria(t_cpu* cpu) {
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
 int ejecutaEntradaSalida(char* separada_instruccion, t_cpu* cpu) {
+	t_entrada_salida* estructura;
 	ejecuta_EntradaSalida(separada_instruccion, cpu);
 	return EXIT_SUCCESS;
 }
