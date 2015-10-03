@@ -80,6 +80,8 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket);
 void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
+void enviarResultadoIniciarERROR(int socket, void* estructura);
+void enviarResultadoIniciarOK(int socket, void* estructura);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
