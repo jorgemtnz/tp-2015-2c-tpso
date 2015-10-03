@@ -112,8 +112,8 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 			}
 
-//			enviarHeader(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR", strlen("OK_INICIAR"));
-//			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
+
+
 			enviarStruct(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR");
 			string_append(&msjDeRta,"mProc ");
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
