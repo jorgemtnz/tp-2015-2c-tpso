@@ -66,105 +66,105 @@ int main(int argc, char *argv[]) {
 	 printf("los datos leidos : %s\n", datosLeidos4);
 
 	 */
-/*
-	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	/*
+	 iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
+	 iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+	 iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	finalizar(&estructuraIniciar3->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	 finalizar(&estructuraIniciar3->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
+	 iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	finalizar(&estructuraIniciar5->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	 finalizar(&estructuraIniciar5->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "HOLA DON PEPITO HOLA DON JOSE";
-	procesoAEscribir->numeroPagina = 5;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "HOLA DON PEPITO HOLA DON JOSE";
+	 procesoAEscribir->numeroPagina = 5;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
-	procesoAEscribir->numeroPagina = 6;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
+	 procesoAEscribir->numeroPagina = 6;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "los wachiturros";
-	procesoAEscribir->numeroPagina = 10;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "los wachiturros";
+	 procesoAEscribir->numeroPagina = 10;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "que tp del ortooo";
-	procesoAEscribir->numeroPagina = 9;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "que tp del ortooo";
+	 procesoAEscribir->numeroPagina = 9;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	finalizar(&estructuraIniciar4->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+	 finalizar(&estructuraIniciar4->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+	 iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	procesoRecibido->numeroPaginaFin = 10;
-	procesoRecibido->numeroPaginaInicio = 10;
-	procesoRecibido->PID = estructuraIniciar4->PID;
+	 procesoRecibido->numeroPaginaFin = 10;
+	 procesoRecibido->numeroPaginaInicio = 10;
+	 procesoRecibido->PID = estructuraIniciar4->PID;
 
-	char* datosLeidos5 = leer(procesoRecibido, listaDeProcesosCargados);
+	 char* datosLeidos5 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	printf("los datos leidos5 : %s\n", datosLeidos5);
+	 printf("los datos leidos5 : %s\n", datosLeidos5);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "my name is juan";
-	procesoAEscribir->numeroPagina = 11;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "my name is juan";
+	 procesoAEscribir->numeroPagina = 11;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoRecibido->PID = estructuraIniciar4->PID;
-	procesoRecibido->numeroPaginaFin = 12;
-	procesoRecibido->numeroPaginaInicio = 11;
+	 procesoRecibido->PID = estructuraIniciar4->PID;
+	 procesoRecibido->numeroPaginaFin = 12;
+	 procesoRecibido->numeroPaginaInicio = 11;
 
-	char* datosLeidos = leer(procesoRecibido, listaDeProcesosCargados);
+	 char* datosLeidos = leer(procesoRecibido, listaDeProcesosCargados);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "lalalalallalalalallaa";
-	procesoAEscribir->numeroPagina = 6;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "lalalalallalalalallaa";
+	 procesoAEscribir->numeroPagina = 6;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "nose que poneer";
-	procesoAEscribir->numeroPagina = 7;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "nose que poneer";
+	 procesoAEscribir->numeroPagina = 7;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoAEscribir->PID = estructuraIniciar4->PID;
-	procesoAEscribir->contenido = "pepepepeppepee";
-	procesoAEscribir->numeroPagina = 8;
+	 procesoAEscribir->PID = estructuraIniciar4->PID;
+	 procesoAEscribir->contenido = "pepepepeppepee";
+	 procesoAEscribir->numeroPagina = 8;
 
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	 escribir(listaDeProcesosCargados, procesoAEscribir);
 
-	procesoRecibido->numeroPaginaFin = 9;
-	procesoRecibido->numeroPaginaInicio = 6;
+	 procesoRecibido->numeroPaginaFin = 9;
+	 procesoRecibido->numeroPaginaInicio = 6;
 
-	char* datosLeidos2 = leer(procesoRecibido, listaDeProcesosCargados);
+	 char* datosLeidos2 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	procesoRecibido->numeroPaginaFin = 6;
-	procesoRecibido->numeroPaginaInicio = 6;
+	 procesoRecibido->numeroPaginaFin = 6;
+	 procesoRecibido->numeroPaginaInicio = 6;
 
-	char* datosLeidos3 = leer(procesoRecibido, listaDeProcesosCargados);
+	 char* datosLeidos3 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	procesoRecibido->numeroPaginaFin = 11;
-	procesoRecibido->numeroPaginaInicio = 10;
+	 procesoRecibido->numeroPaginaFin = 11;
+	 procesoRecibido->numeroPaginaInicio = 10;
 
-	char* datosLeidos4 = leer(procesoRecibido, listaDeProcesosCargados);
+	 char* datosLeidos4 = leer(procesoRecibido, listaDeProcesosCargados);
 
-	printf("los datos leidos : %s\n", datosLeidos);
-	printf("los datos leidos2 : %s\n", datosLeidos2);
-	printf("los datos leidos3 : %s\n", datosLeidos3);
-	printf("los datos leidos4 : %s \n", datosLeidos4);
-*/
+	 printf("los datos leidos : %s\n", datosLeidos);
+	 printf("los datos leidos2 : %s\n", datosLeidos2);
+	 printf("los datos leidos3 : %s\n", datosLeidos3);
+	 printf("los datos leidos4 : %s \n", datosLeidos4);
+	 */
 	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);
@@ -184,8 +184,6 @@ int main(int argc, char *argv[]) {
 
 	//termina prueba
 
-
-
 	return EXIT_SUCCESS;
 }
 
@@ -197,65 +195,72 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
 
+	switch (tipoNotificacion) {
+	case (NEW_CONNECTION): {
+		break;
+	}
+	case (TERMINAL_MESSAGE): {
+		break;
+	}
 
-	if (tipoNotificacion == NEW_CONNECTION) {
+	case (MESSAGE): {
+		switch (header->tipoMensaje) {
+		case (INICIAR_PROC_SWAP): {
 
-	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
-
-	} else if (tipoNotificacion == MESSAGE) {
-
-		if (header->tipoMensaje == INICIAR_PROC_SWAP) {
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
 			//EMPIEZA PRUEBA
 			int a;
-				l_procesosCargados* proceso;
-				l_espacioLibre* espacioLibre;
+			l_procesosCargados* proceso;
+			l_espacioLibre* espacioLibre;
 
-
-				espacioLibre = crearEspacioLibre();
-
+			espacioLibre = crearEspacioLibre();
 
 			printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 
-				for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
-					proceso = list_get(listaDeProcesosCargados, a);
-					printf("\n\n");
-					printf("el pid :  %i\n", proceso->PID);
-					printf("la ubicacion es : %i\n", proceso->ubicacion);
-					printf("cantidad paginas : %i \n", proceso->cantPagsUso);
+			for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
+				proceso = list_get(listaDeProcesosCargados, a);
+				printf("\n\n");
+				printf("el pid :  %i\n", proceso->PID);
+				printf("la ubicacion es : %i\n", proceso->ubicacion);
+				printf("cantidad paginas : %i \n", proceso->cantPagsUso);
 
-				}
-				printf("lista %i \n",list_size(listaDeEspaciosLibres));
-				for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
-					espacioLibre = list_get(listaDeEspaciosLibres, a);
-
-					printf("\nempieza espacio libre\n\n\n");
-					printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
-					printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
-
-				}
-				//TERMINA PRUEBA
-		} else {
-			if (header->tipoMensaje == ESCRIBIR_SWAP) {
-				t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
-				escribir(listaDeProcesosCargados, procesoAEscribir, socket);
-			} else {
-				if (header->tipoMensaje == LEER_SWAP) {
-					t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
-					leer(procesoRecibido, listaDeProcesosCargados, socket);
-				} else {
-					if (header->tipoMensaje == FIN_PROCESO_SWAP) {
-						uint8_t* pid = (uint8_t *)buffer;
-						finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
-					}
-				}
 			}
+			printf("lista %i \n", list_size(listaDeEspaciosLibres));
+			for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
+				espacioLibre = list_get(listaDeEspaciosLibres, a);
+
+				printf("\nempieza espacio libre\n\n\n");
+				printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
+				printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
+
+			}
+			//TERMINA PRUEBA
+			break;
+		}
+		case (ESCRIBIR_SWAP): {
+			t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
+			escribir(listaDeProcesosCargados, procesoAEscribir, socket);
+			break;
+		}
+		case (LEER_SWAP): {
+			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
+			leer(procesoRecibido, listaDeProcesosCargados, socket);
+			break;
+		}
+		case (FIN_PROCESO_SWAP): {
+			uint8_t* pid = (uint8_t *) buffer;
+			finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
+			break;
 		}
 
-	} else if (tipoNotificacion == HANG_UP) {
-
+		}
+		break;
+	}
+	case (HANG_UP): {
+		break;
+	}
 	}
 	return 0;
 }
