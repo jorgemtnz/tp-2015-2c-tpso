@@ -95,18 +95,18 @@ typedef struct CPU_REF {
 //SWAP Y MEMORIA
 
 typedef struct IniciarSwap {
-	pid_t PID;
+	uint8_t PID;
 	uint16_t cantidadPaginas;
 } t_iniciar_swap;
 
 typedef struct {
-	pid_t PID;
+	uint8_t PID;
 	char* contenido;
 	int numeroPagina;
 } t_escribirEnProceso;
 
 typedef struct {
-	pid_t PID;
+	uint8_t PID;
 	int numeroPaginaInicio;
 	int numeroPaginaFin;
 } t_leerDeProceso;
@@ -144,6 +144,9 @@ pid_t deserializar_pid_t(int fdCliente);
 
 void* serializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+
+void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
 
 #endif /* UTILES_PROTOCOLO_H_ */

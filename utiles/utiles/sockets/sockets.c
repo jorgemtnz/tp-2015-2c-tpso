@@ -666,6 +666,7 @@ int conectar(char* ip, char* puerto, int *sock) {
 
 	if (connect(*sock, (struct sockaddr *) &dirCent, sizeof(struct sockaddr)) == -1) {
 		perror("connect");
+		*sock = -1;
 		return -1;
 	}
 	puts("Conexion OK");
@@ -691,6 +692,7 @@ void inicializarRegistroSerializadores() {
 
 		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
 		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
+		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
 
 	}
 }

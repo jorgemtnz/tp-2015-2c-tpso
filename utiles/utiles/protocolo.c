@@ -68,17 +68,22 @@ void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) 
 	return estructura;
 }
 
+void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	serializar_string(fdCliente, estructura);
+}
+void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return deserializar_string(fdCliente);
+}
+
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura) {
-	serializar_pid_t(fdCliente, estructura->PID);
+	serializar_int8_t(fdCliente, estructura->PID);
 	serializar_int16_t(fdCliente, estructura->cantidadPaginas);
 	return 0;
 }
 t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
-	pid_t pid = deserializar_pid_t(fdCliente);
-	estructura->PID = pid;
-	uint16_t cantidadPaginas = deserializar_int16_t(fdCliente);
-	estructura->cantidadPaginas = cantidadPaginas;
+	estructura->PID = deserializar_int8_t(fdCliente);
+	estructura->cantidadPaginas = deserializar_int16_t(fdCliente);
 	return estructura;
 }
 void* serializar_string(int fdCliente, char* estructura) {
