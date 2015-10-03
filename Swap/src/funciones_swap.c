@@ -236,6 +236,8 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 	procesoAEscribir = crearEscribirEnProceso();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
+	t_respuesta_iniciar estructuraDeEnvio;
+	estructuraDeEnvio = crearEstructuraIniciar();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 
 		unProceso = list_get(listaDeProcesosCargados, a);
@@ -264,12 +266,10 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
-	enviarStruct(socket, RESUL_FIN, "RESUL_FIN");
-
-
-
-
+	estructuraDeEnvio->PID = pid;
+	enviarStruct(socket, RESUL_FIN, estructuraDeEnvio);
 }
+
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
 	l_espacioLibre* espacioA;
