@@ -148,6 +148,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 //===========================================================================================
 t_configuracion* configuracion;
 t_log* logger;
+t_dictionary* conexiones;
 // ----------- Contadores -------- //
 int contadorPagTP,variableIdMarco; // contador de paginas de la tabla de paginas
 
