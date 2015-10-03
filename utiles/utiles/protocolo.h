@@ -111,6 +111,11 @@ typedef struct {
 	int numeroPaginaFin;
 } t_leerDeProceso;
 
+typedef struct{
+	uint8_t PID;
+	uint8_t pagina;
+	char texto[256];
+}t_escribirMem;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
