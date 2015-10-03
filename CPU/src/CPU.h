@@ -123,7 +123,7 @@ int  ejecutaResult_Leer();
 int  ejecutaResul_Ok();
 int ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
 void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
-int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
+void* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 int ejecuta_FinProcesoMemoria(t_cpu* cpu);
 int ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 

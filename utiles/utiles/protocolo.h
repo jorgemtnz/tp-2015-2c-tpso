@@ -18,18 +18,9 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
-//#define CONTEXTO_MPROC  1
-//#define RESUL_INSTR_EJEC  2
-//#define INICIAR_PROC    3
-//#define LEER            4
-//#define ESCRIBIR        5
-//#define FIN_PROCESO     6
-//#define RESUL_OK        7
-//#define RESUL_ERROR     8
-//#define RESUL_INICIAR_PROC 9
-//#define RESUL_ESCRIBIR  10
-//#define RESUL_LEER      11
-//#define RESUL_FIN       12
+#define TAMANIO_TEXTO 512
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++  ESTRUCTURAS   ++++++++++++++++++++++++++++++++++++++++
 
@@ -114,8 +105,14 @@ typedef struct {
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
-	char texto[256];
+	char texto[TAMANIO_TEXTO];
 }t_escribirMem;
+
+typedef struct{
+	uint8_t PID;
+	uint8_t pagina;
+	char texto[TAMANIO_TEXTO];
+}t_leerMem;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++

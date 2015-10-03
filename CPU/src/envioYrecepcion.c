@@ -172,7 +172,10 @@ int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	ejecuta_LeerMemoria(separada_instruccion, cpu);
+	t_leerMem* estructura = malloc(sizeof(t_leerMem));
+	estructura->PID = cpu->pcbPlanificador->pid;
+
+	estructura = (t_leerMem*) ejecuta_LeerMemoria(separada_instruccion, cpu);
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
