@@ -1,32 +1,32 @@
 #include "CPU.h"
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
-int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
+int ejecutar(int token, char* separada_instruccion, t_cpu* cpu , int socket) {
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
-		ejecutaIniciarProceso(separada_instruccion, pcbPlanificador, socket);
+		ejecutaIniciarProceso(separada_instruccion, cpu->pcbPlanificador, socket);
 		break;
 	}
 	case (ESCRIBIR_MEM): {
 		log_info(logger, "se va a ejecutar escribir memoria");
-		ejecutaEscribirMemoria(separada_instruccion, pcbPlanificador, socket);
+		ejecutaEscribirMemoria(separada_instruccion, cpu, socket);
 		break;
 	}
 	case (LEER_MEM): {
 		log_info(logger, "se va a ejecutar leer memoria ");
-		ejecutaLeerMemoria(separada_instruccion, pcbPlanificador, socket);
+		ejecutaLeerMemoria(separada_instruccion, cpu, socket);
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
-		ejecutaFinProcesoMemoria(separada_instruccion, pcbPlanificador, socket);
+		ejecutaFinProcesoMemoria(separada_instruccion, cpu, socket);
 		break;
 	}
 	case (ENTRADA_SALIDA): {
 		log_info(logger, "se va a ejecutar entrada salida ");
-		ejecutaEntradaSalida(separada_instruccion, pcbPlanificador, socket);
+		ejecutaEntradaSalida(separada_instruccion, cpu, socket);
 		break;
 	}
 	}

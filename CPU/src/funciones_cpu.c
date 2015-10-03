@@ -25,7 +25,7 @@ void leerArchivoDeConfiguracion() {
 	config_destroy(archivoConfig);
 
 }
-//es la funcion madre para cuando llega el Contexto de un proceso. Se inicia todo el circuito de mCod
+//es la funcion madre para cuando llega el Contexto de un proceso. Se inicia  el circuito de mCod
 int preparaCPU(t_pcb* pcbPlanificador, int socket) {
 	log_info(logger, "se va a ejecutar preparaCPU");
 	t_cpu* cpu = crearCPU();

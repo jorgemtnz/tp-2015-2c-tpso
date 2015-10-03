@@ -26,13 +26,13 @@ char** separaInstruccion(char* instruccionCompleta) {
 }
 
 //recibe la instruccion que se debe interpretar como una cadena de char
-int leerInstruccion(char** instruccion, t_pcb* pcbPlanificador, int socket) {
+int leerInstruccion(char** instruccion, t_cpu* cpu, int socket) {
 	log_info(logger, "se va a ejecutar leerInstruccion");
 	int i = 0;
 	int token;
     int resultado=0;
 	token = reconoceTokenInstruccion(instruccion[i]);
-	resultado = ejecutaInstruccion(token, instruccion[i + 1], pcbPlanificador, socket);
+	resultado = ejecutaInstruccion(token, instruccion[i + 1], cpu, socket);
 	if (resultado== -1)
 		log_error(logger, "[ERROR] al ejecutarInstruccion en CPU");
 
