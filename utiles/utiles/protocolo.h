@@ -90,6 +90,10 @@ typedef struct IniciarSwap {
 	uint16_t cantidadPaginas;
 } t_iniciar_swap;
 
+typedef struct{
+	uint8_t PID;
+}t_respuesta_iniciar;
+
 typedef struct {
 	uint8_t PID;
 	char* contenido;
@@ -149,6 +153,12 @@ void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) 
 
 void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+
+void* serializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
+t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 
 #endif /* UTILES_PROTOCOLO_H_ */

@@ -62,10 +62,20 @@ void crearArchivo() {
 
 }
 
+void enviarResultadoIniciarOK(int socket, void* estructura){
+	enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructura);
+}
+
+void enviarResultadoIniciarERROR(int socket, void* estructura){
+	enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructura);
+}
+
 void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
+	t_respuesta_iniciar* estructura;
+	estructura = crearRespuestaIniciar();
 
 	procesoAInsertarEnLista = crearProceso();
 	espacioLibre = crearEspacioLibre();
@@ -114,7 +124,9 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 
 
-			enviarStruct(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR");
+			estructura->PID = procesoAInsertarEnLista->PID;
+			enviarResultadoIniciarOK(socket, estructura);
+
 			string_append(&msjDeRta,"mProc ");
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
 			string_append(&msjDeRta," - Iniciado");
@@ -122,10 +134,11 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 		}
 	} else {
-		enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, "ERROR_INICIAR");
+		estructura->PID = estructuraIniciar->PID;
+		enviarResultadoIniciarERROR(socket, estructura);
 
 		string_append(&msjDeRta,"mProc ");
-		string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
+		string_append(&msjDeRta,string_itoa(estructuraIniciar->PID));
 		string_append(&msjDeRta," - Fallido");
 		puts(msjDeRta);
 

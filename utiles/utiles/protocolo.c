@@ -38,7 +38,40 @@ void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	puts("Deserializando serializar_CONTEXTO_MPROC");
 	return estructura;
 }
+void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_INICIAR_PROC_OK");
+		serializar_t_respuesta_iniciar(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_iniciar* estructura = deserializar_t_respuesta_iniciar(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_INICIAR_PROC_OK");
+		return estructura;
+}
 
+void* serializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_INICIAR_PROC_OK");
+		serializar_t_respuesta_iniciar(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* deserializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_iniciar* estructura = deserializar_t_respuesta_iniciar(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_INICIAR_PROC_OK");
+		return estructura;
+}
+
+void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+
+	return 0;
+}
+
+t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_iniciar* estructura = malloc(sizeof(t_respuesta_iniciar));
+	estructura->PID = deserializar_int8_t(fdCliente);
+
+	return estructura;
+}
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura) {
 	serializar_int8_t(fdCliente, estructura->pid);
 	serializar_string(fdCliente, estructura->rutaArchivoMcod);
@@ -68,12 +101,6 @@ void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) 
 	return estructura;
 }
 
-void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	serializar_string(fdCliente, estructura);
-}
-void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	return deserializar_string(fdCliente);
-}
 
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);
