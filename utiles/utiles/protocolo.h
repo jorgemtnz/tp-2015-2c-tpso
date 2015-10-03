@@ -18,7 +18,7 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
-#define TAMANIO_TEXTO 512
+
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -109,14 +109,19 @@ typedef struct {
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
-	char texto[TAMANIO_TEXTO];
+	char *texto;
 }t_escribirMem;
 
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
-	char texto[TAMANIO_TEXTO];
+	char* texto;
 }t_leerMem;
+
+typedef struct{
+	uint8_t PID;
+	char* expresion;
+}t_entrada_salida;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
