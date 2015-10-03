@@ -42,8 +42,8 @@ typedef struct {
 	char* nombreSwap;
 	uint32_t cantidadPaginas;
 	uint32_t tamanioPagina;
-	uint32_t retardo;
-	char* tamanioArchivo;
+	uint32_t retardo_swap;
+	uint32_t retardo_compactacion;
 } t_configuracion;
 
 typedef struct {
@@ -66,6 +66,12 @@ typedef struct {
 l_procesosCargados* crearProceso();
 l_espacioLibre* crearEspacioLibre();
 t_escribirEnProceso* crearEscribirEnProceso();
+t_leerDeProceso* crearLeerDeProceso();
+t_iniciar_swap* crearEstructuraIniciar();
+t_respuesta_iniciar* crearRespuestaIniciar();
+t_respuesta_escribir* crearRespuestaEscribir();
+t_respuesta_leer* crearRespuestaLeer();
+t_respuesta_finalizar* crearRespuestaFinalizar();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -82,6 +88,13 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
 void enviarResultadoIniciarERROR(int socket, void* estructura);
 void enviarResultadoIniciarOK(int socket, void* estructura);
+void enviarResultadoLeerERROR(int socket, void* estructura);
+void enviarResultadoLeerOK(int socket, void* estructura);
+void enviarResultadoEscribirERROR(int socket, void* estructura);
+void enviarResultadoEscribirOK(int socket, void* estructura);
+void enviarResultadoFinalizarERROR(int socket, void* estructura);
+void enviarResultadoFinalizarOK(int socket, void* estructura);
+
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);

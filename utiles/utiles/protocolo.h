@@ -18,7 +18,7 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
-
+#define TAMANIO_TEXTO 512
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -47,9 +47,15 @@ typedef enum {
 	RESUL_INICIAR_PROC,
 	RESUL_INICIAR_PROC_OK,
 	RESUL_INICIAR_PROC_ERROR,
-	RESUL_ESCRIBIR,
-	RESUL_LEER,
-	RESUL_FIN,
+	RESUL_ESCRIBIR, //No tendría que ir más
+	RESUL_ESCRIBIR_OK,
+	RESUL_ESCRIBIR_ERROR,
+	RESUL_LEER, //No tendría que ir más
+	RESUL_LEER_OK,
+	RESUL_LEER_ERROR,
+	RESUL_FIN, //No tendría que ir más
+	RESUL_FIN_OK,
+	RESUL_FIN_ERROR,
 } t_tipo_mensaje;
 
 typedef struct PaqueteEnvio{
@@ -102,26 +108,37 @@ typedef struct {
 
 typedef struct {
 	uint8_t PID;
+	char* contenido;
+	int numeroPagina;
+} t_respuesta_escribir;
+
+typedef struct {
+	uint8_t PID;
 	int numeroPaginaInicio;
 	int numeroPaginaFin;
 } t_leerDeProceso;
 
+typedef struct {
+	uint8_t PID;
+	char* contenido;
+	int numeroPagina;
+} t_respuesta_leer;
+
+typedef struct {
+	uint8_t PID;
+} t_respuesta_finalizar;
+
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
-	char *texto;
+	char texto[TAMANIO_TEXTO];
 }t_escribirMem;
 
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
-	char* texto;
+	char texto[TAMANIO_TEXTO];
 }t_leerMem;
-
-typedef struct{
-	uint8_t PID;
-	char* expresion;
-}t_entrada_salida;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++

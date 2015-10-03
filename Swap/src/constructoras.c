@@ -85,5 +85,46 @@ t_respuesta_iniciar* crearRespuestaIniciar(){
 	}
 	contenido->PID = 0;
 	return contenido;
+}
 
+t_respuesta_escribir* crearRespuestaEscribir(){
+
+	t_respuesta_escribir* contenido = malloc(sizeof(t_respuesta_escribir));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
+	}
+	contenido->PID = 0;
+	contenido->contenido = "";
+	contenido->numeroPagina = 0;
+	return contenido;
+
+}
+
+t_respuesta_leer* crearRespuestaLeer(){
+
+	t_respuesta_leer* contenido = malloc(sizeof(t_respuesta_leer));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
+	}
+	contenido->PID = 0;
+	contenido->contenido = "";
+	contenido->numeroPagina = 0;
+	return contenido;
+
+}
+
+t_respuesta_finalizar* crearRespuestaFinalizar(){
+
+	t_respuesta_finalizar* contenido = malloc(sizeof(t_respuesta_finalizar));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
+	}
+	contenido->PID = 0;
+	return contenido;
 }
