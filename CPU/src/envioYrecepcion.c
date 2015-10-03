@@ -110,39 +110,48 @@ int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
 }
 // todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
 int ejecutaResultError(int socket){
+	ejecutaResult_Error();
 	return EXIT_SUCCESS;
 }
 int  ejecutaResultEscribir(int socket)
 {
+	ejecutaResult_Escribir();
+
 	return EXIT_SUCCESS;
 }
 
 int  ejecutaResulFin(int socket){
+	ejecutaResul_Fin();
 	return EXIT_SUCCESS;
 }
 
 int  ejecutaResulIniciarProc(int socket){
+	ejecutaResul_IniciarProc();
 	return EXIT_SUCCESS;
 }
 
 int  ejecutaResulInstrEjec(int socket)
 {
+	ejecutaResul_InstrEjec();
 	return EXIT_SUCCESS;
 }
 int  ejecutaResultLeer(int socket){
+	ejecutaResult_Leer();
 	return EXIT_SUCCESS;
 }
 
 int  ejecutaResulOk(int socket){
+
+	 ejecutaResul_Ok();
 	return EXIT_SUCCESS;
 }
 
 // en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
-int ejecutaIniciarProceso(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
+int ejecutaIniciarProceso(char* separada_instruccion, t_pcb* pcb, int socket) {
 	//TODO HACK usar un tipo especifico
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
-	estructura->PID = pcbPlanificador->pid;
+	estructura->PID = pcb->pid;
 	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
@@ -150,22 +159,22 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_pcb*pcbPlanificador, int
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
-int ejecutaEscribirMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-
+int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+	ejecuta_EscribirMemoria(separada_instruccion, cpu,socket);
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
-int ejecutaLeerMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-
+int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
+	ejecuta_LeerMemoria( separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
-int ejecutaFinProcesoMemoria(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-
+int ejecutaFinProcesoMemoria(char* separada_instruccion,t_cpu* cpu, int socket) {
+	ejecuta_FinProcesoMemoria(separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-int ejecutaEntradaSalida(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-
+int ejecutaEntradaSalida(char* separada_instruccion,t_cpu* cpu, int socket) {
+	ejecuta_EntradaSalida( separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }

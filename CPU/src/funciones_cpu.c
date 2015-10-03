@@ -30,11 +30,12 @@ int preparaCPU(t_pcb* pcbPlanificador, int socket) {
 	log_info(logger, "se va a ejecutar preparaCPU");
 	t_cpu* cpu = crearCPU();
 
+	cpu->pcbPlanificador = pcbPlanificador;
 	//recibe la info del sockect
 	//procesa la info del sockect
 
 	//llama a procesa codigo
-	procesaCodigo(pcbPlanificador, socket);
+	procesaCodigo(cpu, socket);
 
 	return EXIT_SUCCESS;
 
@@ -54,7 +55,7 @@ int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en es
 }
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
-int interpretaInstruccion(char* instruccion_origen,   t_pcb* pcbPlanificador, int socket) {
+int interpretaInstruccion(char* instruccion_origen,   t_cpu* cpu, int socket) {
 	int resultado = 0;
 	t_instruccion* instruccion = creaInstruccion();
         
@@ -62,48 +63,48 @@ int interpretaInstruccion(char* instruccion_origen,   t_pcb* pcbPlanificador, in
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 	instruccion->ptrComienzoInstruccion = &instruccion->instruccion_separada[0];
 //	instruccion->ptrParteLeida = &instruccion->instruccion_separada[0];
-	resultado = leerInstruccion(instruccion->instruccion_separada,    pcbPlanificador, socket);
+	resultado = leerInstruccion(instruccion->instruccion_separada,    cpu, socket);
 	if (resultado== -1)
 	log_error(logger, "[ERROR] al leer instruccion en CPU");
 
 	return EXIT_SUCCESS;
 }
 // ejecuta las instrucciones del mCod
-int ejecutaInstrucciones(t_map* mCodCPU, t_pcb* pcbPlanificador, int socket) {
+int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu, int socket) {
 	int i = 0;
 	int result;
 	log_info(logger, "se va a ejecutar ejecutaInstrucciones");
 	while (mCodCPU->bufferInstrucciones[i] != NULL) {
-		result = interpretaInstruccion( mCodCPU->bufferInstrucciones[i],  pcbPlanificador, socket );
+		result = interpretaInstruccion( mCodCPU->bufferInstrucciones[i],  cpu, socket );
 		if (result != EXIT_SUCCESS) {
 			perror("[ERROR] al interpretar la instruccion en CPU");
 			log_error(logger, "[ERROR] al interpretar la instruccion en CPU");
 			exit(-1);
 		}
-		pcbPlanificador->proximaInstruccion = ++i;
+		cpu->pcbPlanificador->proximaInstruccion = ++i;
 
 	}
 	return EXIT_SUCCESS;
 }
 
 //carga codigo, interpreta y ejecuta las instrucciones
-int procesaCodigo(t_pcb* pcbPlanificador, int socket) {
+int procesaCodigo(t_cpu* cpu, int socket) {
 
 	t_map* mCodCPU = crearMapeo();
 
         log_info(logger, "se va a ejecutar procesaCodigo");
-	cargaProcesoaCPU(pcbPlanificador->rutaArchivoMcod, mCodCPU);
+	cargaProcesoaCPU(cpu->pcbPlanificador->rutaArchivoMcod, mCodCPU);
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(mCodCPU->bufferInstrucciones);
-	ejecutaInstrucciones(mCodCPU, pcbPlanificador, socket);
+	ejecutaInstrucciones(mCodCPU, cpu, socket);
 	return EXIT_SUCCESS;
 }
 
 //funcion que ejecuta la instruccion
-int ejecutaInstruccion(int token, char* separada_instruccion,   t_pcb* pcbPlanificador, int socket) {
+int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu, int socket) {
 
 
           log_info(logger, "se va a ejecutar ejecutaInstruccion ");
-	if (ejecutar(token, separada_instruccion,pcbPlanificador, socket ) != EXIT_SUCCESS) {
+	if (ejecutar(token, separada_instruccion,cpu, socket ) != EXIT_SUCCESS) {
 		perror("[ERROR] al ejecutar la instruccion CPU");
 		log_error(logger, "[ERROR] al ejecutar la instruccion CPU");
 		exit(-1);
