@@ -2,7 +2,7 @@
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
 int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
-        log_info(logger, "se va a ejecutar la funcion ejecutar");
+	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
@@ -34,8 +34,8 @@ int ejecutar(int token, char* separada_instruccion, t_pcb*pcbPlanificador, int s
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
-        log_info(logger, "se va a ejecutar recibirMensajeVarios ");
+int recibirMensajeVarios(int socket, int token, char* buffer, void* extra) {
+	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	switch (token) {
 	case (RESUL_ERROR): {
 		log_info(logger, "se va a ejecutar result error");
@@ -71,23 +71,23 @@ int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
 	case (RESUL_OK): {
 		log_info(logger, "se va a ejecutar resultOK ");
 		ejecutaResulOk(socket);
-		
+
 		break;
 	}
-	case (CONTEXTO_MPROC):{
+	case (CONTEXTO_MPROC): {
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		//me marca error
 //		t_pcb pcbProc = malloc(sizeof(t_pcb));
 //		pcbProc = (t_pcb) buffer;
 //		t_pcb*	pcbPlanificador = &pcbProc;
-		t_pcb*	pcbPlanificador = (t_pcb*) buffer;
-			printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
-			preparaCPU(pcbPlanificador, socket);
-			break;
+		t_pcb* pcbPlanificador = (t_pcb*) buffer;
+		printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
+		preparaCPU(pcbPlanificador, socket);
+		break;
 	}
-	
-	case(STRING):{
-			log_info(logger, "se va a recibir un string ");
+
+	case (STRING): {
+		log_info(logger, "se va a recibir un string ");
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
 //			printf("Recibi el mensaje: %s\n", mensaje);
@@ -98,51 +98,49 @@ int recibirMensajeVarios(int socket, int token,char* buffer, void* extra ) {
 		 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
 		 // de aca para abajo serian las conexiones
 		 }*/
-			break;
+		break;
 	}
-	
-	case(TIEMPO_CPU):{
-			log_info(logger, "llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
+
+	case (TIEMPO_CPU): {
+		log_info(logger, "llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
 	}
-	
+
 	}
 	return EXIT_SUCCESS;
 }
 // todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
-int ejecutaResultError(int socket){
+int ejecutaResultError(int socket) {
 	ejecutaResult_Error();
 	return EXIT_SUCCESS;
 }
-int  ejecutaResultEscribir(int socket)
-{
+int ejecutaResultEscribir(int socket) {
 	ejecutaResult_Escribir();
 
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResulFin(int socket){
+int ejecutaResulFin(int socket) {
 	ejecutaResul_Fin();
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResulIniciarProc(int socket){
+int ejecutaResulIniciarProc(int socket) {
 	ejecutaResul_IniciarProc();
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResulInstrEjec(int socket)
-{
+int ejecutaResulInstrEjec(int socket) {
 	ejecutaResul_InstrEjec();
 	return EXIT_SUCCESS;
 }
-int  ejecutaResultLeer(int socket){
+int ejecutaResultLeer(int socket) {
 	ejecutaResult_Leer();
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResulOk(int socket){
+int ejecutaResulOk(int socket) {
 
-	 ejecutaResul_Ok();
+	ejecutaResul_Ok();
 	return EXIT_SUCCESS;
 }
 
@@ -160,21 +158,24 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_pcb* pcb, int socket) {
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
 int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
-	ejecuta_EscribirMemoria(separada_instruccion, cpu,socket);
+	if (ejecuta_EscribirMemoria(separada_instruccion, cpu, socket) == NULL) {
+		log_error(logger, "[ERROR] no se genero la estructura para enviar EscribirMemoria");
+	    return EXIT_FAILURE;
+	}
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
-	ejecuta_LeerMemoria( separada_instruccion, cpu, socket);
+	ejecuta_LeerMemoria(separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
-int ejecutaFinProcesoMemoria(char* separada_instruccion,t_cpu* cpu, int socket) {
+int ejecutaFinProcesoMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
 	ejecuta_FinProcesoMemoria(separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-int ejecutaEntradaSalida(char* separada_instruccion,t_cpu* cpu, int socket) {
-	ejecuta_EntradaSalida( separada_instruccion, cpu, socket);
+int ejecutaEntradaSalida(char* separada_instruccion, t_cpu* cpu, int socket) {
+	ejecuta_EntradaSalida(separada_instruccion, cpu, socket);
 	return EXIT_SUCCESS;
 }

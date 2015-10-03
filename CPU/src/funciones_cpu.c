@@ -64,8 +64,10 @@ int interpretaInstruccion(char* instruccion_origen,   t_cpu* cpu, int socket) {
 	instruccion->ptrComienzoInstruccion = &instruccion->instruccion_separada[0];
 //	instruccion->ptrParteLeida = &instruccion->instruccion_separada[0];
 	resultado = leerInstruccion(instruccion->instruccion_separada,    cpu, socket);
-	if (resultado== -1)
+	if (resultado== -1){
 	log_error(logger, "[ERROR] al leer instruccion en CPU");
+	return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
 }
