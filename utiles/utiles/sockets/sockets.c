@@ -723,6 +723,15 @@ void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void
 	dictionary_put(registroSerializadores, keySerializacion, registroSerializacion);
 }
 
+char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje) {
+	char* keySerializacion = generarKeySerializacion(tipoMensaje);
+	t_registro_serializacion* registroSerializacion = (t_registro_serializacion *)dictionary_get(registroSerializadores, keySerializacion);
+	if(registroSerializacion == NULL) {
+		return NULL;
+	}
+	return registroSerializacion->descripcion;
+}
+
 int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 

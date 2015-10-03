@@ -105,6 +105,7 @@ bool existeSerializacion(t_tipo_mensaje tipoMensaje);
 char* generarKeySerializacion(t_tipo_mensaje tipoMensaje);
 t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje);
 void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion);
+char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje);
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion);
 int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion);
