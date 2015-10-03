@@ -47,16 +47,16 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(int idProc, int cantPag, int socketCPU) {
-	int rtaSwap, contador;
+void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
+	int rtaSwap, contador,socketSwap;
 	t_TablaDePaginas* tablaDePag;
+	t_iniciar_swap * estructura;
+	estructura = crearEstructuraIniciar();
+	estructura->PID = idProc;
+	estructura->cantidadPaginas = cantPag;
 
-	/* PARTE DE ENVIAR A SWAP UN PROCESO
-	 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
-	 *  puts("Enviando \"puede iniciar proceso\" al Swap");
-	 enviar(atoi(socketCPU), "puede iniciar proceso", strlen("puede iniciar proceso));
-	 puts("Enviado al Swap");
-	 */
+	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	enviarIniciarAlSwap(estructura,socketSwap);
 
 	if (rtaSwap) { // rtaSwap == 0, indica ok
 		for (contador = 0; contador < cantPag; contador++) {

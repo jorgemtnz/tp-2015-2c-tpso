@@ -34,71 +34,60 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
-			if (header->tipoMensaje == RESUL_INICIAR_PROC_OK) {
-
+			switch (header->tipoMensaje) {
+			case RESUL_INICIAR_PROC_OK:
+				break;
 				//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA OK EL INICIAR EN SWAP
-			} else {
-				if (header->tipoMensaje == RESUL_INICIAR_PROC_ERROR) {
-					//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA EN ERROR EL INICIAR EN SWAP
-				} else {
-					if (header->tipoMensaje == RESUL_ESCRIBIR_OK) {
-						//ACA VA LO QUE TIENE QUE HACER MEMORIA CUANDO SWAP LE DICE QUE ESCRIBIR SE HIZO BIEN
-					} else {
-						if (header->tipoMensaje == RESUL_FIN_OK) {
-							//ACA VA LO QUE TIENE QUE HACER MEMORIA CUANDO SWAP LE DICE QUE FINALIZO EL PROCESO(LO BORRO)
-						} else {
-							if (header->tipoMensaje == INICIAR_PROC_SWAP) {//TODO HACK usar un tipo de mensaje especifico
+			case RESUL_INICIAR_PROC_ERROR:
+				break;
+			case RESUL_ESCRIBIR_OK:
+				break;
+			case RESUL_FIN_OK:
+				break;
+			case INICIAR_PROC_SWAP:
+				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 
-								//TODO HACK usar un tipo especifico
-								t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
-
-								t_iniciar_swap* estructuraIniciar;
-								estructuraIniciar = crearEstructuraIniciar();
-								estructuraIniciar->PID = datosDesdeCPU->PID;
-								estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
-								int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-								enviarIniciarASwap(estructuraIniciar, socketSwap);
-							}
-							else {
-								if (header->tipoMensaje == FIN_PROCESO_MEM){
-									t_finalizar_swap* datosDesdeCPU = (t_finalizar_swap*) buffer;
-									t_finalizar_swap* estructuraFinalizar;
-									estructuraFinalizar = crearEstructuraFinalizar();
-									estructuraFinalizar->PID=datosDesdeCPU->PID;
-									int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-									enviarFinalizarASwap(estructuraFinalizar, socketSwap);
-								}
-							}
-						}
-					}
-				}
+				t_iniciar_swap * estructuraIniciar;
+				estructuraIniciar = crearEstructuraIniciar();
+				estructuraIniciar->PID = datosDesdeCPU->PID;
+				estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
+				int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+				enviarIniciarASwap(estructuraIniciar, socketSwap);
+				break;
+			case FIN_PROCESO_MEM:
+				t_finalizar_swap* datosDesdeCPU = (t_finalizar_swap*) buffer;
+				t_finalizar_swap* estructuraFinalizar;
+				estructuraFinalizar = crearEstructuraFinalizar();
+				estructuraFinalizar->PID = datosDesdeCPU->PID;
+				int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+				enviarFinalizarASwap(estructuraFinalizar, socketSwap);
+				break;
 			}
-		}
-	}
-	//printf("Recibi el mensaje: %s\n", buffer);
-	if (tipoNotificacion == TERMINAL_MESSAGE) {
-		if (string_starts_with(buffer, "correr programa")) {
-			char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
-			/* EJEMPLO
-			 puts("Enviando \"correr programa\" al Swap");
-			 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-			 puts("Enviado al Swap");
-			 */
-			int buff, idProc, cantPag, nroPag, pagIn, pagFin; // seria el buffer ques e deba poner
-			char* textoAEscribir;
-			switch (buff) {
-			case 1: // va a ser iniciar este
-				iniciar(idProc, cantPag, socketCPU);
-				break;
-			case 2: // va a ser escribir este
-				escribir(idProc, nroPag, textoAEscribir);
-				break;
-			case 3: // va a ser leer este
-				leer(idProc, pagIn, pagFin);
-				break;
-			case 4: // va a ser finalizar este
-				finalizar(idProc);
-				break;
+
+		} else if (tipoNotificacion == TERMINAL_MESSAGE) {
+			if (string_starts_with(buffer, "correr programa")) {
+				char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
+				/* EJEMPLO
+				 puts("Enviando \"correr programa\" al Swap");
+				 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
+				 puts("Enviado al Swap");
+				 */
+				int buff, idProc, cantPag, nroPag, pagIn, pagFin; // seria el buffer ques e deba poner
+				char* textoAEscribir;
+				switch (buff) {
+				case 1: // va a ser iniciar este
+					iniciar(idProc, cantPag, socketCPU);
+					break;
+				case 2: // va a ser escribir este
+					escribir(idProc, nroPag, textoAEscribir);
+					break;
+				case 3: // va a ser leer este
+					leer(idProc, pagIn, pagFin);
+					break;
+				case 4: // va a ser finalizar este
+					finalizar(idProc);
+					break;
+				}
 			}
 		}
 	}
