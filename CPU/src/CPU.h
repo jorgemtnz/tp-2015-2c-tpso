@@ -57,7 +57,7 @@ typedef struct {
 typedef struct {
 	char** bufferInstrucciones; // son todas las instrucciones ya separadas por barra n
 	char* ptrCMemoriaMap; // puntero al comienzo de la memoria mapeada
-	uint32_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
+	uint16_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
 	uint8_t cantidadInstrucciones;  // cantidad de instrucciones a ejecutar
 } t_map;
 

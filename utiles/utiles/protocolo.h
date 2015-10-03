@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <commons/collections/list.h>
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -29,6 +30,8 @@ typedef enum {
 	STRING,
 
 	CONTEXTO_MPROC,
+	RESULT_EJECUCION_OK,
+	RESULT_EJECUCION_ERROR,
 	RESUL_INSTR_EJEC,
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
@@ -148,6 +151,19 @@ typedef struct{
 	uint8_t PID;
 	char* expresion;
 } t_entrada_salida;
+
+typedef struct{
+	uint8_t PID;
+	t_pcb* pcb;
+	t_list* resultadosInstrucciones;
+	bool finalizoOk;
+} t_respuesta_ejecucion;
+
+typedef struct{
+	t_tipo_mensaje tipoMensaje;
+	char* comandoInstruccion;
+	char* expresion;
+} t_resultado_instruccion;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
