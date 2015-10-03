@@ -3,7 +3,7 @@
 int reconoceTokenInstruccion(char* string) {
 log_info(logger, "se va a ejecutar reconoce token segun el comando de la instruccion ");
 	string_to_lower(string);
-	if (string_equals(string, "inicializar"))
+	if (string_equals(string, "iniciar"))
 		return INICIAR_PROCESO_MEM;
 	if (string_equals(string, "leer"))
 		return LEER_MEM;
