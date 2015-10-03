@@ -140,6 +140,12 @@ int  ejecutaResulOk(int socket){
 // en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
 int ejecutaIniciarProceso(char* separada_instruccion, t_pcb*pcbPlanificador, int socket) {
+	//TODO HACK usar un tipo especifico
+	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
+	estructura->PID = pcbPlanificador->pid;
+	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
+	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
 
 	return EXIT_SUCCESS;
 }
