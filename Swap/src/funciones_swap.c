@@ -29,8 +29,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->nombreSwap = strdup(config_get_string_value(archivoConfig, "NOMBRE_SWAP"));
 		configuracion->cantidadPaginas = config_get_int_value(archivoConfig, "CANTIDAD_PAGINAS");
 		configuracion->tamanioPagina = config_get_int_value(archivoConfig, "TAMANIO_PAGINA");
-		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO_COMPACTACION");
-		configuracion->tamanioArchivo = strdup(config_get_string_value(archivoConfig, "TAMANIO_ARCHIVO"));
+		configuracion->retardo_compactacion = config_get_int_value(archivoConfig, "RETARDO_COMPACTACION");
+		configuracion->retardo_swap = config_get_int_value(archivoConfig, "RETARDO_SWAP");
 
 		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
 		puts(logMsg);
@@ -49,13 +49,16 @@ void crearArchivo() {
 
 	abrirOCrearArchivoLecturaEscritura(pathArchivo, logger);
 
-	crearArchivoMmap(pathArchivo, configuracion->tamanioArchivo);
+	int tamanioArchivo = configuracion->cantidadPaginas*configuracion->tamanioPagina;
+	char* tamanioArchivoString = string_new();
+	tamanioArchivoString = string_itoa(tamanioArchivo);
+	crearArchivoMmap(pathArchivo, tamanioArchivoString);
 
 	int fdEspacioDatos = abrirArchivoEspacioDatos(pathArchivo, logger);
 
 	int offset = 0;
 
-	espacioDatos = crearEspacioDeDatos(fdEspacioDatos, configuracion->tamanioArchivo, logger);
+	espacioDatos = crearEspacioDeDatos(fdEspacioDatos, tamanioArchivo, logger);
 
 	char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
 	escribirEnEspacioDatos(espacioDatos, espacioVacio, offset, configuracion->tamanioPagina);
@@ -163,6 +166,7 @@ void enviarResultadoEscribirERROR(int socket, void* estructura){
 }
 
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket) {
+	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
 	t_respuesta_escribir* respuestaDeEscribir;
@@ -215,6 +219,7 @@ void enviarResultadoLeerERROR(int socket, void* estructura){
 }
 
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
+	sleep(configuracion->retardo_swap);
 	int a, x;
 	char* datosLeidos;
 	char* datosLeidosFinal = string_new();

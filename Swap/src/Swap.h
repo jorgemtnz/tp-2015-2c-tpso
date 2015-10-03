@@ -42,8 +42,8 @@ typedef struct {
 	char* nombreSwap;
 	uint32_t cantidadPaginas;
 	uint32_t tamanioPagina;
-	uint32_t retardo;
-	char* tamanioArchivo;
+	uint32_t retardo_swap;
+	uint32_t retardo_compactacion;
 } t_configuracion;
 
 typedef struct {
