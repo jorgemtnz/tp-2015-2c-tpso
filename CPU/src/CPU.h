@@ -50,7 +50,6 @@
 //--------------------------------estructura para manejar las instrucciones en el CPU----------------
 typedef struct {
 	char** instruccion_separada;  //arreglo de instruccion separada en palabras, separado el token del resto de la instruccion
-	char* ptrParteLeida;  // puntero para manejar el recorrido del arreglo
 	char* ptrComienzoInstruccion;  // puntero al comienzo de la instruccion
 
 } t_instruccion;
@@ -149,7 +148,7 @@ int procesaCodigo(t_cpu* cpu, int socket);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
-int ejecutaIniciarProceso(char* separada_instruccion,  t_pcb* pcb, int socket );
+int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu, int socket );
 int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu, int socket );
 int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu, int socket );
 int ejecutaFinProcesoMemoria(char* separada_instruccion,  t_cpu* cpu, int socket) ;

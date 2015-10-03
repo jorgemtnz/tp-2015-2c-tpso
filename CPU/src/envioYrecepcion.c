@@ -6,7 +6,7 @@ int ejecutar(int token, char* separada_instruccion, t_cpu* cpu , int socket) {
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
-		ejecutaIniciarProceso(separada_instruccion, cpu->pcbPlanificador, socket);
+		ejecutaIniciarProceso(separada_instruccion, cpu, socket);
 		break;
 	}
 	case (ESCRIBIR_MEM): {
@@ -146,13 +146,14 @@ int ejecutaResulOk(int socket) {
 
 // en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
-int ejecutaIniciarProceso(char* separada_instruccion, t_pcb* pcb, int socket) {
+int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu, int socket) {
 	//TODO HACK usar un tipo especifico
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
-	estructura->PID = pcb->pid;
+	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
+
 
 	return EXIT_SUCCESS;
 }

@@ -11,7 +11,7 @@ void* retorno = NULL;
 
 	return retorno;
 }
-//mandar comando a memoria y  el numero de pagina que se debe leer
+//devuelve
 int ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu, int socket) {
 
 	return EXIT_SUCCESS;

@@ -9,7 +9,7 @@ t_instruccion* creaInstruccion(){
 				exit(-1);
 	}
 	//instruccion->instruccion_separada[0]=NULL;
-	instruccion->ptrParteLeida='\0';
+
 	instruccion->ptrComienzoInstruccion='\0';
 	return instruccion;
 }
