@@ -112,8 +112,9 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 
 			}
 
-			enviarHeader(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR", strlen("OK_INICIAR"));
-			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
+//			enviarHeader(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR", strlen("OK_INICIAR"));
+//			enviarSimple(socket, "OK_INICIAR", strlen("OK_INICIAR"));
+			enviarStruct(socket, RESUL_INICIAR_PROC_OK, "OK_INICIAR");
 			string_append(&msjDeRta,"mProc ");
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
 			string_append(&msjDeRta," - Iniciado");
@@ -208,7 +209,7 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	return datosLeidosFinal;
 }
 
-void finalizar(pid_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
+void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;

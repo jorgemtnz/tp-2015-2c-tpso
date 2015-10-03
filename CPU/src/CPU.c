@@ -1,6 +1,6 @@
 #include "CPU.h"
 
-t_dictionary* conexiones;
+
 int main(void) {
 	conexiones = dictionary_create();
 

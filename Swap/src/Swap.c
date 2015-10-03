@@ -247,7 +247,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					leer(procesoRecibido, listaDeProcesosCargados, socket);
 				} else {
 					if (header->tipoMensaje == FIN_PROCESO_SWAP) {
-						pid_t* pid = (pid_t *)buffer;
+						uint8_t* pid = (uint8_t *)buffer;
 						finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
 					}
 				}

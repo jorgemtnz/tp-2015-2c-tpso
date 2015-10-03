@@ -176,5 +176,6 @@ t_cpu* cpu;
 t_map* mCodCPU; // para manejar las instrucciones en el cpu
 
 t_equipo* un;
+t_dictionary* conexiones;
 
 #endif /* CPU_H_ */
