@@ -1,13 +1,19 @@
-
 #include "CPU.h"
 
-int ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
+t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
+	cpu->estadoEjecucion = USO;
+	cpu->cantInstEjecutadas += cpu->cantInstEjecutadas + 1;
 
-	return EXIT_SUCCESS;
+	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
+	estructura = NULL;
+	estructura->PID = cpu->pcbPlanificador->pid;
+	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
+	cpu->estadoEjecucion = NO_USO;
+	return estructura;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
 void* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-void* retorno = NULL;
+	void* retorno = NULL;
 
 	return retorno;
 }
@@ -15,7 +21,7 @@ void* retorno = NULL;
 void* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 	void* retorno = NULL;
 
-		return retorno;
+	return retorno;
 
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso

@@ -148,10 +148,9 @@ int ejecutaResulOk() {
 //debe mandar el inicio a memoria con serializacion correspondiente
 int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	//TODO HACK usar un tipo especifico
-	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
-	estructura->PID = cpu->pcbPlanificador->pid;
-	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
-	ejecuta_IniciarProceso(separada_instruccion, cpu);
+	t_iniciar_swap* estructura;
+
+	estructura = ejecuta_IniciarProceso(separada_instruccion, cpu);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
 
