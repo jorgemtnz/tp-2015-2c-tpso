@@ -34,7 +34,7 @@ int ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios( int token, char* buffer, void* extra) {
+int recibirMensajeVarios(int token, char* buffer, void* extra) {
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	switch (token) {
 	case (RESUL_ERROR): {
@@ -151,6 +151,7 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
+	ejecuta_IniciarProceso(separada_instruccion, cpu);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
 
@@ -158,15 +159,16 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
 int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-    t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
-    estructura->PID = cpu->pcbPlanificador->pid;
-    estructura = (t_escribirMem*) ejecuta_EscribirMemoria(separada_instruccion, cpu);
+	t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
+	estructura->PID = cpu->pcbPlanificador->pid;
+	estructura = (t_escribirMem*) ejecuta_EscribirMemoria(separada_instruccion, cpu);
 
 	if (estructura == NULL) {
 		log_error(logger, "[ERROR] no se genero la estructura para enviar EscribirMemoria");
 		return EXIT_FAILURE;
 	}
-
+	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+	enviarStruct(socketMemoria, ESCRIBIR_MEM, estructura);
 
 	return EXIT_SUCCESS;
 }
@@ -176,6 +178,13 @@ int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 	estructura->PID = cpu->pcbPlanificador->pid;
 
 	estructura = (t_leerMem*) ejecuta_LeerMemoria(separada_instruccion, cpu);
+	if (estructura == NULL) {
+		log_error(logger, "[ERROR] no se genero la estructura para enviar leerMemoria");
+		return EXIT_FAILURE;
+	}
+	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+	enviarStruct(socketMemoria, LEER_MEM, estructura);
+
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
