@@ -61,7 +61,7 @@ int interpretaInstruccion(char* instruccion_origen,   t_cpu* cpu) {
         
         log_info(logger, "se va a ejecutar interpretaInstruccion ");
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
-	instruccion->ptrComienzoInstruccion = &instruccion->instruccion_separada[0];
+	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
 	resultado = leerInstruccion(instruccion->instruccion_separada,    cpu);
 	if (resultado== -1){
 	log_error(logger, "[ERROR] al leer instruccion en CPU");

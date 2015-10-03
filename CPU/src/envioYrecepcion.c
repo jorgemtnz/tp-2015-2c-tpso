@@ -76,10 +76,7 @@ int recibirMensajeVarios(int token, char* buffer, void* extra) {
 	}
 	case (CONTEXTO_MPROC): {
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
-		//me marca error
-//		t_pcb pcbProc = malloc(sizeof(t_pcb));
-//		pcbProc = (t_pcb) buffer;
-//		t_pcb*	pcbPlanificador = &pcbProc;
+
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
 		preparaCPU(pcbPlanificador);
