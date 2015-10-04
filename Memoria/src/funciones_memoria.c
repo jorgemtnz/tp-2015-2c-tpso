@@ -54,6 +54,8 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
+	t_rta_iniciar_ok_CPU * estructuraCPU;
+	estructuraCPU = crearRespuestaIniciarOkCPU();
 
 	for (contador = 0; contador < cantPag; contador++) {
 		contadorPagTP++;
@@ -64,6 +66,7 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 		list_add(listaTablaDePag, tablaDePag);
 	}
 	socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+	enviarRtaIniciarOkCPU (estructura, socketCPU);
 
 	free(tablaDePag);
 }

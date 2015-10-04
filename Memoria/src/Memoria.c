@@ -59,7 +59,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			case (RESUL_FIN_OK) : {
 				break;
 			}
-			case (INICIAR_PROC_SWAP) : {
+			case (INICIAR_PROCESO_MEM) : {
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 				t_iniciar_swap * estructuraIniciar;
 				estructuraIniciar = crearEstructuraIniciar();
@@ -78,33 +78,17 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 				break;
 			}
+			case (LEER_MEM): {
+				break;
+			}
+			case (ESCRIBIR_MEM): {
+				break;
+			}
+
 			}
 
 		} else if (tipoNotificacion == TERMINAL_MESSAGE) {
-			if (string_starts_with(buffer, "correr programa")) {
-				char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
-				/* EJEMPLO
-				 puts("Enviando \"correr programa\" al Swap");
-				 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-				 puts("Enviado al Swap");
-				 */
-				int buff, idProc, cantPag, nroPag, pagIn, pagFin; // seria el buffer ques e deba poner
-				char* textoAEscribir;
-				switch (buff) {
-				case 1: // va a ser iniciar este
-					iniciar(idProc, cantPag, socketCPU);
-					break;
-				case 2: // va a ser escribir este
-					escribir(idProc, nroPag, textoAEscribir);
-					break;
-				case 3: // va a ser leer este
-					leer(idProc, pagIn, pagFin);
-					break;
-				case 4: // va a ser finalizar este
-					finalizar(idProc);
-					break;
-				}
-			}
+
 		}
 	}
 
