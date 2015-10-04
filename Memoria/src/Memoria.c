@@ -30,7 +30,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
-	int socketSwap;
+	int socketSwap,socketCPU;
+	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	socketCPU = atoi((char*) dictionary_get(conexiones, "Swap"));
 
 	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
@@ -42,15 +44,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		if (tipoNotificacion == MESSAGE) {
 			switch (header->tipoMensaje) {
 			case (RESUL_INICIAR_PROC_OK) :{
-				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
-				t_iniciar_swap * estructuraIniciar;
-				estructuraIniciar = crearEstructuraIniciar();
-				socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketSwap);
+				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
+				estructuraIniciar->PID = datosDesdeSwap->PID;
+				estructuraIniciar->cantidadPaginas = datosDesdeSwap->cantidadPaginas;
+				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketCPU);
 				break;
 			}
 				//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA OK EL INICIAR EN SWAP
 			case (RESUL_INICIAR_PROC_ERROR) : {
+				t_rta_iniciar_CPU* rtaDesdeSwap = (t_rta_iniciar_CPU*) buffer;
+				enviarRtaIniciarFalloCPU(rtaDesdeSwap,socketCPU);
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
@@ -61,11 +64,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (INICIAR_PROCESO_MEM) : {
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
-				t_iniciar_swap * estructuraIniciar;
-				estructuraIniciar = crearEstructuraIniciar();
 				estructuraIniciar->PID = datosDesdeCPU->PID;
-				estructuraIniciar->cantidadPaginas = datosDesdeCPU;
-				int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+				estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}

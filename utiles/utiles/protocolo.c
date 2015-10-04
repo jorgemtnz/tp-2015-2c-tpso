@@ -183,12 +183,16 @@ t_respuesta_finalizar* deserializar_t_respuesta_finalizar(int fdCliente, t_tipo_
 
 
 
-
-
-
-
-
-
+void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_INICIAR_PROC_NO_OK_CPU");
+		serializar_t_rta_iniciar_no_ok_CPU(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_escribir* estructura = deserializar_t_rta_iniciar_no_ok_CPU(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_INICIAR_PROC_NO_OK_CPU");
+		return estructura;
+}
 
 void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_RESUL_INICIAR_PROC_OK_CPU");
@@ -217,8 +221,21 @@ void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 	return 0;
 }
 
-t_respuesta_iniciar* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_rta_iniciar_ok_CPU* estructura = crearRespuestaIniciarOkCPU();
+t_rta_iniciar_CPU* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_rta_iniciar_CPU* estructura = crearRespuestaIniciarOkCPU();
+	estructura->PID = deserializar_int8_t(fdCliente);
+
+	return estructura;
+}
+
+void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+
+	return 0;
+}
+
+t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_rta_iniciar_CPU* estructura = crearRespuestaIniciarOkCPU();
 	estructura->PID = deserializar_int8_t(fdCliente);
 
 	return estructura;

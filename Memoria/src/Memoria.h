@@ -139,7 +139,7 @@ t_list* buscarLosIdDeProceso(int idProc);
 void eliminarDeMemoria(int id);
 void enviarASwapEliminarProceso(int idProc);
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) ;
-
+void enviarRtaIniciarFalloCPU (t_rta_iniciar_CPU * estructura, int socketCPU);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================

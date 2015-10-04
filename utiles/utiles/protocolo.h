@@ -52,6 +52,7 @@ typedef enum {
 	RESUL_ESCRIBIR,
 	RESUL_INICIAR_PROC,
 	RESUL_INICIAR_PROC_OK,
+	RESUL_INICIAR_PROC_NO_OK_CPU,
 	RESUL_INICIAR_PROC_OK_CPU,
 	RESUL_INICIAR_PROC_ERROR_CPU,
 	RESUL_INICIAR_PROC_ERROR,
@@ -103,7 +104,8 @@ typedef struct IniciarSwap {
 
 typedef struct {
 	uint8_t PID;
-}t_rta_iniciar_ok_CPU;
+}t_rta_iniciar_CPU;
+
 
 typedef struct {
 	uint8_t PID;
@@ -212,7 +214,13 @@ void* deserializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMe
 void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
-t_respuesta_iniciar* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+t_rta_iniciar_CPU* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
+t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 
 void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje);

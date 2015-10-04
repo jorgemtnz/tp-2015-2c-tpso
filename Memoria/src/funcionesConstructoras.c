@@ -104,8 +104,8 @@ t_finalizar_swap* crearEstructuraFinalizar(){
 	return contenido;
 }
 
-t_rta_iniciar_ok_CPU* crearRespuestaIniciarOkCPU(){
-	t_rta_iniciar_ok_CPU* contenido = malloc(sizeof(t_rta_iniciar_ok_CPU));
+t_rta_iniciar_CPU* crearRespuestaIniciarOkCPU(){
+	t_rta_iniciar_CPU* contenido = malloc(sizeof(t_rta_iniciar_CPU));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para crearRespuestaIniciarOkCPU");
 		log_error(logger, "[ERROR] No se reservo memoria para crearRespuestaIniciarOkCPU");
