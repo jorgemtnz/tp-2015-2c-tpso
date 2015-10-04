@@ -1,30 +1,33 @@
 
 #include "CPU.h"
+// todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
+int ejecutaResultError(t_cpu* cpu) {
 
-int ejecutaResult_Error(){
 	return EXIT_SUCCESS;
 }
-int  ejecutaResult_Escribir()
-{
-	return EXIT_SUCCESS;
-}
+int ejecutaResultEscribir(t_cpu* cpu) {
 
-int  ejecutaResul_Fin(){
+
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResul_IniciarProc(){
+int ejecutaResulFin(t_cpu* cpu) {
+
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResul_InstrEjec()
-{
-	return EXIT_SUCCESS;
-}
-int  ejecutaResult_Leer(){
+int ejecutaResulIniciarProc(t_cpu* cpu) {
+
 	return EXIT_SUCCESS;
 }
 
-int  ejecutaResul_Ok(){
+int ejecutaResulInstrEjec(t_cpu* cpu) {
+
 	return EXIT_SUCCESS;
 }
+int ejecutaResultLeer(t_cpu* cpu) {
+
+	return EXIT_SUCCESS;
+}
+
+

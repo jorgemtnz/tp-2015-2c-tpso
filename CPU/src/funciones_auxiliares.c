@@ -27,19 +27,12 @@ char** separaInstruccion(char* instruccionCompleta) {
 
 //recibe la instruccion que se debe interpretar como una cadena de char
 int leerInstruccion(char** instruccion, t_cpu* cpu) {
-	log_info(logger, "se va a ejecutar leerInstruccion");
-	int i = 0;
-	int token;
-    int resultado=0;
-	token = reconoceTokenInstruccion(instruccion[i]);
-	resultado = ejecutaInstruccion(token, instruccion[i + 1], cpu);
-	if (resultado== -1)
-		log_error(logger, "[ERROR] al ejecutarInstruccion en CPU");
+
 
 	return EXIT_SUCCESS;
 }
 //desmapea el mCod cargado para CPU
-int descargaProcesoCPU(t_map* mCod) {
+int descargaProcesoCPU(t_mCod* mCod) {
 	eliminarEspacioDeDatos(mCod->ptrCMemoriaMap, mCod->ptrTamPagina, logger);
 	return EXIT_SUCCESS;
 }

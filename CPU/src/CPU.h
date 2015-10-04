@@ -59,7 +59,8 @@ typedef struct {
 	char* ptrCMemoriaMap; // puntero al comienzo de la memoria mapeada
 	uint16_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
 	uint8_t cantidadInstrucciones;  // cantidad de instrucciones a ejecutar
-} t_map;
+	t_respuesta_ejecucion* respEjec; //resultado de las rafagas
+} t_mCod;
 
 //--------------------estructura para levantar del archivo de config -----------------------------------------
 typedef struct {
@@ -77,10 +78,11 @@ typedef struct {
 //---------------------------------------------estructura de una CPU, seria la de un hilo--------
 typedef struct {
 	uint8_t idCPU;
-	uint8_t estado; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
+	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
 	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
 	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0
+	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -93,86 +95,86 @@ typedef struct {
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
-t_map* crearMapeo();
+t_resultado_instruccion* creaResultadoInstruccion();
+t_respuesta_ejecucion* creaRespuestaEjecucion();
+t_instruccion* creaInstruccion();
+t_mCod* crearmCod();
 t_configuracion* crearConfiguracion();
 t_cpu* crearCPU();
 t_ProcCPU* crearProcCPU();
-t_instruccion* creaInstruccion();
+
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
-void destInstruccion(t_instruccion* instruccion);
-void destMap(t_map* unMap);
+
+void destmCod(t_mCod* unmCod) ;
+void destConfig(t_configuracion* unaConfig);
 void destHiloCPU(t_cpu* unHiloCPU);
 void destProcCPU(t_ProcCPU* unCPU);
-void destConfig(t_configuracion* unaConfig);
-// +++++++++++++++++++++++++++++++++++Funciones Auxiliares
+void destInstruccion(t_instruccion* unaInstruccion);
+void destVectorInstruccion(char** vectorInstruccion);
+void destIniciarSwap(t_iniciar_swap* estructura);
+void destEscrMem(t_escribirMem* estruc);
+void destEntradSalid(t_entrada_salida* entradSalid );
+void destResInstruc(t_resultado_instruccion* resultInstrucc);
+void destRespEjec(t_respuesta_ejecucion* respEjec);
+
+// +++++++++++++++++++++++++++++++++++Funciones Auxiliares y ejecucion y ejecucionResult
 //============================================================================
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
 int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
 int leerInstruccion(char** instruccion, t_cpu* cpu);
-int descargaProcesoCPU(t_map* mCod);
+int descargaProcesoCPU(t_mCod* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
-int  ejecutaResul_IniciarProc();
-int ejecutaResult_Error();
-int  ejecutaResult_Escribir();
-int  ejecutaResul_Fin();
-int  ejecutaResul_InstrEjec();
-int  ejecutaResult_Leer();
-int  ejecutaResul_Ok();
+
 t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
 t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
 t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 int ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 
-
-void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
-//TODO Conflictua con sockets.h
-//void enviar(int tipoDeMensaje, void* t_estructura, int fdDestinatario);
-void* recibir(int fdReceptor);
-
+int ejecutaResultError(t_cpu* cpu);
+int  ejecutaResultEscribir(t_cpu* cpu);
+int  ejecutaResulFin(t_cpu* cpu);
+int  ejecutaResulIniciarProc(t_cpu* cpu);
+int  ejecutaResulInstrEjec(t_cpu* cpu);
+int  ejecutaResultLeer(t_cpu* cpu);
+int  ejecutaResulOk(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
 void leerArchivoDeConfiguracion();
-int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU);
+int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
-int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu);
-int interpretaInstruccion(char* instruccion_origen, t_cpu* cpu);
+int ejecutaInstrucciones( t_cpu* cpu);
+int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
 int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu);
 int preparaCPU(t_pcb* pcbPlanificador);
 int procesaCodigo(t_cpu* cpu);
 
-//++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
-int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
+//++++++++++++++++++++++++++++++++++++funciones envio por comando ejecutado en CPU+++++++++++++++++++++++++++++++++++++++
+
 int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu );
 int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu);
 int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu);
 int ejecutaFinProcesoMemoria( t_cpu* cpu) ;
 int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu);
 
-
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
-int recibirMensajeVarios( int token,  char*   buffer ,void* extra );
-int ejecutaResultError();
-int  ejecutaResultEscribir();
-int  ejecutaResulFin();
-int  ejecutaResulIniciarProc();
-int  ejecutaResulInstrEjec();
-int  ejecutaResultLeer();
-int  ejecutaResulOk();
+int procesarMensajes(int socket, t_header* , char* buffer, t_tipo_notificacion , void* extra, t_log* );
+int recibirMensajeVarios( int token,  char*   buffer ,void* extra,t_cpu* cpu );
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
 
 t_configuracion* configuracion;
 t_log* logger; //VG del logger
-t_cpu* cpu;
-t_map* mCodCPU; // para manejar las instrucciones en el cpu
+t_ProcCPU* procCPU;  //proceso CPU que controla la lista de los hilos CPU
+
+
 
 t_equipo* un;
 t_dictionary* conexiones;

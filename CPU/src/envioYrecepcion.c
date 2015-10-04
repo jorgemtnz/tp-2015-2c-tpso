@@ -34,43 +34,42 @@ int ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios(int token, char* buffer, void* extra) {
+int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	switch (token) {
 	case (RESUL_ERROR): {
 		log_info(logger, "se va a ejecutar result error");
-		ejecutaResultError(socket);
-
+		ejecutaResultError(cpu);
 		break;
 	}
 	case (RESUL_ESCRIBIR): {
 		log_info(logger, "se va a ejecutar result escribir ");
-		ejecutaResultEscribir();
+		ejecutaResultEscribir(cpu);
 		break;
 	}
 	case (RESUL_FIN): {
 		log_info(logger, "se va a ejecutar result fin de proceso ");
-		ejecutaResulFin();
+		ejecutaResulFin(cpu);
 		break;
 	}
 	case (RESUL_INICIAR_PROC): {
 		log_info(logger, "se va a ejecutar result iniciar proceso ");
-		ejecutaResulIniciarProc();
+		ejecutaResulIniciarProc(cpu);
 		break;
 	}
 	case (RESUL_INSTR_EJEC): {
 		log_info(logger, "se va a ejecutar result instruccion ejecutar ");
-		ejecutaResulInstrEjec();
+		ejecutaResulInstrEjec(cpu);
 		break;
 	}
 	case (RESUL_LEER): {
 		log_info(logger, "se va a ejecutar resultLeer ");
-		ejecutaResultLeer();
+		ejecutaResultLeer(cpu);
 		break;
 	}
 	case (RESUL_OK): {
 		log_info(logger, "se va a ejecutar resultOK ");
-		ejecutaResulOk();
+		ejecutaResulOk(cpu);
 
 		break;
 	}
@@ -80,6 +79,8 @@ int recibirMensajeVarios(int token, char* buffer, void* extra) {
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
 		preparaCPU(pcbPlanificador);
+		//llama a procesa codigo
+		procesaCodigo(cpu);
 		break;
 	}
 
@@ -105,41 +106,6 @@ int recibirMensajeVarios(int token, char* buffer, void* extra) {
 	}
 	return EXIT_SUCCESS;
 }
-// todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
-int ejecutaResultError() {
-	ejecutaResult_Error();
-	return EXIT_SUCCESS;
-}
-int ejecutaResultEscribir() {
-	ejecutaResult_Escribir();
-
-	return EXIT_SUCCESS;
-}
-
-int ejecutaResulFin() {
-	ejecutaResul_Fin();
-	return EXIT_SUCCESS;
-}
-
-int ejecutaResulIniciarProc() {
-	ejecutaResul_IniciarProc();
-	return EXIT_SUCCESS;
-}
-
-int ejecutaResulInstrEjec() {
-	ejecutaResul_InstrEjec();
-	return EXIT_SUCCESS;
-}
-int ejecutaResultLeer() {
-	ejecutaResult_Leer();
-	return EXIT_SUCCESS;
-}
-
-int ejecutaResulOk() {
-
-	ejecutaResul_Ok();
-	return EXIT_SUCCESS;
-}
 
 // en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
 //debe mandar el inicio a memoria con serializacion correspondiente
@@ -157,7 +123,7 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 	t_escribirMem* estructura;
 
-	estructura =  ejecuta_EscribirMemoria(separada_instruccion, cpu);
+	estructura = ejecuta_EscribirMemoria(separada_instruccion, cpu);
 
 	if (estructura == NULL) {
 		log_error(logger, "[ERROR] no se genero la estructura para enviar EscribirMemoria");

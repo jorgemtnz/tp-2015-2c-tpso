@@ -1,6 +1,28 @@
 #include "CPU.h"
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //-----------------------------------FUNCIONES CONTRUCTORAS-------------------------
+
+t_resultado_instruccion* creaResultadoInstruccion(){
+	t_resultado_instruccion* resultInstrucc= malloc(sizeof(t_resultado_instruccion));
+	if (resultInstrucc==NULL){
+			perror("[ERROR] No se reservo memoria resultado instruccion CPU");
+					log_error(logger, "[ERROR] No se reservo memoria resultado instruccion CPU");
+					exit(-1);
+		}
+	return resultInstrucc;
+}
+
+t_respuesta_ejecucion* creaRespuestaEjecucion(){
+	t_respuesta_ejecucion* respEjec = malloc(sizeof(t_respuesta_ejecucion));
+	if (respEjec ==NULL){
+				perror("[ERROR] No se reservo memoria respuesta ejecucion CPU");
+						log_error(logger, "[ERROR] No se reservo memoria respuesta ejecucion CPU");
+						exit(-1);
+			}
+	respEjec->resultadosInstrucciones = list_create();
+	return respEjec;
+}
+
 t_instruccion* creaInstruccion(){
 	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
 	if (instruccion==NULL){
@@ -8,24 +30,21 @@ t_instruccion* creaInstruccion(){
 				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>instruccion");
 				exit(-1);
 	}
-	//instruccion->instruccion_separada[0]=NULL;
-
 	instruccion->ptrComienzoInstruccion='\0';
 	return instruccion;
 }
 
-t_map* crearMapeo() {
-	t_map* map = malloc(sizeof(t_map));
-	if (map == NULL) {
-		perror("[ERROR] No se reservo memoria para CPU>..>map");
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>map");
+t_mCod* crearmCod() {
+	t_mCod* mCod = malloc(sizeof(t_mCod));
+	if (mCod == NULL) {
+		perror("[ERROR] No se reservo memoria para CPU>..>mCod");
+		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
 		exit(-1);
 	}
-	map->ptrCMemoriaMap = '\0';
-	map->ptrTamPagina = 0;
-    //map->bufferInstrucciones[0]=NULL;
-    map->cantidadInstrucciones =0;
-	return map;
+	mCod->ptrCMemoriaMap = '\0';
+	mCod->ptrTamPagina = 0;
+    mCod->cantidadInstrucciones =0;
+	return mCod;
 }
 
 t_configuracion* crearConfiguracion() {
@@ -46,16 +65,20 @@ t_configuracion* crearConfiguracion() {
 }
 
 t_cpu* crearCPU() {
-	t_cpu* CPUHilo = malloc(sizeof(t_cpu));
-	if (CPUHilo == NULL) {
+	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
+	if (cPUHilo == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		exit(-1);
-	}
-	CPUHilo->idCPU = 0;
-	CPUHilo->estado = DISPONIBLE;
+	}//si esta vacia la lista
+	if (list_is_empty(procCPU->listaCPU)==0 )
+	cPUHilo->idCPU = 0;
 
-	return CPUHilo;
+	cPUHilo->idCPU = procCPU->contadorIdCPU +1;
+	procCPU->contadorIdCPU = cPUHilo->idCPU;
+	cPUHilo->porcentajeUso = 0;
+	cPUHilo->estadoEjecucion = NO_USO;
+	return cPUHilo;
 }
 
 t_ProcCPU* crearProcCPU() {
@@ -74,8 +97,8 @@ t_ProcCPU* crearProcCPU() {
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
-void destMap(t_map* unMap) {
-	free(unMap);
+void destmCod(t_mCod* unmCod) {
+	free(unmCod);
 }
 
 void destConfig(t_configuracion* unaConfig) {
@@ -97,4 +120,24 @@ void destInstruccion(t_instruccion* unaInstruccion){
 
 void destVectorInstruccion(char** vectorInstruccion){
 	free ( vectorInstruccion);
+}
+
+void destIniciarSwap(t_iniciar_swap* estructura){
+	free(estructura);
+}
+
+void destEscrMem(t_escribirMem* estruc){
+	free(estruc);
+}
+
+void destEntradSalid(t_entrada_salida* entradSalid ){
+	free(entradSalid);
+}
+
+void destResInstruc(t_resultado_instruccion* resultInstrucc){
+	free(resultInstrucc);
+}
+
+void destRespEjec(t_respuesta_ejecucion* respEjec){
+	list_destroy_and_destroy_elements(respEjec->resultadosInstrucciones, (void*)destResInstruc);
 }

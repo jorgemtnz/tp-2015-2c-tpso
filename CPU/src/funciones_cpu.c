@@ -28,20 +28,14 @@ void leerArchivoDeConfiguracion() {
 //es la funcion madre para cuando llega el Contexto de un proceso. Se inicia  el circuito de mCod
 int preparaCPU(t_pcb* pcbPlanificador) {
 	log_info(logger, "se va a ejecutar preparaCPU");
-	t_cpu* cpu = crearCPU();
+	t_cpu* cpu;
 
+	cpu = list_get(procCPU->listaCPU, procCPU->contadorIdCPU -1);
 	cpu->pcbPlanificador = pcbPlanificador;
-	//recibe la info del sockect
-	//procesa la info del sockect
-
-	//llama a procesa codigo
-	procesaCodigo(cpu);
-
 	return EXIT_SUCCESS;
-
 }
 // se debe agregar instruccion que mape el archivo -> devuelva estructura
-int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
+int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU) {	//solo hay un CPU en este hilo por lo que se crea en el hilo  mCodCPU
 	int fdmCod;
         log_info(logger, "se va a ejecutar cargaProcesoaCPU "); 
 	fdmCod = abrirArchivoLecturaEscritura(dirArchivo, logger);
@@ -55,28 +49,34 @@ int cargaProcesoaCPU(char* dirArchivo, t_map* mCodCPU) {	//solo hay un CPU en es
 }
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
-int interpretaInstruccion(char* instruccion_origen,   t_cpu* cpu) {
+int ejecuta_Instruccion(char* instruccion_origen,   t_cpu* cpu) {
 	int resultado = 0;
 	t_instruccion* instruccion = creaInstruccion();
         
         log_info(logger, "se va a ejecutar interpretaInstruccion ");
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
-	resultado = leerInstruccion(instruccion->instruccion_separada,    cpu);
-	if (resultado== -1){
-	log_error(logger, "[ERROR] al leer instruccion en CPU");
-	return EXIT_FAILURE;
-	}
+
+	log_info(logger, "se va a ejecutar leerInstruccion");
+
+		int token;
+
+		token = reconoceTokenInstruccion(instruccion->instruccion_separada[0]);
+		//le estoy mandando solo la instruccion sin el token
+		resultado = ejecutaInstruccion(token, instruccion->instruccion_separada[1], cpu);
+		if (resultado== -1)
+			log_error(logger, "[ERROR] al ejecutarInstruccion en CPU");
+
 
 	return EXIT_SUCCESS;
 }
 // ejecuta las instrucciones del mCod
-int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu) {
+int ejecutaInstrucciones( t_cpu* cpu) {
 	int i = 0;
 	int result;
 	log_info(logger, "se va a ejecutar ejecutaInstrucciones");
-	while ((mCodCPU->bufferInstrucciones[i] != NULL)&& (i != cpu->pcbPlanificador->tamanioRafaga)) {
-		result = interpretaInstruccion( mCodCPU->bufferInstrucciones[i],  cpu );
+	while ((cpu->mCodCPU->bufferInstrucciones[i] != NULL)&& (i != cpu->pcbPlanificador->tamanioRafaga)) {
+		result = ejecuta_Instruccion( cpu->mCodCPU->bufferInstrucciones[i],  cpu );
 		if (result != EXIT_SUCCESS) {
 			perror("[ERROR] al interpretar la instruccion en CPU");
 			log_error(logger, "[ERROR] al interpretar la instruccion en CPU");
@@ -90,13 +90,16 @@ int ejecutaInstrucciones(t_map* mCodCPU, t_cpu* cpu) {
 
 //carga codigo, interpreta y ejecuta las instrucciones
 int procesaCodigo(t_cpu* cpu) {
+	 log_info(logger, "se va a ejecutar procesaCodigo");
+	t_mCod* mCodCPU = crearmCod();
+	t_respuesta_ejecucion* respEjec = creaRespuestaEjecucion();
+    mCodCPU->respEjec = respEjec;
 
-	t_map* mCodCPU = crearMapeo();
-
-        log_info(logger, "se va a ejecutar procesaCodigo");
 	cargaProcesoaCPU(cpu->pcbPlanificador->rutaArchivoMcod, mCodCPU);
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(mCodCPU->bufferInstrucciones);
-	ejecutaInstrucciones(mCodCPU, cpu);
+
+	cpu->mCodCPU = mCodCPU;
+	ejecutaInstrucciones(cpu);
 	return EXIT_SUCCESS;
 }
 
