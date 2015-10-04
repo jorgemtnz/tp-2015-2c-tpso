@@ -60,6 +60,9 @@ typedef enum {
 	RESUL_ESCRIBIR_ERROR,
 	RESUL_LEER_OK,
 	RESUL_LEER_ERROR,
+	TRAER_PAG_SWAP,
+	RESUL_TRAER_PAG_SWAP_OK,
+	RESUL_TRAER_PAG_SWAP_NO_OK,
 	RESUL_FIN_OK,
 	RESUL_FIN_ERROR,
 } t_tipo_mensaje;
@@ -234,6 +237,10 @@ void* deserializar_RESUL_ESCRIBIR_ERROR(int fdCliente, t_tipo_mensaje tipoMensaj
 void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_escribir* estructura);
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje);
 
+void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura);
+t_lecturaProc_desde_CPU* deserializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* serializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);

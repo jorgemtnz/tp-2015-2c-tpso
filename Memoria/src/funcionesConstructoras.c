@@ -57,8 +57,8 @@ t_config* iniciarArchivoConfig() {
 	return archConf;
 }
 
-t_lecturaSwap* iniciarLectura() {
-	t_lecturaSwap* lectura = malloc(sizeof(t_lecturaSwap));
+t_lectura* iniciarLectura() {
+	t_lectura* lectura = malloc(sizeof(t_lectura));
 	if (lectura == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarLectura");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarLectura");

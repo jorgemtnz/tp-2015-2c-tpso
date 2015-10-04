@@ -107,13 +107,13 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 }
 
 
-void leer(int idProc, int pagIn, int pagFin) {
+void leer(int idProc, int pagIn, int pagFin, int socketSwap, int socketCPU) {
 
 	int a, respuesta;
 	char* contenido;
 	t_rtaLecturaCpu * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
-	t_lecturaSwap * lecturaSwap;
+	t_lectura * lecturaSwap;
 	lecturaSwap = iniciarLectura();
 
 	for (a = pagIn; a <= pagFin; a++) {
@@ -124,21 +124,8 @@ void leer(int idProc, int pagIn, int pagFin) {
 
 		respuesta = buscarSiEstaEnMemoria(idProc, a);
 		if (respuesta == -1) {
-			lecturaSwap = traerDeSwapUnaPaginaDeUnProceso(idProc, a); // aca se tiene que pedir a swap la pagina a y del proceso idProc
-
-			if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-				sacarAlPrimeroDeMemoriaDelProceso(idProc);
-				cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
-
-			} else if (estaLlenaLaMemoria()) {
-				sacarAlPrimeroDeMemoria();
-				cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
-
-			} else { // si no llego ni al maximo de procesos ni al maximo de marcos
-				cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
-
-			}
-			lecturaMandarCpu->contenido = lecturaSwap->contenido;
+			lecturaSwap = traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
+			respuestaTraerDeSwapUnaPaginaDeUnProceso(idProc, a, contenido, lecturaMandarCpu, lecturaSwap);
 
 		} else { // aca significa que trajo el id porque esta en memoria
 
@@ -152,8 +139,6 @@ void leer(int idProc, int pagIn, int pagFin) {
 	}
 
 }
-
-
 
 
 
@@ -193,6 +178,3 @@ void enviarACPUContenidoDePaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
 
 }
 
-t_lecturaSwap* traerDeSwapUnaPaginaDesdeUnProceso(int idProc, int nroDePag) {
-
-}

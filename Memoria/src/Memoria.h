@@ -86,7 +86,13 @@ typedef struct {
 	int pagIn;
 	int pagFin;
 	char* contenido;
-}t_lecturaSwap;
+}t_lectura;
+
+typedef struct {
+	uint8_t idProc;
+	uint8_t pagIn;
+	uint8_t pagFin;
+}t_lecturaProc_desde_CPU;
 
 typedef struct {
 	int idProc;
@@ -113,7 +119,7 @@ t_finalizar_swap* crearEstructuraFinalizar();
 //============================================================================
 void leerArchivoDeConfiguracion();
 void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU);
-void leer(int idProc, int pagIn, int pagFin);
+void leer(int idProc, int pagIn, int pagFin,int socketSwap, int socketCPU);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
 t_TablaDePaginas* iniciarTablaDePaginas();
@@ -126,7 +132,7 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_finalizar_swap *estructura, int socketSwap);
-t_lecturaSwap* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag);
+t_lectura* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc);

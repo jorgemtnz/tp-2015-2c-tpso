@@ -702,6 +702,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
 		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
 		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
+		registrarSerializadores(TRAER_PAG_SWAP, "TRAER_PAG_SWAP", serializar_TRAER_PAG_SWAP, deserializar_TRAER_PAG_SWAP);
 
 	}
 }
