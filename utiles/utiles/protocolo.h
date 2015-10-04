@@ -47,6 +47,9 @@ typedef enum {
 	RESUL_ENT_SAL,
 	RESUL_OK,
 	RESUL_ERROR,
+	RESUL_LEER,
+	RESUL_FIN,
+	RESUL_ESCRIBIR,
 	RESUL_INICIAR_PROC,
 	RESUL_INICIAR_PROC_OK,
 	RESUL_INICIAR_PROC_OK_CPU,
@@ -131,7 +134,7 @@ typedef struct {
 typedef struct {
 	uint8_t PID;
 	char* contenido;
-	int numeroPagina;
+	uint8_t numeroPagina;
 } t_respuesta_leer;
 
 typedef struct {
@@ -219,4 +222,11 @@ void* deserializar_RESUL_ESCRIBIR_ERROR(int fdCliente, t_tipo_mensaje tipoMensaj
 void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_escribir* estructura);
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje);
 
+
+void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* serializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_leer* estructura) ;
+t_respuesta_leer* deserializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje);
 #endif /* UTILES_PROTOCOLO_H_ */
