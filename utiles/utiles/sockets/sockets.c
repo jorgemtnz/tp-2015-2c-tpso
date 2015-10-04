@@ -699,6 +699,8 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_INICIAR_PROC_OK_CPU, "RESUL_INICIAR_PROC_OK_CPU", serializar_RESUL_INICIAR_PROC_OK_CPU, deserializar_RESUL_INICIAR_PROC_OK_CPU);
 		registrarSerializadores(RESUL_LEER_ERROR, "RESUL_LEER_ERROR", serializar_RESUL_LEER_ERROR, deserializar_RESUL_LEER_ERROR);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
+		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
+		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 
 	}
 }

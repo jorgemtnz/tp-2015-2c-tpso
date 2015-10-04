@@ -90,10 +90,6 @@ void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje,
 	return 0;
 }
 
-
-
-
-
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_RESUL_LEER_OK");
 		serializar_t_respuesta_leer(fdCliente, tipoMensaje, estructura);
@@ -134,6 +130,49 @@ t_respuesta_leer* deserializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje ti
 }
 
 
+
+
+
+
+
+
+
+
+
+void* serializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_FIN_OK");
+		serializar_t_respuesta_finalizar(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* serializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_FIN_ERROR");
+		serializar_t_respuesta_finalizar(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* deserializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_finalizar* estructura = deserializar_t_respuesta_finalizar(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_FIN_ERROR");
+		return estructura;
+}
+
+void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_finalizar* estructura = deserializar_t_respuesta_finalizar(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_FIN_OK");
+		return estructura;
+}
+void* serializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+
+
+	return 0;
+}
+t_respuesta_finalizar* deserializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_finalizar* estructura = malloc(sizeof(t_respuesta_finalizar));
+	estructura->PID = deserializar_int8_t(fdCliente);
+
+
+	return estructura;
+}
 
 
 
