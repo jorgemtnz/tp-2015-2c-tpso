@@ -49,6 +49,8 @@ typedef enum {
 	RESUL_ERROR,
 	RESUL_INICIAR_PROC,
 	RESUL_INICIAR_PROC_OK,
+	RESUL_INICIAR_PROC_OK_CPU,
+	RESUL_INICIAR_PROC_ERROR_CPU,
 	RESUL_INICIAR_PROC_ERROR,
 	RESUL_ESCRIBIR_OK,
 	RESUL_ESCRIBIR_ERROR,
@@ -95,6 +97,10 @@ typedef struct IniciarSwap {
 	uint8_t PID;
 	uint16_t cantidadPaginas;
 } t_iniciar_swap;
+
+typedef struct {
+	uint8_t PID;
+}t_rta_iniciar_ok_CPU;
 
 typedef struct {
 	uint8_t PID;

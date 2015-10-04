@@ -30,38 +30,54 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
+	int socketSwap;
+
+	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+	t_iniciar_swap * estructuraIniciar;
+	estructuraIniciar = crearEstructuraIniciar();
+
 	if (tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
 			switch (header->tipoMensaje) {
-			case RESUL_INICIAR_PROC_OK:
-				break;
-				//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA OK EL INICIAR EN SWAP
-			case RESUL_INICIAR_PROC_ERROR:
-				break;
-			case RESUL_ESCRIBIR_OK:
-				break;
-			case RESUL_FIN_OK:
-				break;
-			case INICIAR_PROC_SWAP:
+			case (RESUL_INICIAR_PROC_OK) :{
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
-
+				t_iniciar_swap * estructuraIniciar;
+				estructuraIniciar = crearEstructuraIniciar();
+				socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketSwap);
+				break;
+			}
+				//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA OK EL INICIAR EN SWAP
+			case (RESUL_INICIAR_PROC_ERROR) : {
+				break;
+			}
+			case (RESUL_ESCRIBIR_OK): {
+				break;
+			}
+			case (RESUL_FIN_OK) : {
+				break;
+			}
+			case (INICIAR_PROC_SWAP) : {
+				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 				t_iniciar_swap * estructuraIniciar;
 				estructuraIniciar = crearEstructuraIniciar();
 				estructuraIniciar->PID = datosDesdeCPU->PID;
-				estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
+				estructuraIniciar->cantidadPaginas = datosDesdeCPU;
 				int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
-			case FIN_PROCESO_MEM:
+			}
+			case (FIN_PROCESO_MEM) : {
 				t_finalizar_swap* datosDesdeCPU = (t_finalizar_swap*) buffer;
 				t_finalizar_swap* estructuraFinalizar;
 				estructuraFinalizar = crearEstructuraFinalizar();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
-				int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+				socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 				enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 				break;
+			}
 			}
 
 		} else if (tipoNotificacion == TERMINAL_MESSAGE) {

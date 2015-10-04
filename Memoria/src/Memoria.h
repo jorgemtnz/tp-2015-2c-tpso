@@ -112,8 +112,7 @@ t_finalizar_swap* crearEstructuraFinalizar();
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
-void iniciar(int idProc, int cantPag, int socketCPU);
-void escribir(int idProc, int nroPag, char* texto);
+void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU);
 void leer(int idProc, int pagIn, int pagFin);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);

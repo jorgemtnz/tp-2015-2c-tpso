@@ -48,33 +48,22 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
-	int rtaSwap, contador,socketSwap;
+	int contador;
 	t_TablaDePaginas* tablaDePag;
 	t_iniciar_swap * estructura;
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
 
-	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-	enviarIniciarAlSwap(estructura,socketSwap);
-
-	if (rtaSwap) { // rtaSwap == 0, indica ok
-		for (contador = 0; contador < cantPag; contador++) {
-			contadorPagTP++;
-			tablaDePag = iniciarTablaDePaginas();
-			tablaDePag->idProc = idProc;
-			tablaDePag->paginaDelProceso = contador + 1;
-			tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
-			list_add(listaTablaDePag, tablaDePag);
-		}
-	} else { // la respuesta no fue ok
-		/* PARTE DE ENVIAR A CPU QUE NO SE ENVIO BIEN
-		 *char* socketCPU = (char*) dictionary_get(conexiones, "Cpu");
-		 *  puts("Enviando \"No puede iniciar el proceso\" al Cpu");
-		 enviar(atoi(socketCPU), "No puede iniciar el proceso", strlen("No puede iniciar el proceso));
-		 puts("Enviado al Cpu");
-		 */
+	for (contador = 0; contador < cantPag; contador++) {
+		contadorPagTP++;
+		tablaDePag = iniciarTablaDePaginas();
+		tablaDePag->idProc = idProc;
+		tablaDePag->paginaDelProceso = contador + 1;
+		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
+		list_add(listaTablaDePag, tablaDePag);
 	}
+	socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 
 	free(tablaDePag);
 }
@@ -185,7 +174,9 @@ void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
 
-
+void enviarRtaIniciarOkCPU (t_rta_iniciar_ok_CPU * estructura, int socketCPU){
+	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
+}
 void enviarASwapContenidoDePaginaDesactualizada(int idProc, int pagina, char* contenido) {
 
 }

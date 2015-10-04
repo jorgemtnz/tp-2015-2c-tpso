@@ -90,12 +90,36 @@ void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje,
 	return 0;
 }
 
+void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_INICIAR_PROC_OK_CPU");
+		serializar_t_rta_iniciar_ok_CPU(fdCliente, tipoMensaje, estructura);
+		return 0;
+}
+void* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_escribir* estructura = deserializar_t_rta_iniciar_ok_CPU(fdCliente, tipoMensaje);
+		puts("Deserializando serializar_RESUL_INICIAR_PROC_OK_CPU");
+		return estructura;
+}
+
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_respuesta_escribir* estructura = malloc(sizeof(t_respuesta_escribir));
 	estructura->PID = deserializar_int8_t(fdCliente);
 	estructura->contenido = deserializar_string(fdCliente);
 	estructura->numeroPagina = deserializar_int8_t(fdCliente);
 
+
+	return estructura;
+}
+
+void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+
+	return 0;
+}
+
+t_respuesta_iniciar* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_rta_iniciar_ok_CPU* estructura = crearRespuestaIniciarOkCPU();
+	estructura->PID = deserializar_int8_t(fdCliente);
 
 	return estructura;
 }
