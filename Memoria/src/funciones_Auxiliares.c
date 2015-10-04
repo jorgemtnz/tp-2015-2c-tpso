@@ -169,7 +169,7 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 		campoMarco = list_get(listaMemoria, a);
 		tamanioListaId = list_size(listaIdMarco);
 		for (b = 0; b < tamanioListaId && flag == 0; b++) {
-			id = list_get(listaIdMarco, b);
+			id = *((int*)list_get(listaIdMarco, b));
 			if (id == campoMarco->idMarco) {
 				flag = 1;
 			}
@@ -289,7 +289,7 @@ void eliminarDeMemoria(int id) {
 
 }
 
-respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, t_rtaLecturaCpu* lecturaMandarCpu,t_lectura lecturaSwap) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, t_rtaLecturaCpu* lecturaMandarCpu, t_lectura* lecturaSwap) {
 
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 		sacarAlPrimeroDeMemoriaDelProceso(idProc);
@@ -327,12 +327,13 @@ void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
 
 }
 
-void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
+t_lectura * traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
 	t_lecturaProc_desde_CPU* estructura;
 	estructura->idProc = idProc;
 	estructura->pagIn = nroDePag;
 	estructura->pagFin = nroDePag;
 	enviarStruct(socketSwap, TRAER_PAG_SWAP, estructura);
+	return NULL;
 }
 
 

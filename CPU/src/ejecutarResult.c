@@ -30,4 +30,9 @@ int ejecutaResultLeer(t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 
+int ejecutaResulOk(t_cpu* cpu) {
+
+	return EXIT_SUCCESS;
+}
+
 

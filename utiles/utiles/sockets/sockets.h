@@ -63,6 +63,7 @@ typedef struct {
 // Funciones
 int  crearSocket();
 int  enviarPorSocket(int fdCliente,const void *msg, int *len);
+int enviarSimple(int fdCliente, void *msg, int len);
 int  recibirPorSocket(int fdCliente, void *buf, int len);		// Retorna la cantidad de bytes recibidos
 void comprobarDesconexion(int bytes);
 void cerrarSocket(int sockfd);
@@ -108,5 +109,6 @@ void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void
 char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje);
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion);
+int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion);
 #endif /* SOCKETS_H_ */

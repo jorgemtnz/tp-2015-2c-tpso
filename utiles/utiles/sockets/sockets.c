@@ -234,12 +234,6 @@ int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longi
 	//creamos el header
 	t_header header = crearHeader(tipoMensaje, msg, longitudMensaje);
 
-	//serializamos el header
-	char* headerSerializado = serializarEstructura(HEADER, &header);
-
-	//enviamos el header serializado
-	//return enviarSimple(fdCliente, headerSerializado, strlen(headerSerializado));
-	//por ahora enviamos el header sin serializar
 	return enviarSimple(fdCliente, &header, sizeof(t_header));
 }
 

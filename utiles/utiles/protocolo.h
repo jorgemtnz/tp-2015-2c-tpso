@@ -175,6 +175,12 @@ typedef struct{
 	char* expresion;
 } t_resultado_instruccion;
 
+typedef struct {
+	uint8_t idProc;
+	uint8_t pagIn;
+	uint8_t pagFin;
+}t_lecturaProc_desde_CPU;
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -187,22 +193,22 @@ void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura);
 t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void* serializar_string(int fdCliente, char* estructura);
+void serializar_string(int fdCliente, char* estructura);
 char* deserializar_string(int fdCliente);
 
-void* serializar_int16_t(int fdCliente, int16_t estructura);
+void serializar_int16_t(int fdCliente, int16_t estructura);
 int16_t deserializar_int16_t(int fdCliente);
 
-void* serializar_int8_t(int fdCliente, int8_t estructura);
+void serializar_int8_t(int fdCliente, int8_t estructura);
 int8_t deserializar_int8_t(int fdCliente);
 
-void* serializar_bool(int fdCliente, bool estructura);
+void serializar_bool(int fdCliente, bool estructura);
 bool deserializar_bool(int fdCliente);
 
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura);
 t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void* serializar_pid_t(int fdCliente, pid_t estructura);
+void serializar_pid_t(int fdCliente, pid_t estructura);
 pid_t deserializar_pid_t(int fdCliente);
 
 void* serializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
@@ -215,15 +221,14 @@ void* serializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMens
 void* deserializar_RESUL_INICIAR_PROC_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-void* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+t_rta_iniciar_CPU* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_rta_iniciar_CPU* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-void* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+t_respuesta_escribir* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
-RSUL_TRAER_PAG_SWAP_OK
 
 void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje);
@@ -238,7 +243,7 @@ void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-void* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+t_lecturaProc_desde_CPU* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura);
 t_lecturaProc_desde_CPU* deserializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 

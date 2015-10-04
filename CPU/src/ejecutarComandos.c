@@ -67,7 +67,8 @@ t_entrada_salida* ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu) 
 	cpu->cantInstEjecutadas += 1;
     char* retorno = '\0';
     strcpy(retorno,"mProc");
-    string_append(retorno,"en entrada-salida de tiempo");
+    char* parteMensaje = "en entrada-salida de tiempo";
+    string_append(&retorno, parteMensaje);
     strcpy(estructura->expresion,retorno);
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;

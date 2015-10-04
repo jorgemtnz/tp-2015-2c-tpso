@@ -89,12 +89,6 @@ typedef struct {
 }t_lectura;
 
 typedef struct {
-	uint8_t idProc;
-	uint8_t pagIn;
-	uint8_t pagFin;
-}t_lecturaProc_desde_CPU;
-
-typedef struct {
 	int idProc;
 	char* contenido;
 	int pagIn;

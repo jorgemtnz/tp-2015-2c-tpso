@@ -88,9 +88,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 
 			}
-			case (RESUL_TRAER_PAG_SWAP_NO_OK): {
-				break;
-			}
 			case (ESCRIBIR_MEM): {
 				break;
 			}
