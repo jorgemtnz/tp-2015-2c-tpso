@@ -12,6 +12,13 @@ int ejecutaResultEscribir(t_cpu* cpu) {
 }
 
 int ejecutaResulFin(t_cpu* cpu) {
+	t_resultado_instruccion* resultado = creaResultadoInstruccion();
+	char* temporal;
+	strcpy(resultado->comandoInstruccion, "finalizar") ;
+	resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU ;
+	temporal = string_from_format("mProc %d",cpu->pcbPlanificador->pid, "finalizado" );
+	strcpy(resultado->expresion,temporal);
+	list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones  , resultado);
 
 	return EXIT_SUCCESS;
 }
