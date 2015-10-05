@@ -104,3 +104,15 @@ t_finalizar_swap* crearEstructuraFinalizar(){
 	return contenido;
 }
 
+t_leerDeProceso* crearEstructuraLeer(){
+	t_leerDeProceso* contenido = malloc(sizeof(t_leerDeProceso));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para crearEstructuraFinalizar");
+			log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraFinalizar");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->numeroPaginaFin = 0;
+		contenido->numeroPaginaInicio = 0;
+		return contenido;
+}

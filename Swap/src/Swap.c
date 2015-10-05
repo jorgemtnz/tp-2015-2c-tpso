@@ -252,8 +252,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {
-			uint8_t* pid = (uint8_t *) buffer;
-			finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
+			t_finalizar_swap* estructuraFinalizar = (t_finalizar_swap*) buffer;
+			finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
 			break;
 		}
 

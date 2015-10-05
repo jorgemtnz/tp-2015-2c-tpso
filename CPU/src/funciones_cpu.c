@@ -100,6 +100,12 @@ int procesaCodigo(t_cpu* cpu) {
 
 	cpu->mCodCPU = mCodCPU;
 	ejecutaInstrucciones(cpu);
+
+	//Ejemplo de como enviar la struct para resultado de ejecucion
+//	respEjec->pcb = cpu->pcbPlanificador;
+//	respEjec->finalizoOk = true;
+//	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+//	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK, respEjec);
 	return EXIT_SUCCESS;
 }
 

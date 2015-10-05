@@ -85,7 +85,7 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
 void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket);
-void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
+void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
 void enviarResultadoIniciarERROR(int socket, void* estructura);
 void enviarResultadoIniciarOK(int socket, void* estructura);
 void enviarResultadoLeerERROR(int socket, void* estructura);
