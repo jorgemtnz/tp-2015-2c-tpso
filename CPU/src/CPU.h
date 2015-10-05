@@ -137,7 +137,8 @@ t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu)
 int ejecutaResultError(t_cpu* cpu);
 int  ejecutaResultEscribir(t_cpu* cpu);
 int  ejecutaResulFin(t_cpu* cpu);
-int  ejecutaResulIniciarProc(t_cpu* cpu);
+int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
+int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
 int  ejecutaResulInstrEjec(t_cpu* cpu);
 int  ejecutaResultLeer(t_cpu* cpu);
 int  ejecutaResulOk(t_cpu* cpu);

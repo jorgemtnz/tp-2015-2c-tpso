@@ -55,11 +55,16 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 		ejecutaResulFin(cpu);
 		break;
 	}
-	case (RESUL_INICIAR_PROC): {
-		log_info(logger, "se va a ejecutar result iniciar proceso ");
-		ejecutaResulIniciarProc(cpu);
+	case (RESUL_INICIAR_PROC_OK_CPU): {
+		log_info(logger, "se va a ejecutar result iniciar proceso ok");
+		ejecutaResulIniciarProcOK(cpu);
 		break;
 	}
+	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
+			log_info(logger, "se va a ejecutar result iniciar proceso no ok");
+			ejecutaResulIniciarProc_NO_OK(cpu);
+			break;
+		}
 	case (RESUL_INSTR_EJEC): {
 		log_info(logger, "se va a ejecutar result instruccion ejecutar ");
 		ejecutaResulInstrEjec(cpu);
