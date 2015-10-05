@@ -175,6 +175,30 @@ t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipo
 
 	return estructura;
 }
+void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	serializar_t_respuesta_ejecucion(fdCliente, tipoMensaje, estructura);
+}
+void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
+}
+
+void serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+//	t_pcb* pcb; //aca dentro ya esta el PID del proceso
+//		t_list* resultadosInstrucciones;
+//		bool finalizoOk;
+	t_respuesta_ejecucion* respuestaEjecucion = (t_respuesta_ejecucion*) estructura;
+	serializar_t_pcb(fdCliente, tipoMensaje, respuestaEjecucion->pcb);
+	serializar_bool(fdCliente, respuestaEjecucion->finalizoOk);
+}
+
+t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje) {
+
+	t_respuesta_ejecucion* respuestaEjecucion = malloc(sizeof(t_respuesta_ejecucion));
+	respuestaEjecucion->pcb = deserializar_t_pcb(fdCliente, tipoMensaje);
+	respuestaEjecucion->finalizoOk = deserializar_bool(fdCliente);
+
+	return respuestaEjecucion;
+}
 
 void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_TRAER_PAG_SWAP");
@@ -352,7 +376,6 @@ t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMe
 }
 void serializar_string(int fdCliente, char* estructura) {
 	int16_t tamanioString = strlen(estructura);
-	int tamanioAlter = strlen(estructura);
 	serializar_int16_t(fdCliente, tamanioString);
 	enviarSimple(fdCliente, estructura, tamanioString);
 }

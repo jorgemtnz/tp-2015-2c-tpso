@@ -1,7 +1,7 @@
 #include "CPU.h"
 
 int main(void) {
-	t_ProcCPU* procCPU = crearProcCPU();
+	procCPU = crearProcCPU();
 	t_cpu* cpu = crearCPU();
 
    list_add(procCPU->listaCPU, cpu)  ;

@@ -100,6 +100,11 @@ int procesaCodigo(t_cpu* cpu) {
 
 	cpu->mCodCPU = mCodCPU;
 	ejecutaInstrucciones(cpu);
+
+	respEjec->pcb = cpu->pcbPlanificador;
+	respEjec->finalizoOk = true;
+	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK, respEjec);
 	return EXIT_SUCCESS;
 }
 

@@ -30,8 +30,8 @@ typedef enum {
 	STRING,
 
 	CONTEXTO_MPROC,
-	RESULT_EJECUCION_OK,
-	RESULT_EJECUCION_ERROR,
+	RESUL_EJECUCION_OK,
+	RESUL_EJECUCION_ERROR,
 	RESUL_INSTR_EJEC,
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
@@ -267,9 +267,15 @@ void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,t_finalizar_swap* estructura);
 t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-
 void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje,t_leerDeProceso* estructura);
 t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 #endif /* UTILES_PROTOCOLO_H_ */

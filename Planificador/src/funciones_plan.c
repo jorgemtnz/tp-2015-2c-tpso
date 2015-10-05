@@ -132,3 +132,22 @@ int printConsola(const char *formato, ...){
 	va_end(arguments);
 	return res;
 }
+
+void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
+	switch(header->tipoMensaje) {
+		case (RESUL_EJECUCION_OK): {
+			procesar_RESUL_EJECUCION_OK(socket, header, (t_respuesta_ejecucion*)buffer);
+			break;
+		}
+		default: {
+			printConsola("No se reconoce el mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
+		}
+	}
+}
+
+void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
+	putsConsola("Resultado de la ejecucion:\n");
+	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
+
+}
