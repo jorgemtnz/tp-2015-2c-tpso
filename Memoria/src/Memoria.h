@@ -90,10 +90,11 @@ typedef struct {
 
 typedef struct {
 	int idProc;
+	int pag;
 	char* contenido;
-	int pagIn;
-	int pagFin;
-}t_rtaLecturaCpu;
+}t_lectura_Swap;
+
+
 
 typedef struct {
 	int idProc;
@@ -113,7 +114,7 @@ t_finalizar_swap* crearEstructuraFinalizar();
 //============================================================================
 void leerArchivoDeConfiguracion();
 void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU);
-void leer(int idProc, int pagIn, int pagFin,int socketSwap, int socketCPU);
+void leer(int idProc, int pag, int socketSwap, int socketCPU);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
 t_TablaDePaginas* iniciarTablaDePaginas();
@@ -126,13 +127,13 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_finalizar_swap *estructura, int socketSwap);
-t_lectura* traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
+void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc);
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
-void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu);
+void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
 void verificarBitDeModificada(int idMarco,char* contenido);
 t_list* buscarLosIdDeProceso(int idProc);
@@ -140,6 +141,7 @@ void eliminarDeMemoria(int id);
 void enviarASwapEliminarProceso(int idProc);
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) ;
 void enviarRtaIniciarFalloCPU (t_rta_iniciar_CPU * estructura, int socketCPU);
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //========================================================================================
