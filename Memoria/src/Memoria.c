@@ -88,6 +88,15 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 
 			}
+			case (RESUL_TRAER_PAG_SWAP_OK): {
+				t_lectura_Swap * datosDesdeSwap = (t_lectura_Swap*) buffer;
+				t_lectura_Swap* estructuraRtaLeer;
+				estructuraRtaLeer->idProc = datosDesdeSwap->idProc;
+				estructuraRtaLeer->pag = datosDesdeSwap->pag;
+				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
+				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc,estructuraRtaLeer->pag,estructuraRtaLeer->contenido,socketSwap,socketCPU);
+				break;
+			}
 			case (ESCRIBIR_MEM): {
 				break;
 			}

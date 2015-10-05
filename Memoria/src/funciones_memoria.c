@@ -107,7 +107,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 }
 
 
-void leer(int idProc, int pagIn, int pagFin, int socketSwap, int socketCPU) {
+void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 	int a, respuesta;
 	char* contenido;
@@ -116,17 +116,14 @@ void leer(int idProc, int pagIn, int pagFin, int socketSwap, int socketCPU) {
 	t_lectura * lecturaSwap;
 	lecturaSwap = iniciarLectura();
 
-	for (a = pagIn; a <= pagFin; a++) {
-
 		lecturaMandarCpu->idProc = idProc;
 		lecturaMandarCpu->pagFin = a;
 		lecturaMandarCpu->pagIn = a;
 
 		respuesta = buscarSiEstaEnMemoria(idProc, a);
-		if (respuesta == -1) {
-			lecturaSwap = traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
-			respuestaTraerDeSwapUnaPaginaDeUnProceso(idProc, a, contenido, lecturaMandarCpu, lecturaSwap);
 
+		if (respuesta == -1) {
+			traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		} else { // aca significa que trajo el id porque esta en memoria
 
 			contenido = traerContenidoDeMarco(respuesta);
@@ -136,7 +133,7 @@ void leer(int idProc, int pagIn, int pagFin, int socketSwap, int socketCPU) {
 
 		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 
-	}
+
 
 }
 

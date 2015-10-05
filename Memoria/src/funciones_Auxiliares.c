@@ -289,21 +289,28 @@ void eliminarDeMemoria(int id) {
 
 }
 
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, t_rtaLecturaCpu* lecturaMandarCpu, t_lectura* lecturaSwap) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido) {
 
+	t_rtaLecturaCpu* lecturaMandarCpu;
+	lecturaMandarCpu = iniciarRtaLecturaCpu();
+	lecturaMandarCpu->idProc = idProc;
+	lecturaMandarCpu->pagIn = pag;
+	lecturaMandarCpu->pagFin = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 		sacarAlPrimeroDeMemoriaDelProceso(idProc);
-		cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
+		cargarNuevoMarcoAMemoria(contenido);
 
 	} else if (estaLlenaLaMemoria()) {
 		sacarAlPrimeroDeMemoria();
-		cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
+		cargarNuevoMarcoAMemoria(contenido);
 
 	} else { // si no llego ni al maximo de procesos ni al maximo de marcos
-		cargarNuevoMarcoAMemoria(lecturaSwap->contenido);
+		cargarNuevoMarcoAMemoria(contenido);
 
 	}
-	lecturaMandarCpu->contenido = lecturaSwap->contenido;
+	lecturaMandarCpu->contenido = contenido;
+
+	enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 }
 
 
@@ -327,13 +334,12 @@ void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
 
 }
 
-t_lectura * traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
+void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
 	t_lecturaProc_desde_CPU* estructura;
 	estructura->idProc = idProc;
 	estructura->pagIn = nroDePag;
 	estructura->pagFin = nroDePag;
 	enviarStruct(socketSwap, TRAER_PAG_SWAP, estructura);
-	return NULL;
 }
 
 
