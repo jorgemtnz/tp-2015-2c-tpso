@@ -122,6 +122,7 @@ char* crearNombreCPU() {
 
 int putsConsola (const char *msg) {
 //	puts("putsConsola\n");
+	log_info(logger, msg);
 	return puts(msg);
 }
 int printConsola(const char *formato, ...){
@@ -130,6 +131,9 @@ int printConsola(const char *formato, ...){
 	va_start(arguments, formato);
 	int res = vprintf(formato, arguments);
 	va_end(arguments);
+
+	char* nuevo = string_from_vformat(formato, arguments);
+	log_info(logger, nuevo);
 	return res;
 }
 

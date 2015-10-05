@@ -4,8 +4,8 @@
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
 
-	putsConsola("Iniciando programa");
 	crearLogger();
+	putsConsola("Iniciando programa");
 	listaCPUs = list_create();
 	leerArchivoDeConfiguracion(argc, argv);
 	escucharConexiones(configuracion->puertoEscucha, 0, 0, 0, procesarMensajes, NULL, logger);
