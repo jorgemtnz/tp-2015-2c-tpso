@@ -34,8 +34,11 @@ int ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
+int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
+
+	int token;
+	token = header->tipoMensaje;
 	switch (token) {
 	case (RESUL_ERROR): {
 		log_info(logger, "se va a ejecutar result error");
@@ -86,6 +89,7 @@ int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
 
 	case (STRING): {
 		log_info(logger, "se va a recibir un string ");
+//esto esta extraido desde procesarMensaje() por lo que si se descomenta, daria error
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
 //			printf("Recibi el mensaje: %s\n", mensaje);

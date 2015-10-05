@@ -165,7 +165,7 @@ int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu);
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
 int procesarMensajes(int socket, t_header* , char* buffer, t_tipo_notificacion , void* extra, t_log* );
-int recibirMensajeVarios( int token,  char*   buffer ,void* extra,t_cpu* cpu );
+int recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
