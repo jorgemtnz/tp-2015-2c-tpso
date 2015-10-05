@@ -336,10 +336,15 @@ void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu,int 
 
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
 	t_leerDeProceso* estructura;
+	estructura = crearEstructuraLeer();
 	estructura->PID = idProc;
 	estructura->numeroPaginaFin = nroDePag;
 	estructura->numeroPaginaInicio = nroDePag;
 	enviarStruct(socketSwap, LEER_SWAP, estructura);
+}
+
+void enviarFinalizarACPU(t_respuesta_finalizar* estructuraFinalizar, int socketCPU){
+	enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
 }
 
 
