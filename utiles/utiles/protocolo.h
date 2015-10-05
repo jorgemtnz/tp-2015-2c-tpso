@@ -132,8 +132,8 @@ typedef struct {
 
 typedef struct {
 	uint8_t PID;
-	int numeroPaginaInicio;
-	int numeroPaginaFin;
+	uint8_t numeroPaginaInicio;
+	uint8_t numeroPaginaFin;
 } t_leerDeProceso;
 
 typedef struct {
@@ -267,4 +267,9 @@ void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,t_finalizar_swap* estructura);
 t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
 
+
+void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje,t_leerDeProceso* estructura);
+t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje);
 #endif /* UTILES_PROTOCOLO_H_ */

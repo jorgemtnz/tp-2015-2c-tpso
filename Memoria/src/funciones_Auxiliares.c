@@ -319,6 +319,10 @@ void enviarFinalizarASwap(t_finalizar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
 }
 
+void enviarLeerASwap(t_leerDeProceso* estructuraLeer, int socketSwap){
+	enviarStruct(socketSwap, LEER_SWAP, estructuraLeer);
+}
+
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) {
 
 }
