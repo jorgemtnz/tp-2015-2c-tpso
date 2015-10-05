@@ -274,7 +274,7 @@ void enviarResultadoFinalizarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_ERROR, estructura);
 }
 
-void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
+void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -288,7 +288,7 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 
 		unProceso = list_get(listaDeProcesosCargados, a);
 
-		if (unProceso->PID == (*pid)) {
+		if (unProceso->PID == (pid)) {
 
 			espacioLibre->ubicacion = unProceso->ubicacion;
 
@@ -311,7 +311,7 @@ void finalizar(uint8_t* pid, t_list* listaDeProcesosCargados, t_list* listaDeEsp
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
-	if (unProceso->PID != (*pid)) {
+	if (unProceso->PID != (pid)) {
 		respuestaDeFinalizar->PID= 0;
 		enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
 	}
