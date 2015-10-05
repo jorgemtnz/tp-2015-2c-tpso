@@ -104,6 +104,16 @@ int procesaCodigo(t_cpu* cpu) {
 	//Ejemplo de como enviar la struct para resultado de ejecucion
 //	respEjec->pcb = cpu->pcbPlanificador;
 //	respEjec->finalizoOk = true;
+//	t_resultado_instruccion* resultadoInstruccion = malloc(sizeof(t_resultado_instruccion));
+//	resultadoInstruccion->comandoInstruccion = "comando X";
+//	resultadoInstruccion->expresion = "respuesta Y";
+//	list_add(respEjec->resultadosInstrucciones, resultadoInstruccion);
+//
+//	t_resultado_instruccion* resultadoInstruccion2 = malloc(sizeof(t_resultado_instruccion));
+//	resultadoInstruccion2->comandoInstruccion = "comando X2";
+//	resultadoInstruccion2->expresion = "respuesta Y2";
+//	list_add(respEjec->resultadosInstrucciones, resultadoInstruccion2);
+//
 //	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 //	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK, respEjec);
 	return EXIT_SUCCESS;
