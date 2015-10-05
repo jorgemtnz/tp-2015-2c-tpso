@@ -127,7 +127,7 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 
 	estructura = ejecuta_IniciarProceso(separada_instruccion, cpu);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
-	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
+	enviarStruct(socketMemoria, INICIAR_PROCESO_MEM, estructura);
 	free(estructura);
 	return EXIT_SUCCESS;
 }

@@ -670,6 +670,9 @@ int conectar(char* ip, char* puerto, int *sock) {
 
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
+	if(header != NULL) {
+		log_info(logger, "BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
+	}
 	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);
 	} else {
@@ -699,10 +702,11 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
 		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);
+		registrarSerializadores(LEER_MEM, "LEER_MEM", serializar_LEER_MEM, deserializar_LEER_MEM);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
 		registrarSerializadores(RESUL_FIN, "RESUL_FIN", serializar_RESUL_FIN, deserializar_RESUL_FIN);
 		registrarSerializadores(RESUL_LEER_OK_CPU, "RESUL_LEER_OK_CPU", serializar_RESUL_LEER_OK_CPU, deserializar_RESUL_LEER_OK_CPU);
-
+		registrarSerializadores(INICIAR_PROCESO_MEM, "INICIAR_PROCESO_MEM", serializar_INICIAR_PROCESO_MEM, deserializar_INICIAR_PROCESO_MEM);
 	}
 }
 
@@ -749,6 +753,7 @@ int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructur
 	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
 
 	void* funcion = serializacion->funcionSerializacion;
+
 	return ejecutarSerializacion(funcion, fdCliente, tipoMensaje, estructura);
 }
 

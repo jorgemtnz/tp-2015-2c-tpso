@@ -32,7 +32,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	int socketSwap,socketCPU;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-	socketCPU = atoi((char*) dictionary_get(conexiones, "Swap"));
 
 	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
@@ -47,11 +46,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas = datosDesdeSwap->cantidadPaginas;
+				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketCPU);
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR) : {
 				t_rta_iniciar_CPU* rtaDesdeSwap = (t_rta_iniciar_CPU*) buffer;
+				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap,socketCPU);
 				break;
 			}
@@ -60,6 +61,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (RESUL_FIN_OK) : {
 				t_respuesta_finalizar * datosDesdeSwap = (t_respuesta_finalizar*) buffer;
+				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 				break;
 			}
@@ -80,6 +82,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (LEER_MEM): {
 				t_lecturaProc_desde_CPU* datosDesdeCPU = (t_lecturaProc_desde_CPU*) buffer;
+				log_info(logger, "leer pag %d\n", datosDesdeCPU->pag);
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
 
@@ -100,6 +103,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
 				/*respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc, estructuraRtaLeer->pag, estructuraRtaLeer->contenido, socketCPU);
 				*/
+				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				enviarACPUContenidoPaginaDeUnProceso(estructuraRtaLeer,socketCPU);
 
 

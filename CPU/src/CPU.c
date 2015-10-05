@@ -26,6 +26,8 @@ int main(void) {
 	if (resultConexion_mem == -1)
 		log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
 
+	dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
+
 	escucharConexiones("0", socketPlanificador, socketMemoria, 0, procesarMensajes, NULL, logger);
 
 	log_info(logger, "se destruye proceso CPU");

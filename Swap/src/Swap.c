@@ -1,5 +1,7 @@
 #include "Swap.h"
 
+	t_list* listaDeProcesosCargados;
+	t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
@@ -28,8 +30,6 @@ int main(int argc, char *argv[]) {
 	espacioLibre = crearEspacioLibre();
 	espacioLibre2 = crearEspacioLibre();
 	espacioLibre3 = crearEspacioLibre();
-	t_list* listaDeProcesosCargados;
-	t_list* listaDeEspaciosLibres;
 
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
@@ -190,10 +190,10 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
-	t_list* listaDeProcesosCargados;
-	t_list* listaDeEspaciosLibres;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
+//	t_list* listaDeProcesosCargados;
+//	t_list* listaDeEspaciosLibres;
+//	listaDeEspaciosLibres = list_create();
+//	listaDeProcesosCargados = list_create();
 
 	switch (tipoNotificacion) {
 	case (NEW_CONNECTION): {

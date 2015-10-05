@@ -90,14 +90,6 @@ typedef struct {
 
 typedef struct {
 	int idProc;
-	int pag;
-	char* contenido;
-}t_lectura_Swap;
-
-
-
-typedef struct {
-	int idProc;
 }t_finalizarProc;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++

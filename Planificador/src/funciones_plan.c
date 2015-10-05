@@ -46,7 +46,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 void validarYCrearFIFO(char* nombreAlgoritmo) {
 	planificacion->nombreAlgoritmo = nombreAlgoritmo;
-	planificacion->tamanioRafaga = 0;
+	planificacion->tamanioRafaga = -1;
 	planificacion->tieneDesalojo = false;
 }
 
