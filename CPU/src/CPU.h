@@ -140,7 +140,8 @@ int  ejecutaResulFin(t_cpu* cpu);
 int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
 int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
 int  ejecutaResulInstrEjec(t_cpu* cpu);
-int  ejecutaResultLeer(t_cpu* cpu);
+int ejecutaResultLeerOK(t_cpu* cpu, char* contenido);
+int ejecutaResulLeerError(t_cpu* cpu);
 int  ejecutaResulOk(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================

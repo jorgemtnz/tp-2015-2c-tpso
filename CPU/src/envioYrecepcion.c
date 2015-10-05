@@ -70,14 +70,15 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 		ejecutaResulInstrEjec(cpu);
 		break;
 	}
-	case (RESUL_LEER): {
+	case (RESUL_LEER_OK): {
 		log_info(logger, "se va a ejecutar resultLeer ");
-		ejecutaResultLeer(cpu);
+		char* contenido; // este es el contenido de la pagina
+		ejecutaResultLeerOK(cpu, contenido);
 		break;
 	}
-	case (RESUL_OK): {
+	case (RESUL_LEER_ERROR): {
 		log_info(logger, "se va a ejecutar resultOK ");
-		ejecutaResulOk(cpu);
+		ejecutaResulLeerError(cpu);
 
 		break;
 	}

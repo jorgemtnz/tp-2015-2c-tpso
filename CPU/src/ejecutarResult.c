@@ -53,12 +53,25 @@ int ejecutaResulInstrEjec(t_cpu* cpu) {
 
 	return EXIT_SUCCESS;
 }
-int ejecutaResultLeer(t_cpu* cpu) {
-
+int ejecutaResultLeerOK(t_cpu* cpu,char* contenido) {
+	t_resultado_instruccion* resultado = creaResultadoInstruccion();
+	char* temporal;
+	strcpy(resultado->comandoInstruccion, "leer");
+	resultado->tipoMensaje = RESUL_LEER_OK;
+	temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid, "Pagina", "leida", contenido);
+	strcpy(resultado->expresion, temporal);
+	list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 	return EXIT_SUCCESS;
 }
 
-int ejecutaResulOk(t_cpu* cpu) {
+int ejecutaResulLeerError(t_cpu* cpu) {
+	t_resultado_instruccion* resultado = creaResultadoInstruccion();
+		char* temporal;
+		strcpy(resultado->comandoInstruccion, "leer");
+		resultado->tipoMensaje = RESUL_LEER_ERROR;
+		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid, "Pagina", "no leida");
+		strcpy(resultado->expresion, temporal);
+		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 
 	return EXIT_SUCCESS;
 }
