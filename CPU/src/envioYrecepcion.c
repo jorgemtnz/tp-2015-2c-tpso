@@ -34,8 +34,11 @@ int ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 //recibe las respuestas
-int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
+int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
+
+	int token;
+	token = header->tipoMensaje;
 	switch (token) {
 	case (RESUL_ERROR): {
 		log_info(logger, "se va a ejecutar result error");
@@ -52,11 +55,16 @@ int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
 		ejecutaResulFin(cpu);
 		break;
 	}
-	case (RESUL_INICIAR_PROC): {
-		log_info(logger, "se va a ejecutar result iniciar proceso ");
-		ejecutaResulIniciarProc(cpu);
+	case (RESUL_INICIAR_PROC_OK_CPU): {
+		log_info(logger, "se va a ejecutar result iniciar proceso ok");
+		ejecutaResulIniciarProcOK(cpu);
 		break;
 	}
+	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
+			log_info(logger, "se va a ejecutar result iniciar proceso no ok");
+			ejecutaResulIniciarProc_NO_OK(cpu);
+			break;
+		}
 	case (RESUL_INSTR_EJEC): {
 		log_info(logger, "se va a ejecutar result instruccion ejecutar ");
 		ejecutaResulInstrEjec(cpu);
@@ -86,6 +94,7 @@ int recibirMensajeVarios(int token, char* buffer, void* extra, t_cpu* cpu) {
 
 	case (STRING): {
 		log_info(logger, "se va a recibir un string ");
+//esto esta extraido desde procesarMensaje() por lo que si se descomenta, daria error
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
 //			printf("Recibi el mensaje: %s\n", mensaje);
@@ -116,7 +125,7 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	estructura = ejecuta_IniciarProceso(separada_instruccion, cpu);
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, INICIAR_PROC_SWAP, estructura);
-
+	free(estructura);
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
@@ -131,34 +140,38 @@ int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 	}
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, ESCRIBIR_MEM, estructura);
-
+	free(estructura);
 	return EXIT_SUCCESS;
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_leerMem* estructura = malloc(sizeof(t_leerMem));
+	t_leerMem* estructura ;
 	estructura->PID = cpu->pcbPlanificador->pid;
 
-	estructura = (t_leerMem*) ejecuta_LeerMemoria(separada_instruccion, cpu);
+	estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
 	if (estructura == NULL) {
 		log_error(logger, "[ERROR] no se genero la estructura para enviar leerMemoria");
 		return EXIT_FAILURE;
 	}
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	enviarStruct(socketMemoria, LEER_MEM, estructura);
-
+	free(estructura);
 	return EXIT_SUCCESS;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 int ejecutaFinProcesoMemoria(t_cpu* cpu) {
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
-	int tipoMensaje;
-	tipoMensaje = ejecuta_FinProcesoMemoria(cpu);
+	t_finalizarProc_Mem* estructura;
+	estructura = ejecuta_FinProcesoMemoria(cpu);
+	enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
 int ejecutaEntradaSalida(char* separada_instruccion, t_cpu* cpu) {
-	t_entrada_salida* estructura;
-	ejecuta_EntradaSalida(separada_instruccion, cpu);
+	t_entrada_salida* estructura ;
+	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+	estructura =ejecuta_EntradaSalida(separada_instruccion, cpu);
+	enviarStruct(socketPlanificador, ENTRADA_SALIDA, estructura);
+	free(estructura);
 	return EXIT_SUCCESS;
 }

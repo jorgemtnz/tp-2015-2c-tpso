@@ -148,6 +148,13 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+
+	void imprimirResultadoInstruccion(void* elemento) {
+		t_resultado_instruccion* resultado = (t_resultado_instruccion*) elemento;
+		printConsola("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
+	}
+	list_iterate(respuestaEjecucion->resultadosInstrucciones, imprimirResultadoInstruccion);
+
 	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
 
 }

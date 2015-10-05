@@ -44,6 +44,7 @@ t_mCod* crearmCod() {
 	mCod->ptrCMemoriaMap = '\0';
 	mCod->ptrTamPagina = 0;
     mCod->cantidadInstrucciones =0;
+    mCod->respEjec = creaRespuestaEjecucion();
 	return mCod;
 }
 
@@ -78,6 +79,7 @@ t_cpu* crearCPU() {
 	procCPU->contadorIdCPU = cPUHilo->idCPU;
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->estadoEjecucion = NO_USO;
+
 	return cPUHilo;
 }
 

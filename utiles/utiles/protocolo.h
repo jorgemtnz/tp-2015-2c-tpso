@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <commons/collections/list.h>
-
+//#include "sockets/sockets.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #define TAMANIO_TEXTO 512
@@ -168,6 +168,10 @@ typedef struct{
 } t_entrada_salida;
 
 typedef struct{
+	uint8_t PID;
+}t_finalizarProc_Mem;
+
+typedef struct{
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 	t_list* resultadosInstrucciones;
 	bool finalizoOk;
@@ -183,6 +187,8 @@ typedef struct {
 	uint8_t idProc;
 	uint8_t pag;
 }t_lecturaProc_desde_CPU;
+
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
@@ -285,5 +291,11 @@ void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje)
 
 void serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void serializar_t_resultado_instruccion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void serializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje, t_tipo_mensaje estructura);
+t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 #endif /* UTILES_PROTOCOLO_H_ */

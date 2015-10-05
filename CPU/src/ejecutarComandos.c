@@ -52,24 +52,26 @@ t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 	return estructura;
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
-int ejecuta_FinProcesoMemoria(t_cpu* cpu) {
+t_finalizarProc_Mem* ejecuta_FinProcesoMemoria(t_cpu* cpu) {
+	t_finalizarProc_Mem* estructura=malloc(sizeof(t_finalizarProc_Mem));
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
 	log_info(logger, "se ejecuta fin de proceso desde CPU ");
+	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;
-	return FIN_PROCESO_MEM;
+	return estructura;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
 t_entrada_salida* ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu) {
 	t_entrada_salida* estructura = malloc(sizeof(t_entrada_salida));
-
+	char* temporal;
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
-    char* retorno = '\0';
-    strcpy(retorno,"mProc");
-    char* parteMensaje = "en entrada-salida de tiempo";
-    string_append(&retorno, parteMensaje);
-    strcpy(estructura->expresion,retorno);
+
+    estructura->PID = cpu->pcbPlanificador->pid;
+    	temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid, "en entrada-salida de tiempo %d", configuracion->retardo);
+    	strcpy(estructura->expresion, temporal);
+
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }
