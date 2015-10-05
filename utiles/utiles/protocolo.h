@@ -261,4 +261,10 @@ void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura);
 t_respuesta_finalizar* deserializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje);
 
+
+void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,t_finalizar_swap* estructura);
+t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 #endif /* UTILES_PROTOCOLO_H_ */
