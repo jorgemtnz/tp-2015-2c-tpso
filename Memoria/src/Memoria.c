@@ -94,7 +94,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (RESUL_TRAER_PAG_SWAP_OK): {
 				t_lectura_Swap * datosDesdeSwap = (t_lectura_Swap*) buffer;
-				t_respuesta_leer* estructuraRtaLeer;
+				t_respuesta_leer_CPU* estructuraRtaLeer;
 				estructuraRtaLeer->PID = datosDesdeSwap->idProc;
 				estructuraRtaLeer->numeroPagina= datosDesdeSwap->pag;
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
