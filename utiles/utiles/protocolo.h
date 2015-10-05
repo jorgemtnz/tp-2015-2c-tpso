@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <commons/collections/list.h>
-
+//#include "sockets/sockets.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #define TAMANIO_TEXTO 512
@@ -164,6 +164,10 @@ typedef struct{
 } t_entrada_salida;
 
 typedef struct{
+	uint8_t PID;
+}t_finalizarProc_Mem;
+
+typedef struct{
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 	t_list* resultadosInstrucciones;
 	bool finalizoOk;
@@ -180,6 +184,8 @@ typedef struct {
 	uint8_t pagIn;
 	uint8_t pagFin;
 }t_lecturaProc_desde_CPU;
+
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++

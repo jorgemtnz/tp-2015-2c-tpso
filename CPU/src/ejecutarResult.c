@@ -17,6 +17,7 @@ int ejecutaResulFin(t_cpu* cpu) {
 }
 
 int ejecutaResulIniciarProc(t_cpu* cpu) {
+t_resultado_instruccion* resultado = crearRespuestaIniciarOkCPU();
 
 	return EXIT_SUCCESS;
 }
