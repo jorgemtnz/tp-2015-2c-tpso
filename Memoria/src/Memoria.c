@@ -50,7 +50,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketCPU);
 				break;
 			}
-				//ACA VA LO QUE TIENE QUE HACER MEMORIA CON EL CUANDO ESTA OK EL INICIAR EN SWAP
 			case (RESUL_INICIAR_PROC_ERROR) : {
 				t_rta_iniciar_CPU* rtaDesdeSwap = (t_rta_iniciar_CPU*) buffer;
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap,socketCPU);
@@ -81,7 +80,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_lecturaProc_desde_CPU* datosDesdeCPU = (t_lecturaProc_desde_CPU*) buffer;
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
-				leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,socketSwap,socketCPU);
+
+				/*leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,socketSwap,socketCPU);
+				*/
+				enviarStruct(socketSwap, LEER_SWAP, estructuraLeer);
 				break;
 			}
 			case (RESUL_TRAER_PAG_SWAP_NO_OK): {
@@ -90,11 +92,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (RESUL_TRAER_PAG_SWAP_OK): {
 				t_lectura_Swap * datosDesdeSwap = (t_lectura_Swap*) buffer;
-				t_lectura_Swap* estructuraRtaLeer;
-				estructuraRtaLeer->idProc = datosDesdeSwap->idProc;
-				estructuraRtaLeer->pag = datosDesdeSwap->pag;
+				t_respuesta_leer* estructuraRtaLeer;
+				estructuraRtaLeer->PID = datosDesdeSwap->idProc;
+				estructuraRtaLeer->numeroPagina= datosDesdeSwap->pag;
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
-				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc, estructuraRtaLeer->pag, estructuraRtaLeer->contenido, socketCPU);
+				/*respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc, estructuraRtaLeer->pag, estructuraRtaLeer->contenido, socketCPU);
+				*/
+				enviarACPUContenidoPaginaDeUnProceso(estructuraRtaLeer,socketCPU);
 
 
 				break;

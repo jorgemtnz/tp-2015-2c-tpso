@@ -149,17 +149,6 @@ t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje ti
 	return estructura;
 }
 
-void* serializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	puts("Serializando serializar_RESUL_LEER");
-	serializar_t_rtaLecturaCpu(fdCliente, tipoMensaje, estructura);
-	return 0;
-}
-
-void* deserializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_rtaLecturaCpu* estructura = deserializar_t_rtaLecturaCpu(fdCliente, tipoMensaje);
-	puts("Deserializando serializar_RESUL_LEER");
-	return estructura;
-}
 
 void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura){
 

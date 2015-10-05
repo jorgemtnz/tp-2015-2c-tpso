@@ -72,7 +72,8 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 	}
 	case (RESUL_LEER_OK): {
 		log_info(logger, "se va a ejecutar resultLeer ");
-		char* contenido= "agregame contenido mati"; // este es el contenido de la pagina
+		t_respuesta_leer* datosDesdeSwap = (t_respuesta_leer*) buffer;
+		char* contenido= datosDesdeSwap->contenido; // este es el contenido de la pagina
 		ejecutaResultLeerOK(cpu, contenido);
 		break;
 	}
