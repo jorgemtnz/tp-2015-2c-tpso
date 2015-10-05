@@ -117,8 +117,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	lecturaSwap = iniciarLectura();
 
 		lecturaMandarCpu->idProc = idProc;
-		lecturaMandarCpu->pagFin = a;
-		lecturaMandarCpu->pagIn = a;
+		lecturaMandarCpu->pag = a;
 
 		respuesta = buscarSiEstaEnMemoria(idProc, a);
 
@@ -131,7 +130,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 		}
 
-		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
+		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 
 
 

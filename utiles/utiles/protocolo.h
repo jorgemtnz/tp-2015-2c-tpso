@@ -60,7 +60,6 @@ typedef enum {
 	RESUL_ESCRIBIR_ERROR,
 	RESUL_LEER_OK,
 	RESUL_LEER_ERROR,
-	TRAER_PAG_SWAP,
 	RESUL_TRAER_PAG_SWAP_OK,
 	RESUL_TRAER_PAG_SWAP_NO_OK,
 	RESUL_FIN_OK,
@@ -109,6 +108,11 @@ typedef struct {
 	uint8_t PID;
 }t_rta_iniciar_CPU;
 
+typedef struct {
+	int idProc;
+	char* contenido;
+	int pag;
+}t_rtaLecturaCpu;
 
 typedef struct {
 	uint8_t PID;
@@ -177,8 +181,7 @@ typedef struct{
 
 typedef struct {
 	uint8_t idProc;
-	uint8_t pagIn;
-	uint8_t pagFin;
+	uint8_t pag;
 }t_lecturaProc_desde_CPU;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -232,6 +235,11 @@ t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_me
 
 void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura);
+t_rtaLecturaCpu* deserializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 
 void* serializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) ;

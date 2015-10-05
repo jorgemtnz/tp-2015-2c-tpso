@@ -289,13 +289,12 @@ void eliminarDeMemoria(int id) {
 
 }
 
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
 
 	t_rtaLecturaCpu* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
 	lecturaMandarCpu->idProc = idProc;
-	lecturaMandarCpu->pagIn = pag;
-	lecturaMandarCpu->pagFin = pag;
+	lecturaMandarCpu->pag = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 		sacarAlPrimeroDeMemoriaDelProceso(idProc);
 		cargarNuevoMarcoAMemoria(contenido);
@@ -310,7 +309,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 	}
 	lecturaMandarCpu->contenido = contenido;
 
-	enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
+	enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 }
 
 
@@ -326,24 +325,21 @@ void enviarFinalizarASwap(t_finalizar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
 }
 
-void enviarLeerASwap(t_leerDeProceso* estructuraLeer, int socketSwap){
-	enviarStruct(socketSwap, LEER_SWAP, estructuraLeer);
-}
 
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) {
 
 }
 
-void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
-
+void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu,int socketCPU) {
+	enviarStruct(socketCPU, RESUL_LEER, lecturaMandarCpu);
 }
 
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
-	t_lecturaProc_desde_CPU* estructura;
-	estructura->idProc = idProc;
-	estructura->pagIn = nroDePag;
-	estructura->pagFin = nroDePag;
-	enviarStruct(socketSwap, TRAER_PAG_SWAP, estructura);
+	t_leerDeProceso* estructura;
+	estructura->PID = idProc;
+	estructura->numeroPaginaFin = nroDePag;
+	estructura->numeroPaginaInicio = nroDePag;
+	enviarStruct(socketSwap, LEER_SWAP, estructura);
 }
 
 

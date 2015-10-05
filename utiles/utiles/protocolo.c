@@ -149,6 +149,34 @@ t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje ti
 	return estructura;
 }
 
+void* serializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_LEER");
+	serializar_t_rtaLecturaCpu(fdCliente, tipoMensaje, estructura);
+	return 0;
+}
+
+void* deserializar_RESUL_LEER(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_rtaLecturaCpu* estructura = deserializar_t_rtaLecturaCpu(fdCliente, tipoMensaje);
+	puts("Deserializando serializar_RESUL_LEER");
+	return estructura;
+}
+
+void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura){
+
+	serializar_int8_t(fdCliente, estructura->idProc);
+	serializar_int8_t(fdCliente, estructura->pag);
+	serializar_string(fdCliente, estructura->contenido);
+}
+
+t_rtaLecturaCpu* deserializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_rtaLecturaCpu* estructura = malloc(sizeof(t_rtaLecturaCpu));
+	estructura->idProc = deserializar_int8_t(fdCliente);
+	estructura->pag = deserializar_int8_t(fdCliente);
+	estructura->contenido = deserializar_string(fdCliente);
+
+	return estructura;
+}
+
 void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_LEER_SWAP");
 	serializar_t_finalizar_swap(fdCliente, tipoMensaje, estructura);
@@ -217,9 +245,7 @@ void* serializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensa
 t_lecturaProc_desde_CPU* deserializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_lecturaProc_desde_CPU* estructura = malloc(sizeof(t_lecturaProc_desde_CPU));
 	estructura->idProc = deserializar_int8_t(fdCliente);
-	estructura->pagIn = deserializar_int8_t(fdCliente);
-	estructura->pagFin = deserializar_int8_t(fdCliente);
-
+	estructura->pag = deserializar_int8_t(fdCliente);
 	return estructura;
 }
 void* serializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
