@@ -14,13 +14,14 @@ int ejecutaResulFin(t_cpu* cpu) {
 	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 	char* temporal;
 	strcpy(resultado->comandoInstruccion, "finalizar");
-	resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
+	resultado->tipoMensaje = RESUL_FIN_OK;
 	temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid, "finalizado");
 	strcpy(resultado->expresion, temporal);
 	list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 	cpu->mCodCPU->respEjec->finalizoOk = true;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_FIN, cpu->mCodCPU->respEjec);
+	destRespEjec(cpu->mCodCPU->respEjec); // elimina y hace free a todos los elementos de la lista
 	return EXIT_SUCCESS;
 
 }

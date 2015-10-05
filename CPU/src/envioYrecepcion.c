@@ -86,7 +86,7 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 	}
 	case (CONTEXTO_MPROC): {
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
-
+        //inicia toda la cadena de instruccion desde la CPU hacia memoria
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
 		preparaCPU(pcbPlanificador);
@@ -149,7 +149,6 @@ int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 	t_leerMem* estructura ;
-	estructura->PID = cpu->pcbPlanificador->pid;
 
 	estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
 	if (estructura == NULL) {
@@ -163,10 +162,12 @@ int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 int ejecutaFinProcesoMemoria(t_cpu* cpu) {
-	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 	t_finalizarProc_Mem* estructura;
+	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+
 	estructura = ejecuta_FinProcesoMemoria(cpu);
 	enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
+  free(estructura);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
