@@ -182,8 +182,9 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
 		}
 	}
-	if (unProceso->PID!=procesoAEscribir->PID){
-		respuestaDeEscribir->PID=0;
+	if ((unProceso->PID!=procesoAEscribir->PID) &&(procesoAEscribir->PID != 0)){
+		respuestaDeEscribir->PID=procesoAEscribir->PID;
+		respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
 		enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
 	}
 	if (string_length(procesoAEscribir->contenido) == 0) {
@@ -238,8 +239,9 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 			a = list_size(listaDeProcesosCargados) + 1;
 		}
 	}
-	if(unProceso->PID!=procesoRecibido->PID){
-		respuestaDeLeer->PID=0;
+	if((unProceso->PID!=procesoRecibido->PID) && (procesoRecibido->PID != 0)){
+		respuestaDeLeer->PID= procesoRecibido->PID;
+		respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
 		enviarResultadoLeerERROR(socket, respuestaDeLeer);
 	}
 
@@ -260,7 +262,7 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 
 	respuestaDeLeer->PID=procesoAleer->PID;
 	respuestaDeLeer->contenido= datosLeidosFinal;
-	respuestaDeLeer->numeroPagina=procesoAleer->ubicacion;
+	respuestaDeLeer->numeroPagina=procesoRecibido->numeroPaginaInicio;
 	enviarResultadoLeerOK(socket, respuestaDeLeer);
 
 	return datosLeidosFinal;
@@ -311,8 +313,8 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
 	}
-	if (unProceso->PID != (pid)) {
-		respuestaDeFinalizar->PID= 0;
+	if ((unProceso->PID != pid) && (pid != 0)) {
+		respuestaDeFinalizar->PID= pid;
 		enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
 	}
 	respuestaDeFinalizar->PID = unProceso->PID;
