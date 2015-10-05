@@ -100,6 +100,8 @@ t_ProcCPU* crearProcCPU() {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
+	eliminarEspacioDeDatos(unmCod->ptrCMemoriaMap, unmCod->ptrTamPagina, logger);
+	destRespEjec(unmCod->respEjec); // elimina y hace free a todos los elementos de la lista
 	free(unmCod);
 }
 
@@ -108,6 +110,7 @@ void destConfig(t_configuracion* unaConfig) {
 }
 
 void destHiloCPU(t_cpu* unHiloCPU){
+    destmCod(unHiloCPU->mCodCPU);
    free(unHiloCPU);
 }
 

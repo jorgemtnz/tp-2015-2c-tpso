@@ -51,6 +51,7 @@ int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU) {	//solo hay un CPU en e
 // se debe agregar funcion que intreprente instruccion ya mapeada
 int ejecuta_Instruccion(char* instruccion_origen,   t_cpu* cpu) {
 	int resultado = 0;
+
 	t_instruccion* instruccion = creaInstruccion();
         
         log_info(logger, "se va a ejecutar interpretaInstruccion ");

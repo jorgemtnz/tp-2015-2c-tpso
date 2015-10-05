@@ -168,6 +168,7 @@ int ejecutaFinProcesoMemoria(t_cpu* cpu) {
 	estructura = ejecuta_FinProcesoMemoria(cpu);
 	enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
   free(estructura);
+  destHiloCPU(cpu);
 	return EXIT_SUCCESS;
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados

@@ -21,7 +21,7 @@ int ejecutaResulFin(t_cpu* cpu) {
 	cpu->mCodCPU->respEjec->finalizoOk = true;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_FIN, cpu->mCodCPU->respEjec);
-	destRespEjec(cpu->mCodCPU->respEjec); // elimina y hace free a todos los elementos de la lista
+
 	return EXIT_SUCCESS;
 
 }
