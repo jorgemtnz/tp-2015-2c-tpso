@@ -73,7 +73,7 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 	}
 	case (RESUL_LEER_OK_CPU): {
 		log_info(logger, "se va a ejecutar resultLeer ");
-		t_respuesta_leer* datosDesdeMem = (t_respuesta_leer*) buffer;
+		t_respuesta_leer_CPU* datosDesdeMem = (t_respuesta_leer_CPU*) buffer;
 		char* contenido= datosDesdeMem->contenido; // este es el contenido de la pagina
 		ejecutaResultLeerOK(cpu, contenido);
 		break;

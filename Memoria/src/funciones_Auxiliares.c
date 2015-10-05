@@ -330,7 +330,7 @@ void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* cont
 
 }
 
-void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu,int socketCPU) {
+void enviarACPUContenidoPaginaDeUnProceso(t_respuesta_leer_CPU* lecturaMandarCpu,int socketCPU) {
 	enviarStruct(socketCPU, RESUL_LEER_OK_CPU, lecturaMandarCpu);
 }
 
