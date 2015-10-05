@@ -89,6 +89,16 @@ void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje,
 	return 0;
 }
 
+void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	puts("Serializando serializar_RESUL_LEER_OK_CPU");
+	serializar_t_respuesta_leer(fdCliente, tipoMensaje, estructura);
+	return 0;
+}
+void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_respuesta_leer* estructura = deserializar_t_respuesta_leer(fdCliente, tipoMensaje);
+	puts("Deserializando serializar_RESUL_LEER_OK_CPU");
+	return estructura;
+}
 
 
 void* serializar_RESUL_FIN(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {

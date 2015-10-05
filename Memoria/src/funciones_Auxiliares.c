@@ -331,7 +331,7 @@ void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* cont
 }
 
 void enviarACPUContenidoPaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu,int socketCPU) {
-	enviarStruct(socketCPU, RESUL_LEER_OK, lecturaMandarCpu);
+	enviarStruct(socketCPU, RESUL_LEER_OK_CPU, lecturaMandarCpu);
 }
 
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {

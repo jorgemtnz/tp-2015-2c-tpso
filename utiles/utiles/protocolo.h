@@ -58,6 +58,7 @@ typedef enum {
 	RESUL_ESCRIBIR_OK,
 	RESUL_ESCRIBIR_ERROR,
 	RESUL_LEER_OK,
+	RESUL_LEER_OK_CPU,
 	RESUL_LEER_ERROR,
 	RESUL_TRAER_PAG_SWAP_OK,
 	RESUL_TRAER_PAG_SWAP_NO_OK,
@@ -241,6 +242,8 @@ t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_me
 void* serializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_iniciar* estructura);
 t_respuesta_iniciar* deserializar_t_respuesta_iniciar(int fdCliente, t_tipo_mensaje tipoMensaje);
 
+void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura);
