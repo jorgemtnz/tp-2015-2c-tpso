@@ -196,7 +196,6 @@ t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_
 	t_respuesta_ejecucion* respuestaEjecucion = malloc(sizeof(t_respuesta_ejecucion));
 	respuestaEjecucion->pcb = deserializar_t_pcb(fdCliente, tipoMensaje);
 	respuestaEjecucion->finalizoOk = deserializar_bool(fdCliente);
-
 	return respuestaEjecucion;
 }
 
