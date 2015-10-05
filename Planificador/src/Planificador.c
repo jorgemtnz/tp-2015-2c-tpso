@@ -31,6 +31,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	} else if(tipoNotificacion == TERMINAL_MESSAGE) {
 		procesarMensajesConsola(socket, header, buffer);
 	} else if(tipoNotificacion == MESSAGE) {
+		printConsola("Recibi un mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
+		procesarMensajesSegunTipo(socket, header, buffer);
 
 	} else if(tipoNotificacion == HANG_UP) {
 		desregistrarCPUConectada(socket);

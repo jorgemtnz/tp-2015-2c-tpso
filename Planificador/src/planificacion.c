@@ -13,6 +13,7 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 	pcb->tieneDesalojo = planificacion->tieneDesalojo;
 	pcb->tamanioRafaga = planificacion->tamanioRafaga;
 	pcb->proximaInstruccion = 0;
+	printConsola("Se creo el proceso PID: %d\n", pcb->pid);
 	return pcb;
 }
 

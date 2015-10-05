@@ -685,6 +685,7 @@ void inicializarRegistroSerializadores() {
 		registroSerializadores = dictionary_create();
 
 		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
+		registrarSerializadores(RESUL_EJECUCION_OK, "RESUL_EJECUCION_OK", serializar_RESUL_EJECUCION_OK, deserializar_RESUL_EJECUCION_OK);
 		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
 		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
 		registrarSerializadores(RESUL_INICIAR_PROC_ERROR, "RESUL_INICIAR_PROC_ERROR", serializar_RESUL_INICIAR_PROC_ERROR, deserializar_RESUL_INICIAR_PROC_ERROR);
@@ -697,6 +698,8 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
 		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 		registrarSerializadores(TRAER_PAG_SWAP, "TRAER_PAG_SWAP", serializar_TRAER_PAG_SWAP, deserializar_TRAER_PAG_SWAP);
+		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
+		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);
 
 	}
 }

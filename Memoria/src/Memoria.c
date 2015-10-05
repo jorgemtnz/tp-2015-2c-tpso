@@ -80,8 +80,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (LEER_MEM): {
 				t_lecturaProc_desde_CPU* datosDesdeCPU = (t_lecturaProc_desde_CPU*) buffer;
-				t_lecturaProc_desde_CPU* estructuraLeer;
-				leer(estructuraLeer->idProc,estructuraLeer->pagIn,estructuraLeer->pagFin,socketSwap,socketCPU);
+				t_leerDeProceso* estructuraLeer;
+				estructuraLeer = crearEstructuraLeer();
+				leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,estructuraLeer->numeroPaginaFin,socketSwap,socketCPU);
+				enviarLeerASwap(estructuraLeer, socketSwap);
 				break;
 			}
 			case (RESUL_TRAER_PAG_SWAP_NO_OK): {

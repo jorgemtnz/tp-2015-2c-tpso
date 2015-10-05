@@ -70,6 +70,8 @@ void mostrarComandos();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
+void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer);
+void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion);
 //++++++++++++++++++++++++++++++++++++comandos +++++++++++++++++++++++++++++++++++++++
 int correrPrograma(int socket, t_header* header, char* buffer);
 int correrPath(int socket, t_header* header, char* buffer);
