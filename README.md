@@ -1,13 +1,10 @@
 # tp-2015-2c-tpso
-para tp, fase inicial del proyecto
 
 ruta para la VM  /home/utnso/tp-2015-2c-tpso
 
-utiles y commons-library son bibliotecas compartidas
+utiles y commons-library son bibliotecas compartidas git status les va a mostrar en el branch en que estan. git show branch mostrara los branch que hay git checkout nombreBranch para cambiar de un branch a otro branch cuando hagan cambios en su compu, primero hacer el git add --all , luego el git commit -m "comentario" luego el git pull nombreBranch, y finalmente el git push nombreBranch
 
-
-cuando hagan cambios en su compu, primero hacer el git add --all , luego el git commit -m "comentario"
-luego el git pull , y finalmente el git push
+para unir branchs; parado en el master git merge nombreBranch entonces el master se fusiona con el nombrebranch o hacerlo a la inversa y la fusion es al reves. desde la rama que quiero unir git rebase nombreBranch(a la que quiero ser fusionado) para fusionar y mantener los commits de forma secuencial.
 
 correr proyecto desde eclipse
 
