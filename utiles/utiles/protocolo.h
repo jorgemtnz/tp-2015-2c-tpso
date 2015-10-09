@@ -218,33 +218,34 @@ typedef struct {
 PaqueteEnvio* serializar(int tipoDeMensaje, void* payLoad, int tamanioPayLoad);
 Paquete* deserializar(void* buffer,int tamanioMensaje);
 //+++ interaccion planificador CPU+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+//+++++++++++++++++++++++++++++++SE USA para mandar mensaje a CPU 
 void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
-
+//++++++ SE USA  dentro de serializar_CONTEXTO_MPROC  deserializar_CONTEXTO_MPROC
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estructura);
 t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje);
-
+//++++ SE USA  como nivel inferior para serializar un string
 void serializar_string(int fdCliente, char* estructura);
 char* deserializar_string(int fdCliente);
-
+//++++++SE USA como nivel inferior para serializar un int16
 void serializar_int16_t(int fdCliente, int16_t estructura);
 int16_t deserializar_int16_t(int fdCliente);
-
+//++++++SE USA como nivel inferior para serializar un int8
 void serializar_int8_t(int fdCliente, int8_t estructura);
 int8_t deserializar_int8_t(int fdCliente);
-
+//++++++SE USA como nivel inferior para serializar un bool
 void serializar_bool(int fdCliente, bool estructura);
 bool deserializar_bool(int fdCliente);
-// interaccion Memoria
+// +++++++++interaccion CPU - Memoria
 void* serializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura);
 t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
-
+//++++++SE USA como nivel inferior para serializar un PID
 void serializar_pid_t(int fdCliente, pid_t estructura);
 pid_t deserializar_pid_t(int fdCliente);
-
+// +++++++++interaccion Memoria - swap
 void* serializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_INICIAR_PROC_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
