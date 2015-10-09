@@ -7,10 +7,10 @@ t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 
 	estructura->PID = cpu->pcbPlanificador->pid;
-	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
-	if (estructura->cantidadPaginas< 0)
-		return NULL;
-
+//	estructura->cantidadPaginas = atoi(string_split(separada_instruccion, ";")[0]);
+//	if (estructura->cantidadPaginas< 0)
+//		return NULL;
+  estructura->cantidadPaginas = 10; //hardcodeo
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }
@@ -22,16 +22,18 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 	char** line;
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
-	line = string_split(separada_instruccion, ";");
-	buffer = string_split(line[0], " ");
+//	line = string_split(separada_instruccion, ";");
+//	buffer = string_split(line[0], " ");
 
-	if (buffer[0] == NULL) {
-		log_error(logger, "[ERROR] al crear buffer de instruccion en ejecuta_EscribirMemoria");
-		exit(-1);
+//	if (buffer[0] == NULL) {
+//		log_error(logger, "[ERROR] al crear buffer de instruccion en ejecuta_EscribirMemoria");
+//		exit(-1);
 	}
-	estructura->pagina = atoi(buffer[0]);
-	estructura->texto = buffer[1];
+//	estructura->pagina = atoi(buffer[0]);
+//	estructura->texto = buffer[1];
 	estructura->PID = cpu->pcbPlanificador->pid;
+	estructura->pagina =4; //hardcodeo
+	estructura->texto = "Hola";
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }
@@ -42,11 +44,11 @@ t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
-	buffer = string_split(separada_instruccion, " ");
-	estructura->pagina = atoi(buffer[0]);
-	if (estructura->pagina<0)
+//	buffer = string_split(separada_instruccion, " ");
+//	estructura->pagina = atoi(buffer[0]);
+////	if (estructura->pagina<0)
 		return NULL;
-
+        estructura->pagina = 4;//hardcode
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
