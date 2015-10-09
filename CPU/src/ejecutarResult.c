@@ -34,7 +34,7 @@ int ejecutaResulIniciarProcOK(t_cpu* cpu) {
 //	strcpy(resultado->comandoInstruccion, "inicializar");
 	resultado->comandoInstruccion = "inicializar";
 	resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
-	char* iniciado = "Iniciado";
+//	char* iniciado = "Iniciado";
 	//temporal = string_from_format("mProc %d %s", cpu->pcbPlanificador->pid, iniciado);
 	temporal = "mProc %d %s";
 	//strcpy(resultado->expresion, temporal);

@@ -18,8 +18,8 @@ t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 	t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
 
-	char** buffer;
-	char** line;
+//	char** buffer;
+//	char** line;
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
 //	line = string_split(separada_instruccion, ";");
@@ -28,7 +28,7 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 //	if (buffer[0] == NULL) {
 //		log_error(logger, "[ERROR] al crear buffer de instruccion en ejecuta_EscribirMemoria");
 //		exit(-1);
-	}
+//	}
 //	estructura->pagina = atoi(buffer[0]);
 //	estructura->texto = buffer[1];
 	estructura->PID = cpu->pcbPlanificador->pid;
@@ -40,15 +40,15 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 //devuelve la estructura de leerMemoria
 t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 	t_leerMem* estructura = malloc(sizeof(t_leerMem));
-	char** buffer;
+//	char** buffer;
 
 	cpu->estadoEjecucion = USO;
 	cpu->cantInstEjecutadas += 1;
 //	buffer = string_split(separada_instruccion, " ");
 //	estructura->pagina = atoi(buffer[0]);
-////	if (estructura->pagina<0)
-		return NULL;
-        estructura->pagina = 4;//hardcode
+//	if (estructura->pagina<0)
+//		return NULL;
+        estructura->pagina = 4;//hardcodeo
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;

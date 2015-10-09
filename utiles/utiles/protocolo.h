@@ -33,37 +33,47 @@ typedef enum {
 	RESUL_EJECUCION_OK,
 	RESUL_EJECUCION_ERROR,
 	RESUL_INSTR_EJEC,
+	//+++memoria+++++++++++++++++++
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
 	ESCRIBIR_SWAP,
 	FIN_PROCESO_SWAP,
+	RESUL_TRAER_PAG_SWAP_OK,
+	RESUL_TRAER_PAG_SWAP_NO_OK,
+
+	//+++++++++++origen:cpu  destino: memoria++++++++++++
 	INICIAR_PROCESO_MEM,
 	LEER_MEM,
 	ESCRIBIR_MEM,
 	FIN_PROCESO_MEM,
+	//++++++++++++++++cpu+++++++++++++++++++
 	ENTRADA_SALIDA,
 	TIEMPO_CPU,
 	RESULT_TIEMPO_CPU,
 	RESUL_ENT_SAL,
+	RESUL_INICIAR_PROC_OK_CPU,
+	RESUL_INICIAR_PROC_NO_OK_CPU, //sobra uno de los dos
+	RESUL_INICIAR_PROC_ERROR_CPU,   //sobra uno de los dos
+	RESUL_LEER_OK_CPU,
+
 	RESUL_OK,
 	RESUL_ERROR,
 	RESUL_FIN,
 	RESUL_ESCRIBIR,
 	RESUL_INICIAR_PROC,
 	RESUL_INICIAR_PROC_OK,
-	RESUL_INICIAR_PROC_NO_OK_CPU,
-	RESUL_INICIAR_PROC_OK_CPU,
-	RESUL_INICIAR_PROC_ERROR_CPU,
+
 	RESUL_INICIAR_PROC_ERROR,
 	RESUL_ESCRIBIR_OK,
 	RESUL_ESCRIBIR_ERROR,
 	RESUL_LEER_OK,
-	RESUL_LEER_OK_CPU,
-	RESUL_LEER_ERROR,
-	RESUL_TRAER_PAG_SWAP_OK,
-	RESUL_TRAER_PAG_SWAP_NO_OK,
 	RESUL_FIN_OK,
 	RESUL_FIN_ERROR,
+	RESUL_LEER_ERROR,
+
+	//+++++++++swap++++++++++++++++++
+
+
 } t_tipo_mensaje;
 
 typedef struct PaqueteEnvio{
@@ -207,6 +217,7 @@ typedef struct {
 
 PaqueteEnvio* serializar(int tipoDeMensaje, void* payLoad, int tamanioPayLoad);
 Paquete* deserializar(void* buffer,int tamanioMensaje);
+//+++ interaccion planificador CPU+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
@@ -225,6 +236,7 @@ int8_t deserializar_int8_t(int fdCliente);
 
 void serializar_bool(int fdCliente, bool estructura);
 bool deserializar_bool(int fdCliente);
+// interaccion Memoria
 void* serializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_iniciar_swap* estructura);
