@@ -6,4 +6,4 @@ ruta archivo config
 ruta archivo explicacion de CPU
 https://drive.google.com/open?id=1ogAHcjRKXyzwrDWwJpotMKY2jAFI3P8D2isoDXZsR9A
 
-
+Para solo probar las comunicaciones lo que se puede hacer es en envioYrecepcion.c dentro de las funciones de ejecucion y en el swtich que recibe los mensajes, ir a esas funciones de ejcucion, comentar la funcionalidad y  imprimir la estructura recibida y luego mandarle otra ya hardcodeada.
