@@ -78,7 +78,7 @@ typedef struct {
 typedef struct {
 	int idProc;
 	int Pag;
-	char* texto;
+	char* contenido;
 }t_escrituraProc;
 
 typedef struct {

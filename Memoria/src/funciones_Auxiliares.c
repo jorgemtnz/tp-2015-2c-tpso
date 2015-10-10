@@ -293,8 +293,8 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 
 	t_rtaLecturaCpu* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
-	lecturaMandarCpu->idProc = idProc;
-	lecturaMandarCpu->pag = pag;
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 		sacarAlPrimeroDeMemoriaDelProceso(idProc);
 		cargarNuevoMarcoAMemoria(contenido);

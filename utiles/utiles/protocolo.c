@@ -212,14 +212,14 @@ t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje) {
 
 void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura){
 
-	serializar_int8_t(fdCliente, estructura->idProc);
+	serializar_int8_t(fdCliente, estructura->PID);
 	serializar_int8_t(fdCliente, estructura->numeroPagina);
 	serializar_string(fdCliente, estructura->contenido);
 }
 
 t_rtaLecturaCpu* deserializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_rtaLecturaCpu* estructura = malloc(sizeof(t_rtaLecturaCpu));
-	estructura->idProc = deserializar_int8_t(fdCliente);
+	estructura->PID = deserializar_int8_t(fdCliente);
 	estructura->numeroPagina = deserializar_int8_t(fdCliente);
 	estructura->contenido = deserializar_string(fdCliente);
 
@@ -259,7 +259,7 @@ void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje) {
 void* serializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerMem* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);
 	serializar_int8_t(fdCliente, estructura->numeroPagina);
-	serializar_string(fdCliente, estructura->texto);
+	serializar_string(fdCliente, estructura->contenido);
 
 	return 0;
 }
@@ -267,7 +267,7 @@ t_leerMem* deserializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_leerMem* estructura = malloc(sizeof(t_leerMem));
 	estructura->PID = deserializar_int8_t(fdCliente);
 	estructura->numeroPagina = deserializar_int8_t(fdCliente);
-	estructura->texto = deserializar_string(fdCliente);
+	estructura->contenido = deserializar_string(fdCliente);
 
 	return estructura;
 }

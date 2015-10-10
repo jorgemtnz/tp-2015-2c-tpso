@@ -33,7 +33,7 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 //	estructura->texto = buffer[1];
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->numeroPagina =4; //hardcodeo
-	estructura->texto = "Hola";
+	estructura->contenido = "Hola";
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }

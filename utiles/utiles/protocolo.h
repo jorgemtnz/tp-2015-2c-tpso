@@ -119,7 +119,7 @@ typedef struct {
 }t_PID;
 
 typedef struct {
-	int idProc;
+	uint8_t PID;
 	char* contenido;
 	int numeroPagina;
 }t_rtaLecturaCpu;
@@ -158,13 +158,13 @@ typedef struct {
 typedef struct{
 	uint8_t PID;
 	uint8_t numeroPagina;
-	char* texto;
+	char* contenido;
 }t_escribirMem;
 
 typedef struct{
 	uint8_t PID;
 	uint8_t numeroPagina;
-	char* texto;
+	char* contenido;
 }t_leerMem;
 
 typedef struct{

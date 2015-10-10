@@ -91,7 +91,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 		// 2
 			escritura->Pag = nroPag;
 			escritura->idProc = idProc;
-			escritura->texto = textoAEscribir;
+			escritura->contenido = textoAEscribir;
 
 			/* PARTE DE ENVIAR A SWAP UN PROCESO
 			 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
@@ -116,8 +116,8 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	t_lectura * lecturaSwap;
 	lecturaSwap = iniciarLectura();
 
-		lecturaMandarCpu->idProc = idProc;
-		lecturaMandarCpu->pag = a;
+		lecturaMandarCpu->PID = idProc;
+		lecturaMandarCpu->numeroPagina = a;
 
 		respuesta = buscarSiEstaEnMemoria(idProc, a);
 
