@@ -169,7 +169,7 @@ void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscr
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
-	t_respuesta_escribir* respuestaDeEscribir;
+	t_contenido_pagina* respuestaDeEscribir;
 	respuestaDeEscribir = crearRespuestaEscribir();
 	int nuevaPagina;
 	char* msjDeRta=string_new();
