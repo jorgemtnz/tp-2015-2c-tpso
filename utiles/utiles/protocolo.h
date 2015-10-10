@@ -159,10 +159,6 @@ typedef struct {
 } t_respuesta_leer_CPU;
 
 
-typedef struct {
-	uint8_t PID;
-} t_respuesta_finalizar;
-
 typedef struct{
 	uint8_t PID;
 	uint8_t pagina;
@@ -179,10 +175,6 @@ typedef struct{
 	uint8_t PID;
 	char* expresion;
 } t_entrada_salida;
-
-typedef struct{
-	uint8_t PID;
-}t_finalizarProc_Mem;
 
 typedef struct{
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
@@ -265,9 +257,6 @@ void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensa
 t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
 
-void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje, t_PID* estructura);
-t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
-
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
@@ -299,8 +288,8 @@ void* serializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* e
 void* serializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura);
-t_respuesta_finalizar* deserializar_t_respuesta_finalizar(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
+t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_escribir* estructura);
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje);
@@ -319,8 +308,6 @@ t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente, t_t
 //++++++++++++++++++++++++++++++++++++++++++++interaccion Memoria -  Swap
 void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
-t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);

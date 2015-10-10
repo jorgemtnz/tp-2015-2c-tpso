@@ -162,7 +162,7 @@ int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 int ejecutaFinProcesoMemoria(t_cpu* cpu) {
-	t_finalizarProc_Mem* estructura;
+	t_PID* estructura;
 	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 
 	estructura = ejecuta_FinProcesoMemoria(cpu);
