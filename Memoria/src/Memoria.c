@@ -73,8 +73,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (FIN_PROCESO_MEM) : {
-				t_finalizar_swap* datosDesdeCPU = (t_finalizar_swap*) buffer;
-				t_finalizar_swap* estructuraFinalizar;
+				t_PID* datosDesdeCPU = (t_PID*) buffer;
+				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearEstructuraFinalizar();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				enviarFinalizarASwap(estructuraFinalizar, socketSwap);

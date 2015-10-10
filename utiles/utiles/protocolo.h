@@ -126,7 +126,7 @@ typedef struct {
 
 typedef struct {
 	uint8_t PID;
-} t_finalizar_swap;
+} t_PID;
 
 typedef struct{
 	uint8_t PID;
@@ -323,8 +323,8 @@ t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente, t_t
 //++++++++++++++++++++++++++++++++++++++++++++interaccion Memoria -  Swap
 void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,t_finalizar_swap* estructura);
-t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
+t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);

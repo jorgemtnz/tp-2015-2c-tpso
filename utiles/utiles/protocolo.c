@@ -188,22 +188,22 @@ t_respuesta_leer* deserializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje ti
 
 void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_FIN_PROCESO_SWAP");
-	serializar_t_finalizar_swap(fdCliente, tipoMensaje, estructura);
+	serializar_t_PID(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 
 void* deserializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_finalizar_swap* estructura = deserializar_t_finalizar_swap(fdCliente, tipoMensaje);
+	t_PID* estructura = deserializar_t_PID(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_FIN_PROCESO_SWAP");
 	return estructura;
 }
-void* serializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_finalizar_swap* estructura) {
+void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje, t_PID* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);
 
 	return 0;
 }
-t_finalizar_swap* deserializar_t_finalizar_swap(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_finalizar_swap* estructura = malloc(sizeof(t_finalizar_swap));
+t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_PID* estructura = malloc(sizeof(t_PID));
 	estructura->PID = deserializar_int8_t(fdCliente);
 
 	return estructura;

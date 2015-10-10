@@ -93,8 +93,8 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_finalizar_swap* crearEstructuraFinalizar(){
-	t_finalizar_swap* contenido = malloc(sizeof(t_finalizar_swap));
+t_PID* crearEstructuraFinalizar(){
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para crearEstructuraFinalizar");
 		log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraFinalizar");
