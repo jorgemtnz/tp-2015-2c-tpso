@@ -75,9 +75,9 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_respuesta_iniciar* crearRespuestaIniciar(){
+t_PID* crearRespuestaIniciar(){
 
-	t_respuesta_iniciar* contenido = malloc(sizeof(t_respuesta_iniciar));
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");

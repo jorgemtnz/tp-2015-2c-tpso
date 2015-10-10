@@ -68,7 +68,7 @@ l_espacioLibre* crearEspacioLibre();
 t_escribirEnProceso* crearEscribirEnProceso();
 t_leerDeProceso* crearLeerDeProceso();
 t_iniciar_swap* crearEstructuraIniciar();
-t_respuesta_iniciar* crearRespuestaIniciar();
+t_PID* crearRespuestaIniciar();
 t_respuesta_escribir* crearRespuestaEscribir();
 t_respuesta_leer* crearRespuestaLeer();
 t_respuesta_finalizar* crearRespuestaFinalizar();

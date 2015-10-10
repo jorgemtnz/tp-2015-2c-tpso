@@ -77,7 +77,7 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
-	t_respuesta_iniciar* estructura;
+	t_PID* estructura;
 	estructura = crearRespuestaIniciar();
 
 	procesoAInsertarEnLista = crearProceso();
