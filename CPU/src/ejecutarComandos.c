@@ -32,7 +32,7 @@ t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 //	estructura->pagina = atoi(buffer[0]);
 //	estructura->texto = buffer[1];
 	estructura->PID = cpu->pcbPlanificador->pid;
-	estructura->pagina =4; //hardcodeo
+	estructura->numeroPagina =4; //hardcodeo
 	estructura->texto = "Hola";
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
@@ -48,7 +48,7 @@ t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
 //	estructura->pagina = atoi(buffer[0]);
 //	if (estructura->pagina<0)
 //		return NULL;
-        estructura->pagina = 4;//hardcodeo
+        estructura->numeroPagina = 4;//hardcodeo
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;

@@ -157,13 +157,13 @@ typedef struct {
 
 typedef struct{
 	uint8_t PID;
-	uint8_t pagina;
+	uint8_t numeroPagina;
 	char* texto;
 }t_escribirMem;
 
 typedef struct{
 	uint8_t PID;
-	uint8_t pagina;
+	uint8_t numeroPagina;
 	char* texto;
 }t_leerMem;
 
