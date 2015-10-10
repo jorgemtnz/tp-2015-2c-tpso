@@ -203,11 +203,6 @@ typedef struct{
 typedef struct {
 	uint8_t idProc;
 	uint8_t pag;
-}t_lecturaProc_desde_CPU;
-
-typedef struct {
-	uint8_t idProc;
-	uint8_t pag;
 	char* contenido;
 }t_lectura_Swap;
 
@@ -315,9 +310,6 @@ void* serializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_respuesta_escribir* deserializar_t_respuesta_escribir(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-t_lecturaProc_desde_CPU* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_finalizar* estructura);
-t_lecturaProc_desde_CPU* deserializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
 void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje);

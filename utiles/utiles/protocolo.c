@@ -359,22 +359,12 @@ void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void*
 	//serializar_lecturaProc_desde_CPU(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-t_lecturaProc_desde_CPU* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
+t_respuesta_finalizar* deserializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_respuesta_finalizar* estructura = deserializar_t_respuesta_finalizar(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_TRAER_PAG_SWAP");
 	return estructura;
 }
-void* serializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_finalizar* estructura) {
-	serializar_int8_t(fdCliente, estructura->PID);
-	return 0;
-}
 
-t_lecturaProc_desde_CPU* deserializar_t_lecturaProc_desde_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_lecturaProc_desde_CPU* estructura = malloc(sizeof(t_lecturaProc_desde_CPU));
-	estructura->idProc = deserializar_int8_t(fdCliente);
-	estructura->pag = deserializar_int8_t(fdCliente);
-	return estructura;
-}
 void* serializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_RESUL_FIN_OK");
 	serializar_t_respuesta_finalizar(fdCliente, tipoMensaje, estructura);

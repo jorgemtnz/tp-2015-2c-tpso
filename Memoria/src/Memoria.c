@@ -81,7 +81,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (LEER_MEM): {
-				t_lecturaProc_desde_CPU* datosDesdeCPU = (t_lecturaProc_desde_CPU*) buffer;
+				t_lectura_Swap* datosDesdeCPU = (t_lectura_Swap*) buffer;
 				log_info(logger, "leer pag %d\n", datosDesdeCPU->pag);
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
