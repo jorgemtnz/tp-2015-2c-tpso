@@ -102,9 +102,9 @@ t_contenido_pagina* crearRespuestaEscribir(){
 
 }
 
-t_respuesta_leer* crearRespuestaLeer(){
+t_contenido_pagina* crearRespuestaLeer(){
 
-	t_respuesta_leer* contenido = malloc(sizeof(t_respuesta_leer));
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");

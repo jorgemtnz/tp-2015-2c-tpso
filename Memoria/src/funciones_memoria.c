@@ -111,7 +111,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 	int a, respuesta;
 	char* contenido;
-	t_rtaLecturaCpu * lecturaMandarCpu;
+	t_contenido_pagina * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
 	t_lectura * lecturaSwap;
 	lecturaSwap = iniciarLectura();
@@ -170,7 +170,7 @@ void enviarASwapContenidoDePaginaDesactualizada(int idProc, int pagina, char* co
 
 }
 
-void enviarACPUContenidoDePaginaDeUnProceso(t_rtaLecturaCpu* lecturaMandarCpu) {
+void enviarACPUContenidoDePaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu) {
 
 }
 

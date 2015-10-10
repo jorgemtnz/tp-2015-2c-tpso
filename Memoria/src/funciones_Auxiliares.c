@@ -291,7 +291,7 @@ void eliminarDeMemoria(int id) {
 
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
 
-	t_rtaLecturaCpu* lecturaMandarCpu;
+	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarRtaLecturaCpu();
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;

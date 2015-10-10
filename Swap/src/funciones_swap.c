@@ -228,7 +228,7 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	l_procesosCargados* procesoAleer;
 	unProceso = crearProceso();
 	procesoAleer = crearProceso();
-	t_respuesta_leer* respuestaDeLeer;
+	t_contenido_pagina* respuestaDeLeer;
 	respuestaDeLeer = crearRespuestaLeer();
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);

@@ -118,13 +118,6 @@ typedef struct {
 	uint8_t PID;
 } t_PID;
 
-typedef struct {
-	uint8_t PID;
-	char* contenido;
-	int numeroPagina;
-}t_rtaLecturaCpu;
-
-
 //OK
 typedef struct {
 	uint8_t PID;
@@ -137,12 +130,6 @@ typedef struct {
 	uint8_t numeroPaginaInicio;
 	uint8_t numeroPaginaFin;
 } t_leerDeProceso;
-
-typedef struct {
-	uint8_t PID;
-	char* contenido;
-	uint8_t numeroPagina;
-} t_respuesta_leer;
 
 typedef struct{
 	uint8_t PID;
@@ -213,7 +200,7 @@ t_PID* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipo
 void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_PID* estructura);
 t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void* serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_leer* estructura);
+void* serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_contenido_pagina* estructura);
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
@@ -230,9 +217,6 @@ void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void* serializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje,t_rtaLecturaCpu* estructura);
-t_rtaLecturaCpu* deserializar_t_rtaLecturaCpu(int fdCliente, t_tipo_mensaje tipoMensaje);
-
 void* serializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) ;
 void* serializar_RESUL_ESCRIBIR_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje) ;
@@ -242,8 +226,8 @@ void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* 
 void* serializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_leer* estructura) ;
-t_respuesta_leer* deserializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,t_contenido_pagina* estructura) ;
+t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_FIN(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_FIN(int fdCliente, t_tipo_mensaje tipoMensaje);
