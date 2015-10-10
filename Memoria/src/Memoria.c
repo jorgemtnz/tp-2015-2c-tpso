@@ -51,7 +51,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR) : {
-				t_rta_iniciar_CPU* rtaDesdeSwap = (t_rta_iniciar_CPU*) buffer;
+				t_PID* rtaDesdeSwap = (t_PID*) buffer;
 				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap,socketCPU);
 				break;

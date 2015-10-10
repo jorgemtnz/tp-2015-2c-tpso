@@ -54,7 +54,7 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
-	t_rta_iniciar_CPU * estructuraCPU;
+	t_PID * estructuraCPU;
 	estructuraCPU = crearRespuestaIniciarOkCPU();
 
 	for (contador = 0; contador < cantPag; contador++) {
@@ -158,11 +158,11 @@ void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
 
-void enviarRtaIniciarOkCPU (t_rta_iniciar_CPU * estructura, int socketCPU){
+void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
 
-void enviarRtaIniciarFalloCPU (t_rta_iniciar_CPU * estructura, int socketCPU){
+void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_NO_OK_CPU, estructura);
 }
 

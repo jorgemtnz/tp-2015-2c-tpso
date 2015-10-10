@@ -403,8 +403,8 @@ void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMen
 	serializar_t_rta_iniciar_ok_CPU(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-t_rta_iniciar_CPU* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_rta_iniciar_CPU* estructura = deserializar_t_rta_iniciar_ok_CPU(fdCliente, tipoMensaje);
+t_PID* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_PID* estructura = deserializar_t_rta_iniciar_ok_CPU(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_RESUL_INICIAR_PROC_OK_CPU");
 	return estructura;
 }
@@ -423,8 +423,8 @@ void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 
 	return 0;
 }
-t_rta_iniciar_CPU* crearRespuestaIniciarOkCPU() {
-	t_rta_iniciar_CPU* contenido = malloc(sizeof(t_rta_iniciar_CPU));
+t_PID* crearRespuestaIniciarOkCPU() {
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para crearRespuestaIniciarOkCPU");
 //		log_error(logger, "[ERROR] No se reservo memoria para crearRespuestaIniciarOkCPU");
@@ -433,8 +433,8 @@ t_rta_iniciar_CPU* crearRespuestaIniciarOkCPU() {
 	return contenido;
 }
 
-t_rta_iniciar_CPU* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_rta_iniciar_CPU* estructura = crearRespuestaIniciarOkCPU();
+t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_PID* estructura = crearRespuestaIniciarOkCPU();
 	estructura->PID = deserializar_int8_t(fdCliente);
 
 	return estructura;
@@ -446,8 +446,8 @@ void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensa
 	return 0;
 }
 
-t_rta_iniciar_CPU* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_rta_iniciar_CPU* estructura = crearRespuestaIniciarOkCPU();
+t_PID* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_PID* estructura = crearRespuestaIniciarOkCPU();
 	estructura->PID = deserializar_int8_t(fdCliente);
 
 	return estructura;
