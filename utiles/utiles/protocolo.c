@@ -146,23 +146,10 @@ void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
 }
 
 void* serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	serializar_t_lectura_Swap(fdCliente, tipoMensaje, estructura);
+	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
 }
 void* deserializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	return deserializar_t_lectura_Swap(fdCliente, tipoMensaje);
-}
-void* serializar_t_lectura_Swap(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	t_lectura_Swap* lecturaSwap = (t_lectura_Swap*) estructura;
-	serializar_int8_t(fdCliente, lecturaSwap->idProc);
-	serializar_int8_t(fdCliente, lecturaSwap->numeroPagina);
-	serializar_string(fdCliente, lecturaSwap->contenido);
-}
-void* deserializar_t_lectura_Swap(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_lectura_Swap* lecturaSwap = malloc(sizeof(t_lectura_Swap));
-	lecturaSwap->idProc = deserializar_int8_t(fdCliente);
-	lecturaSwap->numeroPagina = deserializar_int8_t(fdCliente);
-	lecturaSwap->contenido = deserializar_string(fdCliente);
-	return lecturaSwap;
+	return deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 }
 
 void* serializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_leer* estructura) {

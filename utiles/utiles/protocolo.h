@@ -171,13 +171,6 @@ typedef struct{
 	char* expresion;
 } t_resultado_instruccion;
 
-typedef struct {
-	uint8_t idProc;
-	uint8_t numeroPagina;
-	char* contenido;
-}t_lectura_Swap;
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -259,8 +252,6 @@ void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* 
 void* serializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_lectura_Swap(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-void* deserializar_t_lectura_Swap(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje,t_respuesta_leer* estructura) ;
 t_respuesta_leer* deserializar_t_respuesta_leer(int fdCliente, t_tipo_mensaje tipoMensaje);
 

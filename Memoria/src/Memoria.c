@@ -81,7 +81,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (LEER_MEM): {
-				t_lectura_Swap* datosDesdeCPU = (t_lectura_Swap*) buffer;
+				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				log_info(logger, "leer pag %d\n", datosDesdeCPU->numeroPagina);
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
@@ -96,9 +96,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 			}
 			case (RESUL_TRAER_PAG_SWAP_OK): {
-				t_lectura_Swap * datosDesdeSwap = (t_lectura_Swap*) buffer;
+				t_contenido_pagina * datosDesdeSwap = (t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraRtaLeer;
-				estructuraRtaLeer->PID = datosDesdeSwap->idProc;
+				estructuraRtaLeer->PID = datosDesdeSwap->PID;
 				estructuraRtaLeer->numeroPagina= datosDesdeSwap->numeroPagina;
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
 				/*respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc, estructuraRtaLeer->pag, estructuraRtaLeer->contenido, socketCPU);
