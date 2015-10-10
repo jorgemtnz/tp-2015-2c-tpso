@@ -117,9 +117,9 @@ t_respuesta_leer* crearRespuestaLeer(){
 
 }
 
-t_respuesta_finalizar* crearRespuestaFinalizar(){
+t_PID* crearRespuestaFinalizar(){
 
-	t_respuesta_finalizar* contenido = malloc(sizeof(t_respuesta_finalizar));
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");

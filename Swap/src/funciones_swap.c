@@ -284,7 +284,7 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 	procesoAEscribir = crearEscribirEnProceso();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
-	t_respuesta_finalizar* respuestaDeFinalizar;
+	t_PID* respuestaDeFinalizar;
 	respuestaDeFinalizar = crearRespuestaFinalizar();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 

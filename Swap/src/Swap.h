@@ -71,7 +71,7 @@ t_iniciar_swap* crearEstructuraIniciar();
 t_PID* crearRespuestaIniciar();
 t_respuesta_escribir* crearRespuestaEscribir();
 t_respuesta_leer* crearRespuestaLeer();
-t_respuesta_finalizar* crearRespuestaFinalizar();
+t_PID* crearRespuestaFinalizar();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 

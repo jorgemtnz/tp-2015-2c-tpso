@@ -343,7 +343,7 @@ void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap) {
 	enviarStruct(socketSwap, LEER_SWAP, estructura);
 }
 
-void enviarFinalizarACPU(t_respuesta_finalizar* estructuraFinalizar, int socketCPU){
+void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU){
 	enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
 }
 

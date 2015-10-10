@@ -52,7 +52,7 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 	}
 	case (RESUL_FIN): {
 		log_info(logger, "se va a ejecutar result fin de proceso ");
-		t_respuesta_finalizar* datosDesdeMem = (t_respuesta_finalizar*) buffer;
+		t_PID* datosDesdeMem = (t_PID*) buffer;
 		ejecutaResulFin(cpu);
 		break;
 	}

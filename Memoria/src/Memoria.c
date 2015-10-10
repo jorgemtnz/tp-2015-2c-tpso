@@ -60,7 +60,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (RESUL_FIN_OK) : {
-				t_respuesta_finalizar * datosDesdeSwap = (t_respuesta_finalizar*) buffer;
+				t_PID * datosDesdeSwap = (t_PID*) buffer;
 				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 				break;
