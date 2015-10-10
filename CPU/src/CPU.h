@@ -113,7 +113,7 @@ void destProcCPU(t_ProcCPU* unCPU);
 void destInstruccion(t_instruccion* unaInstruccion);
 void destVectorInstruccion(char** vectorInstruccion);
 void destIniciarSwap(t_iniciar_swap* estructura);
-void destEscrMem(t_escribirMem* estruc);
+void destEscrMem(t_contenido_pagina* estruc);
 void destEntradSalid(t_entrada_salida* entradSalid );
 void destResInstruc(t_resultado_instruccion* resultInstrucc);
 void destRespEjec(t_respuesta_ejecucion* respEjec);
@@ -129,7 +129,7 @@ char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
 
 t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
-t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
+t_contenido_pagina* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
 t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);

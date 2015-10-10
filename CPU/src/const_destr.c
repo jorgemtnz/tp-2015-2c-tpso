@@ -131,7 +131,7 @@ void destIniciarSwap(t_iniciar_swap* estructura){
 	free(estructura);
 }
 
-void destEscrMem(t_escribirMem* estruc){
+void destEscrMem(t_contenido_pagina* estruc){
 	free(estruc);
 }
 

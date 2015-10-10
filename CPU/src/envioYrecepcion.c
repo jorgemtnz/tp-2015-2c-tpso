@@ -133,7 +133,7 @@ int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
 int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_escribirMem* estructura;
+	t_contenido_pagina* estructura;
 
 	estructura = ejecuta_EscribirMemoria(separada_instruccion, cpu);
 

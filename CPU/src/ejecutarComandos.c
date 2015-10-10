@@ -15,8 +15,8 @@ t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu) {
 	return estructura;
 }
 //mandar comando a memoria con los datos y la pagina donde debe ser escrita
-t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_escribirMem* estructura = malloc(sizeof(t_escribirMem));
+t_contenido_pagina* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
+	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 
 //	char** buffer;
 //	char** line;

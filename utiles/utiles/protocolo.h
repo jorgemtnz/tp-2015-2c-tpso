@@ -152,12 +152,6 @@ typedef struct{
 	uint8_t PID;
 	uint8_t numeroPagina;
 	char* contenido;
-}t_escribirMem;
-
-typedef struct{
-	uint8_t PID;
-	uint8_t numeroPagina;
-	char* contenido;
 }t_leerMem;
 
 typedef struct{
