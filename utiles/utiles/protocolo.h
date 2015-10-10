@@ -148,13 +148,6 @@ typedef struct {
 	uint8_t numeroPagina;
 } t_respuesta_leer;
 
-typedef struct {
-	uint8_t PID;
-	char* contenido;
-	uint8_t numeroPagina;
-} t_respuesta_leer_CPU;
-
-
 typedef struct{
 	uint8_t PID;
 	uint8_t numeroPagina;
@@ -243,8 +236,8 @@ t_PID* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente, t_tipo_mensaje tipo
 void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_PID* estructura);
 t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void* serializar_t_respuesta_leer_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_leer* estructura);
-t_respuesta_leer_CPU* deserializar_t_respuesta_leer_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+void* serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_leer* estructura);
+t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 t_contenido_pagina* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
@@ -286,9 +279,6 @@ void* deserializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
 t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
-
-void* serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_contenido_pagina* estructura);
-t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 

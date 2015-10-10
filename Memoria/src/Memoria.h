@@ -125,7 +125,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc);
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
-void enviarACPUContenidoPaginaDeUnProceso(t_respuesta_leer_CPU* lecturaMandarCpu, int socketCPU);
+void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
 void verificarBitDeModificada(int idMarco,char* contenido);
 t_list* buscarLosIdDeProceso(int idProc);
