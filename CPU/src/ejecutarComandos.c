@@ -38,8 +38,8 @@ t_contenido_pagina* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* c
 	return estructura;
 }
 //devuelve la estructura de leerMemoria
-t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_leerMem* estructura = malloc(sizeof(t_leerMem));
+t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) {
+	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 //	char** buffer;
 
 	cpu->estadoEjecucion = USO;

@@ -36,9 +36,9 @@ l_espacioLibre* crearEspacioLibre(){
 
 }
 
-t_escribirEnProceso* crearEscribirEnProceso(){
+t_contenido_pagina* crearEscribirEnProceso(){
 
-	t_escribirEnProceso* contenido = malloc(sizeof(t_escribirEnProceso));
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");

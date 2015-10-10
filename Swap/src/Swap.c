@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	estructuraIniciar3->cantidadPaginas = 5;
 	estructuraIniciar4->cantidadPaginas = 15;
 	estructuraIniciar5->cantidadPaginas = 3;
-	t_escribirEnProceso* procesoAEscribir;
+	t_contenido_pagina* procesoAEscribir;
 	procesoAEscribir = crearEscribirEnProceso();
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
@@ -242,7 +242,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			break;
 		}
 		case (ESCRIBIR_SWAP): {
-			t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
+			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
 			escribir(listaDeProcesosCargados, procesoAEscribir, socket);
 			break;
 		}

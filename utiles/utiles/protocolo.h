@@ -116,7 +116,7 @@ typedef struct IniciarSwap {
 
 typedef struct {
 	uint8_t PID;
-}t_PID;
+} t_PID;
 
 typedef struct {
 	uint8_t PID;
@@ -124,12 +124,8 @@ typedef struct {
 	int numeroPagina;
 }t_rtaLecturaCpu;
 
-typedef struct {
-	uint8_t PID;
-	char* contenido;
-	int numeroPagina;
-} t_escribirEnProceso;
 
+//OK
 typedef struct {
 	uint8_t PID;
 	char* contenido;
@@ -147,12 +143,6 @@ typedef struct {
 	char* contenido;
 	uint8_t numeroPagina;
 } t_respuesta_leer;
-
-typedef struct{
-	uint8_t PID;
-	uint8_t numeroPagina;
-	char* contenido;
-}t_leerMem;
 
 typedef struct{
 	uint8_t PID;
@@ -284,8 +274,6 @@ void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estr
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerMem* estructura);
-t_leerMem* deserializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje,t_leerDeProceso* estructura);
 t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje);
 

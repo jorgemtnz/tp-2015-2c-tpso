@@ -65,7 +65,7 @@ typedef struct {
 //============================================================
 l_procesosCargados* crearProceso();
 l_espacioLibre* crearEspacioLibre();
-t_escribirEnProceso* crearEscribirEnProceso();
+t_contenido_pagina* crearEscribirEnProceso();
 t_leerDeProceso* crearLeerDeProceso();
 t_iniciar_swap* crearEstructuraIniciar();
 t_PID* crearRespuestaIniciar();
@@ -83,7 +83,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
 void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
-void escribir(t_list* listaDeProcesosCargados, t_escribirEnProceso* procesoAEscribir, int socket);
+void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket);
 void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
 void enviarResultadoIniciarERROR(int socket, void* estructura);

@@ -130,7 +130,7 @@ int devuelveCantidadElementosArreglo(char** arreglo);
 
 t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
 t_contenido_pagina* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
-t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
+t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 

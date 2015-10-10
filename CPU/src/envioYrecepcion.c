@@ -148,7 +148,7 @@ int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
 }
 //mandar comando a memoria y  el numero de pagina que se debe leer
 int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_leerMem* estructura ;
+	t_contenido_pagina* estructura ;
 
 	estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
 	if (estructura == NULL) {

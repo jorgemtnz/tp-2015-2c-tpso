@@ -222,35 +222,13 @@ void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
 
 void* serializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	puts("Serializando serializar_LEER_MEM");
-	serializar_t_leerMem(fdCliente, tipoMensaje, estructura);
+	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 
 void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_leerMem* estructura = deserializar_t_leerMem(fdCliente, tipoMensaje);
+	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_LEER_MEM");
-	return estructura;
-}
-
-//typedef struct{
-//	uint8_t PID;
-//	uint8_t pagina;
-//	char* texto;
-//}t_leerMem;
-
-void* serializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerMem* estructura) {
-	serializar_int8_t(fdCliente, estructura->PID);
-	serializar_int8_t(fdCliente, estructura->numeroPagina);
-	serializar_string(fdCliente, estructura->contenido);
-
-	return 0;
-}
-t_leerMem* deserializar_t_leerMem(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_leerMem* estructura = malloc(sizeof(t_leerMem));
-	estructura->PID = deserializar_int8_t(fdCliente);
-	estructura->numeroPagina = deserializar_int8_t(fdCliente);
-	estructura->contenido = deserializar_string(fdCliente);
-
 	return estructura;
 }
 
