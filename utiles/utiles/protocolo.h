@@ -121,7 +121,7 @@ typedef struct {
 typedef struct {
 	int idProc;
 	char* contenido;
-	int pag;
+	int numeroPagina;
 }t_rtaLecturaCpu;
 
 typedef struct {
@@ -186,7 +186,7 @@ typedef struct{
 
 typedef struct {
 	uint8_t idProc;
-	uint8_t pag;
+	uint8_t numeroPagina;
 	char* contenido;
 }t_lectura_Swap;
 
