@@ -58,11 +58,9 @@ int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU) { //solo hay un CPU en e
 }
 
 // se debe agregar funcion que intreprente instruccion ya mapeada
-int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
-	int resultado = 0;
-
+void* ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
+	void* estructura;
 	t_instruccion* instruccion = creaInstruccion();
-
 	log_info(logger, "se va a ejecutar interpretaInstruccion ");
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
@@ -71,19 +69,15 @@ int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 	token = reconoceTokenInstruccion(instruccion->instruccion_separada[0]);
 	//le estoy mandando solo la instruccion sin el token
 	log_info(logger, "ejecutar ");
-	if (ejecutar(token, instruccion->instruccion_separada[1],
-			cpu) != EXIT_SUCCESS) {
-		perror("[ERROR] al ejecutar la instruccion CPU");
-		log_error(logger, "[ERROR] al ejecutar la instruccion CPU");
-		exit(-1);
-	}
+	estructura = ejecutar(token, instruccion->instruccion_separada[1], cpu);
 
-	return EXIT_SUCCESS;
+	return estructura;
 }
 // ejecuta las instrucciones del mCod
 
 //carga codigo, interpreta y ejecuta las instrucciones
-int procesaCodigo(t_cpu* cpu) {
+void* procesaCodigo(t_cpu* cpu) {
+	void* estructura;
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	t_mCod* mCodCPU = crearmCod();
 	t_respuesta_ejecucion* respEjec = creaRespuestaEjecucion();
@@ -101,16 +95,11 @@ int procesaCodigo(t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar  cada una de las Instrucciones");
 	while ((cpu->mCodCPU->bufferInstrucciones[i] != NULL)
 			&& (i != cpu->pcbPlanificador->tamanioRafaga)) {
-		result = ejecuta_Instruccion(cpu->mCodCPU->bufferInstrucciones[i], cpu);
-		if (result != EXIT_SUCCESS) {
-			perror("[ERROR] al interpretar la instruccion en CPU");
-			log_error(logger, "[ERROR] al interpretar la instruccion en CPU");
-			exit(-1);
-		} // se actualiza la proxima instruccion
+		estructura = ejecuta_Instruccion(cpu->mCodCPU->bufferInstrucciones[i],
+				cpu);
+		// se actualiza la proxima instruccion
 		cpu->pcbPlanificador->proximaInstruccion = ++i;
-
 	}
-
-	return EXIT_SUCCESS;
+	return estructura;
 }
 

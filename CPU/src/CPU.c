@@ -42,7 +42,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 	int resultConexion_planif = 0;
 	int resultConexion_Memoria = 0;
-	int resultadoMensajeToken = 3;
+	void* estructura;
 	puts("CPU procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	log_info(logger, "se va a procesar un mensaje");
@@ -70,13 +70,12 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	} else if (tipoNotificacion == MESSAGE) {
 
 		//como espero varios resultados, entonces los deje en una sola fucnion+++++++++++++++++++++++++++++++++++++++++
-		// sino es un resultado no devuelve  EXIT_SUCCES entonces es otra cosa+++++++++++++++++++++++++++++++++++++++
+		// devuelve la estructura que se envia, la que se crea por la ejecucion de los comandos ++++++++++++++++++++++++++++++++++++++
 		// se encuentra en enviaryrecibir.c  esta funcion++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-		resultadoMensajeToken = recibirMensajeVarios(header, buffer, extra, cpu);
+		estructura = recibirMensajeVarios(header, buffer, extra, cpu);
 
-		if (resultadoMensajeToken != EXIT_SUCCESS)
-			log_error(logger, "[ERROR] el Tipo Mensaje no corresponde");
+
 
 	} else if (tipoNotificacion == HANG_UP) {
 		log_error(logger, "[ERROR] se desconecto un proceso");
