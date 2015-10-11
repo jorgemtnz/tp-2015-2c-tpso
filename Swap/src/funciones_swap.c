@@ -160,14 +160,14 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	}
 
 }
-
+/*
 void enviarResultadoEscribirOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_OK, estructura);
 }
 
 void enviarResultadoEscribirERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_ERROR, estructura);
-}
+}*/
 
 t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
 	sleep(configuracion->retardo_swap);
@@ -219,7 +219,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	puts(msjDeRta);
 */
 }
-
+/*
 void enviarResultadoLeerOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_OK, estructura);
 }
@@ -227,7 +227,7 @@ void enviarResultadoLeerOK(int socket, void* estructura){
 void enviarResultadoLeerERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_ERROR, estructura);
 }
-
+*/
 t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	sleep(configuracion->retardo_swap);
 	int a, x;
@@ -278,7 +278,7 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	respuestaDeLeer->resultado = OK;
 	return respuestaDeLeer;
 }
-
+/*
 void enviarResultadoFinalizarOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_OK, estructura);
 }
@@ -286,7 +286,7 @@ void enviarResultadoFinalizarOK(int socket, void* estructura){
 void enviarResultadoFinalizarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_ERROR, estructura);
 }
-
+*/
 t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
 	int a, b;
 	l_procesosCargados* unProceso;

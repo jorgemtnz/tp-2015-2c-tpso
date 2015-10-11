@@ -87,20 +87,6 @@ t_PID* crearEstructuraPid(){
 	return contenido;
 }
 
-t_contenido_pagina* crearRespuestaEscribir(){
-
-	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
-	if (contenido == NULL) {
-		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
-		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
-		exit(-1);
-	}
-	contenido->PID = 0;
-	contenido->contenido = "";
-	contenido->numeroPagina = 0;
-	return contenido;
-
-}
 
 t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer(){
 	t_devolucion_escribir_o_leer* contenido = malloc(sizeof(t_devolucion_escribir_o_leer));
