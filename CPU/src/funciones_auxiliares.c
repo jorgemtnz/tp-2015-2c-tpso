@@ -25,12 +25,6 @@ char** separaInstruccion(char* instruccionCompleta) {
 	return vector_Instruccion;
 }
 
-//recibe la instruccion que se debe interpretar como una cadena de char
-int leerInstruccion(char** instruccion, t_cpu* cpu) {
-
-
-	return EXIT_SUCCESS;
-}
 //desmapea el mCod cargado para CPU
 int descargaProcesoCPU(t_mCod* mCod) {
 	eliminarEspacioDeDatos(mCod->ptrCMemoriaMap, mCod->ptrTamPagina, logger);

@@ -123,7 +123,6 @@ void destRespEjec(t_respuesta_ejecucion* respEjec);
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
 int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
-int leerInstruccion(char** instruccion, t_cpu* cpu);
 int descargaProcesoCPU(t_mCod* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
@@ -134,14 +133,13 @@ t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 
-int ejecutaResultError(t_cpu* cpu);
+
 int  ejecutaResultEscribir(t_cpu* cpu);
 int  ejecutaResulFin(t_cpu* cpu);
 int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
 int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
 int  ejecutaResulInstrEjec(t_cpu* cpu);
 int ejecutaResultLeerOK(t_cpu* cpu, char* contenido);
-int ejecutaResulLeerError(t_cpu* cpu);
 int  ejecutaResulOk(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
@@ -150,9 +148,8 @@ void leerArchivoDeConfiguracion();
 int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
-int ejecutaInstrucciones( t_cpu* cpu);
+
 int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
-int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu);
 int preparaCPU(t_pcb* pcbPlanificador);
 int procesaCodigo(t_cpu* cpu);
 
