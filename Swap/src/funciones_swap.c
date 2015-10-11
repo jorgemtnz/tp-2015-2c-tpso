@@ -73,7 +73,7 @@ void enviarResultadoIniciarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructura);
 }
 
-t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
+t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
@@ -169,7 +169,7 @@ void enviarResultadoEscribirERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_ERROR, estructura);
 }
 
-t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
@@ -228,7 +228,7 @@ void enviarResultadoLeerERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_ERROR, estructura);
 }
 
-t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
+t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	sleep(configuracion->retardo_swap);
 	int a, x;
 	char* datosLeidos;
@@ -287,7 +287,7 @@ void enviarResultadoFinalizarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_ERROR, estructura);
 }
 
-t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
+t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -317,7 +317,7 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 				procesoAEscribir->contenido = espacioVacio;
 				procesoAEscribir->numeroPagina = b;
 
-				escribir(listaDeProcesosCargados, procesoAEscribir,socket);
+				escribir(listaDeProcesosCargados, procesoAEscribir);
 			}
 
 			list_remove(listaDeProcesosCargados, a);

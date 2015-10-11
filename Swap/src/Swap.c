@@ -196,7 +196,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	t_PID* pid_a_enviar;
-	pid_a_enviar = crearRespuestaIniciar();
+	pid_a_enviar = crearEstructuraPid();
 
 	switch (tipoNotificacion) {
 	case (NEW_CONNECTION): {
@@ -214,7 +214,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			t_respuesta_iniciar_o_finalizar* resultado;
 			resultado = crearDevolucionIniciarOFinalizar();
-			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
+			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 			pid_a_enviar->PID = resultado->PID;
 			if (resultado == OK) {
 
@@ -258,7 +258,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* paginaAEnviar;
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
-			resultado = escribir(listaDeProcesosCargados, procesoAEscribir, socket);
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
@@ -277,7 +277,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* paginaAEnviar;
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
-			resultado = leer(procesoRecibido, listaDeProcesosCargados, socket);
+			resultado = leer(procesoRecibido, listaDeProcesosCargados);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
@@ -290,7 +290,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		}
 		case (FIN_PROCESO_SWAP): {
 			t_PID* estructuraFinalizar = (t_PID*) buffer;
-			finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
+			t_respuesta_iniciar_o_finalizar* resultado;
+			resultado = crearDevolucionIniciarOFinalizar();
+			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+			pid_a_enviar->PID = resultado->PID;
+			if(resultado->resultado == OK){
+				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
+			}else{
+				log_info(logger , "FALLO EL FINALIZAR");
+			}
+
 			break;
 		}
 

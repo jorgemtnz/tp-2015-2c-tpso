@@ -75,7 +75,7 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_PID* crearRespuestaIniciar(){
+t_PID* crearEstructuraPid(){
 
 	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
