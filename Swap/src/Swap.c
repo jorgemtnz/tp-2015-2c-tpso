@@ -195,10 +195,8 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
-//	t_list* listaDeProcesosCargados;
-//	t_list* listaDeEspaciosLibres;
-//	listaDeEspaciosLibres = list_create();
-//	listaDeProcesosCargados = list_create();
+	t_PID* pid_a_enviar;
+	pid_a_enviar = crearRespuestaIniciar();
 
 	switch (tipoNotificacion) {
 	case (NEW_CONNECTION): {
@@ -214,8 +212,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
-			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
+			t_respuesta_iniciar* resultado;
+			resultado = crearDevolucionFuncionIniciar();
+			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
+			pid_a_enviar->PID = resultado->PID;
+			if(resultado == OK){
 
+				enviarStruct(socket, RESUL_INICIAR_PROC_OK, pid_a_enviar);
+			}else{
+				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, pid_a_enviar);
+			}
 
 			//EMPIEZA PRUEBA
 			int a;

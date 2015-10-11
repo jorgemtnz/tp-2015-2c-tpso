@@ -73,12 +73,12 @@ void enviarResultadoIniciarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructura);
 }
 
-void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
+t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
-	t_PID* estructura;
-	estructura = crearRespuestaIniciar();
+	t_respuesta_iniciar* estructura;
+	estructura = crearDevolucionFuncionIniciar();
 
 	procesoAInsertarEnLista = crearProceso();
 	espacioLibre = crearEspacioLibre();
@@ -134,24 +134,28 @@ void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t
 			}
 
 			estructura->PID = procesoAInsertarEnLista->PID;
-			enviarResultadoIniciarOK(socket, estructura);
+			estructura->resultado = OK;
+			/*enviarResultadoIniciarOK(socket, estructura);
 
 			string_append(&msjDeRta,"mProc ");
 			string_append(&msjDeRta,string_itoa(procesoAInsertarEnLista->PID));
 			string_append(&msjDeRta," - Iniciado");
 			puts(msjDeRta);
-			log_info(logger, msjDeRta);
+			log_info(logger, msjDeRta);*/
+			return estructura;
 
 		}
 	} else {
 		estructura->PID = estructuraIniciar->PID;
-		enviarResultadoIniciarERROR(socket, estructura);
+		estructura->resultado = ERROR;
+		/*enviarResultadoIniciarERROR(socket, estructura);
 
 		string_append(&msjDeRta,"mProc ");
 		string_append(&msjDeRta,string_itoa(estructuraIniciar->PID));
 		string_append(&msjDeRta," - Fallido");
 		puts(msjDeRta);
-		log_error(logger, msjDeRta);
+		log_error(logger, msjDeRta);*/
+		return estructura;
 
 	}
 
