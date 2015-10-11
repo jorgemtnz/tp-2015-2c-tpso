@@ -122,7 +122,7 @@ void destRespEjec(t_respuesta_ejecucion* respEjec);
 //============================================================================
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
-int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
+void*  ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
 int descargaProcesoCPU(t_mCod* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
@@ -138,7 +138,6 @@ int  ejecutaResultEscribir(t_cpu* cpu);
 int  ejecutaResulFin(t_cpu* cpu);
 int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
 int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
-int  ejecutaResulInstrEjec(t_cpu* cpu);
 int ejecutaResultLeerOK(t_cpu* cpu, char* contenido);
 int  ejecutaResulOk(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
@@ -149,22 +148,16 @@ int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
 
-int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
+void* ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
 int preparaCPU(t_pcb* pcbPlanificador);
-int procesaCodigo(t_cpu* cpu);
+void* procesaCodigo(t_cpu* cpu);
 
 //++++++++++++++++++++++++++++++++++++funciones envio por comando ejecutado en CPU+++++++++++++++++++++++++++++++++++++++
-
-int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu );
-int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu);
-int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu);
-int ejecutaFinProcesoMemoria( t_cpu* cpu) ;
-int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu);
 
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
 int procesarMensajes(int socket, t_header* , char* buffer, t_tipo_notificacion , void* extra, t_log* );
-int recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
+void* recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================

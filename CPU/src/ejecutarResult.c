@@ -1,13 +1,5 @@
 #include "CPU.h"
 // todas las funciones de resultados de ejecucion deben devolver un string segun su tipo al planificador
-int ejecutaResultError(t_cpu* cpu) {
-
-	return EXIT_SUCCESS;
-}
-int ejecutaResultEscribir(t_cpu* cpu) {
-
-	return EXIT_SUCCESS;
-}
 
 int ejecutaResulFin(t_cpu* cpu) {
 	t_resultado_instruccion* resultado = creaResultadoInstruccion();
@@ -24,7 +16,10 @@ int ejecutaResulFin(t_cpu* cpu) {
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK, cpu->mCodCPU->respEjec);
 
 	return EXIT_SUCCESS;
+}
+int ejecutaResultEscribir(t_cpu* cpu) {
 
+	return EXIT_SUCCESS;
 }
 
 int ejecutaResulIniciarProcOK(t_cpu* cpu) {
@@ -44,6 +39,7 @@ int ejecutaResulIniciarProcOK(t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 
+
 int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) {
 	t_resultado_instruccion* resultado = creaResultadoInstruccion();
 	char* temporal;
@@ -57,10 +53,6 @@ int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) {
 	return EXIT_SUCCESS;
 }
 
-int ejecutaResulInstrEjec(t_cpu* cpu) {
-
-	return EXIT_SUCCESS;
-}
 int ejecutaResultLeerOK(t_cpu* cpu,char* contenido) {
 	t_resultado_instruccion* resultado = creaResultadoInstruccion();
 	char* temporal;
@@ -72,15 +64,5 @@ int ejecutaResultLeerOK(t_cpu* cpu,char* contenido) {
 	return EXIT_SUCCESS;
 }
 
-int ejecutaResulLeerError(t_cpu* cpu) {
-	t_resultado_instruccion* resultado = creaResultadoInstruccion();
-		char* temporal;
-		strcpy(resultado->comandoInstruccion, "leer");
-		resultado->tipoMensaje = RESUL_LEER_ERROR;
-		temporal = string_from_format("mProc %d Pagina no leida", cpu->pcbPlanificador->pid);//, "Pagina", "no leida");
-		strcpy(resultado->expresion, temporal);
-		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 
-	return EXIT_SUCCESS;
-}
 
