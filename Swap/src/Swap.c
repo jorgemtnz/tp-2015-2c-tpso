@@ -254,10 +254,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		}
 		case (ESCRIBIR_SWAP): {
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
-			t_devolucion_escribir* resultado;
+			t_devolucion_escribir_o_leer* resultado;
 			t_contenido_pagina* paginaAEnviar;
 			paginaAEnviar = crearContenidoPagina();
-			resultado = crearDevolucionEscribir();
+			resultado = crearDevolucionEscribirOLeer();
 			resultado = escribir(listaDeProcesosCargados, procesoAEscribir, socket);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
@@ -273,7 +273,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		}
 		case (LEER_SWAP): {
 			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
-			leer(procesoRecibido, listaDeProcesosCargados, socket);
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+			resultado = leer(procesoRecibido, listaDeProcesosCargados, socket);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+			if(resultado->resultado == OK){
+				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
+			}else{
+				log_info(logger, "FALLO EL LEER");
+			}
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {

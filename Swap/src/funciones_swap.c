@@ -169,12 +169,12 @@ void enviarResultadoEscribirERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_ERROR, estructura);
 }
 
-t_devolucion_escribir* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
-	t_devolucion_escribir* respuestaDeEscribir;
-	respuestaDeEscribir = crearDevolucionEscribir();
+	t_devolucion_escribir_o_leer* respuestaDeEscribir;
+	respuestaDeEscribir= crearDevolucionEscribirOLeer();
 	int nuevaPagina;
 	char* msjDeRta=string_new();
 	int a, ubicacion;
@@ -228,7 +228,7 @@ void enviarResultadoLeerERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_ERROR, estructura);
 }
 
-char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
+t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
 	sleep(configuracion->retardo_swap);
 	int a, x;
 	char* datosLeidos;
@@ -237,8 +237,8 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	l_procesosCargados* procesoAleer;
 	unProceso = crearProceso();
 	procesoAleer = crearProceso();
-	t_contenido_pagina* respuestaDeLeer;
-	respuestaDeLeer = crearRespuestaLeer();
+	t_devolucion_escribir_o_leer* respuestaDeLeer;
+	respuestaDeLeer = crearDevolucionEscribirOLeer();
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
 		if (unProceso->PID == procesoRecibido->PID) {
@@ -251,7 +251,9 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	if((unProceso->PID!=procesoRecibido->PID) && (procesoRecibido->PID != 0)){
 		respuestaDeLeer->PID= procesoRecibido->PID;
 		respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
-		enviarResultadoLeerERROR(socket, respuestaDeLeer);
+		respuestaDeLeer->resultado = ERROR;
+		return respuestaDeLeer;
+		//enviarResultadoLeerERROR(socket, respuestaDeLeer);
 	}
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
@@ -272,9 +274,9 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	respuestaDeLeer->PID=procesoAleer->PID;
 	respuestaDeLeer->contenido= datosLeidosFinal;
 	respuestaDeLeer->numeroPagina=procesoRecibido->numeroPaginaInicio;
-	enviarResultadoLeerOK(socket, respuestaDeLeer);
-
-	return datosLeidosFinal;
+	//enviarResultadoLeerOK(socket, respuestaDeLeer);
+	respuestaDeLeer->resultado = OK;
+	return respuestaDeLeer;
 }
 
 void enviarResultadoFinalizarOK(int socket, void* estructura){
