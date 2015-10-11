@@ -40,11 +40,6 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 	int token;
 	token = header->tipoMensaje;
 	switch (token) {
-	case (RESUL_ERROR): {
-		log_info(logger, "se va a ejecutar result error");
-		ejecutaResultError(cpu);
-		break;
-	}
 	case (RESUL_ESCRIBIR): {
 		log_info(logger, "se va a ejecutar result escribir ");
 		ejecutaResultEscribir(cpu);
@@ -76,12 +71,6 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		char* contenido= datosDesdeMem->contenido; // este es el contenido de la pagina
 		ejecutaResultLeerOK(cpu, contenido);
-		break;
-	}
-	case (RESUL_LEER_ERROR): {
-		log_info(logger, "se va a ejecutar resultOK ");
-		ejecutaResulLeerError(cpu);
-
 		break;
 	}
 	case (CONTEXTO_MPROC): {
