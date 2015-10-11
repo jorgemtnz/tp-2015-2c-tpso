@@ -67,8 +67,14 @@ typedef enum {
 typedef struct{
 	uint8_t PID;
 	t_resultado_funcion resultado;
-}t_respuesta_iniciar;
+}t_respuesta_iniciar_o_finalizar;
 
+typedef struct{
+	uint8_t PID;
+		char* contenido;
+		uint8_t numeroPagina;
+		t_resultado_funcion resultado;
+}t_devolucion_escribir_o_leer;
 
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
@@ -80,11 +86,10 @@ l_espacioLibre* crearEspacioLibre();
 t_contenido_pagina* crearEscribirEnProceso();
 t_leerDeProceso* crearLeerDeProceso();
 t_iniciar_swap* crearEstructuraIniciar();
-t_PID* crearRespuestaIniciar();
-t_contenido_pagina* crearRespuestaEscribir();
-t_contenido_pagina* crearRespuestaLeer();
-t_PID* crearRespuestaFinalizar();
-t_respuesta_iniciar* crearDevolucionFuncionIniciar();
+t_PID* crearEstructuraPid();
+t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar();
+t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer();
+t_contenido_pagina* crearContenidoPagina();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -95,10 +100,10 @@ void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
-void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket);
-char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket);
-void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
+t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir);
+t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
+t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 void enviarResultadoIniciarERROR(int socket, void* estructura);
 void enviarResultadoIniciarOK(int socket, void* estructura);
 void enviarResultadoLeerERROR(int socket, void* estructura);

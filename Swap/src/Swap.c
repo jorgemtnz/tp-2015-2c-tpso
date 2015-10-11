@@ -1,11 +1,11 @@
 #include "Swap.h"
 
-	t_list* listaDeProcesosCargados;
-	t_list* listaDeEspaciosLibres;
+t_list* listaDeProcesosCargados;
+t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 
-	if(hayQueEjecutarTests(argc, argv)) {
+	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();
 	}
 
@@ -196,7 +196,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	t_PID* pid_a_enviar;
-	pid_a_enviar = crearRespuestaIniciar();
+	pid_a_enviar = crearEstructuraPid();
 
 	switch (tipoNotificacion) {
 	case (NEW_CONNECTION): {
@@ -212,14 +212,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
-			t_respuesta_iniciar* resultado;
-			resultado = crearDevolucionFuncionIniciar();
-			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
+			t_respuesta_iniciar_o_finalizar* resultado;
+			resultado = crearDevolucionIniciarOFinalizar();
+			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 			pid_a_enviar->PID = resultado->PID;
-			if(resultado == OK){
+			if (resultado == OK) {
 
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, pid_a_enviar);
-			}else{
+			} else {
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, pid_a_enviar);
 			}
 
@@ -254,17 +254,52 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		}
 		case (ESCRIBIR_SWAP): {
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
-			escribir(listaDeProcesosCargados, procesoAEscribir, socket);
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+
+			if (resultado->resultado == OK) {
+
+				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
+			} else {
+				log_info(logger, "FALLO EL ESCRIBIR");
+			}
 			break;
 		}
 		case (LEER_SWAP): {
 			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
-			leer(procesoRecibido, listaDeProcesosCargados, socket);
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+			resultado = leer(procesoRecibido, listaDeProcesosCargados);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+			if(resultado->resultado == OK){
+				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
+			}else{
+				log_info(logger, "FALLO EL LEER");
+			}
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {
 			t_PID* estructuraFinalizar = (t_PID*) buffer;
-			finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
+			t_respuesta_iniciar_o_finalizar* resultado;
+			resultado = crearDevolucionIniciarOFinalizar();
+			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+			pid_a_enviar->PID = resultado->PID;
+			if(resultado->resultado == OK){
+				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
+			}else{
+				log_info(logger , "FALLO EL FINALIZAR");
+			}
+
 			break;
 		}
 

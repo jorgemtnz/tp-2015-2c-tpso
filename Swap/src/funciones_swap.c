@@ -73,12 +73,12 @@ void enviarResultadoIniciarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructura);
 }
 
-t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
+t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
-	t_respuesta_iniciar* estructura;
-	estructura = crearDevolucionFuncionIniciar();
+	t_respuesta_iniciar_o_finalizar* estructura;
+	estructura = crearDevolucionIniciarOFinalizar();
 
 	procesoAInsertarEnLista = crearProceso();
 	espacioLibre = crearEspacioLibre();
@@ -160,21 +160,21 @@ t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeE
 	}
 
 }
-
+/*
 void enviarResultadoEscribirOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_OK, estructura);
 }
 
 void enviarResultadoEscribirERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_ERROR, estructura);
-}
+}*/
 
-void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
-	t_contenido_pagina* respuestaDeEscribir;
-	respuestaDeEscribir = crearRespuestaEscribir();
+	t_devolucion_escribir_o_leer* respuestaDeEscribir;
+	respuestaDeEscribir= crearDevolucionEscribirOLeer();
 	int nuevaPagina;
 	char* msjDeRta=string_new();
 	int a, ubicacion;
@@ -189,7 +189,10 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	if ((unProceso->PID!=procesoAEscribir->PID) &&(procesoAEscribir->PID != 0)){
 		respuestaDeEscribir->PID=procesoAEscribir->PID;
 		respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
-		enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
+		respuestaDeEscribir->contenido = procesoAEscribir->contenido;
+		respuestaDeEscribir->resultado = ERROR;
+		return respuestaDeEscribir;
+		//enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
 	}
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
@@ -203,7 +206,9 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	respuestaDeEscribir->PID=unProceso->PID;
 	respuestaDeEscribir->numeroPagina= nuevaPagina;
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
-	enviarResultadoEscribirOK(socket, respuestaDeEscribir);
+	respuestaDeEscribir->resultado = OK;
+	return respuestaDeEscribir;
+	/*enviarResultadoEscribirOK(socket, respuestaDeEscribir);
 
 	string_append(&msjDeRta,"Mproc ");
 	string_append(&msjDeRta,string_itoa(unProceso->PID));
@@ -212,9 +217,9 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	string_append(&msjDeRta," escrita: ");
 	string_append(&msjDeRta,procesoAEscribir->contenido);
 	puts(msjDeRta);
-
+*/
 }
-
+/*
 void enviarResultadoLeerOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_OK, estructura);
 }
@@ -222,8 +227,8 @@ void enviarResultadoLeerOK(int socket, void* estructura){
 void enviarResultadoLeerERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_LEER_ERROR, estructura);
 }
-
-char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket) {
+*/
+t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
 	sleep(configuracion->retardo_swap);
 	int a, x;
 	char* datosLeidos;
@@ -232,8 +237,8 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	l_procesosCargados* procesoAleer;
 	unProceso = crearProceso();
 	procesoAleer = crearProceso();
-	t_contenido_pagina* respuestaDeLeer;
-	respuestaDeLeer = crearRespuestaLeer();
+	t_devolucion_escribir_o_leer* respuestaDeLeer;
+	respuestaDeLeer = crearDevolucionEscribirOLeer();
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
 		if (unProceso->PID == procesoRecibido->PID) {
@@ -246,7 +251,9 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	if((unProceso->PID!=procesoRecibido->PID) && (procesoRecibido->PID != 0)){
 		respuestaDeLeer->PID= procesoRecibido->PID;
 		respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
-		enviarResultadoLeerERROR(socket, respuestaDeLeer);
+		respuestaDeLeer->resultado = ERROR;
+		return respuestaDeLeer;
+		//enviarResultadoLeerERROR(socket, respuestaDeLeer);
 	}
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
@@ -267,11 +274,11 @@ char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, in
 	respuestaDeLeer->PID=procesoAleer->PID;
 	respuestaDeLeer->contenido= datosLeidosFinal;
 	respuestaDeLeer->numeroPagina=procesoRecibido->numeroPaginaInicio;
-	enviarResultadoLeerOK(socket, respuestaDeLeer);
-
-	return datosLeidosFinal;
+	//enviarResultadoLeerOK(socket, respuestaDeLeer);
+	respuestaDeLeer->resultado = OK;
+	return respuestaDeLeer;
 }
-
+/*
 void enviarResultadoFinalizarOK(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_OK, estructura);
 }
@@ -279,8 +286,8 @@ void enviarResultadoFinalizarOK(int socket, void* estructura){
 void enviarResultadoFinalizarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_ERROR, estructura);
 }
-
-void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
+*/
+t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -288,8 +295,8 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 	procesoAEscribir = crearEscribirEnProceso();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
-	t_PID* respuestaDeFinalizar;
-	respuestaDeFinalizar = crearRespuestaFinalizar();
+	t_respuesta_iniciar_o_finalizar* respuestaDeFinalizar;
+	respuestaDeFinalizar = crearDevolucionIniciarOFinalizar();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 
 		unProceso = list_get(listaDeProcesosCargados, a);
@@ -310,7 +317,7 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 				procesoAEscribir->contenido = espacioVacio;
 				procesoAEscribir->numeroPagina = b;
 
-				escribir(listaDeProcesosCargados, procesoAEscribir,socket);
+				escribir(listaDeProcesosCargados, procesoAEscribir);
 			}
 
 			list_remove(listaDeProcesosCargados, a);
@@ -319,10 +326,14 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 	}
 	if ((unProceso->PID != pid) && (pid != 0)) {
 		respuestaDeFinalizar->PID= pid;
-		enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
+		respuestaDeFinalizar->resultado = ERROR;
+		//enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
+		return respuestaDeFinalizar;
 	}
 	respuestaDeFinalizar->PID = unProceso->PID;
-	enviarResultadoFinalizarOK(socket, respuestaDeFinalizar);
+	respuestaDeFinalizar->resultado = OK;
+	//enviarResultadoFinalizarOK(socket, respuestaDeFinalizar);
+	return respuestaDeFinalizar;
 }
 
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
