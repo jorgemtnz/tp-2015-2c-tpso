@@ -59,6 +59,17 @@ typedef struct {
 
 } l_procesosCargados;
 
+typedef enum {
+	OK,
+	ERROR,
+}t_resultado_funcion;
+
+typedef struct{
+	uint8_t PID;
+	t_resultado_funcion resultado;
+}t_respuesta_iniciar;
+
+
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -73,6 +84,7 @@ t_PID* crearRespuestaIniciar();
 t_contenido_pagina* crearRespuestaEscribir();
 t_contenido_pagina* crearRespuestaLeer();
 t_PID* crearRespuestaFinalizar();
+t_respuesta_iniciar* crearDevolucionFuncionIniciar();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -83,7 +95,7 @@ void crearArchivo();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
-void iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
+t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket);
 void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket);
 char* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados, int socket);
 void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket);
