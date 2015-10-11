@@ -102,6 +102,35 @@ t_contenido_pagina* crearRespuestaEscribir(){
 
 }
 
+t_devolucion_escribir* crearDevolucionEscribir(){
+	t_devolucion_escribir* contenido = malloc(sizeof(t_devolucion_escribir));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+			log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->contenido = "";
+		contenido->numeroPagina = 0;
+		contenido->resultado = OK;
+		return contenido;
+
+}
+
+t_contenido_pagina* crearContenidoPagina(){
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+			log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->contenido = "";
+		contenido->numeroPagina = 0;
+
+		return contenido;
+
+}
 t_contenido_pagina* crearRespuestaLeer(){
 
 	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));

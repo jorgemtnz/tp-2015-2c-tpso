@@ -169,12 +169,12 @@ void enviarResultadoEscribirERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_ESCRIBIR_ERROR, estructura);
 }
 
-void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
+t_devolucion_escribir* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int socket) {
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
-	t_contenido_pagina* respuestaDeEscribir;
-	respuestaDeEscribir = crearRespuestaEscribir();
+	t_devolucion_escribir* respuestaDeEscribir;
+	respuestaDeEscribir = crearDevolucionEscribir();
 	int nuevaPagina;
 	char* msjDeRta=string_new();
 	int a, ubicacion;
@@ -189,7 +189,10 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	if ((unProceso->PID!=procesoAEscribir->PID) &&(procesoAEscribir->PID != 0)){
 		respuestaDeEscribir->PID=procesoAEscribir->PID;
 		respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
-		enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
+		respuestaDeEscribir->contenido = procesoAEscribir->contenido;
+		respuestaDeEscribir->resultado = ERROR;
+		return respuestaDeEscribir;
+		//enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
 	}
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
@@ -203,7 +206,9 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	respuestaDeEscribir->PID=unProceso->PID;
 	respuestaDeEscribir->numeroPagina= nuevaPagina;
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
-	enviarResultadoEscribirOK(socket, respuestaDeEscribir);
+	respuestaDeEscribir->resultado = OK;
+	return respuestaDeEscribir;
+	/*enviarResultadoEscribirOK(socket, respuestaDeEscribir);
 
 	string_append(&msjDeRta,"Mproc ");
 	string_append(&msjDeRta,string_itoa(unProceso->PID));
@@ -212,7 +217,7 @@ void escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscri
 	string_append(&msjDeRta," escrita: ");
 	string_append(&msjDeRta,procesoAEscribir->contenido);
 	puts(msjDeRta);
-
+*/
 }
 
 void enviarResultadoLeerOK(int socket, void* estructura){
