@@ -4,6 +4,11 @@
 	t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
+
+	if(hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
+
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
@@ -265,4 +270,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	}
 	}
 	return 0;
+}
+
+char* decirHolaMundo() {
+	return "Hola Mundo";
 }

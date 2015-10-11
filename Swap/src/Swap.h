@@ -9,6 +9,7 @@
 #define SWAP_H_
 
 // +++++++++++++++++++++++++++++++++++++++ Includes +++++++++++++++++++++++++++++++++++++
+#include "../test/test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -106,5 +107,8 @@ int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo
 t_configuracion* configuracion;
 t_log* logger;
 char *espacioDatos;
+
+//test
+char* decirHolaMundo();
 
 #endif /* SWAP_H_ */
