@@ -692,6 +692,8 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
 		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);
 		registrarSerializadores(LEER_MEM, "LEER_MEM", serializar_LEER_MEM, deserializar_LEER_MEM);
+		registrarSerializadores(ESCRIBIR_MEM, "ESCRIBIR_MEM", serializar_ESCRIBIR_MEM, deserializar_ESCRIBIR_MEM);
+		registrarSerializadores(ENTRADA_SALIDA, "ENTRADA_SALIDA", serializar_ENTRADA_SALIDA, deserializar_ENTRADA_SALIDA);
 		registrarSerializadores(INICIAR_PROCESO_MEM, "INICIAR_PROCESO_MEM", serializar_INICIAR_PROCESO_MEM, deserializar_INICIAR_PROCESO_MEM);
 	//+++++++++++++++++++++++ resultados++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
