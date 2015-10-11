@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	crearArchivo();
 
 	//empieza prueba(NO BORRAR)
-
+/*
 	int a;
 	l_procesosCargados* proceso;
 	l_espacioLibre* espacioLibre;
@@ -50,8 +50,22 @@ int main(int argc, char *argv[]) {
 	procesoAEscribir = crearEscribirEnProceso();
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
+*/
 
-	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
+	t_iniciar_swap* estructuraIniciar;
+		estructuraIniciar = crearEstructuraIniciar();
+		t_list* listaDeEspaciosLibres;
+		t_list* listaDeProcesosCargados;
+		listaDeEspaciosLibres = list_create();
+		listaDeProcesosCargados = list_create();
+		estructuraIniciar->PID = 3;
+		estructuraIniciar->cantidadPaginas = 30;
+		t_respuesta_iniciar_o_finalizar* respuesta;
+		respuesta = crearDevolucionIniciarOFinalizar();
+		respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	printf("el pid %i \n", respuesta->PID);
+
+	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 	/*
 	 prueba para borrar el contenido mapeado cuando se va un proceso
 	 iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
@@ -169,7 +183,7 @@ int main(int argc, char *argv[]) {
 	 printf("los datos leidos2 : %s\n", datosLeidos2);
 	 printf("los datos leidos3 : %s\n", datosLeidos3);
 	 printf("los datos leidos4 : %s \n", datosLeidos4);
-	 */
+
 	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);
@@ -186,7 +200,7 @@ int main(int argc, char *argv[]) {
 		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
 
 	}
-
+*/
 	//termina prueba
 
 	return EXIT_SUCCESS;

@@ -74,6 +74,7 @@ void enviarResultadoIniciarERROR(int socket, void* estructura){
 }
 
 t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
+
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
@@ -142,12 +143,14 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 			string_append(&msjDeRta," - Iniciado");
 			puts(msjDeRta);
 			log_info(logger, msjDeRta);*/
+
 			return estructura;
 
 		}
 	} else {
 		estructura->PID = estructuraIniciar->PID;
 		estructura->resultado = ERROR;
+
 		/*enviarResultadoIniciarERROR(socket, estructura);
 
 		string_append(&msjDeRta,"mProc ");
