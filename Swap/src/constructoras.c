@@ -158,9 +158,9 @@ t_PID* crearRespuestaFinalizar(){
 	return contenido;
 }
 
-t_respuesta_iniciar* crearDevolucionFuncionIniciar(){
+t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar(){
 
-	t_respuesta_iniciar* contenido = malloc(sizeof(t_respuesta_iniciar));
+	t_respuesta_iniciar_o_finalizar* contenido = malloc(sizeof(t_respuesta_iniciar_o_finalizar));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");

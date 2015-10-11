@@ -73,12 +73,12 @@ void enviarResultadoIniciarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructura);
 }
 
-t_respuesta_iniciar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
+t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados, int socket) {
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
-	t_respuesta_iniciar* estructura;
-	estructura = crearDevolucionFuncionIniciar();
+	t_respuesta_iniciar_o_finalizar* estructura;
+	estructura = crearDevolucionIniciarOFinalizar();
 
 	procesoAInsertarEnLista = crearProceso();
 	espacioLibre = crearEspacioLibre();
@@ -287,7 +287,7 @@ void enviarResultadoFinalizarERROR(int socket, void* estructura){
 	enviarStruct(socket, RESUL_FIN_ERROR, estructura);
 }
 
-void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
+t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres, int socket) {
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
@@ -295,8 +295,8 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 	procesoAEscribir = crearEscribirEnProceso();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
-	t_PID* respuestaDeFinalizar;
-	respuestaDeFinalizar = crearRespuestaFinalizar();
+	t_respuesta_iniciar_o_finalizar* respuestaDeFinalizar;
+	respuestaDeFinalizar = crearDevolucionIniciarOFinalizar();
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 
 		unProceso = list_get(listaDeProcesosCargados, a);
@@ -326,10 +326,14 @@ void finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspa
 	}
 	if ((unProceso->PID != pid) && (pid != 0)) {
 		respuestaDeFinalizar->PID= pid;
-		enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
+		respuestaDeFinalizar->resultado = ERROR;
+		//enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
+		return respuestaDeFinalizar;
 	}
 	respuestaDeFinalizar->PID = unProceso->PID;
-	enviarResultadoFinalizarOK(socket, respuestaDeFinalizar);
+	respuestaDeFinalizar->resultado = OK;
+	//enviarResultadoFinalizarOK(socket, respuestaDeFinalizar);
+	return respuestaDeFinalizar;
 }
 
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {

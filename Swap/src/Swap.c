@@ -212,8 +212,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
-			t_respuesta_iniciar* resultado;
-			resultado = crearDevolucionFuncionIniciar();
+			t_respuesta_iniciar_o_finalizar* resultado;
+			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
 			pid_a_enviar->PID = resultado->PID;
 			if (resultado == OK) {
