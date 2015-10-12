@@ -302,10 +302,49 @@ static void test_acomodar_espacios_libres() {
 
 }
 
+static void test_corto_cod() {
+	t_iniciar_swap* estructuraIniciar;
+	estructuraIniciar = crearEstructuraIniciar();
+	t_list* listaDeEspaciosLibres;
+	t_list* listaDeProcesosCargados;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	estructuraIniciar->PID = 2;
+	estructuraIniciar->cantidadPaginas = 5;
+	t_respuesta_iniciar_o_finalizar* respuesta;
+	respuesta = crearDevolucionIniciarOFinalizar();
+	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_devolucion_escribir_o_leer* resultadoLeer1;
+	resultadoLeer1 = crearDevolucionEscribirOLeer();
+	t_devolucion_escribir_o_leer* resultadoLeer2;
+	resultadoLeer2 = crearDevolucionEscribirOLeer();
+	t_leerDeProceso *procesoRecibido;
+	procesoRecibido = crearLeerDeProceso();
+	procesoRecibido->PID = 2;
+	procesoRecibido->numeroPaginaInicio = 0;
+	procesoRecibido->numeroPaginaFin = 0;
+
+	resultadoLeer1 = leer(procesoRecibido, listaDeProcesosCargados);
+
+	procesoRecibido->PID = 2;
+	procesoRecibido->numeroPaginaInicio = 1;
+	procesoRecibido->numeroPaginaFin = 1;
+
+	resultadoLeer2 = leer(procesoRecibido, listaDeProcesosCargados);
+
+	respuesta = finalizar(2, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	CU_ASSERT_EQUAL(respuesta->PID, 2);
+	CU_ASSERT_STRING_EQUAL(resultadoLeer2->contenido, "\0");
+	CU_ASSERT_STRING_EQUAL(resultadoLeer1->contenido, "\0");
+
+}
+
 static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test Iniciar UN proceso", test_iniciar_un_proceso }, {
 		"Test Escribir en proceso", test_escribir_en_proceso }, { "Test Leer de proceso", test_leer_de_proceso }, { "Test Finalizar un proceso",
 		test_finalizar_un_proceso }, { "Test Proceso que no entra en Swap ", test_iniciar_proceso_que_no_entra }, { "Test Iniciar y finalizar varios procesos ",
-		test_iniciar_y_finalizar_varios_procesos }, { "Test acomodar espacios libres ", test_acomodar_espacios_libres },
+		test_iniciar_y_finalizar_varios_procesos }, { "Test acomodar espacios libres ", test_acomodar_espacios_libres }, { "Test corto cod ", test_corto_cod },
 CU_TEST_INFO_NULL, };
 
 CUNIT_MAKE_SUITE(swap, "Test swap", init_suite, clean_suite, tests)
