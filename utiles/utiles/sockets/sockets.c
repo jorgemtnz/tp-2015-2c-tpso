@@ -699,12 +699,12 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
 		registrarSerializadores(RESUL_INICIAR_PROC_ERROR, "RESUL_INICIAR_PROC_ERROR", serializar_RESUL_INICIAR_PROC_ERROR, deserializar_RESUL_INICIAR_PROC_ERROR);
 		registrarSerializadores(RESUL_ESCRIBIR_OK, "RESUL_ESCRIBIR_OK", serializar_RESUL_ESCRIBIR_OK, deserializar_RESUL_ESCRIBIR_OK);
-		registrarSerializadores(RESUL_ESCRIBIR_ERROR, "RESUL_ESCRIBIR_ERROR", serializar_RESUL_ESCRIBIR_ERROR, deserializar_RESUL_ESCRIBIR_ERROR);
+//		registrarSerializadores(RESUL_ESCRIBIR_ERROR, "RESUL_ESCRIBIR_ERROR", serializar_RESUL_ESCRIBIR_ERROR, deserializar_RESUL_ESCRIBIR_ERROR);
 		registrarSerializadores(RESUL_INICIAR_PROC_OK_CPU, "RESUL_INICIAR_PROC_OK_CPU", serializar_RESUL_INICIAR_PROC_OK_CPU, deserializar_RESUL_INICIAR_PROC_OK_CPU);
 		registrarSerializadores(RESUL_INICIAR_PROC_NO_OK_CPU, "RESUL_INICIAR_PROC_NO_OK_CPU", serializar_RESUL_INICIAR_PROC_NO_OK_CPU, deserializar_RESUL_INICIAR_PROC_NO_OK_CPU);
-		registrarSerializadores(RESUL_LEER_ERROR, "RESUL_LEER_ERROR", serializar_RESUL_LEER_ERROR, deserializar_RESUL_LEER_ERROR);
+//		registrarSerializadores(RESUL_LEER_ERROR, "RESUL_LEER_ERROR", serializar_RESUL_LEER_ERROR, deserializar_RESUL_LEER_ERROR);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
-		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
+//		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
 		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 		registrarSerializadores(RESUL_EJECUCION_OK, "RESUL_EJECUCION_OK", serializar_RESUL_EJECUCION_OK, deserializar_RESUL_EJECUCION_OK);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);

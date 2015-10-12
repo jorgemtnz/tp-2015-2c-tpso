@@ -82,11 +82,13 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		break;
 	}
 	case (RESUL_INICIAR_PROC_OK_CPU): {
+		//recibe desde memoria y debe continuar con la ejecucion
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
 		ejecutaResulIniciarProcOK(cpu);
 		break;
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
+		//al dar error se debe devolver el proceso
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
 		ejecutaResulIniciarProc_NO_OK(cpu);
 		break;
