@@ -53,65 +53,45 @@ int main(int argc, char *argv[]) {
 	procesoRecibido = crearLeerDeProceso();
 */
 	t_iniciar_swap* estructuraIniciar;
-	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
-	estructuraIniciar->PID = 3;
-	estructuraIniciar->cantidadPaginas = 6;
+		estructuraIniciar = crearEstructuraIniciar();
+		t_list* listaDeEspaciosLibres;
+		t_list* listaDeProcesosCargados;
+		listaDeEspaciosLibres = list_create();
+		listaDeProcesosCargados = list_create();
+		estructuraIniciar->PID = 0;
+		estructuraIniciar->cantidadPaginas = 6;
 
-	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+		iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	t_iniciar_swap* estructuraIniciar2;
-	estructuraIniciar2 = crearEstructuraIniciar();
-	estructuraIniciar2->PID = 1;
-	estructuraIniciar2->cantidadPaginas = 4;
+		t_iniciar_swap* estructuraIniciar2;
+		estructuraIniciar2 = crearEstructuraIniciar();
+		estructuraIniciar2->PID = 1;
+		estructuraIniciar2->cantidadPaginas = 2;
 
-	iniciar(estructuraIniciar2, listaDeEspaciosLibres, listaDeProcesosCargados);
+		iniciar(estructuraIniciar2, listaDeEspaciosLibres, listaDeProcesosCargados);
 
+		t_iniciar_swap* estructuraIniciar3;
+		estructuraIniciar3 = crearEstructuraIniciar();
+		estructuraIniciar3->PID = 18;
+		estructuraIniciar3->cantidadPaginas = 10;
 
-	t_iniciar_swap* estructuraIniciar3;
-	estructuraIniciar3 = crearEstructuraIniciar();
-	estructuraIniciar3->PID = 18;
-	estructuraIniciar3->cantidadPaginas = 15;
+		iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-	iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
+		finalizar(0, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	t_iniciar_swap* estructuraIniciar4;
-	estructuraIniciar4 = crearEstructuraIniciar();
-	estructuraIniciar4->PID = 0;
-	estructuraIniciar4->cantidadPaginas = 8;
+		finalizar(1, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+		t_iniciar_swap* estructuraIniciar4;
+		estructuraIniciar4 = crearEstructuraIniciar();
+		estructuraIniciar4->PID = 5;
+		estructuraIniciar4->cantidadPaginas = 7;
 
-	finalizar(1, listaDeProcesosCargados, listaDeEspaciosLibres);
-
-	t_iniciar_swap* estructuraIniciar5;
-	estructuraIniciar5 = crearEstructuraIniciar();
-	estructuraIniciar5->PID = 10;
-	estructuraIniciar5->cantidadPaginas = 2;
-
-	iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	finalizar(3, listaDeProcesosCargados, listaDeEspaciosLibres);
-
-	t_iniciar_swap* estructuraIniciar6;
-	estructuraIniciar6 = crearEstructuraIniciar();
-	estructuraIniciar6->PID = 13;
-	estructuraIniciar6->cantidadPaginas = 5;
-
-	iniciar(estructuraIniciar6, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-
-	int a;
-		l_procesosCargados* proceso;
-		l_espacioLibre* espacioLibre;
-		proceso = crearProceso();
-		espacioLibre = crearEspacioLibre();
-
-
-
+		iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+		int a;
+			l_procesosCargados* proceso;
+			l_espacioLibre* espacioLibre;
+			proceso = crearProceso();
+			espacioLibre = crearEspacioLibre();
 
 	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 	/*
