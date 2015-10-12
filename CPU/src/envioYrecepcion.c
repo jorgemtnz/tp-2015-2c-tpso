@@ -72,6 +72,7 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	switch (token) {
 	case (RESUL_ESCRIBIR): {
 		log_info(logger, "se va a ejecutar result escribir ");
+		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
 
 		break;
 	}
