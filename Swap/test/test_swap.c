@@ -115,8 +115,24 @@ static void test_finalizar_un_proceso(){
 		CU_ASSERT_EQUAL(respuesta->resultado, OK);
 
 }
+
+static void test_iniciar_proceso_que_no_entra(){
+	t_iniciar_swap* estructuraIniciar;
+	estructuraIniciar = crearEstructuraIniciar();
+	t_list* listaDeEspaciosLibres;
+	t_list* listaDeProcesosCargados;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	estructuraIniciar->PID = 3;
+	estructuraIniciar->cantidadPaginas = 520;
+	t_respuesta_iniciar_o_finalizar* respuesta;
+	respuesta = crearDevolucionIniciarOFinalizar();
+	respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	CU_ASSERT_EQUAL(respuesta->PID, 3);
+	CU_ASSERT_EQUAL(respuesta->resultado, ERROR);
+}
 static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test Iniciar UN proceso", test_iniciar_un_proceso }, {
-		"Test Escribir en proceso", test_escribir_en_proceso },{ "Test Leer de proceso", test_leer_de_proceso },{ "Test Finalizar un proceso",test_finalizar_un_proceso},
+		"Test Escribir en proceso", test_escribir_en_proceso },{ "Test Leer de proceso", test_leer_de_proceso },{ "Test Finalizar un proceso",test_finalizar_un_proceso},{ "Test Proceso que no entra en Swap ",test_iniciar_proceso_que_no_entra},
 CU_TEST_INFO_NULL, };
 
 CUNIT_MAKE_SUITE(swap, "Test swap", init_suite, clean_suite, tests)
