@@ -61,7 +61,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
-				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				t_contenido_pagina* datosdesdeSwap = (t_contenido_pagina*) buffer;
+				enviarRtaEscribirACPU(datosdesdeSwap, socketCPU);
 
 				break;
 			}
@@ -132,3 +133,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	pthread_mutex_unlock(&mutexProcesadorMensajes);
 }
 
+char* decirHolaMundo() {
+	return "Hola Mundo";
+}
