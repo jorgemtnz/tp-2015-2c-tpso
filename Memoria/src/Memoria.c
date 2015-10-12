@@ -35,6 +35,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	int socketSwap,socketCPU;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 
 	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
@@ -60,6 +61,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
+				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+
 				break;
 			}
 			case (RESUL_FIN_OK) : {
@@ -100,15 +103,21 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				estructuraRtaLeer->PID = datosDesdeSwap->PID;
 				estructuraRtaLeer->numeroPagina= datosDesdeSwap->numeroPagina;
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
-				/*respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->idProc, estructuraRtaLeer->pag, estructuraRtaLeer->contenido, socketCPU);
-				*/
-				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido, socketCPU);
+
 				enviarACPUContenidoPaginaDeUnProceso(estructuraRtaLeer,socketCPU);
 
 
 				break;
 			}
 			case (ESCRIBIR_MEM): {
+				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				t_contenido_pagina* estructuraEscribir;
+				estructuraEscribir->PID = datosDesdeCPU->PID;
+				estructuraEscribir->numeroPagina= datosDesdeCPU->numeroPagina;
+				estructuraEscribir->contenido = datosDesdeCPU->contenido;
+				escribir(estructuraEscribir->PID, estructuraEscribir->numeroPagina, estructuraEscribir->contenido, socketSwap);
+
 				break;
 			}
 

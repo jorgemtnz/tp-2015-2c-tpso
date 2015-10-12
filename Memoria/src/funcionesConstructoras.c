@@ -69,7 +69,7 @@ t_lectura* iniciarLectura() {
 
 
 
-t_contenido_pagina* iniciarRtaLecturaCpu(){
+t_contenido_pagina* iniciarContenidoPagina(){
 	t_contenido_pagina* rtaLecturaCpu = malloc(sizeof(t_contenido_pagina));
 	if (rtaLecturaCpu == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
