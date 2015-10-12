@@ -199,7 +199,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	}
 
 	respuestaDeEscribir->PID=unProceso->PID;
-	respuestaDeEscribir->numeroPagina= nuevaPagina;
+	respuestaDeEscribir->numeroPagina= procesoAEscribir->numeroPagina;
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
 	respuestaDeEscribir->resultado = OK;
 	return respuestaDeEscribir;
@@ -305,6 +305,7 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 				procesoAEscribir->numeroPagina = b;
 
 				escribir(listaDeProcesosCargados, procesoAEscribir);
+
 			}
 
 			list_remove(listaDeProcesosCargados, a);

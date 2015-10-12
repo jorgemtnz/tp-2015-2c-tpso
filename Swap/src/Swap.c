@@ -5,9 +5,7 @@ t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 
-	if (hayQueEjecutarTests(argc, argv)) {
-		return ejecutarTests();
-	}
+
 
 	conexiones = dictionary_create();
 
@@ -15,7 +13,9 @@ int main(int argc, char *argv[]) {
 	leerArchivoDeConfiguracion(argc, argv);
 
 	crearArchivo();
-
+	if (hayQueEjecutarTests(argc, argv)) {
+			return ejecutarTests();
+		}
 	//empieza prueba(NO BORRAR)
 /*
 	int a;
@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
 */
-
 	t_iniciar_swap* estructuraIniciar;
 		estructuraIniciar = crearEstructuraIniciar();
 		t_list* listaDeEspaciosLibres;
@@ -63,7 +62,21 @@ int main(int argc, char *argv[]) {
 		t_respuesta_iniciar_o_finalizar* respuesta;
 		respuesta = crearDevolucionIniciarOFinalizar();
 		respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-	printf("el pid %i \n", respuesta->PID);
+		t_contenido_pagina* procesoAEscribir;
+		procesoAEscribir = crearContenidoPagina();
+		procesoAEscribir->PID = 3;
+		procesoAEscribir->contenido = "PROBANDO ESCRITURA EN EL PROCESO";
+		procesoAEscribir->numeroPagina = 5;
+		t_devolucion_escribir_o_leer* resultadoLeer;
+		resultadoLeer = crearDevolucionEscribirOLeer();
+		escribir(listaDeProcesosCargados, procesoAEscribir);
+		t_leerDeProceso *procesoRecibido;
+		procesoRecibido = crearLeerDeProceso();
+		procesoRecibido->PID = 3;
+		procesoRecibido->numeroPaginaInicio = 5;
+		procesoRecibido->numeroPaginaFin = 5;
+		resultadoLeer = leer(procesoRecibido, listaDeProcesosCargados);
+	printf("el pid %i %s %i \n", resultadoLeer->PID, resultadoLeer->contenido, resultadoLeer->numeroPagina);
 
 	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 	/*
