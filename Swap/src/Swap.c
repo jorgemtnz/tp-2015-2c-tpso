@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
 	if (hayQueEjecutarTests(argc, argv)) {
 			return ejecutarTests();
 		}
+
 	//empieza prueba(NO BORRAR)
 /*
 	int a;
@@ -52,31 +53,65 @@ int main(int argc, char *argv[]) {
 	procesoRecibido = crearLeerDeProceso();
 */
 	t_iniciar_swap* estructuraIniciar;
-		estructuraIniciar = crearEstructuraIniciar();
-		t_list* listaDeEspaciosLibres;
-		t_list* listaDeProcesosCargados;
-		listaDeEspaciosLibres = list_create();
-		listaDeProcesosCargados = list_create();
-		estructuraIniciar->PID = 3;
-		estructuraIniciar->cantidadPaginas = 30;
-		t_respuesta_iniciar_o_finalizar* respuesta;
-		respuesta = crearDevolucionIniciarOFinalizar();
-		respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-		t_contenido_pagina* procesoAEscribir;
-		procesoAEscribir = crearContenidoPagina();
-		procesoAEscribir->PID = 3;
-		procesoAEscribir->contenido = "PROBANDO ESCRITURA EN EL PROCESO";
-		procesoAEscribir->numeroPagina = 5;
-		t_devolucion_escribir_o_leer* resultadoLeer;
-		resultadoLeer = crearDevolucionEscribirOLeer();
-		escribir(listaDeProcesosCargados, procesoAEscribir);
-		t_leerDeProceso *procesoRecibido;
-		procesoRecibido = crearLeerDeProceso();
-		procesoRecibido->PID = 3;
-		procesoRecibido->numeroPaginaInicio = 5;
-		procesoRecibido->numeroPaginaFin = 5;
-		resultadoLeer = leer(procesoRecibido, listaDeProcesosCargados);
-	printf("el pid %i %s %i \n", resultadoLeer->PID, resultadoLeer->contenido, resultadoLeer->numeroPagina);
+	estructuraIniciar = crearEstructuraIniciar();
+	t_list* listaDeEspaciosLibres;
+	t_list* listaDeProcesosCargados;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	estructuraIniciar->PID = 3;
+	estructuraIniciar->cantidadPaginas = 6;
+
+	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_iniciar_swap* estructuraIniciar2;
+	estructuraIniciar2 = crearEstructuraIniciar();
+	estructuraIniciar2->PID = 1;
+	estructuraIniciar2->cantidadPaginas = 4;
+
+	iniciar(estructuraIniciar2, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+
+	t_iniciar_swap* estructuraIniciar3;
+	estructuraIniciar3 = crearEstructuraIniciar();
+	estructuraIniciar3->PID = 18;
+	estructuraIniciar3->cantidadPaginas = 15;
+
+	iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_iniciar_swap* estructuraIniciar4;
+	estructuraIniciar4 = crearEstructuraIniciar();
+	estructuraIniciar4->PID = 0;
+	estructuraIniciar4->cantidadPaginas = 8;
+
+	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	finalizar(1, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	t_iniciar_swap* estructuraIniciar5;
+	estructuraIniciar5 = crearEstructuraIniciar();
+	estructuraIniciar5->PID = 10;
+	estructuraIniciar5->cantidadPaginas = 2;
+
+	iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	finalizar(3, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	t_iniciar_swap* estructuraIniciar6;
+	estructuraIniciar6 = crearEstructuraIniciar();
+	estructuraIniciar6->PID = 13;
+	estructuraIniciar6->cantidadPaginas = 5;
+
+	iniciar(estructuraIniciar6, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+
+	int a;
+		l_procesosCargados* proceso;
+		l_espacioLibre* espacioLibre;
+		proceso = crearProceso();
+		espacioLibre = crearEspacioLibre();
+
+
+
 
 	//escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 	/*
@@ -196,7 +231,7 @@ int main(int argc, char *argv[]) {
 	 printf("los datos leidos2 : %s\n", datosLeidos2);
 	 printf("los datos leidos3 : %s\n", datosLeidos3);
 	 printf("los datos leidos4 : %s \n", datosLeidos4);
-
+*/
 	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
 	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
 		proceso = list_get(listaDeProcesosCargados, a);
@@ -213,7 +248,7 @@ int main(int argc, char *argv[]) {
 		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
 
 	}
-*/
+
 	//termina prueba
 
 	return EXIT_SUCCESS;
