@@ -97,26 +97,26 @@ static void test_leer_de_proceso() {
 	CU_ASSERT_EQUAL(resultadoLeer->resultado, OK);
 }
 
-static void test_finalizar_un_proceso(){
+static void test_finalizar_un_proceso() {
 	t_iniciar_swap* estructuraIniciar;
-		estructuraIniciar = crearEstructuraIniciar();
-		t_list* listaDeEspaciosLibres;
-		t_list* listaDeProcesosCargados;
-		listaDeEspaciosLibres = list_create();
-		listaDeProcesosCargados = list_create();
-		estructuraIniciar->PID = 3;
-		estructuraIniciar->cantidadPaginas = 3;
-		t_respuesta_iniciar_o_finalizar* respuesta;
-		respuesta = crearDevolucionIniciarOFinalizar();
-		iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	estructuraIniciar = crearEstructuraIniciar();
+	t_list* listaDeEspaciosLibres;
+	t_list* listaDeProcesosCargados;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	estructuraIniciar->PID = 3;
+	estructuraIniciar->cantidadPaginas = 3;
+	t_respuesta_iniciar_o_finalizar* respuesta;
+	respuesta = crearDevolucionIniciarOFinalizar();
+	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 
-		respuesta = finalizar(3, listaDeProcesosCargados, listaDeEspaciosLibres);
-		CU_ASSERT_EQUAL(respuesta->PID, 3);
-		CU_ASSERT_EQUAL(respuesta->resultado, OK);
+	respuesta = finalizar(3, listaDeProcesosCargados, listaDeEspaciosLibres);
+	CU_ASSERT_EQUAL(respuesta->PID, 3);
+	CU_ASSERT_EQUAL(respuesta->resultado, OK);
 
 }
 
-static void test_iniciar_proceso_que_no_entra(){
+static void test_iniciar_proceso_que_no_entra() {
 	t_iniciar_swap* estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
 	t_list* listaDeEspaciosLibres;
@@ -131,8 +131,113 @@ static void test_iniciar_proceso_que_no_entra(){
 	CU_ASSERT_EQUAL(respuesta->PID, 3);
 	CU_ASSERT_EQUAL(respuesta->resultado, ERROR);
 }
+
+static void test_iniciar_y_finalizar_varios_procesos() {
+	t_iniciar_swap* estructuraIniciar;
+	estructuraIniciar = crearEstructuraIniciar();
+	t_list* listaDeEspaciosLibres;
+	t_list* listaDeProcesosCargados;
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+	estructuraIniciar->PID = 3;
+	estructuraIniciar->cantidadPaginas = 6;
+
+	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_iniciar_swap* estructuraIniciar2;
+	estructuraIniciar2 = crearEstructuraIniciar();
+	estructuraIniciar2->PID = 1;
+	estructuraIniciar2->cantidadPaginas = 4;
+
+	iniciar(estructuraIniciar2, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_iniciar_swap* estructuraIniciar3;
+	estructuraIniciar3 = crearEstructuraIniciar();
+	estructuraIniciar3->PID = 18;
+	estructuraIniciar3->cantidadPaginas = 15;
+
+	iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	t_iniciar_swap* estructuraIniciar4;
+	estructuraIniciar4 = crearEstructuraIniciar();
+	estructuraIniciar4->PID = 0;
+	estructuraIniciar4->cantidadPaginas = 8;
+
+	iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	finalizar(1, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	t_iniciar_swap* estructuraIniciar5;
+	estructuraIniciar5 = crearEstructuraIniciar();
+	estructuraIniciar5->PID = 10;
+	estructuraIniciar5->cantidadPaginas = 2;
+
+	iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	finalizar(3, listaDeProcesosCargados, listaDeEspaciosLibres);
+
+	t_iniciar_swap* estructuraIniciar6;
+	estructuraIniciar6 = crearEstructuraIniciar();
+	estructuraIniciar6->PID = 13;
+	estructuraIniciar6->cantidadPaginas = 5;
+
+	iniciar(estructuraIniciar6, listaDeEspaciosLibres, listaDeProcesosCargados);
+
+	int a;
+	l_procesosCargados* proceso;
+	l_espacioLibre* espacioLibre;
+	proceso = crearProceso();
+	espacioLibre = crearEspacioLibre();
+
+	a = 0;
+	proceso = list_get(listaDeProcesosCargados, a);
+
+	CU_ASSERT_EQUAL(proceso->PID, 18);
+	CU_ASSERT_EQUAL(proceso->cantPagsUso, 15);
+	CU_ASSERT_EQUAL(proceso->ubicacion, 10);
+
+	a = 1;
+	proceso = list_get(listaDeProcesosCargados, a);
+
+	CU_ASSERT_EQUAL(proceso->PID, 0);
+	CU_ASSERT_EQUAL(proceso->cantPagsUso, 8);
+	CU_ASSERT_EQUAL(proceso->ubicacion, 25);
+
+	a = 2;
+	proceso = list_get(listaDeProcesosCargados, a);
+
+	CU_ASSERT_EQUAL(proceso->PID, 10);
+	CU_ASSERT_EQUAL(proceso->cantPagsUso, 2);
+	CU_ASSERT_EQUAL(proceso->ubicacion, 6);
+
+	a = 3;
+	proceso = list_get(listaDeProcesosCargados, a);
+
+	CU_ASSERT_EQUAL(proceso->PID, 13);
+	CU_ASSERT_EQUAL(proceso->cantPagsUso, 5);
+	CU_ASSERT_EQUAL(proceso->ubicacion, 0);
+
+	a = 0;
+	espacioLibre = list_get(listaDeEspaciosLibres, a);
+	CU_ASSERT_EQUAL(espacioLibre->ubicacion, 5);
+	CU_ASSERT_EQUAL(espacioLibre->cantPagsLibres, 1);
+
+	a = 1;
+	espacioLibre = list_get(listaDeEspaciosLibres, a);
+	CU_ASSERT_EQUAL(espacioLibre->ubicacion, 8);
+	CU_ASSERT_EQUAL(espacioLibre->cantPagsLibres, 2);
+
+	a = 2;
+	espacioLibre = list_get(listaDeEspaciosLibres, a);
+	CU_ASSERT_EQUAL(espacioLibre->ubicacion, 33);
+	CU_ASSERT_EQUAL(espacioLibre->cantPagsLibres, configuracion->cantidadPaginas - 33);
+
+}
+
 static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test Iniciar UN proceso", test_iniciar_un_proceso }, {
-		"Test Escribir en proceso", test_escribir_en_proceso },{ "Test Leer de proceso", test_leer_de_proceso },{ "Test Finalizar un proceso",test_finalizar_un_proceso},{ "Test Proceso que no entra en Swap ",test_iniciar_proceso_que_no_entra},
+		"Test Escribir en proceso", test_escribir_en_proceso }, { "Test Leer de proceso", test_leer_de_proceso }, { "Test Finalizar un proceso",
+		test_finalizar_un_proceso }, { "Test Proceso que no entra en Swap ", test_iniciar_proceso_que_no_entra }, { "Test Iniciar y finalizar varios procesos ",
+		test_iniciar_y_finalizar_varios_procesos },
 CU_TEST_INFO_NULL, };
 
 CUNIT_MAKE_SUITE(swap, "Test swap", init_suite, clean_suite, tests)

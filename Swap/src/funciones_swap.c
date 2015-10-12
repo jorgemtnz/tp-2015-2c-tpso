@@ -413,9 +413,9 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 			espacioB = list_get(listaDeEspaciosLibres, a + 1);
 
 			if ((espacioA->ubicacion + espacioA->cantPagsLibres) != (espacioB->ubicacion)) {
-				printf("espacio a insertar %i, espacioB %i\n", (espacioLibre->ubicacion + espacioLibre->cantPagsLibres), (espacioB->ubicacion));
+
 				if ((espacioLibre->ubicacion + espacioLibre->cantPagsLibres) == (espacioB->ubicacion)) {
-					printf("en el for\n");
+
 					list_add_in_index(listaDeEspaciosLibres, a + 1, espacioLibre);
 					a = list_size(listaDeEspaciosLibres) + 1; //salgo del for cuando lo encuentro
 
