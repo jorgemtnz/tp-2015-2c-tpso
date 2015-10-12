@@ -65,17 +65,6 @@ void* serializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje, vo
 	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-void* serializar_RESUL_ESCRIBIR_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	puts("Serializando serializar_RESUL_ESCRIBIR_ERROR");
-	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
-	return 0;
-}
-void* deserializar_RESUL_ESCRIBIR_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
-	puts("Deserializando serializar_RESUL_ESCRIBIR_ERROR");
-	return estructura;
-}
-
 void* deserializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 	puts("Deserializando serializar_RESUL_ESCRIBIR_OK");
@@ -140,16 +129,7 @@ void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* 
 	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-void* serializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	puts("Serializando serializar_RESUL_LEER_ERROR");
-	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
-	return 0;
-}
-void* deserializar_RESUL_LEER_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
-	puts("Deserializando serializar_RESUL_LEER_ERROR");
-	return estructura;
-}
+
 
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
@@ -332,16 +312,6 @@ void* serializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* e
 	puts("Serializando serializar_RESUL_FIN_OK");
 	serializar_t_PID(fdCliente, tipoMensaje, estructura);
 	return 0;
-}
-void* serializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	puts("Serializando serializar_RESUL_FIN_ERROR");
-	serializar_t_PID(fdCliente, tipoMensaje, estructura);
-	return 0;
-}
-void* deserializar_RESUL_FIN_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_PID* estructura = deserializar_t_PID(fdCliente, tipoMensaje);
-	puts("Deserializando serializar_RESUL_FIN_ERROR");
-	return estructura;
 }
 
 void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {

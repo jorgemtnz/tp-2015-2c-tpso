@@ -189,14 +189,6 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
 		}
 	}
-	if ((unProceso->PID!=procesoAEscribir->PID) &&(procesoAEscribir->PID != 0)){
-		respuestaDeEscribir->PID=procesoAEscribir->PID;
-		respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
-		respuestaDeEscribir->contenido = procesoAEscribir->contenido;
-		respuestaDeEscribir->resultado = ERROR;
-		return respuestaDeEscribir;
-		//enviarResultadoEscribirERROR(socket, respuestaDeEscribir);
-	}
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
 		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, configuracion->tamanioPagina);
@@ -251,14 +243,6 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 			a = list_size(listaDeProcesosCargados) + 1;
 		}
 	}
-	if((unProceso->PID!=procesoRecibido->PID) && (procesoRecibido->PID != 0)){
-		respuestaDeLeer->PID= procesoRecibido->PID;
-		respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
-		respuestaDeLeer->resultado = ERROR;
-		return respuestaDeLeer;
-		//enviarResultadoLeerERROR(socket, respuestaDeLeer);
-	}
-
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
 		for (x = 0; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++) {
 
@@ -326,12 +310,6 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 			list_remove(listaDeProcesosCargados, a);
 			a = list_size(listaDeProcesosCargados) + 1; //PARA SALIR DEL FOR CUANDO LO ENCONTRE
 		}
-	}
-	if ((unProceso->PID != pid) && (pid != 0)) {
-		respuestaDeFinalizar->PID= pid;
-		respuestaDeFinalizar->resultado = ERROR;
-		//enviarResultadoFinalizarERROR(socket, respuestaDeFinalizar);
-		return respuestaDeFinalizar;
 	}
 	respuestaDeFinalizar->PID = unProceso->PID;
 	respuestaDeFinalizar->resultado = OK;
