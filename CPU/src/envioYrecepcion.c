@@ -99,6 +99,7 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_INICIAR_PROC_OK_CPU): {
 		//recibe desde memoria y debe continuar con la ejecucion
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
+		t_PID* datosDesdeMem = (t_PID*) buffer;
 		//	t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		t_resultado_instruccion* resultado = malloc(
 				sizeof(t_resultado_instruccion));
@@ -118,6 +119,7 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
 		//al dar error se debe devolver el proceso
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
+		t_PID* datosDesdeMem = (t_PID*) buffer;
 		t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		char* temporal;
 		strcpy(resultado->comandoInstruccion, "inicializar");
