@@ -50,7 +50,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas = datosDesdeSwap->cantidadPaginas;
-				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketCPU);
 				break;
 			}
@@ -93,9 +92,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
 
-				/*leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,socketSwap,socketCPU);
-				*/
-				enviarStruct(socketSwap, LEER_SWAP, estructuraLeer);
+				leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,socketSwap,socketCPU);
+
 				break;
 			}
 			case (RESUL_TRAER_PAG_SWAP_OK): {

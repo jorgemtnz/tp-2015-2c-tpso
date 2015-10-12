@@ -48,25 +48,22 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
-	int contador;
+	int contador,tamanioTablaDePag;
 	t_TablaDePaginas* tablaDePag;
 	t_iniciar_swap * estructura;
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
-	t_PID * estructuraCPU;
-	estructuraCPU = crearRespuestaIniciarOkCPU();
 
 	for (contador = 0; contador < cantPag; contador++) {
 		contadorPagTP++;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
-		tablaDePag->paginaDelProceso = contador + 1;
+		tablaDePag->paginaDelProceso = contador;
 		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
 		list_add(listaTablaDePag, tablaDePag);
 	}
-	socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
-	enviarRtaIniciarOkCPU (estructura, socketCPU);
+	// enviarRtaIniciarOkCPU (estructura, socketCPU);
 
 	free(tablaDePag);
 }
