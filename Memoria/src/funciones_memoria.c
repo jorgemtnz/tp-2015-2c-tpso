@@ -71,11 +71,11 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 	free(tablaDePag);
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir) {
+void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 	// 1 -ver si estan en memoria y ponerle el bit de modificada
 	// 2- si no esta mandar a escribir a swap
 
-	t_escrituraProc * escritura;
+	t_contenido_pagina * escritura;
 	escritura = iniciarEscrituraProc();
 	int idMarco;
 	t_TLB * campoTLB;
@@ -89,16 +89,11 @@ void escribir(int idProc, int nroPag, char* textoAEscribir) {
 
 	if( idMarco == -1){
 		// 2
-			escritura->Pag = nroPag;
-			escritura->idProc = idProc;
+			escritura->numeroPagina = nroPag;
+			escritura->PID = idProc;
 			escritura->contenido = textoAEscribir;
 
-			/* PARTE DE ENVIAR A SWAP UN PROCESO
-			 *char* socketCPU = (char*) dictionary_get(conexiones, "Swap");
-			 *  puts("Enviando \"escribir paginas para tal proceso\" al Swap");
-			 enviar(atoi(socketCPU), "escribir paginas para tal proceso", strlen("escribir paginas para tal proceso));
-			 puts("Enviado al Swap");
-			 */
+			enviarEscribirAlSwap(escritura,socketSwap);
 
 	}else {// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
@@ -157,7 +152,9 @@ void finalizar(int idProc) {
 void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
-
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap){
+	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
+}
 void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }

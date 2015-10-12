@@ -292,7 +292,7 @@ void eliminarDeMemoria(int id) {
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
 
 	t_contenido_pagina* lecturaMandarCpu;
-	lecturaMandarCpu = iniciarRtaLecturaCpu();
+	lecturaMandarCpu = iniciarContenidoPagina();
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
