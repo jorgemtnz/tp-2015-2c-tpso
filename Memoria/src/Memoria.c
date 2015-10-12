@@ -21,6 +21,9 @@ int main(int argc, char *argv[]) {
 //	estructura->PID = 2;
 //	estructura->cantidadPaginas = 14;
 //	enviarIniciarASwap(estructura, socketSwap);
+	if(hayQueEjecutarTests(argc,argv)){
+		return ejecutarTests();
+	}
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, socketSwap, procesarMensajes, NULL, logger);
 
 	return EXIT_SUCCESS;
