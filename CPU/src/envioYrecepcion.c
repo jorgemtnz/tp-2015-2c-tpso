@@ -72,32 +72,78 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	switch (token) {
 	case (RESUL_ESCRIBIR): {
 		log_info(logger, "se va a ejecutar result escribir ");
-		ejecutaResultEscribir(cpu);
+
 		break;
 	}
 	case (RESUL_FIN): {
 		log_info(logger, "se va a ejecutar result fin de proceso ");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
-		estructura = ejecutaResulFin(cpu);
+
+		t_resultado_instruccion* resultado = creaResultadoInstruccion();
+		int socketPlanificador = atoi(
+				(char*) dictionary_get(conexiones, "Planificador"));
+		char* temporal;
+		strcpy(resultado->comandoInstruccion, "finalizar");
+		resultado->tipoMensaje = RESUL_FIN_OK;
+		char* finalizado = "finalizado";
+		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid,
+				finalizado);
+		strcpy(resultado->expresion, temporal);
+		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
+		cpu->mCodCPU->respEjec->finalizoOk = true;
+		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
+				cpu->mCodCPU->respEjec);
 		break;
 	}
 	case (RESUL_INICIAR_PROC_OK_CPU): {
 		//recibe desde memoria y debe continuar con la ejecucion
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
-		ejecutaResulIniciarProcOK(cpu);
+		//	t_resultado_instruccion* resultado = creaResultadoInstruccion();
+		t_resultado_instruccion* resultado = malloc(
+				sizeof(t_resultado_instruccion));
+		char* temporal;
+		//	strcpy(resultado->comandoInstruccion, "inicializar");
+		resultado->comandoInstruccion = "inicializar";
+		resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
+		//	char* iniciado = "Iniciado";
+		//temporal = string_from_format("mProc %d %s", cpu->pcbPlanificador->pid, iniciado);
+		temporal = "mProc %d %s";
+		//strcpy(resultado->expresion, temporal);
+		resultado->expresion = temporal;
+		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
+
 		break;
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
 		//al dar error se debe devolver el proceso
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
-		ejecutaResulIniciarProc_NO_OK(cpu);
+		t_resultado_instruccion* resultado = creaResultadoInstruccion();
+		char* temporal;
+		strcpy(resultado->comandoInstruccion, "inicializar");
+		resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
+		char* fallo = "fallo";
+		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid,
+				fallo);
+		strcpy(resultado->expresion, temporal);
+		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
+
 		break;
 	}
 	case (RESUL_LEER_OK_CPU): {
 		log_info(logger, "se va a ejecutar resultLeer ");
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		char* contenido = datosDesdeMem->contenido; // este es el contenido de la pagina
-		ejecutaResultLeerOK(cpu, contenido);
+
+		t_resultado_instruccion* resultado = creaResultadoInstruccion();
+		char* temporal;
+		strcpy(resultado->comandoInstruccion, "leer");
+		resultado->tipoMensaje = RESUL_LEER_OK_CPU;
+		temporal = string_from_format("mProc %d Pagina leida",
+				cpu->pcbPlanificador->pid); //, "Pagina", "leida", contenido);
+//		string_append(resultado->expresion,contenido);
+		strcpy(resultado->expresion, temporal);
+		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 		break;
 	}
 	case (CONTEXTO_MPROC): {

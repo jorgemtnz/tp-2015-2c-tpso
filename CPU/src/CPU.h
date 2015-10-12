@@ -133,13 +133,6 @@ t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 
-
-int  ejecutaResultEscribir(t_cpu* cpu);
-int  ejecutaResulFin(t_cpu* cpu);
-int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
-int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
-int ejecutaResultLeerOK(t_cpu* cpu, char* contenido);
-int  ejecutaResulOk(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
