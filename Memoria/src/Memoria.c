@@ -94,10 +94,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socketSwap, LEER_SWAP, estructuraLeer);
 				break;
 			}
-			case (RESUL_TRAER_PAG_SWAP_NO_OK): {
-				break;
-
-			}
 			case (RESUL_TRAER_PAG_SWAP_OK): {
 				t_contenido_pagina * datosDesdeSwap = (t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraRtaLeer;
