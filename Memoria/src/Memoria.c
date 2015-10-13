@@ -3,11 +3,7 @@
 
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
-	listaMemoria = list_create();
-	listaTLB = list_create();
-	listaTablaDePag = list_create();
-	contadorPagTP = 0;
-	variableIdMarco = 0;
+	inicializacionDesdeCero();
 
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 

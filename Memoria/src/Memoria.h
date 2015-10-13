@@ -60,39 +60,39 @@ typedef struct { // estructura que se carga en la lista de memoria principal
 } t_marco;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TLB;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TablaDePaginas;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 	int CantPag;
 }t_iniciarProc;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 	int Pag;
 	char* contenido;
 }t_escrituraProc;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 	int pagIn;
 	int pagFin;
 	char* contenido;
 }t_lectura;
 
 typedef struct {
-	int idProc;
+	pid_t idProc;
 }t_finalizarProc;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++

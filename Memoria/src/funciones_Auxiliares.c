@@ -347,4 +347,12 @@ void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU){
 	enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
 }
 
+void inicializacionDesdeCero(){
+	listaMemoria = list_create();
+	listaTLB = list_create();
+	listaTablaDePag = list_create();
+	contadorPagTP = 0;
+	variableIdMarco = 0;
+}
+
 
