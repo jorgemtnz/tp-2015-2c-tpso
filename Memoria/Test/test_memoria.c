@@ -63,10 +63,6 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria(){
 		}
 		}
 	}
-	printf("\n%i\n",contadorCantProc1);
-	printf("\n%i\n",contadorCantProc2);
-	printf("\n%i\n",contadorCantProc3);
-	printf("\n%i\n",contadorCantProc4);
 
 	CU_ASSERT_EQUAL(tamanioFinalTablaDePag, 22);
 	CU_ASSERT_EQUAL(contadorMarcoNegativo, 22);

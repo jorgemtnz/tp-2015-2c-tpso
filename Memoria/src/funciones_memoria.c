@@ -66,7 +66,7 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 	}
 	// enviarRtaIniciarOkCPU (estructura, socketCPU);
 
-	free(tablaDePag);
+	free(estructura);
 }
 
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
