@@ -48,7 +48,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
-	int contador,tamanioTablaDePag;
+	int tamanioTablaDePag;
+	uint16_t contador;
 	t_TablaDePaginas* tablaDePag;
 	t_iniciar_swap * estructura;
 	estructura = crearEstructuraIniciar();
