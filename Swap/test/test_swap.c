@@ -26,10 +26,6 @@ static void test_iniciar_un_proceso() {
 
 	t_iniciar_swap* estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 30;
 	t_respuesta_iniciar_o_finalizar* respuesta;
@@ -42,10 +38,6 @@ static void test_iniciar_un_proceso() {
 static void test_escribir_en_proceso() {
 	t_iniciar_swap* estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 30;
 	t_respuesta_iniciar_o_finalizar* respuesta;
@@ -68,10 +60,6 @@ static void test_escribir_en_proceso() {
 static void test_leer_de_proceso() {
 	t_iniciar_swap* estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 30;
 	t_respuesta_iniciar_o_finalizar* respuesta;
@@ -99,11 +87,8 @@ static void test_leer_de_proceso() {
 
 static void test_finalizar_un_proceso() {
 	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 3;
 	t_respuesta_iniciar_o_finalizar* respuesta;
@@ -119,10 +104,6 @@ static void test_finalizar_un_proceso() {
 static void test_iniciar_proceso_que_no_entra() {
 	t_iniciar_swap* estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 520;
 	t_respuesta_iniciar_o_finalizar* respuesta;
@@ -134,11 +115,8 @@ static void test_iniciar_proceso_que_no_entra() {
 
 static void test_iniciar_y_finalizar_varios_procesos() {
 	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 6;
 
@@ -236,11 +214,8 @@ static void test_iniciar_y_finalizar_varios_procesos() {
 
 static void test_acomodar_espacios_libres() {
 	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 0;
 	estructuraIniciar->cantidadPaginas = 6;
 
@@ -304,11 +279,8 @@ static void test_acomodar_espacios_libres() {
 
 static void test_algoritmo_compactacion() {
 	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 0;
 	estructuraIniciar->cantidadPaginas = 6;
 
@@ -381,11 +353,8 @@ static void test_algoritmo_compactacion() {
 
 static void test_corto_cod() {
 	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
 	estructuraIniciar = crearEstructuraIniciar();
-	t_list* listaDeEspaciosLibres;
-	t_list* listaDeProcesosCargados;
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
 	estructuraIniciar->PID = 2;
 	estructuraIniciar->cantidadPaginas = 5;
 	t_respuesta_iniciar_o_finalizar* respuesta;

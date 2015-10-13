@@ -1,7 +1,6 @@
 #include "Swap.h"
 
-t_list* listaDeProcesosCargados;
-t_list* listaDeEspaciosLibres;
+
 t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
 
@@ -11,7 +10,7 @@ int main(int argc, char *argv[]) {
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
-
+	inicializarListas();
 	crearArchivo();
 	if (hayQueEjecutarTests(argc, argv)) {
 			return ejecutarTests();
@@ -54,33 +53,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, pid_a_enviar);
 			}
 
-			//EMPIEZA PRUEBA
-			int a;
-			l_procesosCargados* proceso;
-			l_espacioLibre* espacioLibre;
 
-			espacioLibre = crearEspacioLibre();
-
-			printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
-
-			for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
-				proceso = list_get(listaDeProcesosCargados, a);
-				printf("\n\n");
-				printf("el pid :  %i\n", proceso->PID);
-				printf("la ubicacion es : %i\n", proceso->ubicacion);
-				printf("cantidad paginas : %i \n", proceso->cantPagsUso);
-
-			}
-			printf("lista %i \n", list_size(listaDeEspaciosLibres));
-			for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
-				espacioLibre = list_get(listaDeEspaciosLibres, a);
-
-				printf("\nempieza espacio libre\n\n\n");
-				printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
-				printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
-
-			}
-			//TERMINA PRUEBA
 			break;
 		}
 		case (ESCRIBIR_SWAP): {

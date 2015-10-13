@@ -112,7 +112,7 @@ void enviarResultadoEscribirERROR(int socket, void* estructura);
 void enviarResultadoEscribirOK(int socket, void* estructura);
 void enviarResultadoFinalizarERROR(int socket, void* estructura);
 void enviarResultadoFinalizarOK(int socket, void* estructura);
-
+void inicializarListas();
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
@@ -124,6 +124,8 @@ int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo
 t_configuracion* configuracion;
 t_log* logger;
 char *espacioDatos;
+t_list* listaDeProcesosCargados;
+t_list* listaDeEspaciosLibres;
 
 //test
 char* decirHolaMundo();

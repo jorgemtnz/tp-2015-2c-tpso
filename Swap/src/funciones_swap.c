@@ -1,6 +1,12 @@
 #include "Swap.h"
 //escribir las funciones aqui
 
+
+void inicializarListas(){
+
+	listaDeEspaciosLibres = list_create();
+	listaDeProcesosCargados = list_create();
+}
 void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 	char* logMsg = NULL;
