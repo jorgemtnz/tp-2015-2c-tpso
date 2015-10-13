@@ -43,7 +43,6 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria(){
 	for (a = 0; a < tamanioFinalTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if(campoTablaDePag->idMarco == -1) contadorMarcoNegativo ++;
-		if(campoTablaDePag->idProc == PID1 ) contadorCantProc1 ++;
 
 		switch (campoTablaDePag->idProc) {
 		case (1): {
