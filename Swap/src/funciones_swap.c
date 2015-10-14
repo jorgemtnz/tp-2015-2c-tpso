@@ -313,7 +313,8 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 				espacioC->cantPagsLibres = (espacioA->cantPagsLibres + espacioB->cantPagsLibres);
 				list_remove(listaDeEspaciosLibres, a + 1);
 				list_remove(listaDeEspaciosLibres, a);
-
+				free(espacioA);
+				free(espacioB);
 				list_add_in_index(listaDeEspaciosLibres, a, espacioC);
 				a--;
 				if ((a + 3) > list_size(listaDeEspaciosLibres)) { //SI HAY MENOS DE DOS ELEMENTOS EN LA LISTA SALGO DEL FOR
@@ -328,9 +329,8 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 			}
 		}
 	}
-	//free(espacioA);
-	//free(espacioB);
-	//free(espacioC);
+
+
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
@@ -343,6 +343,7 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	l_procesosCargados* espacioProcSig;
 	espacioProcSig = crearProceso();
 	l_espacioLibre* nuevoEspacioLibre = crearEspacioLibre();
+	l_espacioLibre* espacioA = crearEspacioLibre();
 	int a;
 	espacioProcAux = list_get(listaDeProcesosCargados, 0);
 	espacioProcAux->ubicacion = 0;
@@ -359,13 +360,20 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	int ultimoLugarOcupado = espacioProcAux->ubicacion + espacioProcAux->cantPagsUso;
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
+
 	list_clean(listaDeEspaciosLibres);
+	/*for(a =0 ; a< list_size(listaDeEspaciosLibres); a++){
+	espacioA = list_get(listaDeEspaciosLibres, a);
+	list_remove(listaDeEspaciosLibres,a);
+	free(espacioA);
+	}
+	*/
+
+
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
+
 	log_info(logger, "Memoria compactada correctamente");
 
-	//free(espacioProcAux);
-	//free(espacioProcSig);
-	//free(nuevoEspacioLibre);
 }
 _Bool comparador(l_procesosCargados proc1, l_procesosCargados proc2) {
 	int ub1 = proc1.ubicacion;
@@ -424,6 +432,5 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 			list_add_in_index(listaDeEspaciosLibres, 1, espacioLibre);
 		}
 	}
-//free(espacioA);
-//free(espacioB);
+
 }

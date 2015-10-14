@@ -1,7 +1,11 @@
 #include "Swap.h"
 
 int main(int argc, char *argv[]) {
-
+	l_procesosCargados* proceso;
+	proceso = crearProceso();
+	l_espacioLibre* espacioLibre;
+	espacioLibre = crearEspacioLibre;
+	int a;
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
@@ -16,7 +20,17 @@ int main(int argc, char *argv[]) {
 
 	free(configuracion);
 	free(logger);
-	free(listaDeProcesosCargados);
+	for(a=0 ; a < list_size(listaDeProcesosCargados); a++){
+	proceso =	list_get(listaDeProcesosCargados,a);
+	list_remove(listaDeProcesosCargados,a);
+	free(proceso);
+	}
+	for(a=0 ; a < list_size(listaDeEspaciosLibres); a++){
+		espacioLibre =	list_get(listaDeEspaciosLibres,a);
+		list_remove(listaDeEspaciosLibres,a);
+		free(espacioLibre);
+		}
+
 	free(listaDeEspaciosLibres);
 	free(conexiones);
 
