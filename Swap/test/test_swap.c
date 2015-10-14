@@ -11,6 +11,8 @@
 #include "../src/Swap.h"
 
 static int init_suite() {
+	configuracion->retardo_compactacion = 0;
+	configuracion->retardo_swap = 0;
 	return 0;
 }
 
