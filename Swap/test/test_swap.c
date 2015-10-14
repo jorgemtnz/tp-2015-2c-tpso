@@ -390,7 +390,8 @@ static void test_corto_cod() {
 static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test Iniciar UN proceso", test_iniciar_un_proceso }, {
 		"Test Escribir en proceso", test_escribir_en_proceso }, { "Test Leer de proceso", test_leer_de_proceso }, { "Test Finalizar un proceso",
 		test_finalizar_un_proceso }, { "Test Proceso que no entra en Swap ", test_iniciar_proceso_que_no_entra }, { "Test Iniciar y finalizar varios procesos ",
-		test_iniciar_y_finalizar_varios_procesos }, { "Test acomodar espacios libres ", test_acomodar_espacios_libres },{ "Test compactacion ", test_algoritmo_compactacion }, { "Test corto cod ", test_corto_cod },
+		test_iniciar_y_finalizar_varios_procesos }, { "Test acomodar espacios libres ", test_acomodar_espacios_libres }, { "Test compactacion ",
+		test_algoritmo_compactacion }, { "Test corto cod ", test_corto_cod },
 CU_TEST_INFO_NULL, };
 
 CUNIT_MAKE_SUITE(swap, "Test swap", init_suite, clean_suite, tests)

@@ -60,22 +60,20 @@ typedef struct {
 } l_procesosCargados;
 
 typedef enum {
-	OK,
-	ERROR,
-}t_resultado_funcion;
+	OK, ERROR,
+} t_resultado_funcion;
 
-typedef struct{
+typedef struct {
 	uint8_t PID;
 	t_resultado_funcion resultado;
-}t_respuesta_iniciar_o_finalizar;
+} t_respuesta_iniciar_o_finalizar;
 
-typedef struct{
+typedef struct {
 	uint8_t PID;
-		char* contenido;
-		uint8_t numeroPagina;
-		t_resultado_funcion resultado;
-}t_devolucion_escribir_o_leer;
-
+	char* contenido;
+	uint8_t numeroPagina;
+	t_resultado_funcion resultado;
+} t_devolucion_escribir_o_leer;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -126,6 +124,7 @@ t_log* logger;
 char *espacioDatos;
 t_list* listaDeProcesosCargados;
 t_list* listaDeEspaciosLibres;
+t_dictionary* conexiones;
 
 //test
 char* decirHolaMundo();

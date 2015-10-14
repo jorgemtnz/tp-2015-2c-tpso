@@ -1,10 +1,6 @@
 #include "Swap.h"
 
-
-t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
-
-
 
 	conexiones = dictionary_create();
 
@@ -13,11 +9,16 @@ int main(int argc, char *argv[]) {
 	inicializarListas();
 	crearArchivo();
 	if (hayQueEjecutarTests(argc, argv)) {
-			return ejecutarTests();
-		}
+		return ejecutarTests();
+	}
 
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
 
+	free(configuracion);
+	free(logger);
+	free(listaDeProcesosCargados);
+	free(listaDeEspaciosLibres);
+	free(conexiones);
 
 	return EXIT_SUCCESS;
 }
@@ -53,7 +54,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, pid_a_enviar);
 			}
 
-
+			free(estructuraIniciar);
+			free(resultado);
 			break;
 		}
 		case (ESCRIBIR_SWAP): {
@@ -73,6 +75,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			} else {
 				log_info(logger, "FALLO EL ESCRIBIR");
 			}
+			free(procesoAEscribir);
+			free(resultado);
+			free(paginaAEnviar);
 			break;
 		}
 		case (LEER_SWAP): {
@@ -85,11 +90,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
-			if(resultado->resultado == OK){
+			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
-			}else{
+			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
+			free(procesoRecibido);
+			free(resultado);
+			free(paginaAEnviar);
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {
@@ -98,12 +106,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 			pid_a_enviar->PID = resultado->PID;
-			if(resultado->resultado == OK){
+			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
-			}else{
-				log_info(logger , "FALLO EL FINALIZAR");
+			} else {
+				log_info(logger, "FALLO EL FINALIZAR");
 			}
-
+			free(estructuraFinalizar);
+			free(resultado);
 			break;
 		}
 
@@ -114,6 +123,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		break;
 	}
 	}
+
+	free(pid_a_enviar);
 	return 0;
 }
 
