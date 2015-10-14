@@ -332,7 +332,6 @@ static void test_algoritmo_compactacion() {
 
 	a = 1;
 	proceso = list_get(listaDeProcesosCargados, a);
-
 	CU_ASSERT_EQUAL(proceso->PID, 8);
 	CU_ASSERT_EQUAL(proceso->cantPagsUso, 28);
 	CU_ASSERT_EQUAL(proceso->ubicacion, 10);

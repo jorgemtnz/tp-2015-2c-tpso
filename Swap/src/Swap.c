@@ -5,7 +5,6 @@ int main(int argc, char *argv[]) {
 	proceso = crearProceso();
 	l_espacioLibre* espacioLibre;
 	espacioLibre = crearEspacioLibre;
-	int a;
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
@@ -20,16 +19,16 @@ int main(int argc, char *argv[]) {
 
 	free(configuracion);
 	free(logger);
-	for(a=0 ; a < list_size(listaDeProcesosCargados); a++){
-	proceso =	list_get(listaDeProcesosCargados,a);
-	list_remove(listaDeProcesosCargados,a);
-	free(proceso);
+	while (list_size(listaDeProcesosCargados) > 0) {
+		proceso = list_get(listaDeProcesosCargados, 0);
+		list_remove(listaDeProcesosCargados, 0);
+		free(proceso);
 	}
-	for(a=0 ; a < list_size(listaDeEspaciosLibres); a++){
-		espacioLibre =	list_get(listaDeEspaciosLibres,a);
-		list_remove(listaDeEspaciosLibres,a);
+	while (list_size(listaDeEspaciosLibres) > 0) {
+		espacioLibre = list_get(listaDeEspaciosLibres, 0);
+		list_remove(listaDeEspaciosLibres, 0);
 		free(espacioLibre);
-		}
+	}
 
 	free(listaDeEspaciosLibres);
 	free(conexiones);

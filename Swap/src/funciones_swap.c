@@ -361,13 +361,13 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 
-	list_clean(listaDeEspaciosLibres);
-	/*for(a =0 ; a< list_size(listaDeEspaciosLibres); a++){
-	espacioA = list_get(listaDeEspaciosLibres, a);
-	list_remove(listaDeEspaciosLibres,a);
-	free(espacioA);
+	//list_clean(listaDeEspaciosLibres);
+	while(list_size(listaDeEspaciosLibres) > 0){
+	espacioA = list_get(listaDeEspaciosLibres, 0);
+	list_remove(listaDeEspaciosLibres,0);
+//	free(espacioA);
 	}
-	*/
+
 
 
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
