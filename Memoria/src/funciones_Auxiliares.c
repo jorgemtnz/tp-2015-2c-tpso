@@ -6,7 +6,7 @@
  */
 #include "Memoria.h"
 
-int buscarSiEstaEnMemoria(t_PID idProc, uint16_t nroPag) {
+int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	int tamanioTLB, a, tamanioTablaPag, idMarco = -1;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
@@ -96,7 +96,7 @@ void cargarNuevoMarcoAMemoria(char* contenido) {
 	free(campoAux);
 }
 
-bool llegoAlMaximoDelProcesoLaMemoria(t_PID idProc) {
+bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	bool respuesta;
 	int a, tamanioTablaDePag, contadorMarcosEnMemoria, flag = 0;
 	tamanioTablaDePag = list_size(listaTablaDePag);
@@ -138,7 +138,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlPrimeroDeMemoriaDelProceso(t_PID idProc) {
+void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 
 	// voy a guardar todos los marcos del idProc que encuentre y voy a ir comparando  los idMarco hasta encomtrar
 	// al primero
@@ -248,7 +248,7 @@ char* traerContenidoDeMarco(int idMarco) {
 	return contenido;
 }
 
-t_list* buscarLosIdDeProceso(t_PID idProc) {
+t_list* buscarLosIdDeProceso(int idProc) {
 	int a, tamanioTablaDePag;
 	t_list* listaId;
 	listaId = list_create();
@@ -286,7 +286,7 @@ void eliminarDeMemoria(int id) {
 
 }
 
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(t_PID idProc, uint16_t pag, char* contenido, int socketCPU) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
@@ -350,6 +350,10 @@ void inicializacionDesdeCero(){
 	listaTablaDePag = list_create();
 	contadorPagTP = 0;
 	variableIdMarco = 0;
+}
+
+void iniciarConfiguracionTLBNoHabilitada(){
+	configuracion->tlbHabilitada = 0;
 }
 
 
