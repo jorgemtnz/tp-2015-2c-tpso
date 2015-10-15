@@ -48,6 +48,7 @@ t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu) 
 //	estructura->pagina = atoi(buffer[0]);
 //	if (estructura->pagina<0)
 //		return NULL;
+	estructura->contenido = NULL;
         estructura->numeroPagina = 4;//hardcodeo
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->estadoEjecucion = NO_USO;

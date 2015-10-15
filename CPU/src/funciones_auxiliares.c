@@ -2,6 +2,10 @@
 //si es inicializar me devuelve el token sino -1 como error
 int reconoceTokenInstruccion(char* string) {
 log_info(logger, "se va a ejecutar reconoce token segun el comando de la instruccion ");
+	if(string_ends_with(string, ";")) {
+		int tamanioString = strlen(string);
+		string[tamanioString - 1] = '\0';
+	}
 	string_to_lower(string);
 	if (string_equals(string, "iniciar"))
 		return INICIAR_PROCESO_MEM;

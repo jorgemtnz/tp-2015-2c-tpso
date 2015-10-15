@@ -123,7 +123,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 		}
 
-		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
+		//enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 
 
 

@@ -25,13 +25,13 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 
+int socketCPU;
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	pthread_mutex_lock(&mutexProcesadorMensajes);
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
-	int socketSwap,socketCPU;
+	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-	socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 
 	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
@@ -39,6 +39,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 	if (tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
+		socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
 			switch (header->tipoMensaje) {

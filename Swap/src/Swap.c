@@ -60,7 +60,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 			pid_a_enviar->PID = resultado->PID;
-			if (resultado == OK) {
+			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, pid_a_enviar);
 			} else {
