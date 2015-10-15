@@ -60,26 +60,26 @@ typedef struct { // estructura que se carga en la lista de memoria principal
 } t_marco;
 
 typedef struct {
-	pid_t idProc;
+	int idProc;
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TLB;
 
 typedef struct {
-	pid_t idProc;
+	int idProc;
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
 } t_TablaDePaginas;
 
 typedef struct {
-	pid_t idProc;
+	int idProc;
 	int CantPag;
 }t_iniciarProc;
 
 typedef struct {
-	pid_t idProc;
+	int idProc;
 	int Pag;
 	char* contenido;
 }t_escrituraProc;
@@ -108,7 +108,7 @@ t_PID* crearEstructuraFinalizar();
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void leerArchivoDeConfiguracion();
-void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU);
+void iniciar(int idProc, int cantPag, int socketCPU);
 void leer(int idProc, int pag, int socketSwap, int socketCPU);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
@@ -142,6 +142,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 
 void inicializacionDesdeCero();
+void iniciarConfiguracionTLBNoHabilitada();
 
 //========================================================================================
 

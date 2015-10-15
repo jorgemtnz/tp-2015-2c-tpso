@@ -26,7 +26,7 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria(){
 	inicializacionDesdeCero();
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
-	pid_t PID1= 1, PID2= 2, PID3= 3, PID4= 4;
+	int PID1= 1, PID2= 2, PID3= 3, PID4= 4;
 	int cant1= 4, cant2= 5, cant3= 6, cant4= 7;
 	int socketMentiroso = 7;
 	int tamanioFinalTablaDePag,a;
@@ -71,6 +71,19 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria(){
 	CU_ASSERT_EQUAL(contadorCantProc2, 5);
 	CU_ASSERT_EQUAL(contadorCantProc3, 6);
 	CU_ASSERT_EQUAL(contadorCantProc4, 7);
+}
+
+static void test_probar_memoria_sin_TLB(){
+	inicializacionDesdeCero();
+	iniciarConfiguracionTLBNoHabilitada();
+	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
+	int cant1 = 2, cant2 = 3, cant3 = 4, cant4 = 6;
+	int socketMentiroso = 7;
+
+	escribir(PID1, cant1, socketMentiroso);
+	escribir(PID2, cant2, socketMentiroso);
+	escribir(PID3, cant3, socketMentiroso);
+	escribir(PID4, cant4, socketMentiroso);
 }
 
 static CU_TestInfo tests[] = {

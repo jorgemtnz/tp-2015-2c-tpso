@@ -47,7 +47,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
+void iniciar(int idProc, int cantPag, int socketCPU) {
 	int tamanioTablaDePag;
 	uint16_t contador;
 	t_TablaDePaginas* tablaDePag;
