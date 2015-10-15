@@ -6,8 +6,8 @@
  */
 #include "Memoria.h"
 
-int buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	int tamanioTLB, a, tamanioTablaPag, idMarco;
+int buscarSiEstaEnMemoria(t_PID idProc, uint16_t nroPag) {
+	int tamanioTLB, a, tamanioTablaPag, idMarco = -1;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
@@ -19,8 +19,6 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idProc == idProc && campoTLB->paginaDelProceso == nroPag /*que este en un marco*/) {
 				idMarco = campoTLB->idMarco;
-				free(campoTLB);
-				return idMarco;
 			}
 		}
 	}
@@ -31,16 +29,11 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
 			idMarco = campoTablaDePag->idMarco;
-			free(campoTablaDePag);
-			return idMarco;
 		}
 	}
 
-	// si llego aca es porque no esta entonces devuelve - 1
-	free(campoTLB);
-	free(campoTablaDePag);
+	return idMarco; // si no encontro retorna -1 que es lo primero que se seteo
 
-	return -1;
 }
 
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
@@ -58,17 +51,20 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idMarco == idMarco) {
 				campoTLB->bitPagModificada = 1;
+				list_replace(listaTLB,a,campoTLB);
 				flagTLB = 1;
 			}
 		}
 	}
-	// sino veo si esta en la tabla de paginas
+	// veo si esta en la tabla de paginas y la modifico ( por mas que este en la TLB, tambien tengo que modificarlo
+	// en la Tabla de Pag)
 
 	tamanioTablaPag = list_size(listaTablaDePag);
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
 			campoTablaDePag->bitPagModificada = 1;
+			list_replace(listaTablaDePag,a,campoTablaDePag);
 			flagTablaDePag = 1;
 		}
 	}
@@ -77,6 +73,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 		campoMarco = list_get(listaMemoria, a);
 		if (campoMarco->idMarco == idMarco) {
 			campoMarco->contenido = contenido;
+			list_replace(listaMemoria,a,campoMarco);
 			flagMemoria = 1;
 		}
 	}
@@ -99,7 +96,7 @@ void cargarNuevoMarcoAMemoria(char* contenido) {
 	free(campoAux);
 }
 
-bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
+bool llegoAlMaximoDelProcesoLaMemoria(t_PID idProc) {
 	bool respuesta;
 	int a, tamanioTablaDePag, contadorMarcosEnMemoria, flag = 0;
 	tamanioTablaDePag = list_size(listaTablaDePag);
@@ -141,7 +138,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
+void sacarAlPrimeroDeMemoriaDelProceso(t_PID idProc) {
 
 	// voy a guardar todos los marcos del idProc que encuentre y voy a ir comparando  los idMarco hasta encomtrar
 	// al primero
@@ -251,7 +248,7 @@ char* traerContenidoDeMarco(int idMarco) {
 	return contenido;
 }
 
-t_list* buscarLosIdDeProceso(int idProc) {
+t_list* buscarLosIdDeProceso(t_PID idProc) {
 	int a, tamanioTablaDePag;
 	t_list* listaId;
 	listaId = list_create();
@@ -289,7 +286,7 @@ void eliminarDeMemoria(int id) {
 
 }
 
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(t_PID idProc, uint16_t pag, char* contenido, int socketCPU) {
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();

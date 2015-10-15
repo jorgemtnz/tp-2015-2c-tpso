@@ -47,7 +47,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
+void iniciar(t_PID idProc, uint16_t cantPag, int socketCPU) {
 	int tamanioTablaDePag;
 	uint16_t contador;
 	t_TablaDePaginas* tablaDePag;
@@ -69,7 +69,7 @@ void iniciar(pid_t idProc, uint16_t cantPag, int socketCPU) {
 	free(estructura);
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
+void escribir(t_PID idProc, uint16_t nroPag, char* textoAEscribir, int socketSwap) {
 	// 1 -ver si estan en memoria y ponerle el bit de modificada
 	// 2- si no esta mandar a escribir a swap
 
@@ -100,7 +100,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 }
 
 
-void leer(int idProc, int pag, int socketSwap, int socketCPU) {
+void leer(t_PID idProc, uint16_t pag, int socketSwap, int socketCPU) {
 
 	int a, respuesta;
 	char* contenido;
@@ -131,7 +131,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 
 
-void finalizar(int idProc) {
+void finalizar(t_PID idProc) {
 	int a,tamanioListaId,id;
 	t_list * listaDeId;
 	listaDeId = buscarLosIdDeProceso(idProc);

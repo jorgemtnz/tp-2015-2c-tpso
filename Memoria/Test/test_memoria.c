@@ -73,6 +73,10 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria(){
 	CU_ASSERT_EQUAL(contadorCantProc4, 7);
 }
 
+static void test_probar_memoria_sin_TLB(){
+	inicializacionDesdeCero();
+}
+
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},
 	CU_TEST_INFO_NULL,
