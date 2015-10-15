@@ -155,14 +155,17 @@ int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura) {
 	if(existeSerializacion(tipoMensaje)) {
 		return enviarSerializado(fdCliente, tipoMensaje, estructura);
 	} else {
-		char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
-		int longitudMensajeSerializado = strlen(estructuraSerializada);
-
-		//enviamos un header
-		enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
-
-		//enviamos la estructura serializada
-		return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
+		printf("No existe serializacion para el tipoMensaje %s\n", getNombreTipoMensaje(tipoMensaje));
+		exit(-1);
+		return 0;
+//		char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
+//		int longitudMensajeSerializado = strlen(estructuraSerializada);
+//
+//		//enviamos un header
+//		enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
+//
+//		//enviamos la estructura serializada
+//		return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
 	}
 }
 
@@ -695,6 +698,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(ESCRIBIR_MEM, "ESCRIBIR_MEM", serializar_ESCRIBIR_MEM, deserializar_ESCRIBIR_MEM);
 		registrarSerializadores(ENTRADA_SALIDA, "ENTRADA_SALIDA", serializar_ENTRADA_SALIDA, deserializar_ENTRADA_SALIDA);
 		registrarSerializadores(INICIAR_PROCESO_MEM, "INICIAR_PROCESO_MEM", serializar_INICIAR_PROCESO_MEM, deserializar_INICIAR_PROCESO_MEM);
+		registrarSerializadores(FIN_PROCESO_MEM, "FIN_PROCESO_MEM", serializar_FIN_PROCESO_MEM, deserializar_FIN_PROCESO_MEM);
 	//+++++++++++++++++++++++ resultados++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
 		registrarSerializadores(RESUL_INICIAR_PROC_ERROR, "RESUL_INICIAR_PROC_ERROR", serializar_RESUL_INICIAR_PROC_ERROR, deserializar_RESUL_INICIAR_PROC_ERROR);
@@ -769,12 +773,14 @@ int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructu
 }
 
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	printf("Serializando %s\n", getNombreTipoMensaje(tipoMensaje));
 	(int*)funcion(fdCliente, tipoMensaje, estructura);
 	//TODO
 	return 0;
 }
 
 int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion) {
+	printf("Deserializando %s\n", getNombreTipoMensaje(tipoMensaje));
 	void* resultado = funcion(fdCliente, tipoMensaje);
 	resultadoDeserializacion -> resultado = resultado;
 	//TODO

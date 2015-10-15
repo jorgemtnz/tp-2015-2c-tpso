@@ -201,6 +201,11 @@ void* serializar_RESUL_INICIAR_PROC_ERROR(int fdCliente,
 void* deserializar_RESUL_INICIAR_PROC_ERROR(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
+void* serializar_FIN_PROCESO_MEM(int fdCliente,
+		t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_FIN_PROCESO_MEM(int fdCliente,
+		t_tipo_mensaje tipoMensaje);
+
 void* serializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
 t_PID* deserializar_RESUL_INICIAR_PROC_OK_CPU(int fdCliente,
