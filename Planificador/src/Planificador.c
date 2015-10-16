@@ -8,6 +8,9 @@ int main(int argc, char *argv[]) {
 	putsConsola("Iniciando programa");
 	listaCPUs = list_create();
 	leerArchivoDeConfiguracion(argc, argv);
+	if (hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
 	escucharConexiones(configuracion->puertoEscucha, 0, 0, 0, procesarMensajes, NULL, logger);
 	levantarConsola();
 
@@ -38,4 +41,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		desregistrarCPUConectada(socket);
 	}
 	return 0;
+}
+
+char* decirHolaMundo() {
+	return "Hola Mundo";
 }
