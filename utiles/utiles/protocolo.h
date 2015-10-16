@@ -243,7 +243,7 @@ void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente,
+void serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
