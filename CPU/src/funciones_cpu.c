@@ -1,12 +1,12 @@
 #include "CPU.h"
 //lee el archivo de configuracion
-void leerArchivoDeConfiguracion() {
-	char* nombreArchivoConfig;
+void leerArchivoDeConfiguracion(char* nombreArchivoConfig) {
+
 	t_config* archivoConfig = NULL;
 	int result = 0;
 	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
-	nombreArchivoConfig = strdup(
-			"/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
+//	nombreArchivoConfig = strdup(
+//			"/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");

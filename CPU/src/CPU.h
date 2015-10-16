@@ -134,10 +134,11 @@ t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 
+int cargaArchvConfig(int argc, char **argv);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
-void leerArchivoDeConfiguracion();
+void leerArchivoDeConfiguracion(char* nombreArchivoConfig);
 int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
