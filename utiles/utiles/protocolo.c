@@ -190,6 +190,18 @@ void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return estructura;
 }
 
+void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	//puts("Serializando serializar_ESCRIBIR_SWAP");
+	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
+	return 0;
+}
+
+void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
+	//puts("Deserializando serializar_ESCRIBIR_SWAP");
+	return estructura;
+}
+
 void* serializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_LEER_MEM");
 	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);

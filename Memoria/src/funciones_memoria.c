@@ -162,7 +162,7 @@ void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU){
-	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
+	enviarStruct(socketCPU, RESUL_ESCRIBIR_OK, estructura);
 }
 
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU){
