@@ -285,7 +285,7 @@ void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 
-void serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje,
+void* serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
@@ -321,8 +321,8 @@ t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente,
 
 void serializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_tipo_mensaje estructura);
-t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
+t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente
+		);
 
 void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);

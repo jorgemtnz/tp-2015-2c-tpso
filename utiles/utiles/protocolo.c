@@ -134,13 +134,11 @@ void* deserializar_RESUL_FIN(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return estructura;
 }
 
-
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_RESUL_LEER_OK");
 	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
-
 
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
@@ -255,27 +253,40 @@ t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipo
 }
 void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	serializar_t_respuesta_ejecucion(fdCliente, tipoMensaje, estructura);
+
 }
 void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
 }
 
-void serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+void* serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 //	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 //		t_list* resultadosInstrucciones;
 //		bool finalizoOk;
+	int a;
+	t_resultado_instruccion* contenidoLista;
+	contenidoLista = malloc(sizeof(t_resultado_instruccion));
 	t_respuesta_ejecucion* respuestaEjecucion = (t_respuesta_ejecucion*) estructura;
 	serializar_t_pcb(fdCliente, tipoMensaje, respuestaEjecucion->pcb);
 
 	serializar_bool(fdCliente, respuestaEjecucion->finalizoOk);
 
-
 	serializar_int8_t(fdCliente, list_size(respuestaEjecucion->resultadosInstrucciones));
-	void serializar_t_resultado_instruccion_adapter(void* elemento) {
-		serializar_t_resultado_instruccion(fdCliente, tipoMensaje, elemento);
+	/*void serializar_t_resultado_instruccion_adapter(void* elemento) {
+	 serializar_t_resultado_instruccion(fdCliente, tipoMensaje, elemento);
+	 }
+
+	 list_iterate(respuestaEjecucion->resultadosInstrucciones, serializar_t_resultado_instruccion_adapter);*/
+
+	for (a = 0; a < list_size(respuestaEjecucion->resultadosInstrucciones); a++) {
+		contenidoLista = list_get(respuestaEjecucion->resultadosInstrucciones, a);
+
+		serializar_t_resultado_instruccion(fdCliente, tipoMensaje, contenidoLista);
+
 	}
 
-	list_iterate(respuestaEjecucion->resultadosInstrucciones, serializar_t_resultado_instruccion_adapter);
+	return 0;
+
 }
 
 t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje) {
@@ -299,22 +310,24 @@ void serializar_t_resultado_instruccion(int fdCliente, t_tipo_mensaje tipoMensaj
 
 	t_resultado_instruccion* resultadoInstruccion = (t_resultado_instruccion*) estructura;
 	// confuso por que la estructura tambien es un tipo mensaje (pero de una ejecucion anterior)
+
 	serializar_t_tipo_mensaje(fdCliente, tipoMensaje, resultadoInstruccion->tipoMensaje);
+
 	serializar_string(fdCliente, resultadoInstruccion->comandoInstruccion);
 	serializar_string(fdCliente, resultadoInstruccion->expresion);
 }
 t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_resultado_instruccion* resultadoInstruccion = malloc(sizeof(t_resultado_instruccion));
-	resultadoInstruccion->tipoMensaje = deserializar_t_tipo_mensaje(fdCliente, tipoMensaje);
+	resultadoInstruccion->tipoMensaje = deserializar_t_tipo_mensaje(fdCliente);
 	resultadoInstruccion->comandoInstruccion = deserializar_string(fdCliente);
 	resultadoInstruccion->expresion = deserializar_string(fdCliente);
 	return resultadoInstruccion;
 }
 
 void serializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje, t_tipo_mensaje estructura) {
-	enviarSimple(fdCliente, estructura, sizeof(t_tipo_mensaje));
+	enviarSimple(fdCliente, &estructura, sizeof(t_tipo_mensaje));
 }
-t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje) {
+t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente) {
 	t_tipo_mensaje* tipoMensajeARecibir = malloc(sizeof(t_tipo_mensaje));
 	recibirPorSocket(fdCliente, tipoMensajeARecibir, sizeof(t_tipo_mensaje));
 	return *tipoMensajeARecibir;
@@ -452,7 +465,7 @@ t_iniciar_swap* deserializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMe
 	return estructura;
 }
 void serializar_string(int fdCliente, char* estructura) {
-	if(estructura != NULL) {
+	if (estructura != NULL) {
 		int16_t tamanioString = strlen(estructura);
 		serializar_int16_t(fdCliente, tamanioString);
 		enviarSimple(fdCliente, estructura, tamanioString);
@@ -463,7 +476,7 @@ void serializar_string(int fdCliente, char* estructura) {
 char* deserializar_string(int fdCliente) {
 	int16_t tamanioString = deserializar_int16_t(fdCliente);
 	char* string = malloc(tamanioString + 1);
-	if(tamanioString > 0) {
+	if (tamanioString > 0) {
 		recibirPorSocket(fdCliente, string, tamanioString);
 	}
 	string[tamanioString] = '\0';
