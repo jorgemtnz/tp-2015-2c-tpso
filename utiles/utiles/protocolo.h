@@ -324,4 +324,7 @@ void serializar_t_tipo_mensaje(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
+void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 #endif /* UTILES_PROTOCOLO_H_ */

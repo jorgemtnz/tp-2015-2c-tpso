@@ -27,7 +27,7 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	tamanioTablaPag = list_size(listaTablaDePag);
 	for (a = 0; a < tamanioTablaPag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag && idMarco !=-1) {
 			idMarco = campoTablaDePag->idMarco;
 		}
 	}
@@ -349,11 +349,61 @@ void inicializacionDesdeCero(){
 	listaTLB = list_create();
 	listaTablaDePag = list_create();
 	contadorPagTP = 0;
-	variableIdMarco = 0;
+	contadorEscribirPrintF =0;
+	contadorIniciarPrintF = 0;
+
 }
 
 void iniciarConfiguracionTLBNoHabilitada(){
 	configuracion->tlbHabilitada = 0;
+}
+
+void hardcodearTablaDePaginasYMarcoMemoria(int pag1,int pag2,int pag3,int pag4,int pag5) {
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_marco * campoMemoria;
+	campoMemoria = iniciarMarco();
+
+	campoTablaDePag = list_get(listaTablaDePag, pag1);
+	campoTablaDePag->idMarco = 455;
+	list_replace(listaTablaDePag,1,campoTablaDePag);
+
+	campoTablaDePag = list_get(listaTablaDePag, pag2);
+	campoTablaDePag->idMarco = 456 ;
+	list_replace(listaTablaDePag,5,campoTablaDePag);
+
+	campoTablaDePag = list_get(listaTablaDePag, pag3);
+	campoTablaDePag->idMarco = 457 ;
+	list_replace(listaTablaDePag,9,campoTablaDePag);
+
+	campoTablaDePag = list_get(listaTablaDePag, pag4);
+	campoTablaDePag->idMarco = 458 ;
+	list_replace(listaTablaDePag,14,campoTablaDePag);
+
+	campoTablaDePag = list_get(listaTablaDePag, pag5);
+	campoTablaDePag->idMarco = 459;
+	list_replace(listaTablaDePag,18,campoTablaDePag);
+
+	campoMemoria->contenido = 'PID 1';
+	campoMemoria->idMarco = 455;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria->contenido = 'PID 2';
+	campoMemoria->idMarco = 456;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria->contenido = 'PID 3';
+	campoMemoria->idMarco = 457;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria->contenido = 'PID 3';
+	campoMemoria->idMarco = 458;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria->contenido = 'PID 4';
+	campoMemoria->idMarco = 459;
+	list_add(listaMemoria, campoMemoria);
+
 }
 
 

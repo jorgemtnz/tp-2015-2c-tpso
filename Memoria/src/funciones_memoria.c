@@ -62,9 +62,12 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
 		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
+		tablaDePag->bitPagModificada = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-	// enviarRtaIniciarOkCPU (estructura, socketCPU);
+    enviarRtaIniciarOkCPU (estructura, socketCPU);
+	contadorIniciarPrintF ++;
+	printf("\nEnvio a Swap iniciar por %i vez\n",contadorIniciarPrintF);
 
 	free(estructura);
 }
@@ -75,7 +78,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarEscrituraProc();
-	int idMarco;
+	int idMarco,a=0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_marco * campoMemoria;
@@ -92,6 +95,8 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 			escritura->contenido = textoAEscribir;
 
 			enviarEscribirAlSwap(escritura,socketSwap);
+			contadorEscribirPrintF ++;
+			printf("Envio a Swap escribir por %i vez",contadorEscribirPrintF);
 
 	}else {// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
@@ -157,7 +162,7 @@ void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU){
-	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
+	enviarStruct(socketCPU, RESUL_ESCRIBIR_OK, estructura);
 }
 
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU){

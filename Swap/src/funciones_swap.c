@@ -145,6 +145,8 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 
 		}
 	} else {
+
+
 		estructura->PID = estructuraIniciar->PID;
 		estructura->resultado = ERROR;
 
@@ -361,13 +363,12 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 
-	//list_clean(listaDeEspaciosLibres);
+
 	while(list_size(listaDeEspaciosLibres) > 0){
 	espacioA = list_get(listaDeEspaciosLibres, 0);
 	list_remove(listaDeEspaciosLibres,0);
 //	free(espacioA);
 	}
-
 
 
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
