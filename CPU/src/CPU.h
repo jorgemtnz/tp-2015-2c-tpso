@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>  // read write
+#include <unistd.h>  // read write  /* para STDIN_FILENO */
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -133,12 +133,12 @@ t_contenido_pagina* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* c
 t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
+int putsConsola (const char *msg) ;
 
-int cargaArchvConfig(int argc, char **argv);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
-void leerArchivoDeConfiguracion(char* nombreArchivoConfig);
+void leerArchivoDeConfiguracion(int argc, char *argv[]);
 int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();

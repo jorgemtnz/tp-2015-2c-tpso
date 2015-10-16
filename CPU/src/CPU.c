@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
 	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
 
-	 cargaArchvConfig(argc, argv);
+	 leerArchivoDeConfiguracion(argc, argv);
 
 	int socketPlanificador;
 	int socketMemoria;

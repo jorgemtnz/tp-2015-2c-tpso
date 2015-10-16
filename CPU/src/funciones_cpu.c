@@ -1,10 +1,20 @@
 #include "CPU.h"
 //lee el archivo de configuracion
-void leerArchivoDeConfiguracion(char* nombreArchivoConfig) {
-
+void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	t_config* archivoConfig = NULL;
 	int result = 0;
+	char* logMsg = NULL;
+
 	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
+		if(argc < 2) {
+			logMsg = string_from_format("Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./CPU /home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg\n");
+			putsConsola(logMsg);
+			log_error(logger, logMsg);
+			exit(-1);
+		}
+
+	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
+
 //	nombreArchivoConfig = strdup(
 //			"/home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg");
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);

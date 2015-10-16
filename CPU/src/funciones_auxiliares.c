@@ -36,18 +36,30 @@ int descargaProcesoCPU(t_mCod* mCod) {
 	return EXIT_SUCCESS;
 }
 
-char* pedirRutaArchivo() {
-	char* nombreArchivoConfig = '\0';
-	log_info(logger, "se va a ejecutar pedirRutaArchivo");
-	printf("Ingrese la ruta del archivo de configuracion");
-	fflush(stdin);
-	scanf("%s", nombreArchivoConfig);
-	if (nombreArchivoConfig == '\0')
-		perror("[ERROR] nombre archivo configuracion no ingresado");
-	log_error(logger, "[ERROR] nombre archivo configuracion no ingresado");
-
-	return nombreArchivoConfig;
-}
+//char* pedirRutaArchivo() {
+//	char buf[4096] = { };
+//	int numbytes;
+//	int intentos = 0;
+//	log_info(logger, "se va a ejecutar pedirRutaArchivo");
+//	printf("Ingrese la ruta del archivo de configuracion");
+//	fflush(stdin);
+//
+//	numbytes = read(STDIN_FILENO, buf, sizeof(buf));
+//	while (numbytes > 0) {
+//		/* va a estar leyendo constantemente desde pantalla
+//		 * AQUI VA EL TRATAMIENTO QUE PIDA EL EJERCICIO.
+//		 */
+//
+//		numbytes = read(STDIN_FILENO, buf, sizeof(buf));
+//	}
+//	if (numbytes == -1) {
+//		perror("fallo en read");
+//		log_error(logger, " nombre archivo configuracion no ingresado");
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	return buf;
+//}
 
 int devuelveCantidadElementosArreglo(char** arreglo) {
 	log_info(logger, "se va a ejecutar devuelveCantidadElementosArreglo");
@@ -62,19 +74,10 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 	return contador;
 }
 
-int cargaArchvConfig(int argc, char **argv) {
-	int fd, ret, numbytes;
-	char buf[128] = { };
-	if (argc != 2) {
-		printf(
-				"ingrese la ruta del archivo configuracion a continuación del nombre del programa\n");
-		perror("[ERROR]: ruta Archivo de configuracion no encontrado");
-		log_error(logger, "ruta Archivo de configuracion no encontrado");
-		exit(-1);
-	}
-
-	leerArchivoDeConfiguracion(argv[1]);
-
-	return EXIT_SUCCESS;
+int putsConsola (const char *msg) {
+	log_info(logger, msg);
+	return puts(msg);
 }
+
+
 
