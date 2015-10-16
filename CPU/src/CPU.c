@@ -9,7 +9,8 @@ int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
-	leerArchivoDeConfiguracion();
+
+	 cargaArchvConfig(argc, argv);
 
 	int socketPlanificador;
 	int socketMemoria;

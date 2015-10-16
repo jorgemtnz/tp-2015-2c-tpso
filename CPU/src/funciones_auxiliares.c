@@ -1,8 +1,9 @@
 #include "CPU.h"
 //si es inicializar me devuelve el token sino -1 como error
 int reconoceTokenInstruccion(char* string) {
-log_info(logger, "se va a ejecutar reconoce token segun el comando de la instruccion ");
-	if(string_ends_with(string, ";")) {
+	log_info(logger,
+			"se va a ejecutar reconoce token segun el comando de la instruccion ");
+	if (string_ends_with(string, ";")) {
 		int tamanioString = strlen(string);
 		string[tamanioString - 1] = '\0';
 	}
@@ -37,7 +38,7 @@ int descargaProcesoCPU(t_mCod* mCod) {
 
 char* pedirRutaArchivo() {
 	char* nombreArchivoConfig = '\0';
-        log_info(logger, "se va a ejecutar pedirRutaArchivo");
+	log_info(logger, "se va a ejecutar pedirRutaArchivo");
 	printf("Ingrese la ruta del archivo de configuracion");
 	fflush(stdin);
 	scanf("%s", nombreArchivoConfig);
@@ -61,4 +62,19 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 	return contador;
 }
 
+int cargaArchvConfig(int argc, char **argv) {
+	int fd, ret, numbytes;
+	char buf[128] = { };
+	if (argc != 2) {
+		printf(
+				"ingrese la ruta del archivo configuracion a continuación del nombre del programa\n");
+		perror("[ERROR]: ruta Archivo de configuracion no encontrado");
+		log_error(logger, "ruta Archivo de configuracion no encontrado");
+		exit(-1);
+	}
+
+	leerArchivoDeConfiguracion(argv[1]);
+
+	return EXIT_SUCCESS;
+}
 
