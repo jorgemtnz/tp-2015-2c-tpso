@@ -290,6 +290,7 @@ void* serializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje
 }
 
 t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_resultado_instruccion* resultadoInstruccion = malloc(sizeof(t_resultado_instruccion));
 
 	t_respuesta_ejecucion* respuestaEjecucion = malloc(sizeof(t_respuesta_ejecucion));
 	respuestaEjecucion->pcb = deserializar_t_pcb(fdCliente, tipoMensaje);
@@ -300,7 +301,8 @@ t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente, t_tipo_
 	respuestaEjecucion->resultadosInstrucciones = list_create();
 	int var;
 	for (var = 0; var < cantidadResultadosInstrucciones; var++) {
-		list_add(respuestaEjecucion->resultadosInstrucciones, deserializar_t_resultado_instruccion(fdCliente, tipoMensaje));
+		resultadoInstruccion = deserializar_t_resultado_instruccion(fdCliente, tipoMensaje);
+		list_add(respuestaEjecucion->resultadosInstrucciones, resultadoInstruccion);
 	}
 
 	return respuestaEjecucion;
