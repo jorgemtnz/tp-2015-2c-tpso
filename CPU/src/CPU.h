@@ -8,6 +8,7 @@
 #ifndef CPU_H_
 #define CPU_H_
 // +++++++++++++++++++++++++++++++++++++++ Includes +++++++++++++++++++++++++++++++++++++
+#include "../test/test.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -163,5 +164,8 @@ t_ProcCPU* procCPU;  //proceso CPU que controla la lista de los hilos CPU
 
 t_equipo* un;
 t_dictionary* conexiones;
+
+//test
+char* decirHolaMundo();
 
 #endif /* CPU_H_ */

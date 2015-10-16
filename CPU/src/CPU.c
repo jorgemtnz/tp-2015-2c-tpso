@@ -1,6 +1,6 @@
 #include "CPU.h"
 
-int main(void) {
+int main(int argc, char *argv[]) {
 	procCPU = crearProcCPU();
 	t_cpu* cpu = crearCPU();
 
@@ -28,6 +28,9 @@ int main(void) {
 
 	dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 
+	if (hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
 	escucharConexiones("0", socketPlanificador, socketMemoria, 0, procesarMensajes, NULL, logger);
 
 	log_info(logger, "se destruye proceso CPU");
@@ -82,3 +85,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	return 0;
 }
 
+char* decirHolaMundo() {
+	return "Hola Mundo";
+}
