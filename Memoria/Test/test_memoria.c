@@ -160,20 +160,22 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 
 	campoMemoria = list_get(listaMemoria, 0);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
+	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 1);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
+	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 2);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
+	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 3);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
+	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 4);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
-
+	printf("\n\n %i \n\n",campoMemoria->idMarco);
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
-	inicializacionDesdeCero();
-	iniciarConfiguracionTLBNoHabilitada();
 
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
@@ -196,12 +198,15 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	escribir(PID1, pag1,contenido1, socketMentiroso);
-	escribir(PID2, pag2,contenido2, socketMentiroso);
-	escribir(PID3, pag3,contenido3, socketMentiroso);
-	escribir(PID3, pag4,contenido3Bis, socketMentiroso);
-	escribir(PID4, pag5,contenido4, socketMentiroso);
+	printf("\n\n entro a escribir \n\n");
 
+	escribir(PID1, 1,contenido1, socketMentiroso);
+	escribir(PID2, 1,contenido2, socketMentiroso);
+	escribir(PID3, 0,contenido3, socketMentiroso);
+	escribir(PID3, 5,contenido3Bis, socketMentiroso);
+	escribir(PID4, 3,contenido4, socketMentiroso);
+
+	printf("\n\n a \n\n");
 	for (a = 0; a < 4; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 

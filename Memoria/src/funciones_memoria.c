@@ -65,8 +65,6 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		list_add(listaTablaDePag, tablaDePag);
 	}
     //enviarRtaIniciarOkCPU (estructura, socketCPU);
-	contadorIniciarPrintF ++;
-	printf("\nEnvio a Swap iniciar por %i vez\n",contadorIniciarPrintF);
 
 	free(estructura);
 }
@@ -75,13 +73,11 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 	// 1 -ver si estan en memoria y ponerle el bit de modificada
 	// 2- si no esta mandar a escribir a swap
 
+	printf("\n\n entro a escribir \n\n");
+
 	t_contenido_pagina * escritura;
 	escritura = iniciarEscrituraProc();
-	int idMarco,a=0;
-	t_TLB * campoTLB;
-	campoTLB = iniciarTLB();
-	t_marco * campoMemoria;
-	campoMemoria = iniciarMarco();
+	int idMarco;
 
 	//veo si esta en un marco de memoria
 
@@ -94,8 +90,6 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 			escritura->contenido = textoAEscribir;
 
 			//enviarEscribirAlSwap(escritura,socketSwap);
-			contadorEscribirPrintF ++;
-			printf("Envio a Swap escribir por %i vez",contadorEscribirPrintF);
 
 	}else {// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
