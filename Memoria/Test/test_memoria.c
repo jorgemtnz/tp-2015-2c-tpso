@@ -118,8 +118,6 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5,idMarco6;
 
 
-
-
 	idMarco1 = buscarSiEstaEnMemoria(PID1,1);
 	idMarco2 = buscarSiEstaEnMemoria(PID2,1);
 	idMarco3 = buscarSiEstaEnMemoria(PID3,0);
@@ -135,7 +133,44 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	CU_ASSERT_EQUAL(idMarco6,-1);
 
 }
-/*
+
+static void escribir_en_marco_y_poner_bit_de_modificada(){
+	int tamanioMemoria,a;
+	tamanioMemoria= list_size(listaMemoria);
+	int idMarco1 = 455, idMarco2 = 456, idMarco3 = 457, idMarco4 = 458, idMarco5 = 459;
+	char* contenido1;
+	char* contenido2;
+	char* contenido3;
+	char* contenido3Bis;
+	char* contenido4;
+	contenido1 = "escritura1";
+	contenido2 = "escritura2";
+	contenido3 = "escritura3";
+	contenido3Bis = "escritura3Bis";
+	contenido4 = "escritura4";
+	t_marco * campoMemoria;
+	campoMemoria = iniciarMarco();
+
+
+	escribirEnMarcoYponerBitDeModificada(idMarco1,contenido1);
+	escribirEnMarcoYponerBitDeModificada(idMarco2,contenido2);
+	escribirEnMarcoYponerBitDeModificada(idMarco3,contenido3);
+	escribirEnMarcoYponerBitDeModificada(idMarco4,contenido3Bis);
+	escribirEnMarcoYponerBitDeModificada(idMarco5,contenido4);
+
+	campoMemoria = list_get(listaMemoria, 0);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
+	campoMemoria = list_get(listaMemoria, 1);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
+	campoMemoria = list_get(listaMemoria, 2);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
+	campoMemoria = list_get(listaMemoria, 3);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
+	campoMemoria = list_get(listaMemoria, 4);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
+
+}
+
 static void test_probar_escribir_memoria_sin_TLB(){
 	inicializacionDesdeCero();
 	iniciarConfiguracionTLBNoHabilitada();
@@ -151,11 +186,11 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	char* contenido3;
 	char* contenido3Bis;
 	char* contenido4;
-	contenido1 ='escritura1';
-	contenido2 = 'escritura2';
-	contenido3 = 'escritura3';
-	contenido3Bis = 'escritura3Bis';
-	contenido4 = 'escritura4';
+	contenido1 = "escritura1";
+	contenido2 = "escritura2";
+	contenido3 = "escritura3";
+	contenido3Bis = "escritura3Bis";
+	contenido4 = "escritura4";
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
@@ -221,10 +256,11 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	}
 
 }
-*/
+
 
 static CU_TestInfo tests[] = {
-	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},/*{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},*/{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
+	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
+	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
 

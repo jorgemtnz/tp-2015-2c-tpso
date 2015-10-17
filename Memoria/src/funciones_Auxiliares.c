@@ -79,9 +79,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 			flagMemoria = 1;
 		}
 	}
-	free(campoMarco);
-	free(campoTLB);
-	free(campoTablaDePag);
+
 }
 
 void cargarNuevoMarcoAMemoria(char* contenido) {
@@ -363,48 +361,62 @@ void iniciarConfiguracionTLBNoHabilitada(){
 void hardcodearTablaDePaginasYMarcoMemoria(int pag1,int pag2,int pag3,int pag4,int pag5) {
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
-	t_marco * campoMemoria;
-	campoMemoria = iniciarMarco();
+    t_marco * campoMemoria;
+    t_marco * campoMemoria1;
+    campoMemoria1 = iniciarMarco();
 
+	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag1);
 	campoTablaDePag->idMarco = 455;
 	list_replace(listaTablaDePag,1,campoTablaDePag);
 
+	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag2);
 	campoTablaDePag->idMarco = 456 ;
 	list_replace(listaTablaDePag,5,campoTablaDePag);
 
+	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag3);
 	campoTablaDePag->idMarco = 457 ;
 	list_replace(listaTablaDePag,9,campoTablaDePag);
 
+	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag4);
 	campoTablaDePag->idMarco = 458 ;
 	list_replace(listaTablaDePag,14,campoTablaDePag);
 
+	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag5);
 	campoTablaDePag->idMarco = 459;
 	list_replace(listaTablaDePag,18,campoTablaDePag);
 
+
+	campoMemoria = iniciarMarco();
 	campoMemoria->contenido = 'PID 1';
 	campoMemoria->idMarco = 455;
 	list_add(listaMemoria, campoMemoria);
 
+	campoMemoria = iniciarMarco();
+	campoMemoria = iniciarMarco();
 	campoMemoria->contenido = 'PID 2';
 	campoMemoria->idMarco = 456;
 	list_add(listaMemoria, campoMemoria);
 
+	campoMemoria = iniciarMarco();
 	campoMemoria->contenido = 'PID 3';
 	campoMemoria->idMarco = 457;
 	list_add(listaMemoria, campoMemoria);
 
+	campoMemoria = iniciarMarco();
 	campoMemoria->contenido = 'PID 3';
 	campoMemoria->idMarco = 458;
 	list_add(listaMemoria, campoMemoria);
 
+	campoMemoria = iniciarMarco();
 	campoMemoria->contenido = 'PID 4';
 	campoMemoria->idMarco = 459;
 	list_add(listaMemoria, campoMemoria);
+
 
 }
 
