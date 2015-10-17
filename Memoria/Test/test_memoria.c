@@ -160,19 +160,15 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 
 	campoMemoria = list_get(listaMemoria, 0);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
-	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 1);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
-	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 2);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
-	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 3);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
-	printf("\n\n %i \n\n",campoMemoria->idMarco);
 	campoMemoria = list_get(listaMemoria, 4);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
-	printf("\n\n %i \n\n",campoMemoria->idMarco);
+
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
@@ -198,21 +194,19 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	printf("\n\n entro a escribir \n\n");
-
 	escribir(PID1, 1,contenido1, socketMentiroso);
 	escribir(PID2, 1,contenido2, socketMentiroso);
 	escribir(PID3, 0,contenido3, socketMentiroso);
 	escribir(PID3, 5,contenido3Bis, socketMentiroso);
 	escribir(PID4, 3,contenido4, socketMentiroso);
 
-	printf("\n\n a \n\n");
+
 	for (a = 0; a < 4; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(pag1 != a){
+		if(1 != a){
 		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		} else {
@@ -225,9 +219,12 @@ static void test_probar_escribir_memoria_sin_TLB(){
 		campoTablaDePag = list_get(listaTablaDePag, a + 4);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(pag2 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 456);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
+		if(1 != a){
+		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
+		}else {
+			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 456);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
 		}
 	}
 
@@ -235,10 +232,10 @@ static void test_probar_escribir_memoria_sin_TLB(){
 		campoTablaDePag = list_get(listaTablaDePag, a + 9);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(pag3 != a && pag4 != a){
+		if(0 != a && 5 != a){
 		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		} else if ( pag3 != a){
+		} else if ( 5 != a){
 			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 457);
 			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
 		}else {
@@ -251,7 +248,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 		campoTablaDePag = list_get(listaTablaDePag, a + 15);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(pag5 != a){
+		if(3 != a){
 		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		}else {

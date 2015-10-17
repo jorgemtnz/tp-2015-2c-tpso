@@ -73,8 +73,6 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 	// 1 -ver si estan en memoria y ponerle el bit de modificada
 	// 2- si no esta mandar a escribir a swap
 
-	printf("\n\n entro a escribir \n\n");
-
 	t_contenido_pagina * escritura;
 	escritura = iniciarEscrituraProc();
 	int idMarco;
@@ -89,7 +87,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 			escritura->PID = idProc;
 			escritura->contenido = textoAEscribir;
 
-			//enviarEscribirAlSwap(escritura,socketSwap);
+			enviarEscribirAlSwap(escritura,socketSwap);
 
 	}else {// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
@@ -121,7 +119,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 		}
 
-		//enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
+		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
 
 
 
