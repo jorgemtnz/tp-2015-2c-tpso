@@ -7,7 +7,7 @@
 #include "Memoria.h"
 
 int buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	int tamanioTLB, a, tamanioTablaPag, idMarco = -1;
+	int tamanioTLB, a, tamanioTablaPag, idMarco = -1,flagTLB =0,flagTDP = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
@@ -19,16 +19,18 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idProc == idProc && campoTLB->paginaDelProceso == nroPag /*que este en un marco*/) {
 				idMarco = campoTLB->idMarco;
+				flagTLB = 1;
 			}
 		}
 	}
 	// sino veo si esta en la tabla de paginas
 
 	tamanioTablaPag = list_size(listaTablaDePag);
-	for (a = 0; a < tamanioTablaPag; a++) {
+	for (a = 0; a < tamanioTablaPag && flagTLB == 0 && flagTDP ==0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag && idMarco !=-1) {
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag ) {
 			idMarco = campoTablaDePag->idMarco;
+			flagTDP=1;
 		}
 	}
 

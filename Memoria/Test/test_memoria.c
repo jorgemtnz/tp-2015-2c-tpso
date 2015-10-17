@@ -1,4 +1,5 @@
 /*
+ /*
  * test_suite1.c
  *
  *  Created on: 12/4/2015
@@ -106,11 +107,42 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 
 }
 
+static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
+	iniciarConfiguracionTLBNoHabilitada();
+	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
+	// int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
+
+	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
+	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
+
+	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5,idMarco6;
+
+
+
+
+	idMarco1 = buscarSiEstaEnMemoria(PID1,1);
+	idMarco2 = buscarSiEstaEnMemoria(PID2,1);
+	idMarco3 = buscarSiEstaEnMemoria(PID3,0);
+	idMarco4 = buscarSiEstaEnMemoria(PID3,5);
+	idMarco5 = buscarSiEstaEnMemoria(PID4,3);
+	idMarco6 = buscarSiEstaEnMemoria(PID1,-1);
+
+	CU_ASSERT_EQUAL(idMarco1,455);
+	CU_ASSERT_EQUAL(idMarco2,456);
+	CU_ASSERT_EQUAL(idMarco3,457);
+	CU_ASSERT_EQUAL(idMarco4,458);
+	CU_ASSERT_EQUAL(idMarco5,459);
+	CU_ASSERT_EQUAL(idMarco6,-1);
+
+}
+/*
 static void test_probar_escribir_memoria_sin_TLB(){
 	inicializacionDesdeCero();
 	iniciarConfiguracionTLBNoHabilitada();
+
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
+
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int socketMentiroso = 7;
 	int a = 1;
@@ -189,10 +221,10 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	}
 
 }
-
+*/
 
 static CU_TestInfo tests[] = {
-	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
+	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},/*{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},*/{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
 

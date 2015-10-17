@@ -48,8 +48,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 
 void iniciar(int idProc, int cantPag, int socketCPU) {
-	int tamanioTablaDePag;
-	uint16_t contador;
+	int contador;
 	t_TablaDePaginas* tablaDePag;
 	t_iniciar_swap * estructura;
 	estructura = crearEstructuraIniciar();
@@ -65,7 +64,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPagModificada = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-    enviarRtaIniciarOkCPU (estructura, socketCPU);
+    //enviarRtaIniciarOkCPU (estructura, socketCPU);
 	contadorIniciarPrintF ++;
 	printf("\nEnvio a Swap iniciar por %i vez\n",contadorIniciarPrintF);
 
@@ -94,7 +93,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 			escritura->PID = idProc;
 			escritura->contenido = textoAEscribir;
 
-			enviarEscribirAlSwap(escritura,socketSwap);
+			//enviarEscribirAlSwap(escritura,socketSwap);
 			contadorEscribirPrintF ++;
 			printf("Envio a Swap escribir por %i vez",contadorEscribirPrintF);
 
