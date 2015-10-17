@@ -420,4 +420,48 @@ void hardcodearTablaDePaginasYMarcoMemoria(int pag1,int pag2,int pag3,int pag4,i
 
 }
 
+t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
+	int contador;
+	t_TablaDePaginas* tablaDePag;
+	t_iniciar_swap * estructura;
+	estructura = crearEstructuraIniciar();
+	estructura->PID = idProc;
+	estructura->cantidadPaginas = cantPag;
 
+	for (contador = 0; contador < cantPag; contador++) {
+		contadorPagTP++;
+		tablaDePag = iniciarTablaDePaginas();
+		tablaDePag->idProc = idProc;
+		tablaDePag->paginaDelProceso = contador;
+		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
+		tablaDePag->bitPagModificada = 0;
+		list_add(listaTablaDePag, tablaDePag);
+	}
+    return estructura;
+}
+
+t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
+	// 1 -ver si estan en memoria y ponerle el bit de modificada
+	// 2- si no esta mandar a escribir a swap
+
+	t_contenido_pagina * escritura;
+	escritura = iniciarEscrituraProc();
+	int idMarco;
+
+	//veo si esta en un marco de memoria
+
+	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
+
+	if( idMarco == -1){
+		// 2
+			escritura->numeroPagina = nroPag;
+			escritura->PID = idProc;
+			escritura->contenido = textoAEscribir;
+
+			return escritura;
+
+	}else {// entonces tengo el id del marco
+		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
+	}
+
+}

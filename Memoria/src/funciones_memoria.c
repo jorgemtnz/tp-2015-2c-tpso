@@ -64,7 +64,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPagModificada = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-    //enviarRtaIniciarOkCPU (estructura, socketCPU);
+    enviarRtaIniciarOkCPU (estructura, socketCPU);
 
 	free(estructura);
 }

@@ -137,6 +137,8 @@ void enviarASwapEliminarProceso(int idProc);
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) ;
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU);
+t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
+t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
