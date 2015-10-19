@@ -41,7 +41,7 @@ t_mCod* crearmCod() {
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
 		exit(-1);
 	}
-	mCod->ptrCMemoriaMap = '\0';
+	mCod->ptrCMemoriaMap = NULL;
 	mCod->ptrTamPagina = 0;
     mCod->cantidadInstrucciones =0;
     mCod->respEjec = creaRespuestaEjecucion();
@@ -72,14 +72,14 @@ t_cpu* crearCPU() {
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		exit(-1);
 	}//si esta vacia la lista
-	if (list_is_empty(procCPU->listaCPU)==0 )
+	if (list_size(procCPU->listaCPU)==0 )
 	cPUHilo->idCPU = 0;
 
 	cPUHilo->idCPU = procCPU->contadorIdCPU +1;
 	procCPU->contadorIdCPU = cPUHilo->idCPU;
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->estadoEjecucion = NO_USO;
-
+    cPUHilo->cantInstEjecutadas=0;
 	return cPUHilo;
 }
 
