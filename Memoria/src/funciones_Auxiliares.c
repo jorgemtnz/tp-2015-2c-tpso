@@ -288,7 +288,7 @@ void eliminarDeMemoria(int id) {
 
 void eliminarDeTablaDePaginas(int id) {
 	int a, tamanioTablaDePaginas, flag = 0;
-	tamanioTablaDePaginas = list_size(listaMemoria);
+	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
