@@ -27,16 +27,33 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	inicializacionDesdeCero();
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
+	t_iniciar_swap* campoIniciar;
+	campoIniciar = crearEstructuraIniciar();
+	t_iniciar_swap* campoIniciar1;
+	campoIniciar1 = crearEstructuraIniciar();
+	t_iniciar_swap* campoIniciar2;
+	campoIniciar2 = crearEstructuraIniciar();
+	t_iniciar_swap* campoIniciar3;
+	campoIniciar3 = crearEstructuraIniciar();
+
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
 	int socketMentiroso = 7;
 	int tamanioFinalTablaDePag, a;
 	int contadorCantProc1 = 0, contadorCantProc2 = 0, contadorCantProc3 = 0, contadorCantProc4 = 0;
 	int contadorMarcoNegativo = 0;
-	iniciar(PID1, cant1, socketMentiroso);
-	iniciar(PID2, cant2, socketMentiroso);
-	iniciar(PID3, cant3, socketMentiroso);
-	iniciar(PID4, cant4, socketMentiroso);
+	campoIniciar = iniciar_falso(PID1, cant1, socketMentiroso);
+	CU_ASSERT_EQUAL(campoIniciar->PID, PID1);
+	CU_ASSERT_EQUAL(campoIniciar->cantidadPaginas, cant1);
+	campoIniciar1 = iniciar_falso(PID2, cant2, socketMentiroso);
+	CU_ASSERT_EQUAL(campoIniciar1->PID, PID2);
+	CU_ASSERT_EQUAL(campoIniciar1->cantidadPaginas, cant2);
+	campoIniciar2 =iniciar_falso(PID3, cant3, socketMentiroso);
+	CU_ASSERT_EQUAL(campoIniciar2->PID, PID3);
+	CU_ASSERT_EQUAL(campoIniciar2->cantidadPaginas, cant3);
+	campoIniciar3 =iniciar_falso(PID4, cant4, socketMentiroso);
+	CU_ASSERT_EQUAL(campoIniciar3->PID, PID4);
+	CU_ASSERT_EQUAL(campoIniciar3->cantidadPaginas, cant4);
 
 	tamanioFinalTablaDePag = list_size(listaTablaDePag);
 
@@ -193,13 +210,19 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
+	t_contenido_pagina* campoEscribir;
+	campoEscribir = iniciarEscrituraProc();
 
 	escribir(PID1, 1,contenido1, socketMentiroso);
 	escribir(PID2, 1,contenido2, socketMentiroso);
 	escribir(PID3, 0,contenido3, socketMentiroso);
 	escribir(PID3, 5,contenido3Bis, socketMentiroso);
 	escribir(PID4, 3,contenido4, socketMentiroso);
+	campoEscribir = escribir_falso(PID4, 8,contenido4, socketMentiroso);
 
+	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
+	CU_ASSERT_EQUAL(campoEscribir->contenido, contenido4);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 8);
 
 	for (a = 0; a < 4; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);

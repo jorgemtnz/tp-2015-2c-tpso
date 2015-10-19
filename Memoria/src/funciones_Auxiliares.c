@@ -277,13 +277,46 @@ void eliminarDeMemoria(int id) {
 	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
 		if (campoMarco->idMarco == id) {
-			list_remove(id, a);
+			list_remove(listaMemoria, a);
 			flag = 1;
 		}
 	}
 
 	free(campoMarco);
 
+}
+
+void eliminarDeTablaDePaginas(int id) {
+	int a, tamanioTablaDePaginas, flag = 0;
+	tamanioTablaDePaginas = list_size(listaTablaDePag);
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+
+	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idMarco == id) {
+			list_remove(listaTablaDePag, a);
+			flag = 1;
+		}
+	}
+	free(campoTablaDePag);
+}
+
+void eliminarDeTLBSiEsta(int id) {
+	int a, tamanioTLB, flag = 0;
+	tamanioTLB = list_size(listaTLB);
+	t_TLB* campoTLB;
+	campoTLB = iniciarTLB();
+
+	for (a = 0; a < tamanioTLB && flag == 0; a++) {
+		campoTLB = list_get(listaTLB, a);
+		if (campoTLB->idMarco == id) {
+			list_remove(listaTLB, a);
+			flag = 1;
+		}
+	}
+
+	free(campoTLB);
 }
 
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
@@ -418,6 +451,69 @@ void hardcodearTablaDePaginasYMarcoMemoria(int pag1,int pag2,int pag3,int pag4,i
 	list_add(listaMemoria, campoMemoria);
 
 
+}
+
+t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
+	int contador;
+	t_TablaDePaginas* tablaDePag;
+	t_iniciar_swap * estructura;
+	estructura = crearEstructuraIniciar();
+	estructura->PID = idProc;
+	estructura->cantidadPaginas = cantPag;
+
+	for (contador = 0; contador < cantPag; contador++) {
+		contadorPagTP++;
+		tablaDePag = iniciarTablaDePaginas();
+		tablaDePag->idProc = idProc;
+		tablaDePag->paginaDelProceso = contador;
+		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
+		tablaDePag->bitPagModificada = 0;
+		list_add(listaTablaDePag, tablaDePag);
+	}
+    return estructura;
+}
+
+t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
+	// 1 -ver si estan en memoria y ponerle el bit de modificada
+	// 2- si no esta mandar a escribir a swap
+
+	t_contenido_pagina * escritura;
+	escritura = iniciarEscrituraProc();
+	int idMarco;
+
+	//veo si esta en un marco de memoria
+
+	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
+
+	if( idMarco == -1){
+		// 2
+			escritura->numeroPagina = nroPag;
+			escritura->PID = idProc;
+			escritura->contenido = textoAEscribir;
+
+			return escritura;
+
+	}else {// entonces tengo el id del marco
+		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
+	}
+
+}
+
+int finalizar_falso(int idProc) {
+	int a,tamanioListaId,id;
+	t_list * listaDeId;
+	listaDeId = buscarLosIdDeProceso(idProc);
+	tamanioListaId = list_size(listaDeId);
+
+	for(a=0;a<tamanioListaId;a++){
+		id= list_get(listaDeId,a);
+		eliminarDeMemoria(id);
+		eliminarDeTablaDePaginas(id);
+		if(configuracion->tlbHabilitada == 0){
+			eliminarDeTLBSiEsta(id);
+		}
+	}
+	return idProc;
 }
 
 
