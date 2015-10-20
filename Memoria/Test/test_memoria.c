@@ -39,7 +39,7 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
 	int socketMentiroso = 7;
-	int tamanioFinalTablaDePag, a;
+	int tamanioFinalTablaDePag, a,b=0;
 	int contadorCantProc1 = 0, contadorCantProc2 = 0, contadorCantProc3 = 0, contadorCantProc4 = 0;
 	int contadorMarcoNegativo = 0;
 	campoIniciar = iniciar_falso(PID1, cant1, socketMentiroso);
@@ -59,7 +59,7 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 
 	for (a = 0; a < tamanioFinalTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idMarco == -1)
+		if (campoTablaDePag->idMarco <0)
 			contadorMarcoNegativo++;
 
 		switch (campoTablaDePag->idProc) {
@@ -91,35 +91,39 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	CU_ASSERT_EQUAL(contadorCantProc4, 7);
 
 	for(a=0;a<4;a++){
+		b--;
 	campoTablaDePag = list_get(listaTablaDePag, a);
 	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
 	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 	}
 
 	for(a=0;a<5;a++){
+		b--;
 	campoTablaDePag = list_get(listaTablaDePag, a+4);
 	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
 	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 	}
 
 	for(a=0;a<6;a++){
+		b--;
 	campoTablaDePag = list_get(listaTablaDePag, a+9);
 	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
 	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 	}
 
 	for(a=0;a<7;a++){
+		b--;
 	campoTablaDePag = list_get(listaTablaDePag, a+15);
 	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
 	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 	}
 
 }
@@ -132,7 +136,7 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
 
-	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5,idMarco6;
+	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5;
 
 
 	idMarco1 = buscarSiEstaEnMemoria(PID1,1);
@@ -140,14 +144,12 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	idMarco3 = buscarSiEstaEnMemoria(PID3,0);
 	idMarco4 = buscarSiEstaEnMemoria(PID3,5);
 	idMarco5 = buscarSiEstaEnMemoria(PID4,3);
-	idMarco6 = buscarSiEstaEnMemoria(PID1,-1);
 
 	CU_ASSERT_EQUAL(idMarco1,455);
 	CU_ASSERT_EQUAL(idMarco2,456);
 	CU_ASSERT_EQUAL(idMarco3,457);
 	CU_ASSERT_EQUAL(idMarco4,458);
 	CU_ASSERT_EQUAL(idMarco5,459);
-	CU_ASSERT_EQUAL(idMarco6,-1);
 
 }
 
@@ -195,6 +197,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 
 
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
+	int b=0;
 	int socketMentiroso = 7;
 	int a = 1;
 	char* contenido1;
@@ -240,11 +243,12 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	}
 
 	for (a = 0; a < 5; a++) {
+		b --;
 		campoTablaDePag = list_get(listaTablaDePag, a + 4);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
 		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		}else {
 			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 456);
@@ -253,11 +257,12 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	}
 
 	for (a = 0; a < 6; a++) {
+		b--;
 		campoTablaDePag = list_get(listaTablaDePag, a + 9);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
 		if(0 != a && 5 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		} else if ( 5 != a){
 			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 457);
@@ -269,11 +274,12 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	}
 
 	for (a = 0; a < 7; a++) {
+		b--;
 		campoTablaDePag = list_get(listaTablaDePag, a + 15);
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
 		if(3 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		}else {
 			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 459);
@@ -286,7 +292,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 static void test_buscar_los_id_de_proceso(){
 	int PID1=1 ,PID2=2 ,PID3=3 ,PID4=4 ;
 	int cont1=0,cont2=0,cont3=0,cont4=0;
-	int tamaniolista,a,id;
+	int tamaniolista,a,id,b=0;
 	t_list* lista1;
 	lista1 = list_create();
 	t_list* lista2;
@@ -300,7 +306,7 @@ static void test_buscar_los_id_de_proceso(){
 	tamaniolista = list_size(lista1);
 	for (a = 0; a < tamaniolista; a++) {
 		id = list_get(lista1,a);
-		if (id == -1) {
+		if (id <0) {
 			cont1++;
 		} else {
 			CU_ASSERT_EQUAL(id, 455);
@@ -346,6 +352,12 @@ static void test_buscar_los_id_de_proceso(){
 	CU_ASSERT_EQUAL(cont2, 4);
 	CU_ASSERT_EQUAL(cont3, 4);
 	CU_ASSERT_EQUAL(cont4, 6);
+
+}
+
+static void test_probar_finalizar_un_proceso(){
+	int PID1=1,PID2=2,PID3=3,PID4=4;
+
 
 }
 
