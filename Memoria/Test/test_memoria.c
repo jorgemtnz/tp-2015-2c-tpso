@@ -219,24 +219,25 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_contenido_pagina* campoEscribir;
 	campoEscribir = iniciarEscrituraProc();
 
-	escribir(PID1, 1,contenido1, socketMentiroso);
-	escribir(PID2, 1,contenido2, socketMentiroso);
-	escribir(PID3, 0,contenido3, socketMentiroso);
-	escribir(PID3, 5,contenido3Bis, socketMentiroso);
-	escribir(PID4, 3,contenido4, socketMentiroso);
-	campoEscribir = escribir_falso(PID4, 8,contenido4, socketMentiroso);
+
+	escribir_falso(PID1, 1,contenido1, socketMentiroso);
+	escribir_falso(PID2, 1,contenido2, socketMentiroso);
+	escribir_falso(PID3, 0,contenido3, socketMentiroso);
+	escribir_falso(PID3, 5,contenido3Bis, socketMentiroso);
+	escribir_falso(PID4, 3,contenido4, socketMentiroso);
+	campoEscribir = escribir_falso(PID4, 4,contenido4, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
 	CU_ASSERT_EQUAL(campoEscribir->contenido, contenido4);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 8);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 4);
 
 	for (a = 0; a < 4; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-
+		b--;
 		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
 		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
 		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, -1);
+		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
 		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
 		} else {
 			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 455);
@@ -308,7 +309,7 @@ static void test_buscar_los_id_de_proceso(){
 	tamaniolista = list_size(lista1);
 	for (a = 0; a < tamaniolista; a++) {
 		id = list_get(lista1,a);
-		if (id <0) {
+		if (id < 0) {
 			cont1++;
 		} else {
 			CU_ASSERT_EQUAL(id, 455);
@@ -319,7 +320,7 @@ static void test_buscar_los_id_de_proceso(){
 	tamaniolista = list_size(lista2);
 	for (a = 0; a < tamaniolista; a++) {
 		id = list_get(lista2,a);
-		if (id == -1) {
+		if (id < 0) {
 			cont2++;
 		} else {
 			CU_ASSERT_EQUAL(id, 456);
@@ -330,7 +331,7 @@ static void test_buscar_los_id_de_proceso(){
 	tamaniolista = list_size(lista3);
 	for (a = 0; a < tamaniolista; a++) {
 		id = list_get(lista3,a);
-		if (id == -1) {
+		if (id < 0) {
 			cont3++;
 		} else if (id == 457) {
 			CU_ASSERT_EQUAL(id, 457);
@@ -343,7 +344,7 @@ static void test_buscar_los_id_de_proceso(){
 	tamaniolista = list_size(lista4);
 	for (a = 0; a < tamaniolista; a++) {
 		id = list_get(lista4,a);
-		if (id == -1) {
+		if (id < 0) {
 			cont4++;
 		} else {
 			CU_ASSERT_EQUAL(id, 459);
