@@ -84,6 +84,7 @@ typedef struct {
 	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
 	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
+    char* nombre;
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------

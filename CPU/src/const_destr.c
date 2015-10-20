@@ -2,35 +2,39 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //-----------------------------------FUNCIONES CONTRUCTORAS-------------------------
 
-t_resultado_instruccion* creaResultadoInstruccion(){
-	t_resultado_instruccion* resultInstrucc= malloc(sizeof(t_resultado_instruccion));
-	if (resultInstrucc==NULL){
-			perror("[ERROR] No se reservo memoria resultado instruccion CPU");
-					log_error(logger, "[ERROR] No se reservo memoria resultado instruccion CPU");
-					exit(-1);
-		}
+t_resultado_instruccion* creaResultadoInstruccion() {
+	t_resultado_instruccion* resultInstrucc = malloc(
+			sizeof(t_resultado_instruccion));
+	if (resultInstrucc == NULL) {
+		perror("[ERROR] No se reservo memoria resultado instruccion CPU");
+		log_error(logger,
+				"[ERROR] No se reservo memoria resultado instruccion CPU");
+		exit(-1);
+	}
 	return resultInstrucc;
 }
 
-t_respuesta_ejecucion* creaRespuestaEjecucion(){
+t_respuesta_ejecucion* creaRespuestaEjecucion() {
 	t_respuesta_ejecucion* respEjec = malloc(sizeof(t_respuesta_ejecucion));
-	if (respEjec ==NULL){
-				perror("[ERROR] No se reservo memoria respuesta ejecucion CPU");
-						log_error(logger, "[ERROR] No se reservo memoria respuesta ejecucion CPU");
-						exit(-1);
-			}
+	if (respEjec == NULL) {
+		perror("[ERROR] No se reservo memoria respuesta ejecucion CPU");
+		log_error(logger,
+				"[ERROR] No se reservo memoria respuesta ejecucion CPU");
+		exit(-1);
+	}
 	respEjec->resultadosInstrucciones = list_create();
 	return respEjec;
 }
 
-t_instruccion* creaInstruccion(){
+t_instruccion* creaInstruccion() {
 	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
-	if (instruccion==NULL){
+	if (instruccion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>instruccion");
-				log_error(logger, "[ERROR] No se reservo memoria para CPU>..>instruccion");
-				exit(-1);
+		log_error(logger,
+				"[ERROR] No se reservo memoria para CPU>..>instruccion");
+		exit(-1);
 	}
-	instruccion->ptrComienzoInstruccion='\0';
+	instruccion->ptrComienzoInstruccion = '\0';
 	return instruccion;
 }
 
@@ -43,8 +47,8 @@ t_mCod* crearmCod() {
 	}
 	mCod->ptrCMemoriaMap = NULL;
 	mCod->ptrTamPagina = 0;
-    mCod->cantidadInstrucciones =0;
-    mCod->respEjec = creaRespuestaEjecucion();
+	mCod->cantidadInstrucciones = 0;
+	mCod->respEjec = creaRespuestaEjecucion();
 	return mCod;
 }
 
@@ -52,7 +56,8 @@ t_configuracion* crearConfiguracion() {
 	t_configuracion* configuracion = malloc(sizeof(t_configuracion));
 	if (configuracion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>configuracion");
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>configuracion");
+		log_error(logger,
+				"[ERROR] No se reservo memoria para CPU>..>configuracion");
 		exit(-1);
 	}
 	configuracion->cantidad_hilos = 0;
@@ -71,17 +76,43 @@ t_cpu* crearCPU() {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		exit(-1);
-	}//si esta vacia la lista
-	if (list_size(procCPU->listaCPU)==0 ){
-	cPUHilo->idCPU = 0;
-	}else{
-	  cPUHilo->idCPU = procCPU->contadorIdCPU +1;}
+	} //si esta vacia la lista
+	int token = procCPU->contadorIdCPU  ;
+	switch (token) {
+	case 0: {
+		cPUHilo->idCPU = 0;
+		cPUHilo->nombre = strdup("CPU primera");
+		procCPU->contadorIdCPU = cPUHilo->idCPU;
+		break;
+	}
+	case 1: {
+		cPUHilo->idCPU = 1;
+		cPUHilo->nombre = strdup("CPU segunda");
+		procCPU->contadorIdCPU += cPUHilo->idCPU;
+		break;
+	}
+	case 2: {
+		cPUHilo->idCPU = 2;
+		cPUHilo->nombre = strdup("CPU tercera");
+		procCPU->contadorIdCPU += cPUHilo->idCPU;
+		break;
+	}
+	case 3: {
+			cPUHilo->idCPU = 3;
+			cPUHilo->nombre = strdup("CPU cuarta");
+			procCPU->contadorIdCPU += cPUHilo->idCPU;
+			break;
+		}
+	default:
+		cPUHilo->idCPU = token;
+		string_append_with_format(cPUHilo->nombre,"CPU \%d", token);
 
-	procCPU->contadorIdCPU = cPUHilo->idCPU;
+	}
+
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->estadoEjecucion = NO_USO;
-    cPUHilo->cantInstEjecutadas=0;
-    cPUHilo->mCodCPU= crearmCod();
+	cPUHilo->cantInstEjecutadas = 0;
+	cPUHilo->mCodCPU = crearmCod();
 
 	return cPUHilo;
 }
@@ -103,7 +134,8 @@ t_ProcCPU* crearProcCPU() {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
-	eliminarEspacioDeDatos(unmCod->ptrCMemoriaMap, unmCod->ptrTamPagina, logger);
+	eliminarEspacioDeDatos(unmCod->ptrCMemoriaMap, unmCod->ptrTamPagina,
+			logger);
 	destRespEjec(unmCod->respEjec); // elimina y hace free a todos los elementos de la lista
 	free(unmCod);
 }
@@ -112,40 +144,41 @@ void destConfig(t_configuracion* unaConfig) {
 	free(unaConfig);
 }
 
-void destHiloCPU(t_cpu* unHiloCPU){
-    destmCod(unHiloCPU->mCodCPU);
-   free(unHiloCPU);
+void destHiloCPU(t_cpu* unHiloCPU) {
+	destmCod(unHiloCPU->mCodCPU);
+	free(unHiloCPU);
 }
 
-void destProcCPU(t_ProcCPU* unCPU){
-	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*)destHiloCPU);
+void destProcCPU(t_ProcCPU* unCPU) {
+	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
 	free(unCPU);
 }
 
-void destInstruccion(t_instruccion* unaInstruccion){
+void destInstruccion(t_instruccion* unaInstruccion) {
 	free(unaInstruccion);
 }
 
-void destVectorInstruccion(char** vectorInstruccion){
-	free ( vectorInstruccion);
+void destVectorInstruccion(char** vectorInstruccion) {
+	free(vectorInstruccion);
 }
 
-void destIniciarSwap(t_iniciar_swap* estructura){
+void destIniciarSwap(t_iniciar_swap* estructura) {
 	free(estructura);
 }
 
-void destEscrMem(t_contenido_pagina* estruc){
+void destEscrMem(t_contenido_pagina* estruc) {
 	free(estruc);
 }
 
-void destEntradSalid(t_entrada_salida* entradSalid ){
+void destEntradSalid(t_entrada_salida* entradSalid) {
 	free(entradSalid);
 }
 
-void destResInstruc(t_resultado_instruccion* resultInstrucc){
+void destResInstruc(t_resultado_instruccion* resultInstrucc) {
 	free(resultInstrucc);
 }
 
-void destRespEjec(t_respuesta_ejecucion* respEjec){
-	list_destroy_and_destroy_elements(respEjec->resultadosInstrucciones, (void*)destResInstruc);
+void destRespEjec(t_respuesta_ejecucion* respEjec) {
+	list_destroy_and_destroy_elements(respEjec->resultadosInstrucciones,
+			(void*) destResInstruc);
 }
