@@ -263,7 +263,7 @@ t_list* buscarLosIdDeProceso(int idProc) {
 		}
 	}
 
-	free(campoTablaDePag);
+
 
 	return listaId;
 

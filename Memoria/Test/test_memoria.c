@@ -193,6 +193,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
 
+
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int socketMentiroso = 7;
 	int a = 1;
@@ -282,10 +283,76 @@ static void test_probar_escribir_memoria_sin_TLB(){
 
 }
 
+static void test_buscar_los_id_de_proceso(){
+	int PID1=1 ,PID2=2 ,PID3=3 ,PID4=4 ;
+	int cont1=0,cont2=0,cont3=0,cont4=0;
+	int tamaniolista,a,id;
+	t_list* lista1;
+	lista1 = list_create();
+	t_list* lista2;
+	lista2 = list_create();
+	t_list* lista3;
+	lista3 = list_create();
+	t_list* lista4;
+	lista4 = list_create();
+
+	lista1 = buscarLosIdDeProceso(PID1);
+	tamaniolista = list_size(lista1);
+	for (a = 0; a < tamaniolista; a++) {
+		id = list_get(lista1,a);
+		if (id == -1) {
+			cont1++;
+		} else {
+			CU_ASSERT_EQUAL(id, 455);
+		}
+
+	}
+	lista2 = buscarLosIdDeProceso(PID2);
+	tamaniolista = list_size(lista2);
+	for (a = 0; a < tamaniolista; a++) {
+		id = list_get(lista2,a);
+		if (id == -1) {
+			cont2++;
+		} else {
+			CU_ASSERT_EQUAL(id, 456);
+		}
+
+	}
+	lista3 = buscarLosIdDeProceso(PID3);
+	tamaniolista = list_size(lista3);
+	for (a = 0; a < tamaniolista; a++) {
+		id = list_get(lista3,a);
+		if (id == -1) {
+			cont3++;
+		} else if (id == 457) {
+			CU_ASSERT_EQUAL(id, 457);
+		} else {
+			CU_ASSERT_EQUAL(id, 458);
+		}
+
+	}
+	lista4 = buscarLosIdDeProceso(PID4);
+	tamaniolista = list_size(lista4);
+	for (a = 0; a < tamaniolista; a++) {
+		id = list_get(lista4,a);
+		if (id == -1) {
+			cont4++;
+		} else {
+			CU_ASSERT_EQUAL(id, 459);
+		}
+
+	}
+	CU_ASSERT_EQUAL(cont1, 3);
+	CU_ASSERT_EQUAL(cont2, 4);
+	CU_ASSERT_EQUAL(cont3, 4);
+	CU_ASSERT_EQUAL(cont4, 6);
+
+}
+
 
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
-	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
+	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},{"Test busca los id de los procesos",test_buscar_los_id_de_proceso},
 	CU_TEST_INFO_NULL,
 };
 

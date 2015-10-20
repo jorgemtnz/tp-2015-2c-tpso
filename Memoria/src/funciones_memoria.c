@@ -118,11 +118,6 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 			lecturaMandarCpu->contenido = contenido;
 
 		}
-
-		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
-
-
-
 }
 
 
