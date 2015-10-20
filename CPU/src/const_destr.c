@@ -72,14 +72,17 @@ t_cpu* crearCPU() {
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		exit(-1);
 	}//si esta vacia la lista
-	if (list_size(procCPU->listaCPU)==0 )
+	if (list_size(procCPU->listaCPU)==0 ){
 	cPUHilo->idCPU = 0;
+	}else{
+	  cPUHilo->idCPU = procCPU->contadorIdCPU +1;}
 
-	cPUHilo->idCPU = procCPU->contadorIdCPU +1;
 	procCPU->contadorIdCPU = cPUHilo->idCPU;
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->estadoEjecucion = NO_USO;
     cPUHilo->cantInstEjecutadas=0;
+    cPUHilo->mCodCPU= crearmCod();
+
 	return cPUHilo;
 }
 

@@ -1,6 +1,7 @@
 #include "CPU.h"
 
 int main(int argc, char *argv[]) {
+	// inicio funcion
 	procCPU = crearProcCPU();
 	t_cpu* cpu = crearCPU();
 
@@ -11,7 +12,7 @@ int main(int argc, char *argv[]) {
 	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
 
 	 leerArchivoDeConfiguracion(argc, argv);
-
+// inicio funcion
 	int socketPlanificador;
 	int socketMemoria;
 	int resultConexion_mem = 0;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();
-	}
+	}// poner aca el levantar hilos y luego el
 	escucharConexiones("0", socketPlanificador, socketMemoria, 0, procesarMensajes, NULL, logger);
 
 	log_info(logger, "se destruye proceso CPU");
