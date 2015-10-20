@@ -160,7 +160,7 @@ t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int contadorPagTP,variableIdMarco,contadorEscribirPrintF,contadorIniciarPrintF; // contador de paginas de la tabla de paginas
+int contadorPagTP,variableIdMarcoNeg, variableIdMarcoPos; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;
