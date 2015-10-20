@@ -288,7 +288,6 @@ void eliminarDeMemoria(int id) {
 		}
 	}
 
-	free(campoMarco);
 
 }
 
@@ -305,7 +304,6 @@ void eliminarDeTablaDePaginas(int id) {
 			flag = 1;
 		}
 	}
-	free(campoTablaDePag);
 }
 
 void eliminarDeTLBSiEsta(int id) {
@@ -397,7 +395,7 @@ void iniciarConfiguracionTLBNoHabilitada(){
 	configuracion->tlbHabilitada = 0;
 }
 
-void hardcodearTablaDePaginasYMarcoMemoria(int pag1,int pag2,int pag3,int pag4,int pag5) {
+void hardcodearTablaDePaginas(int pag1,int pag2,int pag3,int pag4,int pag5) {
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
     t_marco * campoMemoria;
@@ -507,16 +505,18 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 }
 
 int finalizar_falso(int idProc) {
-	int a,tamanioListaId,id;
+	int a, tamanioListaId, id;
 	t_list * listaDeId;
 	listaDeId = buscarLosIdDeProceso(idProc);
 	tamanioListaId = list_size(listaDeId);
 
-	for(a=0;a<tamanioListaId;a++){
-		id= list_get(listaDeId,a);
-		eliminarDeMemoria(id);
+	for (a = 0; a < tamanioListaId; a++) {
+		id = list_get(listaDeId, a);
 		eliminarDeTablaDePaginas(id);
-		if(configuracion->tlbHabilitada == 0){
+		if (id > 0) {
+			eliminarDeMemoria(id);
+		}
+		if (configuracion->tlbHabilitada == 0) {
 			eliminarDeTLBSiEsta(id);
 		}
 	}

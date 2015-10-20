@@ -131,8 +131,10 @@ void finalizar(int idProc) {
 
 	for(a=0;a<tamanioListaId;a++){
 			id= list_get(listaDeId,a);
-			eliminarDeMemoria(id);
 			eliminarDeTablaDePaginas(id);
+			if(id > 0){
+				eliminarDeMemoria(id);
+			}
 			if(configuracion->tlbHabilitada == 0){
 				eliminarDeTLBSiEsta(id);
 			}

@@ -136,7 +136,7 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	// int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
 
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
-	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
+	hardcodearTablaDePaginas(pag1,pag2,pag3,pag4,pag5);
 
 	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5;
 
@@ -173,6 +173,9 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 	campoMemoria = iniciarMarco();
 
 
+	printf("\n a \n");
+
+
 	escribirEnMarcoYponerBitDeModificada(idMarco1,contenido1);
 	escribirEnMarcoYponerBitDeModificada(idMarco2,contenido2);
 	escribirEnMarcoYponerBitDeModificada(idMarco3,contenido3);
@@ -193,15 +196,11 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
-
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
-	hardcodearTablaDePaginasYMarcoMemoria(pag1,pag2,pag3,pag4,pag5);
-
-
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int b=0;
 	int socketMentiroso = 7;
-	int a = 1;
+	int a = 1,tamanioMemoria;
 	char* contenido1;
 	char* contenido2;
 	char* contenido3;
@@ -358,16 +357,36 @@ static void test_buscar_los_id_de_proceso(){
 
 }
 
-static void test_probar_finalizar_un_proceso(){
+static void test_probar_finalizar_un_proceso_sin_TLB(){
 	int PID1=1,PID2=2,PID3=3,PID4=4;
+	int tamanioTablaDePag,tamanioMemoria;
+	int id1,id2,id3,id4;
 
+	id1=finalizar_falso(PID1);
 
+	id2=finalizar_falso(PID2);
+
+	id3=finalizar_falso(PID3);
+
+	id4=finalizar_falso(PID4);
+
+	CU_ASSERT_EQUAL(id1, 1);
+	CU_ASSERT_EQUAL(id2, 2);
+	CU_ASSERT_EQUAL(id3, 3);
+	CU_ASSERT_EQUAL(id4, 4);
+
+	tamanioTablaDePag = list_size(listaTablaDePag);
+	tamanioMemoria = list_size(listaMemoria);
+
+	CU_ASSERT_EQUAL(tamanioTablaDePag, 0);
+	CU_ASSERT_EQUAL(tamanioMemoria, 0);
 }
 
 
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
 	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},{"Test busca los id de los procesos",test_buscar_los_id_de_proceso},
+	{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
 
