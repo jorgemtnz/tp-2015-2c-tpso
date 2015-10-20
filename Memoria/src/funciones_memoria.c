@@ -57,10 +57,11 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 	for (contador = 0; contador < cantPag; contador++) {
 		contadorPagTP++;
+		variableIdMarcoNeg --;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
-		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
+		tablaDePag->idMarco = variableIdMarcoNeg; // porque no esta en algun marco en mem pcpal
 		tablaDePag->bitPagModificada = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
@@ -81,7 +82,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 
 	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
 
-	if( idMarco == -1){
+	if( idMarco <0){
 		// 2
 			escritura->numeroPagina = nroPag;
 			escritura->PID = idProc;
@@ -110,7 +111,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 		respuesta = buscarSiEstaEnMemoria(idProc, a);
 
-		if (respuesta == -1) {
+		if (respuesta <0) {
 			traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		} else { // aca significa que trajo el id porque esta en memoria
 

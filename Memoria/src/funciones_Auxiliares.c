@@ -7,7 +7,7 @@
 #include "Memoria.h"
 
 int buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	int tamanioTLB, a, tamanioTablaPag, idMarco = -1,flagTLB =0,flagTDP = 0;
+	int tamanioTLB, a, tamanioTablaPag, idMarco ,flagTLB =0,flagTDP = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
@@ -86,14 +86,14 @@ void cargarNuevoMarcoAMemoria(char* contenido) {
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
 
-	variableIdMarco++;
+	variableIdMarcoPos++;
 
-	campoAux->idMarco = variableIdMarco;
+	campoAux->idMarco = variableIdMarcoPos;
 	campoAux->contenido = contenido;
 
 	list_add(listaMemoria, campoAux);
 
-	free(campoAux);
+
 }
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
@@ -105,7 +105,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco != -1 && flag == 0) { // o sea esta en memoria
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco >0 && flag == 0) { // o sea esta en memoria
 			contadorMarcosEnMemoria++;
 			if (contadorMarcosEnMemoria == configuracion->cantidadMarcos) {
 				flag = 1;
@@ -118,9 +118,6 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	} else {
 		respuesta = true;
 	}
-
-	free(campoTablaDePag);
-
 	return respuesta;
 }
 
@@ -140,54 +137,64 @@ bool estaLlenaLaMemoria() {
 
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 
-	// voy a guardar todos los marcos del idProc que encuentre y voy a ir comparando  los idMarco hasta encomtrar
-	// al primero
-
-	// va a ir sacando los marcos y ver si coincide el id con el del proceso, el primer id que coincida va a ser
-	// el que va a sacar
-	int a, b, id, tamanioMemoria, tamanioListaId, flag = 0;
+	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
+	int a, b, id, tamanioMemoria, tamanioListaId, flag = 0,idMenor;
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
-	t_TablaDePaginas* campoTablaDePag;
-	campoTablaDePag = iniciarTablaDePaginas();
 	t_list* listaIdMarco;
 	listaIdMarco = list_create();
 
-	tamanioMemoria = list_size(listaMemoria);
-	for (a = 0; a < tamanioMemoria; a++) {
-		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc) {
-			list_add(listaIdMarco, campoTablaDePag->idMarco);
+	listaIdMarco = buscarLosIdDeProceso(idProc);
+	tamanioListaId = list_size(listaIdMarco);
+	for(a=0;a<tamanioListaId;a++){
+		id = list_get(listaIdMarco,a);
+		if(a == 0){
+			idMenor = id;
+		}else {
+			if(id < idMenor){
+				idMenor = id;
+				campoMarco = list_get(listaMemoria,a);
+			}
 		}
+
 	}
 
-	tamanioMemoria = list_size(listaMemoria);
-	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
-		campoMarco = list_get(listaMemoria, a);
-		tamanioListaId = list_size(listaIdMarco);
-		for (b = 0; b < tamanioListaId && flag == 0; b++) {
-			id = *((int*)list_get(listaIdMarco, b));
-			if (id == campoMarco->idMarco) {
-				flag = 1;
-			}
-			list_remove(listaMemoria, a);
-			verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
-		}
+	eliminarDeMemoria(idMenor);
+	eliminarDeTablaDePaginas(idMenor);
+	if (configuracion->tlbHabilitada == 0) {
+		eliminarDeTLBSiEsta(idMenor);
 	}
+
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
 
 	free(campoMarco);
-	free(campoTablaDePag);
 
 }
 
 void sacarAlPrimeroDeMemoria() {
-	t_marco* campoMemoria;
-	campoMemoria = iniciarMarco();
-	list_remove(listaMemoria, 0);
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	int tamanioMemoria,idMenor,id,a;
+	tamanioMemoria = list_size(listaMemoria);
+	for(a=0;a<tamanioMemoria;a++){
+		if(a == 0){
+			idMenor = id;
+		} else {
+			if(id < idMenor){
+				idMenor = id;
+				campoMarco = list_get(listaMemoria,a);
+			}
+		}
+	}
+	eliminarDeMemoria(idMenor);
+	eliminarDeTablaDePaginas(idMenor);
+	if (configuracion->tlbHabilitada == 0) {
+			eliminarDeTLBSiEsta(idMenor);
+	}
 
-	verificarBitDeModificada(campoMemoria->idMarco, campoMemoria->contenido);
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
 
-	free(campoMemoria);
+	free(campoMarco);
 
 }
 
@@ -243,7 +250,6 @@ char* traerContenidoDeMarco(int idMarco) {
 		}
 	}
 	contenido = campoMemoria->contenido;
-	free(campoMemoria);
 
 	return contenido;
 }
@@ -382,8 +388,8 @@ void inicializacionDesdeCero(){
 	listaTLB = list_create();
 	listaTablaDePag = list_create();
 	contadorPagTP = 0;
-	contadorEscribirPrintF =0;
-	contadorIniciarPrintF = 0;
+	variableIdMarcoNeg = 0;
+	variableIdMarcoPos =0;
 
 }
 

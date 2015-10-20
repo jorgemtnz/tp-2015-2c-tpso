@@ -101,7 +101,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido, socketCPU);
 
-				enviarACPUContenidoPaginaDeUnProceso(estructuraRtaLeer,socketCPU);
 
 
 				break;
