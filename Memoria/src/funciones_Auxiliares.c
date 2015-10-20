@@ -468,14 +468,15 @@ t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 	estructura->cantidadPaginas = cantPag;
 
 	for (contador = 0; contador < cantPag; contador++) {
-		contadorPagTP++;
-		tablaDePag = iniciarTablaDePaginas();
-		tablaDePag->idProc = idProc;
-		tablaDePag->paginaDelProceso = contador;
-		tablaDePag->idMarco = -1; // porque no esta en algun marco en mem pcpal
-		tablaDePag->bitPagModificada = 0;
-		list_add(listaTablaDePag, tablaDePag);
-	}
+			contadorPagTP++;
+			variableIdMarcoNeg --;
+			tablaDePag = iniciarTablaDePaginas();
+			tablaDePag->idProc = idProc;
+			tablaDePag->paginaDelProceso = contador;
+			tablaDePag->idMarco = variableIdMarcoNeg; // porque no esta en algun marco en mem pcpal
+			tablaDePag->bitPagModificada = 0;
+			list_add(listaTablaDePag, tablaDePag);
+		}
     return estructura;
 }
 
@@ -491,7 +492,7 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 
 	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
 
-	if( idMarco == -1){
+	if( idMarco < 0){
 		// 2
 			escritura->numeroPagina = nroPag;
 			escritura->PID = idProc;

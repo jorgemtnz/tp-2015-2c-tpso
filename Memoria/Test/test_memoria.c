@@ -39,7 +39,7 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
 	int socketMentiroso = 7;
-	int tamanioFinalTablaDePag, a,b=0;
+	int tamanioFinalTablaDePag, a;
 	int contadorCantProc1 = 0, contadorCantProc2 = 0, contadorCantProc3 = 0, contadorCantProc4 = 0;
 	int contadorMarcoNegativo = 0;
 	campoIniciar = iniciar_falso(PID1, cant1, socketMentiroso);
@@ -89,6 +89,8 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	CU_ASSERT_EQUAL(contadorCantProc2, 5);
 	CU_ASSERT_EQUAL(contadorCantProc3, 6);
 	CU_ASSERT_EQUAL(contadorCantProc4, 7);
+
+	int b=0;
 
 	for(a=0;a<4;a++){
 		b--;
