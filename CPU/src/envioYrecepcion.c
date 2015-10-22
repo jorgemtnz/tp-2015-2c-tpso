@@ -80,22 +80,9 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, "se va a ejecutar result fin de proceso ");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 
-		t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		int socketPlanificador = atoi(
 				(char*) dictionary_get(conexiones, "Planificador"));
-		char* temporal;
-		//strcpy(resultado->comandoInstruccion, "finalizar");
-		resultado->comandoInstruccion = "finalizar";
-		resultado->tipoMensaje = RESUL_FIN_OK;
-		char* finalizado = "finalizado";
-//		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid,
-//				finalizado);
-		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid);
-		resultado->expresion = temporal;
-//		strcpy(resultado->expresion, temporal);
-		//list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
-		cpu->mCodCPU->respEjec->finalizoOk = true;
-		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		cpu = ejecutarResul_Fin(cpu);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		break;

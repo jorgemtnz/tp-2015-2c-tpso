@@ -104,6 +104,7 @@ t_mCod* crearmCod();
 t_configuracion* crearConfiguracion();
 t_cpu* crearCPU();
 t_ProcCPU* crearProcCPU();
+t_pcb * crearPcb();
 
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
@@ -135,6 +136,8 @@ t_contenido_pagina* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
 t_PID* ejecuta_FinProcesoMemoria(t_cpu* cpu);
 t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
+
+t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================

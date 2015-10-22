@@ -61,31 +61,39 @@ static void test_crearResultados() {
 	void* extra;
 	t_PID* datosDesdememoria = malloc(sizeof(t_PID));
 	datosDesdememoria->PID = 1;
-	printf("test resultado\n");
 	sprintf(buffer, "\%d", datosDesdememoria->PID);
 	t_header* header = malloc(sizeof(header));
 	header->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
 	header->tamanioMensaje = strlen(buffer);
-	printf("test resultado\n");
-	recibirMensajeVarios(header, buffer, extra, cpuPrimera);
-	t_resultado_instruccion* resultadoIniciar = malloc(
-			sizeof(t_resultado_instruccion));
-	resultadoIniciar = list_get(cpuPrimera->mCodCPU->respEjec->resultadosInstrucciones, 0);
-	CU_ASSERT_EQUAL(resultadoIniciar->tipoMensaje,RESUL_INICIAR_PROC_OK_CPU );
 
+	recibirMensajeVarios(header, buffer, extra, cpuPrimera);
+	t_resultado_instruccion* resultadoIniciar = malloc(sizeof(t_resultado_instruccion));
+	resultadoIniciar = list_get(cpuPrimera->mCodCPU->respEjec->resultadosInstrucciones, 0);
+	CU_ASSERT_EQUAL(resultadoIniciar->tipoMensaje, RESUL_INICIAR_PROC_OK_CPU);
 
 //	destHiloCPU(cpuPrimera);
 //	destInstruccion(resultadoIniciar);
 }
 
+static void test_ejecutarResul_Fin() {
+	t_cpu* cpuPrimera = crearCPU();
+
+	cpuPrimera = ejecutarResul_Fin(cpuPrimera);
+
+	t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
+
+	resultado = list_get(cpuPrimera->mCodCPU->respEjec->resultadosInstrucciones, 0);
+
+	CU_ASSERT_EQUAL(resultado->tipoMensaje, RESUL_FIN_OK);
+	CU_ASSERT_EQUAL(cpuPrimera->idCPU, 0);
+
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //tests pertenecientes a este suite se deben agregar
-static CU_TestInfo tests[] = { { "Test Hola Mundo",
-		test_debe_devolver_hola_mundo }, { "Test carga archvConfig",
-		test_carga_ok_archv_Confg }, { "test crear procesoCPU",
-		test_crearProcesoCPU }, { "test crear CPU", test_crearCPU }, {
-		"test recibir resultados iniciar ok cpu, leer, finalizar",
-		test_crearResultados }, CU_TEST_INFO_NULL };
+static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test carga archvConfig", test_carga_ok_archv_Confg }, {
+		"test crear procesoCPU", test_crearProcesoCPU }, { "test crear CPU", test_crearCPU }, { "test recibir resultados iniciar ok cpu, leer, finalizar",
+		test_crearResultados }, { "test RESUL_FIN", test_ejecutarResul_Fin }, CU_TEST_INFO_NULL };
 
 CUNIT_MAKE_SUITE(cpu, "Test CPU", init_suite, clean_suite, tests)

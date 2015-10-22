@@ -23,6 +23,8 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 		exit(-1);
 	}
 	respEjec->resultadosInstrucciones = list_create();
+	respEjec->pcb = crearPcb();
+		respEjec->finalizoOk = true;
 	return respEjec;
 }
 
@@ -70,6 +72,24 @@ t_configuracion* crearConfiguracion() {
 	return configuracion;
 }
 
+t_pcb * crearPcb(){
+	t_pcb* pcb = malloc(sizeof(t_pcb));
+		if (pcb == NULL) {
+			perror("[ERROR] No se reservo memoria para CPU>..>pcb");
+			log_error(logger, "[ERROR] No se reservo memoria para CPU>..>pcb");
+			exit(-1);
+		}
+		pcb->pid = 0;
+		pcb->proximaInstruccion = 0;
+		pcb->rutaArchivoMcod = '\0';
+		pcb->tamanioRafaga = 0;
+		pcb->tieneDesalojo = true ;
+
+
+		return pcb;
+}
+
+
 t_cpu* crearCPU() {
 	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
 	if (cPUHilo == NULL) {
@@ -113,6 +133,7 @@ t_cpu* crearCPU() {
 	cPUHilo->estadoEjecucion = NO_USO;
 	cPUHilo->cantInstEjecutadas = 0;
 	cPUHilo->mCodCPU = crearmCod();
+	cPUHilo->pcbPlanificador = crearPcb();
 
 	return cPUHilo;
 }

@@ -81,3 +81,25 @@ int putsConsola (const char *msg) {
 
 
 
+t_cpu* ejecutarResul_Fin(t_cpu* cpu){
+t_resultado_instruccion* resultado = creaResultadoInstruccion();
+
+char* temporal;
+//strcpy(resultado->comandoInstruccion, "finalizar");
+
+resultado->comandoInstruccion = "finalizar";
+resultado->tipoMensaje = RESUL_FIN_OK;
+char* finalizado = "finalizado";
+//		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid,
+//				finalizado);
+
+temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid);
+resultado->expresion = temporal;
+
+//		strcpy(resultado->expresion, temporal);
+list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
+cpu->mCodCPU->respEjec->finalizoOk = true;
+
+cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+return cpu;
+}
