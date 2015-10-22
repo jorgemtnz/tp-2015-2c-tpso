@@ -111,14 +111,19 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//al dar error se debe devolver el proceso
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+
 		t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		char* temporal;
-		strcpy(resultado->comandoInstruccion, "inicializar");
-		resultado->tipoMensaje = RESUL_INICIAR_PROC_OK_CPU;
+
+		resultado->comandoInstruccion =  "inicializar";
+
+		resultado->tipoMensaje = RESUL_INICIAR_PROC_NO_OK_CPU;
 		char* fallo = "fallo";
+
 		temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid,
 				fallo);
-		strcpy(resultado->expresion, temporal);
+
+		resultado->expresion =  temporal;
 		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 
 		break;
