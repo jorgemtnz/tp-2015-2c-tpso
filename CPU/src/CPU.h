@@ -143,7 +143,7 @@ t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 //============================================================================
 
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
-int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
+void cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
 void levantarHilosCPU();
 int hiloCPU();
 

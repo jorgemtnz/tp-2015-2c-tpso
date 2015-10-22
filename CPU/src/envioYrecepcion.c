@@ -147,6 +147,7 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				pcbPlanificador->rutaArchivoMcod);
 		preparaCPU(pcbPlanificador);
 		//llama a procesa codigo
+
 		estructura = procesaCodigo(cpu);
 		break;
 	}

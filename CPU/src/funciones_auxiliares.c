@@ -67,10 +67,10 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 	while (arreglo[contador] != NULL) {
 		contador++;
 	}
-	if (contador == 0)
+	if (contador == 0){
 		perror("[ERROR] arreglo vacio");
 	log_error(logger, "[ERROR] arreglo vacio");
-
+	}
 	return contador;
 }
 

@@ -43,10 +43,12 @@ int main(int argc, char *argv[]) {
 
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-	t_cpu* cpu;
-
+	t_cpu* cpu = crearCPU();
+if(procCPU->contadorIdCPU != 0){
 	cpu = list_get(procCPU->listaCPU, procCPU->contadorIdCPU - 1);
-
+}else{
+	cpu = list_get(procCPU->listaCPU, 0);
+}
 	int resultConexion_planif = 0;
 	int resultConexion_Memoria = 0;
 	void* estructura;
