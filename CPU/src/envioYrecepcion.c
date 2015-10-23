@@ -26,7 +26,7 @@ void* ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	}
 	case (LEER_MEM): {
 		log_info(logger, "se va a ejecutar leer memoria ");
-		t_contenido_pagina* estructura;
+		t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 
 		estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
 		if (estructura == NULL) {
