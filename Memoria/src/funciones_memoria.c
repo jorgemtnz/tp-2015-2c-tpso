@@ -129,16 +129,16 @@ void finalizar(int idProc) {
 	listaDeId = buscarLosIdDeProceso(idProc);
 	tamanioListaId = list_size(listaDeId);
 
-	for(a=0;a<tamanioListaId;a++){
-			id= list_get(listaDeId,a);
-			eliminarDeTablaDePaginas(id);
-			if(id > 0){
-				eliminarDeMemoria(id);
-			}
-			if(configuracion->tlbHabilitada == 0){
-				eliminarDeTLBSiEsta(id);
-			}
+	for (a = 0; a < tamanioListaId; a++) {
+		id = list_get(listaDeId, a);
+		eliminarDeTablaDePaginasDefinitivamente(id);
+		if (id > 0) {
+			eliminarDeMemoria(id);
 		}
+		if (configuracion->tlbHabilitada == 0) {
+			eliminarDeTLBDefinitivamente(id);
+		}
+	}
 
 	enviarASwapEliminarProceso(idProc);
 
