@@ -156,7 +156,35 @@ static void test_ejecuta_IniciarProceso() {
 	estructura = ejecuta_IniciarProceso(instruccion->instruccion_separada[1], cpu);
 	CU_ASSERT_EQUAL(estructura->PID, 0);
 	CU_ASSERT_EQUAL(cpu->estadoEjecucion, NO_USO);
-	CU_ASSERT_EQUAL(estructura->cantidadPaginas, 10);
+	CU_ASSERT_EQUAL(estructura->cantidadPaginas, 10); //DATO HARCODEADO OJO CUANDO LO CAMBIEN
+}
+
+static void test_ejecuta_EscribirMemoria() {
+	t_cpu* cpu = crearCPU();
+	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
+	t_instruccion* instruccion = creaInstruccion();
+	char* instruccion_origen = "inicializar 3";
+	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
+	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
+	estructura = ejecuta_EscribirMemoria(instruccion->instruccion_separada[1], cpu);
+	CU_ASSERT_EQUAL(estructura->PID, 0);
+	CU_ASSERT_EQUAL(cpu->estadoEjecucion, NO_USO);
+	CU_ASSERT_EQUAL(estructura->numeroPagina, 4); //DATOS HARCODEADOS OJO CUANDO SE CAMBIEN
+	CU_ASSERT_STRING_EQUAL(estructura->contenido, "Hola");
+}
+
+static void test_ejecuta_EntradaSalida() {
+	t_cpu* cpu = crearCPU();
+	t_entrada_salida* estructura = malloc(sizeof(t_entrada_salida));
+	t_instruccion* instruccion = creaInstruccion();
+	char* instruccion_origen = "inicializar 3";
+	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
+	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
+	estructura = ejecuta_EntradaSalida(instruccion->instruccion_separada[1], cpu);
+	CU_ASSERT_EQUAL(estructura->PID, 0);
+	CU_ASSERT_EQUAL(cpu->estadoEjecucion, NO_USO); //DATOS HARCODEADOS OJO CUANDO SE CAMBIEN
+
+	CU_ASSERT_STRING_EQUAL(estructura->expresion, "mProc 0 en entrada-salida de tiempo 28");
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -166,6 +194,7 @@ static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mund
 		{ "test RESUL_INICIAR_PROC_OK_CPU", test_RESUL_INICIAR_PROC_OK_CPU }, { "test_iniciarProcNoOkCPU", test_iniciarProcNoOkCPU }, { "test RESUL_FIN",
 				test_ejecutarResul_Fin }, { "test_RESUL_LEER_OK_CPU", test_RESUL_LEER_OK_CPU }, { "test_ejecuta_FinProcesoMemoria",
 				test_ejecuta_FinProcesoMemoria }, { " test_ejecuta_LeerMemoria", test_ejecuta_LeerMemoria }, { "test_ejecuta_IniciarProceso",
-				test_ejecuta_IniciarProceso }, CU_TEST_INFO_NULL };
+				test_ejecuta_IniciarProceso }, { "test_ejecuta_EscribirMemoria", test_ejecuta_EscribirMemoria }, { "test_ejecuta_EntradaSalida",
+				test_ejecuta_EntradaSalida }, CU_TEST_INFO_NULL };
 
 CUNIT_MAKE_SUITE(cpu, "Test CPU", init_suite, clean_suite, tests)

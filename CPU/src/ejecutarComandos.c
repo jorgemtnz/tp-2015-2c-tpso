@@ -72,9 +72,9 @@ t_entrada_salida* ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu) 
 	cpu->cantInstEjecutadas += 1;
 
     estructura->PID = cpu->pcbPlanificador->pid;
-    	temporal = string_from_format("mProc %d", cpu->pcbPlanificador->pid, "en entrada-salida de tiempo %d", configuracion->retardo);
-    	strcpy(estructura->expresion, temporal);
+    	temporal = string_from_format("mProc %d %s %d", cpu->pcbPlanificador->pid, "en entrada-salida de tiempo", configuracion->retardo);
 
+    estructura->expresion = temporal;
 	cpu->estadoEjecucion = NO_USO;
 	return estructura;
 }
