@@ -82,11 +82,22 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 
 }
 
-void cargarNuevoMarcoAMemoria(char* contenido) {
+void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag) {
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	int tamanioTablaDePag,a,flag=0;
+	tamanioTablaDePag = list_size(listaTablaDePag);
 
 	variableIdMarcoPos++;
+
+	for(a=0;a<tamanioTablaDePag && flag ==1;a++){
+		campoTablaDePag= list_get(listaTablaDePag,a);
+		if(campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag){
+			campoTablaDePag->idMarco = variableIdMarcoPos;
+		}
+	}
 
 	campoAux->idMarco = variableIdMarcoPos;
 	campoAux->contenido = contenido;
@@ -138,7 +149,7 @@ bool estaLlenaLaMemoria() {
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
-	int a, b, id, tamanioMemoria, tamanioListaId, flag = 0,idMenor;
+	int a, b, id, tamanioMemoria, tamanioListaId, flag = 0,idMenor,primero=0;
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_list* listaIdMarco;
@@ -148,13 +159,16 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 	tamanioListaId = list_size(listaIdMarco);
 	for(a=0;a<tamanioListaId;a++){
 		id = list_get(listaIdMarco,a);
-		if(a == 0){
+		if(id>0){
+		if(primero == 0){
+			primero++;
 			idMenor = id;
 		}else {
 			if(id < idMenor){
 				idMenor = id;
 				campoMarco = list_get(listaMemoria,a);
 			}
+		}
 		}
 
 	}
@@ -166,8 +180,6 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 	}
 
 	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
-
-	free(campoMarco);
 
 }
 
@@ -228,11 +240,11 @@ void verificarBitDeModificada(int idMarco, char* contenido) {
 		pagina = campoTablaDePag->paginaDelProceso;
 		idProc = campoTablaDePag->idProc;
 
+		campoTablaDePag->bitPagModificada = 0;
+		campoTLB->bitPagModificada = 0;
+
 		enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido);
 	}
-
-	free(campoTLB);
-	free(campoTablaDePag);
 
 }
 
@@ -331,16 +343,10 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 	lecturaMandarCpu->numeroPagina = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 		sacarAlPrimeroDeMemoriaDelProceso(idProc);
-		cargarNuevoMarcoAMemoria(contenido);
-
 	} else if (estaLlenaLaMemoria()) {
 		sacarAlPrimeroDeMemoria();
-		cargarNuevoMarcoAMemoria(contenido);
-
-	} else { // si no llego ni al maximo de procesos ni al maximo de marcos
-		cargarNuevoMarcoAMemoria(contenido);
-
 	}
+	cargarNuevoMarcoAMemoria(contenido,idProc,pag);
 	lecturaMandarCpu->contenido = contenido;
 
 	enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
