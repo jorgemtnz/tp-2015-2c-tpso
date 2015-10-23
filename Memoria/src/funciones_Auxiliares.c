@@ -98,7 +98,7 @@ void cargarNuevoMarcoAMemoria(char* contenido) {
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	bool respuesta;
-	int a, tamanioTablaDePag, contadorMarcosEnMemoria, flag = 0;
+	int a, tamanioTablaDePag, contadorMarcosEnMemoria=0, flag = 0;
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
@@ -107,7 +107,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco >0 && flag == 0) { // o sea esta en memoria
 			contadorMarcosEnMemoria++;
-			if (contadorMarcosEnMemoria == configuracion->cantidadMarcos) {
+			if (contadorMarcosEnMemoria == configuracion->maximosMarcosPorProceso) {
 				flag = 1;
 			}
 		}

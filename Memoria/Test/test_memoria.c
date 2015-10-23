@@ -173,8 +173,6 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 	campoMemoria = iniciarMarco();
 
 
-	printf("\n a \n");
-
 
 	escribirEnMarcoYponerBitDeModificada(idMarco1,contenido1);
 	escribirEnMarcoYponerBitDeModificada(idMarco2,contenido2);
@@ -414,6 +412,42 @@ static void test_traer_contenido_de_marco(){
 
 }
 
+static void test_llego_maximo_de_marco_del_proceso(){
+	int PID1=1,PID2=2,PID3=3,PID4=4;
+	configuracion->maximosMarcosPorProceso = 2;
+	bool respuesta1;
+	bool respuesta2;
+	bool respuesta3;
+	bool respuesta4;
+	int resp1,resp2,resp3,resp4;
+
+
+	respuesta1 =llegoAlMaximoDelProcesoLaMemoria(PID1);
+	respuesta2 =llegoAlMaximoDelProcesoLaMemoria(PID2);
+	respuesta3 =llegoAlMaximoDelProcesoLaMemoria(PID3);
+	respuesta4 =llegoAlMaximoDelProcesoLaMemoria(PID4);
+
+	if(!respuesta1){
+		resp1 = 1;
+	}
+	if(!respuesta2){
+		resp2=1;
+	}
+	if(!respuesta4){
+		resp4=1;
+	}
+
+	if(respuesta3){
+		resp3=1;
+	}
+
+	CU_ASSERT_EQUAL(resp1, 1);
+	CU_ASSERT_EQUAL(resp2, 1);
+	CU_ASSERT_EQUAL(resp3, 1);
+	CU_ASSERT_EQUAL(resp4, 1);
+
+}
+
 static void test_probar_finalizar_un_proceso_sin_TLB(){
 	int PID1=1,PID2=2,PID3=3,PID4=4;
 	int tamanioTablaDePag,tamanioMemoria;
@@ -443,7 +477,9 @@ static void test_probar_finalizar_un_proceso_sin_TLB(){
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
 	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},{"Test busca los id de los procesos",test_buscar_los_id_de_proceso},
-	{"Test traer contenido",test_traer_contenido_de_marco},{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
+	{"Test traer contenido",test_traer_contenido_de_marco},{"Test probar si llego al max de proc", test_llego_maximo_de_marco_del_proceso},
+
+	{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
 
