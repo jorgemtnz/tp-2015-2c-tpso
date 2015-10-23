@@ -70,13 +70,13 @@ t_lectura* iniciarLectura() {
 
 
 t_contenido_pagina* iniciarContenidoPagina(){
-	t_contenido_pagina* rtaLecturaCpu = malloc(sizeof(t_contenido_pagina));
-	if (rtaLecturaCpu == NULL) {
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
+	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		exit(-1);
 	}
-	return rtaLecturaCpu;
+	return contenido;
 
 }
 t_iniciar_swap* crearEstructuraIniciar(){
@@ -93,7 +93,7 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_PID* crearEstructuraFinalizar(){
+t_PID* crearPID(){
 	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para crearEstructuraFinalizar");

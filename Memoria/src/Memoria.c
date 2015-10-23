@@ -78,7 +78,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			case (FIN_PROCESO_MEM) : {
 				t_PID* datosDesdeCPU = (t_PID*) buffer;
 				t_PID* estructuraFinalizar;
-				estructuraFinalizar = crearEstructuraFinalizar();
+				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 				break;
@@ -96,10 +96,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			case (RESUL_TRAER_PAG_SWAP_OK): {
 				t_contenido_pagina * datosDesdeSwap = (t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraRtaLeer;
+				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer->PID = datosDesdeSwap->PID;
 				estructuraRtaLeer->numeroPagina= datosDesdeSwap->numeroPagina;
 				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
-				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido, socketCPU);
+				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido, socketCPU, socketSwap);
 
 
 
@@ -108,6 +109,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraEscribir;
+				estructuraEscribir = iniciarContenidoPagina();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina= datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;

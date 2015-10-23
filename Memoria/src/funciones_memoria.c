@@ -75,7 +75,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 	// 2- si no esta mandar a escribir a swap
 
 	t_contenido_pagina * escritura;
-	escritura = iniciarEscrituraProc();
+	escritura = iniciarContenidoPagina();
 	int idMarco;
 
 	//veo si esta en un marco de memoria

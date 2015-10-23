@@ -38,6 +38,7 @@ typedef enum {
 	FIN_PROCESO_SWAP,
 	RESUL_TRAER_PAG_SWAP_OK,
 	RESUL_TRAER_PAG_SWAP_NO_OK,
+	SOBREESCRIBIR_SWAP,
 
 	//+++++++++++origen:cpu  destino: memoria++++++++++++
 	INICIAR_PROCESO_MEM, //solicitud desde el CPU a memoria
@@ -276,6 +277,10 @@ void* deserializar_RESUL_FIN_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_PID* estructura);
 t_PID* deserializar_t_PID(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+void* serializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
+		void* estructura);
+void* deserializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_TRAER_PAG_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

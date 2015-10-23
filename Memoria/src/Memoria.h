@@ -100,7 +100,7 @@ typedef struct {
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
 t_iniciar_swap* crearEstructuraIniciar();
-t_PID* crearEstructuraFinalizar();
+t_PID* crearPID();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -125,20 +125,20 @@ void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
-void sacarAlPrimeroDeMemoriaDelProceso(int idProc);
+void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap);
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
 void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(int idMarco,char* contenido);
+void verificarBitDeModificada(int idMarco,char* contenido,int socketSwap);
 t_list* buscarLosIdDeProceso(int idProc);
 void eliminarDeMemoria(int id);
 void eliminarDeTablaDePaginas(int id);
 void eliminarDeTLBSiEsta(int id);
 void enviarASwapEliminarProceso(int idProc);
-void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) ;
+void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido, int socketSwap);
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU);
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU);
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU, int socketSwap);
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
 t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
 int finalizar_falso(int idProc);

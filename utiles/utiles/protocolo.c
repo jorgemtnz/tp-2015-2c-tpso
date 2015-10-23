@@ -93,6 +93,17 @@ void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) 
 	return estructura;
 }
 
+void* serializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	//puts("Serializando serializar_SOBREESCRIBIR_SWAP");
+	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
+	return 0;
+}
+void* deserializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
+	//puts("Deserializando deserializar_SOBREESCRIBIR_SWAP");
+	return estructura;
+}
+
 //OK
 void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_contenido_pagina* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);

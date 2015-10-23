@@ -146,7 +146,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
+void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a, b, id, tamanioMemoria, tamanioListaId, flag = 0,idMenor,primero=0;
@@ -179,11 +179,11 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc) {
 		eliminarDeTLBSiEsta(idMenor);
 	}
 
-	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido, socketSwap);
 
 }
 
-void sacarAlPrimeroDeMemoria() {
+void sacarAlPrimeroDeMemoria(int socketSwap) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	int tamanioMemoria,idMenor,id,a;
@@ -204,13 +204,13 @@ void sacarAlPrimeroDeMemoria() {
 			eliminarDeTLBSiEsta(idMenor);
 	}
 
-	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido);
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido, socketSwap);
 
 	free(campoMarco);
 
 }
 
-void verificarBitDeModificada(int idMarco, char* contenido) {
+void verificarBitDeModificada(int idMarco, char* contenido,int socketSwap) {
 	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina, idProc;/* teoricamente si esta en TLB el bit de modif de un proceso tamb esta en TAbla de pag,
 	 lo hago para verificar nada mas*/
 	tamanioTLB = list_size(listaTLB);
@@ -243,7 +243,7 @@ void verificarBitDeModificada(int idMarco, char* contenido) {
 		campoTablaDePag->bitPagModificada = 0;
 		campoTLB->bitPagModificada = 0;
 
-		enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido);
+		enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido,socketSwap);
 	}
 
 }
@@ -335,16 +335,16 @@ void eliminarDeTLBSiEsta(int id) {
 	free(campoTLB);
 }
 
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU, int socketSwap) {
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-		sacarAlPrimeroDeMemoriaDelProceso(idProc);
+		sacarAlPrimeroDeMemoriaDelProceso(idProc,socketSwap);
 	} else if (estaLlenaLaMemoria()) {
-		sacarAlPrimeroDeMemoria();
+		sacarAlPrimeroDeMemoria(socketSwap);
 	}
 	cargarNuevoMarcoAMemoria(contenido,idProc,pag);
 	lecturaMandarCpu->contenido = contenido;
@@ -366,8 +366,13 @@ void enviarFinalizarASwap(t_PID *estructura, int socketSwap) {
 }
 
 
-void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido) {
-
+void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido, int socketSwap) {
+	t_contenido_pagina* estructura;
+	estructura = iniciarContenidoPagina();
+	estructura->PID = idProc;
+	estructura->numeroPagina = pagina;
+	estructura->contenido = contenido;
+	enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);
 }
 
 void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu,int socketCPU) {

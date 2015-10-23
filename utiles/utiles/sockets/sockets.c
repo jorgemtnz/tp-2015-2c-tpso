@@ -715,7 +715,8 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
 		registrarSerializadores(RESUL_FIN, "RESUL_FIN", serializar_RESUL_FIN, deserializar_RESUL_FIN);
 		registrarSerializadores(RESUL_LEER_OK_CPU, "RESUL_LEER_OK_CPU", serializar_RESUL_LEER_OK_CPU, deserializar_RESUL_LEER_OK_CPU);
-		
+		registrarSerializadores(SOBREESCRIBIR_SWAP, "SOBREESCRIBIR_SWAP", serializar_SOBREESCRIBIR_SWAP, deserializar_SOBREESCRIBIR_SWAP);
+
 	}
 }
 
