@@ -146,6 +146,18 @@ static void test_ejecuta_LeerMemoria() {
 	CU_ASSERT_EQUAL(estructura->numeroPagina, 4);
 }
 
+static void test_ejecuta_IniciarProceso() {
+	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
+	t_cpu* cpu = crearCPU();
+	t_instruccion* instruccion = creaInstruccion();
+	char* instruccion_origen = "inicializar 3";
+	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
+	instruccion->ptrComienzoInstruccion = instruccion->instruccion_separada[0];
+	estructura = ejecuta_IniciarProceso(instruccion->instruccion_separada[1], cpu);
+	CU_ASSERT_EQUAL(estructura->PID, 0);
+	CU_ASSERT_EQUAL(cpu->estadoEjecucion, NO_USO);
+	CU_ASSERT_EQUAL(estructura->cantidadPaginas, 10);
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //tests pertenecientes a este suite se deben agregar
@@ -153,6 +165,7 @@ static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mund
 		"test crear procesoCPU", test_crearProcesoCPU }, { "test crear CPU", test_crearCPU },
 		{ "test RESUL_INICIAR_PROC_OK_CPU", test_RESUL_INICIAR_PROC_OK_CPU }, { "test_iniciarProcNoOkCPU", test_iniciarProcNoOkCPU }, { "test RESUL_FIN",
 				test_ejecutarResul_Fin }, { "test_RESUL_LEER_OK_CPU", test_RESUL_LEER_OK_CPU }, { "test_ejecuta_FinProcesoMemoria",
-				test_ejecuta_FinProcesoMemoria }, { " test_ejecuta_LeerMemoria", test_ejecuta_LeerMemoria }, CU_TEST_INFO_NULL };
+				test_ejecuta_FinProcesoMemoria }, { " test_ejecuta_LeerMemoria", test_ejecuta_LeerMemoria }, { "test_ejecuta_IniciarProceso",
+				test_ejecuta_IniciarProceso }, CU_TEST_INFO_NULL };
 
 CUNIT_MAKE_SUITE(cpu, "Test CPU", init_suite, clean_suite, tests)

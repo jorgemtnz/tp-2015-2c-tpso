@@ -8,7 +8,7 @@ void* ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
-		t_iniciar_swap* estructura;
+		t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 		estructura = ejecuta_IniciarProceso(separada_instruccion, cpu);
 		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		enviarStruct(socketMemoria, INICIAR_PROCESO_MEM, estructura);
