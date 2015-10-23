@@ -289,6 +289,39 @@ static void test_probar_escribir_memoria_sin_TLB(){
 		}
 	}
 
+	for(a=0;a<5;a++){
+		campoMemoria= list_get(listaMemoria,a);
+		switch(a){
+		case 0: {
+			CU_ASSERT_EQUAL(campoMemoria->idMarco,455);
+			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
+			break;
+		}
+		case 1: {
+			CU_ASSERT_EQUAL(campoMemoria->idMarco,456);
+			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
+			break;
+		}
+		case 2: {
+			CU_ASSERT_EQUAL(campoMemoria->idMarco,457);
+			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
+			break;
+		}
+		case 3: {
+			CU_ASSERT_EQUAL(campoMemoria->idMarco,458);
+			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
+			break;
+		}
+		case 4: {
+			CU_ASSERT_EQUAL(campoMemoria->idMarco,459);
+			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
+			break;
+		}
+		}
+	}
+
+
+
 }
 
 static void test_buscar_los_id_de_proceso(){
@@ -357,6 +390,30 @@ static void test_buscar_los_id_de_proceso(){
 
 }
 
+static void test_traer_contenido_de_marco(){
+	int id1=455, id2=456, id3=457, id4=458, id5=459;
+	char* contenido1;
+	char* contenido2;
+	char* contenido3;
+	char* contenido4;
+	char* contenido5;
+
+	contenido1 = traerContenidoDeMarco(id1);
+	contenido2 = traerContenidoDeMarco(id2);
+	contenido3 = traerContenidoDeMarco(id3);
+	contenido4 = traerContenidoDeMarco(id4);
+	contenido5 = traerContenidoDeMarco(id5);
+
+	CU_ASSERT_STRING_EQUAL(contenido1,"escritura1");
+	CU_ASSERT_STRING_EQUAL(contenido2,"escritura2");
+	CU_ASSERT_STRING_EQUAL(contenido3,"escritura3");
+	CU_ASSERT_STRING_EQUAL(contenido4,"escritura3Bis");
+	CU_ASSERT_STRING_EQUAL(contenido5,"escritura4");
+
+
+
+}
+
 static void test_probar_finalizar_un_proceso_sin_TLB(){
 	int PID1=1,PID2=2,PID3=3,PID4=4;
 	int tamanioTablaDePag,tamanioMemoria;
@@ -386,7 +443,7 @@ static void test_probar_finalizar_un_proceso_sin_TLB(){
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
 	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},{"Test busca los id de los procesos",test_buscar_los_id_de_proceso},
-	{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
+	{"Test traer contenido",test_traer_contenido_de_marco},{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
 
