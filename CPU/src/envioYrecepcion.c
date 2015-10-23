@@ -41,7 +41,7 @@ void* ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	}
 	case (FIN_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
-		t_PID* estructura;
+		t_PID* estructura = malloc(sizeof(t_PID));
 		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		estructura = ejecuta_FinProcesoMemoria(cpu);
 		enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
