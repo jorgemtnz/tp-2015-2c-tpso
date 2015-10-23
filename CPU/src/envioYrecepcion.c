@@ -135,12 +135,12 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		char* temporal;
-		strcpy(resultado->comandoInstruccion, "leer");
+		resultado->comandoInstruccion = "leer";
 		resultado->tipoMensaje = RESUL_LEER_OK_CPU;
 		temporal = string_from_format("mProc %d Pagina leida",
 				cpu->pcbPlanificador->pid); //, "Pagina", "leida", contenido);
 //		string_append(resultado->expresion,contenido);
-		strcpy(resultado->expresion, temporal);
+		resultado->expresion = temporal;
 		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 		break;
 	}
