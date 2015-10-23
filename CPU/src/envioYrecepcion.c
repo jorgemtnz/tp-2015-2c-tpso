@@ -26,7 +26,7 @@ void* ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	}
 	case (LEER_MEM): {
 		log_info(logger, "se va a ejecutar leer memoria ");
-		t_contenido_pagina* estructura;
+		t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 
 		estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
 		if (estructura == NULL) {
@@ -41,7 +41,7 @@ void* ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
 	}
 	case (FIN_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
-		t_PID* estructura;
+		t_PID* estructura = malloc(sizeof(t_PID));
 		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		estructura = ejecuta_FinProcesoMemoria(cpu);
 		enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
@@ -135,12 +135,12 @@ void* recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		t_resultado_instruccion* resultado = creaResultadoInstruccion();
 		char* temporal;
-		strcpy(resultado->comandoInstruccion, "leer");
+		resultado->comandoInstruccion = "leer";
 		resultado->tipoMensaje = RESUL_LEER_OK_CPU;
 		temporal = string_from_format("mProc %d Pagina leida",
 				cpu->pcbPlanificador->pid); //, "Pagina", "leida", contenido);
 //		string_append(resultado->expresion,contenido);
-		strcpy(resultado->expresion, temporal);
+		resultado->expresion = temporal;
 		list_add(cpu->mCodCPU->respEjec->resultadosInstrucciones, resultado);
 		break;
 	}
