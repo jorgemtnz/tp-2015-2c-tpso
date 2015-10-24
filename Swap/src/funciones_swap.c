@@ -134,6 +134,18 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 				a = list_size(listaDeEspaciosLibres) + 1;
 			}
 
+			//LOGUEO
+			int byteInicial, tamanioEnBytes;
+			if (procesoAInsertarEnLista->ubicacion == 0) {
+				byteInicial = 0;
+			} else {
+				byteInicial = procesoAInsertarEnLista->ubicacion * configuracion->tamanioPagina;
+			}
+			tamanioEnBytes = procesoAInsertarEnLista->cantPagsUso * configuracion->tamanioPagina;
+			char* contenidoLogger = string_from_format("Proceso mProc asignado, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i",
+					procesoAInsertarEnLista->PID, byteInicial, tamanioEnBytes);
+			log_info(logger, contenidoLogger);
+
 			estructura->PID = procesoAInsertarEnLista->PID;
 			estructura->resultado = OK;
 
@@ -146,6 +158,8 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 		}
 	} else {
 
+		char* contenidoLogger = string_from_format("Proceso mProc rechazado por falta de espacio (PID: %i)", estructuraIniciar->PID);
+		log_info(logger, contenidoLogger);
 
 		estructura->PID = estructuraIniciar->PID;
 		estructura->resultado = ERROR;
@@ -160,6 +174,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 }
 
 t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
+
 	sleep(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
@@ -176,6 +191,19 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
 		}
 	}
+
+	//LOGUEO
+	int byteInicial, tamanioEnBytes;
+	if ((ubicacion + procesoAEscribir->numeroPagina) == 0) {
+		byteInicial = 0;
+	} else {
+		byteInicial = (ubicacion + procesoAEscribir->numeroPagina) * configuracion->tamanioPagina;
+	}
+	tamanioEnBytes = configuracion->tamanioPagina; //SIEMPRE SE ESCRIBE DE A UNA PAGINA
+	char* contenidoLogger = string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
+			procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
+	log_info(logger, contenidoLogger);
+
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
 		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, configuracion->tamanioPagina);
@@ -189,6 +217,11 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
 	respuestaDeEscribir->resultado = OK;
+
+	contenidoLogger = string_from_format(
+			"Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s", procesoAEscribir->PID,
+			byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
+	log_info(logger, contenidoLogger);
 	return respuestaDeEscribir;
 	free(unProceso);
 	free(respuestaDeEscribir);
@@ -215,6 +248,19 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 			a = list_size(listaDeProcesosCargados) + 1;
 		}
 	}
+
+	//LOGUEO
+	int byteInicial, tamanioEnBytes;
+	if ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) == 0) {
+		byteInicial = 0;
+	} else {
+		byteInicial = (procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * configuracion->tamanioPagina;
+	}
+	tamanioEnBytes = (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio) * configuracion->tamanioPagina;
+	char* contenidoLogger = string_from_format("Lectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i", procesoRecibido->PID,
+			byteInicial, tamanioEnBytes);
+	log_info(logger, contenidoLogger);
+
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
 		for (x = 0; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++) {
 
@@ -235,6 +281,10 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
 	//enviarResultadoLeerOK(socket, respuestaDeLeer);
 	respuestaDeLeer->resultado = OK;
+	contenidoLogger = string_from_format(
+			"Finalizo leer correctamente , el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i , el contenido es: %s", procesoRecibido->PID,
+			byteInicial, tamanioEnBytes, respuestaDeLeer->contenido);
+	log_info(logger, contenidoLogger);
 	return respuestaDeLeer;
 	free(unProceso);
 	free(respuestaDeLeer);
@@ -282,6 +332,12 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	}
 	respuestaDeFinalizar->PID = unProceso->PID;
 	respuestaDeFinalizar->resultado = OK;
+
+	int byteInicial = unProceso->ubicacion * configuracion->tamanioPagina;
+	int tamanioEnBytes = unProceso->cantPagsUso * configuracion->tamanioPagina;
+	char* contenidoLogger = string_from_format("Proceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i",
+					respuestaDeFinalizar->PID, byteInicial, tamanioEnBytes);
+	log_info(logger, contenidoLogger);
 
 	return respuestaDeFinalizar;
 	free(respuestaDeFinalizar);
@@ -332,12 +388,11 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 		}
 	}
 
-
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	sleep(configuracion->retardo_compactacion);
-	log_error(logger, "ERROR: La memoria será compactada por fragmentación externa");
+	log_info(logger, "Compactacion iniciada por fragmentacion externa");
 	//ORDENAR LISTA POR UBICACION
 	//list_sort(listaDeProcesosCargados, comparador(list_get(listaDeProcesosCargados,i)));
 	l_procesosCargados* espacioProcAux;
@@ -363,17 +418,15 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 
-
-	while(list_size(listaDeEspaciosLibres) > 0){
-	espacioA = list_get(listaDeEspaciosLibres, 0);
-	list_remove(listaDeEspaciosLibres,0);
+	while (list_size(listaDeEspaciosLibres) > 0) {
+		espacioA = list_get(listaDeEspaciosLibres, 0);
+		list_remove(listaDeEspaciosLibres, 0);
 //	free(espacioA);
 	}
 
-
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
-	log_info(logger, "Memoria compactada correctamente");
+	log_info(logger, "Compactacion finalizada correctamente");
 
 }
 _Bool comparador(l_procesosCargados proc1, l_procesosCargados proc2) {

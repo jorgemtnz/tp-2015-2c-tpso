@@ -55,7 +55,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		case (INICIAR_PROC_SWAP): {
 
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
-			printf("el pid recibido %i  y cantidad de pag %i  \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
+			//printf("el pid recibido %i  y cantidad de pag %i  \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			t_respuesta_iniciar_o_finalizar* resultado;
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
