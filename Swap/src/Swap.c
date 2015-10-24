@@ -4,7 +4,7 @@ int main(int argc, char *argv[]) {
 	l_procesosCargados* proceso;
 	proceso = crearProceso();
 	l_espacioLibre* espacioLibre;
-	espacioLibre = crearEspacioLibre;
+	espacioLibre = crearEspacioLibre();
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
@@ -161,6 +161,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			free(procesoAEscribir);
 			free(resultado);
 			free(paginaAEnviar);
+			free(paginaEnBlanco);
 			break;
 		}
 
