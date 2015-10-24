@@ -13,7 +13,7 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	if (configuracion->tlbHabilitada == 1) {
+	if (configuracion->tlbHabilitada == 0) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB; a++) {
 			campoTLB = list_get(listaTLB, a);
@@ -47,7 +47,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	t_marco * campoMarco;
 	campoMarco = iniciarMarco();
 
-	if (configuracion->tlbHabilitada == 1) {
+	if (configuracion->tlbHabilitada == 0) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 			campoTLB = list_get(listaTLB, a);
@@ -102,7 +102,56 @@ void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag) {
 	campoAux->idMarco = variableIdMarcoPos;
 	campoAux->contenido = contenido;
 
+	if(configuracion->tlbHabilitada ==0){
+		cargarNuevoEnTLB(PID,pag,campoAux->idMarco);
+	}
 	list_add(listaMemoria, campoAux);
+
+
+}
+
+void cargarNuevoEnTLB(int PID,int pag,int id){
+	int tamanioTLB,a;
+	t_TLB * campoTLB;
+	campoTLB = iniciarTLB();
+
+	tamanioTLB=list_size(listaTLB);
+	variableTLB ++;
+
+	if(tamanioTLB==configuracion->entradasTlb){
+		sacarAlPrimeroDeTLB();
+	}
+
+	campoTLB->bitPagModificada=0;
+	campoTLB->idMarco=id;
+	campoTLB->idProc=PID;
+	campoTLB->paginaDelProceso=pag;
+	campoTLB->posicion = variableTLB;
+
+	list_add(listaTLB,campoTLB);
+}
+
+void sacarAlPrimeroDeTLB() {
+	int tamanioTLB, a,posicionEnLista;
+	t_TLB * campoTLB;
+	campoTLB = iniciarTLB();
+	t_TLB * campoMasViejoTLB;
+	campoMasViejoTLB = iniciarTLB();
+
+	tamanioTLB = list_size(listaTLB);
+
+	for(a=0;a<tamanioTLB;a++){
+		campoTLB=list_get(listaTLB,a);
+		if(a==0){
+			campoMasViejoTLB = campoTLB;
+			posicionEnLista = a;
+		} else {
+			if(campoTLB->posicion < campoMasViejoTLB->posicion){
+				posicionEnLista = a;
+			}
+		}
+	}
+	list_remove(listaTLB,posicionEnLista);
 
 
 }
@@ -437,6 +486,7 @@ void inicializacionDesdeCero(){
 	contadorPagTP = 0;
 	variableIdMarcoNeg = 0;
 	variableIdMarcoPos =0;
+	variableTLB =0;
 
 }
 
@@ -565,7 +615,7 @@ int finalizar_falso(int idProc) {
 			if (id > 0) {
 				eliminarDeMemoria(id);
 			}
-			if (configuracion->tlbHabilitada == 0) {
+			if (configuracion->tlbHabilitada ==0) {
 				eliminarDeTLBDefinitivamente(id);
 			}
 		}

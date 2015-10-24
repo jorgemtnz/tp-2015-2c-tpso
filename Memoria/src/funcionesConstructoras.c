@@ -100,7 +100,6 @@ t_PID* crearPID(){
 		log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraFinalizar");
 		exit(-1);
 	}
-	contenido->PID = 0;
 	return contenido;
 }
 

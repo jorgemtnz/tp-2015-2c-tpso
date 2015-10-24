@@ -64,6 +64,7 @@ typedef struct {
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
+	int posicion;
 } t_TLB;
 
 typedef struct {
@@ -128,6 +129,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap);
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
+void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
 void verificarBitDeModificada(int idMarco,char* contenido,int socketSwap);
@@ -162,7 +164,7 @@ t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int contadorPagTP,variableIdMarcoNeg, variableIdMarcoPos; // contador de paginas de la tabla de paginas
+int contadorPagTP,variableIdMarcoNeg, variableIdMarcoPos,variableTLB; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;
