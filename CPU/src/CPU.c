@@ -101,3 +101,7 @@ if(procCPU->contadorIdCPU != 0){
 char* decirHolaMundo() {
 	return "Hola Mundo";
 }
+
+char* getNombre() {
+	return "CPU"; //ver si conviene responder un nombre distinto por cada hilo de CPU
+}
