@@ -4,7 +4,7 @@ int main(int argc, char *argv[]) {
 	l_procesosCargados* proceso;
 	proceso = crearProceso();
 	l_espacioLibre* espacioLibre;
-	espacioLibre = crearEspacioLibre;
+	espacioLibre = crearEspacioLibre();
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
@@ -126,6 +126,42 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			free(estructuraFinalizar);
 			free(resultado);
+			break;
+		}
+		case (SOBREESCRIBIR_SWAP): {
+			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			t_contenido_pagina* paginaEnBlanco;
+			paginaEnBlanco = crearContenidoPagina();
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+
+			//BORRO EL CONTENIDO VIEJO DE LA PAGINA
+			char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
+
+			paginaEnBlanco->PID = procesoAEscribir->PID;
+			paginaEnBlanco->contenido = espacioVacio;
+			paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
+			escribir(listaDeProcesosCargados, paginaEnBlanco);
+
+			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
+
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+
+			if (resultado->resultado == OK) {
+
+				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
+			} else {
+				log_info(logger, "FALLO EL SOBREESCRIBIR");
+			}
+			free(procesoAEscribir);
+			free(resultado);
+			free(paginaAEnviar);
+			free(paginaEnBlanco);
 			break;
 		}
 

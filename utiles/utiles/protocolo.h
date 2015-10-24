@@ -71,6 +71,7 @@ typedef enum {
 //	RESUL_LEER_ERROR,
 
 //+++++++++swap++++++++++++++++++
+	 RESUL_SOBREESCRIBIR_OK,
 
 } t_tipo_mensaje;
 
@@ -331,5 +332,7 @@ t_tipo_mensaje deserializar_t_tipo_mensaje(int fdCliente
 
 void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 #endif /* UTILES_PROTOCOLO_H_ */
