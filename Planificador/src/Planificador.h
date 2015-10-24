@@ -54,6 +54,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]);
 int putsConsola (const char *msg);
 int printConsola(const char *formato, ...);
 bool cpuDesconectada(void *cpu);
+char* obtenerNombreProc(char* ruta);
 //============================================================================
 
 
@@ -97,13 +98,13 @@ void desregistrarCPUConectada(int socket);
 //++++++++++++++++++++++++++++++++++++ ps +++++++++++++++++++++++++++++++++++++++
 //Genera los mensajes segun el anexo, para una lista de PCBs, y le pone el estado que viene como parametro
 //Devuelve la lista de mensajes
-//FUNCION: t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
+t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
 //Recorre los elementos del dictionary, las keys son: Listo, Ejecutando, Bloqueado, en el value te viene una t_list* listaPcb
 //para cada elemento del t_dictionary se llama a generarMensajesPsLista(value, key) y
 //se recorre la lista que te devuelve, y cada elemento se agrega a una lista resultado
 //Devuelve la lista resultado
-//FUNCION: t_list* generarMensajesPsDictionary(t_dictionary* listas);
-
+t_list* generarMensajesPsDictionary(t_dictionary* listas);
+t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
 
 //========================================================================================
 
