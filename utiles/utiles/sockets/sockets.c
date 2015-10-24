@@ -175,7 +175,7 @@ int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer, t_re
 
 	//deserializamos la estructura
 	if(existeSerializacion(header->tipoMensaje)) {
-		return recibirSerializado(fdCliente, header->tipoMensaje, buffer, resultadoSerializacion);
+		return recibirSerializado(fdCliente, *header, buffer, resultadoSerializacion);
 	} else {
 		void* bufferMsgSerializado = malloc(header->tamanioMensaje);
 		int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
@@ -232,20 +232,18 @@ bool string_equals(char* string1, char* string2) {
 	return strcmp(string1, string2) == 0;
 }
 
-int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
-
-	//creamos el header
-	t_header header = crearHeader(tipoMensaje, msg, longitudMensaje);
-
+int enviarHeader(int fdCliente, t_header header) {
 	return enviarSimple(fdCliente, &header, sizeof(t_header));
 }
 
+int contadorMensajes = 0;
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
 	t_header* header = malloc(sizeof(t_header));
 
 	header->tipoMensaje = tipoMensaje;
 	header->tamanioMensaje = longitudMensaje;
-
+	header->numeroMensaje = contadorMensajes++;
+	header->nombre = getNombre();
 
 	return *header;
 }
@@ -551,7 +549,6 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
 						funcionParaProcesarMensaje(newfd, NULL, NULL, NEW_CONNECTION, extra, logger);
-						char nombre = getNombre();
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
@@ -591,7 +588,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //						}
 //						printf("\n");
 						if(i == STDIN_FILENO) {
-							printf("Recibi mensaje por socket %d\n", i);
+							//printf("Recibi mensaje por socket %d\n", i);
 							funcionParaProcesarMensaje(i, NULL, textbuf, TERMINAL_MESSAGE, extra, logger);
 						} else {
 							t_header header;
@@ -600,7 +597,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 							char* nombre = deserializar_string(i);
 							header.nombre = nombre;
 
-							printf("Recibi mensaje por socket %d de %s\n", i, header.nombre);
+							//printf("Recibi mensaje nro. %d por socket %d de %s\n", header.numeroMensaje, i, header.nombre);
 
 							t_resultado_serializacion resultadoSerializacion;
 							recibirStructSegunHeader(i, &header, buf, &resultadoSerializacion);
@@ -766,31 +763,33 @@ char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje) {
 int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 
-	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
-	serializar_string(fdCliente, getNombre());
+	//creamos el header
+	t_header header = crearHeader(tipoMensaje, NULL, 0);
+	enviarHeader(fdCliente, header);
+	serializar_string(fdCliente, header.nombre);
 
 	void* funcion = serializacion->funcionSerializacion;
 
-	return ejecutarSerializacion(funcion, fdCliente, tipoMensaje, estructura);
+	return ejecutarSerializacion(funcion, fdCliente, header, estructura);
 }
 
-int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion) {
-	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
+int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resultado_serializacion* resultadoSerializacion) {
+	t_registro_serializacion* serializacion = getSerializacion(header.tipoMensaje);
 
 	void* funcion = serializacion->funcionDeserializacion;
-	return ejecutarDeserializacion(funcion, fdCliente, tipoMensaje, resultadoSerializacion);
+	return ejecutarDeserializacion(funcion, fdCliente, header, resultadoSerializacion);
 }
 
-int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	printf("Serializando %s\n", getNombreTipoMensaje(tipoMensaje));
-	(int*)funcion(fdCliente, tipoMensaje, estructura);
+int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_header header, void* estructura) {
+	printf("Envio  %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	(int*)funcion(fdCliente, header.tipoMensaje, estructura);
 	//TODO
 	return 0;
 }
 
-int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion) {
-	printf("Deserializando %s\n", getNombreTipoMensaje(tipoMensaje));
-	void* resultado = funcion(fdCliente, tipoMensaje);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_header header, t_resultado_serializacion* resultadoDeserializacion) {
+	printf("Recibo %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	void* resultado = funcion(fdCliente, header.tipoMensaje);
 	resultadoDeserializacion -> resultado = resultado;
 	//TODO
 	return 0;

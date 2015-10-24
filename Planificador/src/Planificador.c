@@ -24,7 +24,7 @@ void crearLogger() {
 
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-	putsConsola("Planificador procesar mensajes");
+	//putsConsola("Planificador procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	if(tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
@@ -34,7 +34,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	} else if(tipoNotificacion == TERMINAL_MESSAGE) {
 		procesarMensajesConsola(socket, header, buffer);
 	} else if(tipoNotificacion == MESSAGE) {
-		printConsola("Recibi un mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
+//		printConsola("Recibi un mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
 		procesarMensajesSegunTipo(socket, header, buffer);
 
 	} else if(tipoNotificacion == HANG_UP) {
