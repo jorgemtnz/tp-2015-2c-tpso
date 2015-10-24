@@ -46,3 +46,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 char* decirHolaMundo() {
 	return "Hola Mundo";
 }
+
+char* getNombre() {
+	return "Planificador";
+}

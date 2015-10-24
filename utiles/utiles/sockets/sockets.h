@@ -111,4 +111,7 @@ int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCl
 int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion);
 int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion);
+
+//para identificarse
+char* getNombre();
 #endif /* SOCKETS_H_ */

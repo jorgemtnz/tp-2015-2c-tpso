@@ -550,6 +550,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						printf("selectserver: new connection from %s on "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
 						funcionParaProcesarMensaje(newfd, NULL, NULL, NEW_CONNECTION, extra, logger);
+						char nombre = getNombre();
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
 						 int entero;
 						 recv(newfd , &entero, sizeof(int),0);
