@@ -143,6 +143,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaEnBlanco->PID = procesoAEscribir->PID;
 			paginaEnBlanco->contenido = espacioVacio;
 			paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
+			log_info(logger, "ESCRITURA DE PAGINA EN BLANCO PARA BORRAR EL CONTENIDO Y ESCRIBIR LUEGO EL NUEVO");
 			escribir(listaDeProcesosCargados, paginaEnBlanco);
 
 			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
