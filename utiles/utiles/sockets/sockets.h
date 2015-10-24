@@ -44,6 +44,7 @@ typedef struct t_paquete {
 typedef struct {
 	int tamanioMensaje;
 	t_tipo_mensaje tipoMensaje;
+	char* nombre;
 }t_header;
 #pragma pack(0)
 

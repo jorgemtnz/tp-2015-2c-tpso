@@ -246,6 +246,7 @@ t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje)
 	header->tipoMensaje = tipoMensaje;
 	header->tamanioMensaje = longitudMensaje;
 
+
 	return *header;
 }
 
@@ -583,7 +584,6 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						FD_CLR(i, &master); // remove from master set
 					} else {
 						// we got some data from a client
-						printf("Recibi mensaje por socket %d\n", i);
 //						printf("En ascii ");
 //						int var = 0;
 //						for (var = 0; var < string_length(buf); var++) {
@@ -591,11 +591,16 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //						}
 //						printf("\n");
 						if(i == STDIN_FILENO) {
+							printf("Recibi mensaje por socket %d\n", i);
 							funcionParaProcesarMensaje(i, NULL, textbuf, TERMINAL_MESSAGE, extra, logger);
 						} else {
 							t_header header;
 							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);
 							memcpy(&header, buf, sizeof(t_header));
+							char* nombre = deserializar_string(i);
+							header.nombre = nombre;
+
+							printf("Recibi mensaje por socket %d de %s\n", i, header.nombre);
 
 							t_resultado_serializacion resultadoSerializacion;
 							recibirStructSegunHeader(i, &header, buf, &resultadoSerializacion);
@@ -762,6 +767,7 @@ int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructur
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 
 	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
+	serializar_string(fdCliente, getNombre());
 
 	void* funcion = serializacion->funcionSerializacion;
 
