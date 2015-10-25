@@ -4,7 +4,6 @@
  *  Created on: 29/8/2015
  *      Author: utnso
  */
-
 #ifndef MEMORIA_H_
 #define MEMORIA_H_
 
@@ -113,6 +112,7 @@ void iniciar(int idProc, int cantPag, int socketCPU);
 void leer(int idProc, int pag, int socketSwap, int socketCPU);
 void finalizar(int idProc);
 void inicializadoCorrecto(int idProc, int cantPag);
+void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU);
 t_TablaDePaginas* iniciarTablaDePaginas();
 t_escrituraProc* iniciarEscrituraProc();
 t_TLB* iniciarTLB();
@@ -126,13 +126,13 @@ void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
-void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap);
+void sacarAlPrimeroDeMemoriaDelProceso(char* contenido, int PID, int pag,int socketSwap) ;
 void sacarAlPrimeroDeMemoria();
 char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(int idMarco,char* contenido,int socketSwap);
+void verificarBitDeModificada(int idMarco, char* contenido,int idMenor, char* contenidoACargar, int PIDaCargar, int pagACargar,int socketSwap);
 t_list* buscarLosIdDeProceso(int idProc);
 void eliminarDeMemoria(int id);
 int eliminarDeTablaDePaginas(int id);
@@ -164,7 +164,7 @@ t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int contadorPagTP,variableIdMarcoNeg, variableIdMarcoPos,variableTLB; // contador de paginas de la tabla de paginas
+int variableIdMarcoNeg, variableIdMarcoPos,variableTLB; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;

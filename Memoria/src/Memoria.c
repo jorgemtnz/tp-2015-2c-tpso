@@ -85,7 +85,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				log_info(logger, "leer pag %d\n", datosDesdeCPU->numeroPagina);
+				log_info(logger, "leer pag %d del proceso %d\n", datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
 
@@ -108,14 +108,28 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				log_info(logger, "leer pag %d del proceso %d\n", datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina= datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				escribir(estructuraEscribir->PID, estructuraEscribir->numeroPagina, estructuraEscribir->contenido, socketSwap);
+				escribir(estructuraEscribir->PID, estructuraEscribir->numeroPagina, estructuraEscribir->contenido, socketSwap, socketCPU);
+				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 
 				break;
+			}
+			case (RESUL_SOBREESCRIBIR_OK): {
+				/* solo se usa en las funciones de sacar a un marco de memoria entonces
+				 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
+				 que es lo que se manda en el caso que no haya que sacar alguno */
+				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				log_info(logger, "resultado sobreescribir ok de pag %d del proceso %d\n", datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+				t_contenido_pagina* lecturaMandarCpu;
+				lecturaMandarCpu = iniciarContenidoPagina();
+				lecturaMandarCpu = datosDesdeCPU;
+				enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
+
 			}
 
 			}

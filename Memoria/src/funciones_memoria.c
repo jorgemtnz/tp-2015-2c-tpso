@@ -56,7 +56,6 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	estructura->cantidadPaginas = cantPag;
 
 	for (contador = 0; contador < cantPag; contador++) {
-		contadorPagTP++;
 		variableIdMarcoNeg --;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
@@ -70,7 +69,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	free(estructura);
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
+void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
 	// 1 -ver si estan en memoria y ponerle el bit de modificada
 	// 2- si no esta mandar a escribir a swap
 
@@ -82,16 +81,18 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 
 	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
 
+	escritura->numeroPagina = nroPag;
+	escritura->PID = idProc;
+	escritura->contenido = textoAEscribir;
+
 	if( idMarco <0){
 		// 2
-			escritura->numeroPagina = nroPag;
-			escritura->PID = idProc;
-			escritura->contenido = textoAEscribir;
 
 			enviarEscribirAlSwap(escritura,socketSwap);
 
 	}else {// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
+		enviarRtaEscribirACPU(escritura, socketCPU);
 	}
 
 }
@@ -99,24 +100,23 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
 
 void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
-	int a, respuesta;
+	int a, id;
 	char* contenido;
 	t_contenido_pagina * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
-	t_lectura * lecturaSwap;
-	lecturaSwap = iniciarLectura();
 
 		lecturaMandarCpu->PID = idProc;
 		lecturaMandarCpu->numeroPagina = a;
 
-		respuesta = buscarSiEstaEnMemoria(idProc, a);
+		id = buscarSiEstaEnMemoria(idProc, a);
 
-		if (respuesta <0) {
+		if (id <0) {// no lo encontro
 			traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		} else { // aca significa que trajo el id porque esta en memoria
 
-			contenido = traerContenidoDeMarco(respuesta);
+			contenido = traerContenidoDeMarco(id);
 			lecturaMandarCpu->contenido = contenido;
+			enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
 
 		}
 }

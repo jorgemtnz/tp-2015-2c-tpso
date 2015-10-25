@@ -1,9 +1,3 @@
-/*
- * funciones_Auxiliares.c
- *
- *  Created on: 27/9/2015
- *      Author: utnso
- */
 #include "Memoria.h"
 
 int buscarSiEstaEnMemoria(int idProc, int nroPag) {
@@ -116,12 +110,13 @@ void cargarNuevoEnTLB(int PID,int pag,int id){
 	campoTLB = iniciarTLB();
 
 	tamanioTLB=list_size(listaTLB);
-	variableTLB ++;
 
 	if(tamanioTLB==configuracion->entradasTlb){
 		sacarAlPrimeroDeTLB();
 	}
 
+
+	variableTLB ++;
 	campoTLB->bitPagModificada=0;
 	campoTLB->idMarco=id;
 	campoTLB->idProc=PID;
@@ -195,7 +190,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap) {
+void sacarAlPrimeroDeMemoriaDelProceso(char* contenido, int PID, int pag,int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a, id,tamanioListaId,idMenor,primero=0,nuevoId;
@@ -204,7 +199,7 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap) {
 	t_list* listaIdMarco;
 	listaIdMarco = list_create();
 
-	listaIdMarco = buscarLosIdDeProceso(idProc);
+	listaIdMarco = buscarLosIdDeProceso(PID);
 	tamanioListaId = list_size(listaIdMarco);
 	for(a=0;a<tamanioListaId;a++){
 		id = list_get(listaIdMarco,a);
@@ -222,19 +217,12 @@ void sacarAlPrimeroDeMemoriaDelProceso(int idProc, int socketSwap) {
 
 	}
 
-	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido, socketSwap);
-
-	eliminarDeMemoria(idMenor);
-	nuevoId= eliminarDeTablaDePaginas(idMenor);
-	if (configuracion->tlbHabilitada == 0) {
-		eliminarDeTLBSiEstaPorNuevoId(idMenor,nuevoId);
-	}
-
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido,idMenor,contenido, PID,pag,socketSwap);
 
 
 }
 
-void sacarAlPrimeroDeMemoria(int socketSwap) {
+void sacarAlPrimeroDeMemoria(int socketSwap,int idProc,char* contenido,int pag) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	int tamanioMemoria,idMenor,id,a,nuevoId,primero=0;
@@ -252,23 +240,17 @@ void sacarAlPrimeroDeMemoria(int socketSwap) {
 			}
 		}
 	}
-	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido, socketSwap);
-
-	eliminarDeMemoria(idMenor);
-	nuevoId= eliminarDeTablaDePaginas(idMenor);
-	if (configuracion->tlbHabilitada == 0) {
-		eliminarDeTLBSiEstaPorNuevoId(idMenor,nuevoId);
-	}
-
-
-
-
+	verificarBitDeModificada(campoMarco->idMarco, campoMarco->contenido,idMenor,contenido,idProc,pag,socketSwap);
 
 }
 
-void verificarBitDeModificada(int idMarco, char* contenido,int socketSwap) {
+void verificarBitDeModificada(int idMarco, char* contenido, int idMenor, char* contenidoACargar, int PIDaCargar, int pagACargar,int socketSwap) {
+	/* solo se usa en las funciones de sacar a un marco de memoria entonces
+	   en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
+	   que es lo que se manda en el caso que no haya que sacar alguno */
 	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina, idProc;/* teoricamente si esta en TLB el bit de modif de un proceso tamb esta en TAbla de pag,
 	 lo hago para verificar nada mas*/
+	int bitTLB=0, bitTablaDePag=0,nuevoId;
 	tamanioTLB = list_size(listaTLB);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TLB* campoTLB;
@@ -276,31 +258,49 @@ void verificarBitDeModificada(int idMarco, char* contenido,int socketSwap) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
-		campoTLB = list_get(listaTLB, a);
-		if (campoTLB->idMarco == idMarco) {
-			flagTLB = 1;
-			list_remove(listaTLB, a);
+	if (configuracion->tlbHabilitada == 0) {
+		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
+			campoTLB = list_get(listaTLB, a);
+			if (campoTLB->idMarco == idMarco) {
+				flagTLB = 1;
+				bitTLB = campoTLB->bitPagModificada;
+				if (bitTLB == 1) {
+					campoTLB->bitPagModificada = 0;
+				}
+			}
 		}
 	}
+
+
 
 	for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
 			flagTablaDePag = 1;
-			list_remove(listaTablaDePag, a);
+			bitTablaDePag = campoTablaDePag->bitPagModificada;
+			if(bitTablaDePag==1){
+				campoTablaDePag->bitPagModificada = 0;
+				pagina = campoTablaDePag->paginaDelProceso;
+				idProc = campoTablaDePag->idProc;
+			}
 		}
 	}
 
-	if (campoTablaDePag->bitPagModificada == 1 && campoTLB->bitPagModificada == 1) { // teoricamente los dos tienen que estar en uno
-		pagina = campoTablaDePag->paginaDelProceso;
-		idProc = campoTablaDePag->idProc;
+	eliminarDeMemoria(idMenor);
+	nuevoId= eliminarDeTablaDePaginas(idMenor);
+	if (configuracion->tlbHabilitada == 0) {
+		eliminarDeTLBSiEstaPorNuevoId(idMenor,nuevoId);
+	}
+	cargarNuevoMarcoAMemoria(contenidoACargar,PIDaCargar,pagACargar);
 
-		campoTablaDePag->bitPagModificada = 0;
-		campoTLB->bitPagModificada = 0;
+
+	if (bitTablaDePag == 1 && bitTLB == 1) {// teoricamente los dos tienen que estar en uno
 
 		enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido,socketSwap);
 	}
+
+
+
 
 }
 
@@ -426,14 +426,14 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
-	lecturaMandarCpu->PID = idProc;
-	lecturaMandarCpu->numeroPagina = pag;
 	if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-		sacarAlPrimeroDeMemoriaDelProceso(idProc,socketSwap);
+		sacarAlPrimeroDeMemoriaDelProceso(contenido,idProc,pag,socketSwap);
 	} else if (estaLlenaLaMemoria()) {
-		sacarAlPrimeroDeMemoria(socketSwap);
+		sacarAlPrimeroDeMemoria(socketSwap,idProc,contenido,pag);
 	}
 	cargarNuevoMarcoAMemoria(contenido,idProc,pag);
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
 	lecturaMandarCpu->contenido = contenido;
 
 	enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU); // en esta funcion se tiene que mandar a cpu el lecturaMandarCPU
@@ -483,7 +483,6 @@ void inicializacionDesdeCero(){
 	listaMemoria = list_create();
 	listaTLB = list_create();
 	listaTablaDePag = list_create();
-	contadorPagTP = 0;
 	variableIdMarcoNeg = 0;
 	variableIdMarcoPos =0;
 	variableTLB =0;
@@ -565,7 +564,6 @@ t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 	estructura->cantidadPaginas = cantPag;
 
 	for (contador = 0; contador < cantPag; contador++) {
-			contadorPagTP++;
 			variableIdMarcoNeg --;
 			tablaDePag = iniciarTablaDePaginas();
 			tablaDePag->idProc = idProc;
@@ -621,5 +619,4 @@ int finalizar_falso(int idProc) {
 		}
 	return idProc;
 }
-
 
