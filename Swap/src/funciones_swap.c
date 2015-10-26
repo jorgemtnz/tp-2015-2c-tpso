@@ -337,7 +337,7 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	int byteInicial = unProceso->ubicacion * configuracion->tamanioPagina;
 	int tamanioEnBytes = unProceso->cantPagsUso * configuracion->tamanioPagina;
 	char* contenidoLogger = string_from_format("Proceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i",
-					respuestaDeFinalizar->PID, byteInicial, tamanioEnBytes);
+			respuestaDeFinalizar->PID, byteInicial, tamanioEnBytes);
 	log_info(logger, contenidoLogger);
 
 	return respuestaDeFinalizar;
@@ -488,4 +488,19 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 		}
 	}
 
+}
+
+t_devolucion_escribir_o_leer* borrarContenidoPagina(t_contenido_pagina* procesoAEscribir) {
+	//BORRO EL CONTENIDO VIEJO DE LA PAGINA
+	char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
+	t_contenido_pagina* paginaEnBlanco;
+	paginaEnBlanco = crearContenidoPagina();
+	t_devolucion_escribir_o_leer* resultado;
+	resultado = crearDevolucionEscribirOLeer();
+	paginaEnBlanco->PID = procesoAEscribir->PID;
+	paginaEnBlanco->contenido = espacioVacio;
+	paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
+	log_info(logger, "ESCRITURA DE PAGINA EN BLANCO PARA BORRAR EL CONTENIDO Y ESCRIBIR LUEGO EL NUEVO");
+	resultado = escribir(listaDeProcesosCargados, paginaEnBlanco);
+	return resultado;
 }

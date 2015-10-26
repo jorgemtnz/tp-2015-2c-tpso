@@ -388,11 +388,33 @@ static void test_corto_cod() {
 
 }
 
+static void test_borrarContenidoPagina() {
+	t_iniciar_swap* estructuraIniciar;
+	inicializarListas();
+	estructuraIniciar = crearEstructuraIniciar();
+	estructuraIniciar->PID = 2;
+	estructuraIniciar->cantidadPaginas = 5;
+	iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	t_devolucion_escribir_o_leer* resultado;
+	resultado = crearDevolucionEscribirOLeer();
+	t_contenido_pagina* procesoAEscribir;
+	procesoAEscribir = crearContenidoPagina();;
+	procesoAEscribir->contenido = "HOLA PROBANDO ESCRITURA DE UNA PAGINA ";
+	procesoAEscribir->numeroPagina = 3;
+	procesoAEscribir->PID = 2;
+	escribir(listaDeProcesosCargados, procesoAEscribir);
+	resultado = borrarContenidoPagina(procesoAEscribir);
+	CU_ASSERT_EQUAL(resultado->PID, 2);
+	CU_ASSERT_STRING_EQUAL(resultado->contenido, "\0");
+	CU_ASSERT_EQUAL(resultado->numeroPagina, 3);
+	CU_ASSERT_EQUAL(resultado->resultado, OK);
+}
+
 static CU_TestInfo tests[] = { { "Test Hola Mundo", test_debe_devolver_hola_mundo }, { "Test Iniciar UN proceso", test_iniciar_un_proceso }, {
 		"Test Escribir en proceso", test_escribir_en_proceso }, { "Test Leer de proceso", test_leer_de_proceso }, { "Test Finalizar un proceso",
 		test_finalizar_un_proceso }, { "Test Proceso que no entra en Swap ", test_iniciar_proceso_que_no_entra }, { "Test Iniciar y finalizar varios procesos ",
 		test_iniciar_y_finalizar_varios_procesos }, { "Test acomodar espacios libres ", test_acomodar_espacios_libres }, { "Test compactacion ",
-		test_algoritmo_compactacion }, { "Test corto cod ", test_corto_cod },
+		test_algoritmo_compactacion }, { "Test corto cod ", test_corto_cod },{"test_borrarContenidoPagina", test_borrarContenidoPagina},
 CU_TEST_INFO_NULL, };
 
 CUNIT_MAKE_SUITE(swap, "Test swap", init_suite, clean_suite, tests)

@@ -75,8 +75,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
 			t_devolucion_escribir_o_leer* resultado;
 			t_contenido_pagina* paginaAEnviar;
+			t_contenido_pagina* paginaEnBlanco;
+			paginaEnBlanco = crearContenidoPagina();
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
+
+			borrarContenidoPagina(procesoAEscribir);
+
 			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
@@ -137,14 +142,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
 
-			//BORRO EL CONTENIDO VIEJO DE LA PAGINA
-			char* espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
-
-			paginaEnBlanco->PID = procesoAEscribir->PID;
-			paginaEnBlanco->contenido = espacioVacio;
-			paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
-			log_info(logger, "ESCRITURA DE PAGINA EN BLANCO PARA BORRAR EL CONTENIDO Y ESCRIBIR LUEGO EL NUEVO");
-			escribir(listaDeProcesosCargados, paginaEnBlanco);
+			borrarContenidoPagina(procesoAEscribir);
 
 			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
 
