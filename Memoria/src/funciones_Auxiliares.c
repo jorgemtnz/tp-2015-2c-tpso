@@ -201,7 +201,60 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlMasViejoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int socketSwap) {
+void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar) {
+
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_marco* campoAux;
+	campoAux = iniciarMarco();
+	int tamanioMemoria, idMenor, id, a, nuevoId, primero = 0;
+
+	tamanioMemoria = list_size(listaMemoria);
+	//sleep(configuracion->retardoMemoria);
+	for (a = 0; a < tamanioMemoria; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (primero == 0) {
+			primero++;
+			campoAux = campoMarco;
+		} else {
+			if (campoMarco->idMarco < campoAux->idMarco) {
+				campoAux = campoMarco;
+			}
+		}
+	}
+
+	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, socketSwap);
+}
+
+void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap) {
+	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
+	int a, tamanioListaMarco, primero = 0;
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_marco* campoAux;
+	campoAux = iniciarMarco();
+	t_list* listaMarco;
+	listaMarco = list_create();
+
+	listaMarco = buscarLosMarcosDeProcesoEnMemoria(PIDACargar);
+	tamanioListaMarco = list_size(listaMarco);
+	for (a = 0; a < tamanioListaMarco; a++) {
+		campoMarco = list_get(listaMarco, a);
+		if (primero == 0) {
+			primero++;
+			campoAux = campoMarco;
+		} else {
+			if (campoMarco->idMarco < campoAux->idMarco) {
+				campoAux = campoMarco;
+			}
+		}
+
+	}
+	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, socketSwap);
+}
+
+
+void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a,tamanioListaMarco,primero=0;
@@ -244,16 +297,15 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenido
 	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria; a++) {
 		campoMarco = list_get(listaMemoria, a);
-		if (campoMarco->idMarco > 0) {
-			if (primero == 0) {
-				primero++;
+		if (primero == 0) {
+			primero++;
+			campoAux=campoMarco;
+		} else {
+			if (campoMarco->posicion < campoAux->posicion) {
 				campoAux=campoMarco;
-			} else {
-				if (campoMarco->posicion < campoAux->posicion) {
-					campoAux=campoMarco;
-				}
 			}
 		}
+
 	}
 	verificarBitDeModificada(campoAux,contenidoACargar,PIDACargar,pagACargar,socketSwap);
 
@@ -473,16 +525,23 @@ void eliminarDeTablaDePaginasDefinitivamente(int id){
 		}
 }
 
+
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int socketCPU, int socketSwap) {
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	if (configuracion->algoritmo_reemplazo == "LRU") {
-
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-			sacarAlMasViejoDelProcesoDeMemoria(contenido, idProc, pag, socketSwap);
+			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
 			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag);
+		}
+
+	} else if(configuracion->algoritmo_reemplazo == "FIFO") {
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacarAlPrimeroDeMemoriaDelProceso( contenido, idProc, pag, socketSwap) ;
+		} else if (estaLlenaLaMemoria()) {
+			sacarAlPrimeroDeMemoria(socketSwap, idProc, contenido, pag);
 		}
 
 	} else { // aca significa que es el de clock
