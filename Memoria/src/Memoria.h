@@ -50,12 +50,14 @@ typedef struct {
 	uint8_t entradasTlb;
 	uint8_t tlbHabilitada;
 	uint8_t retardoMemoria;
+	char* algoritmo_reemplazo;
 
 } t_configuracion;
 
 typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
 	char* contenido; // el texto que tendra esa posicion
+	int posicion;
 } t_marco;
 
 typedef struct {
@@ -132,8 +134,9 @@ char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(int idMarco, char* contenido,int idMenor, char* contenidoACargar, int PIDaCargar, int pagACargar,int socketSwap);
+void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int socketSwap);
 t_list* buscarLosIdDeProceso(int idProc);
+t_list* buscarLosMarcosDeProcesoEnMemoria( int PID);
 void eliminarDeMemoria(int id);
 int eliminarDeTablaDePaginas(int id);
 void eliminarDeTLBSiEstaPorNuevoId(int idMenor,int nuevoId);
@@ -164,7 +167,7 @@ t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int variableIdMarcoNeg, variableIdMarcoPos,variableTLB; // contador de paginas de la tabla de paginas
+int variableIdMarcoNeg, variableIdMarcoPos,variableTLB,variableEnvejecimientoMarco; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;

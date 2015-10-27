@@ -35,6 +35,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->entradasTlb = config_get_int_value(archivoConfig, "ENTRADAS_TLB");
 		configuracion->retardoMemoria = config_get_int_value(archivoConfig, "RETARDO_MEMORIA");
 		configuracion->tlbHabilitada = config_get_int_value(archivoConfig, "TLB_HABILITADA");
+		configuracion->algoritmo_reemplazo = config_get_string_value(archivoConfig, "ALGORITMO_REEMPLAZO");
 		log_info(logger, "[INFO]: Archivo de configuracion leido correctamente");
 
 		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
@@ -79,19 +80,19 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 
 	//veo si esta en un marco de memoria
 
-	idMarco = buscarSiEstaEnMemoria(idProc,nroPag);
+	idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
 	escritura->contenido = textoAEscribir;
 
-	if( idMarco <0){
+	if (idMarco < 0) {
 		// 2
+		sleep(configuracion->retardoMemoria);
+		enviarEscribirAlSwap(escritura, socketSwap);
 
-			enviarEscribirAlSwap(escritura,socketSwap);
-
-	}else {// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(idMarco,textoAEscribir);
+	} else {	// entonces tengo el id del marco
+		escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
 		enviarRtaEscribirACPU(escritura, socketCPU);
 	}
 
@@ -111,6 +112,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 		id = buscarSiEstaEnMemoria(idProc, a);
 
 		if (id <0) {// no lo encontro
+			//sleep(configuracion->retardoMemoria);
 			traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		} else { // aca significa que trajo el id porque esta en memoria
 

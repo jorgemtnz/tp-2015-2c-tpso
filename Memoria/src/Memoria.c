@@ -8,7 +8,6 @@ int main(int argc, char *argv[]) {
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 
 	leerArchivoDeConfiguracion(argc, argv);
-
 	int socketSwap;
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap), &socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
@@ -114,8 +113,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina= datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				escribir(estructuraEscribir->PID, estructuraEscribir->numeroPagina, estructuraEscribir->contenido, socketSwap, socketCPU);
 				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+				escribir(estructuraEscribir->PID, estructuraEscribir->numeroPagina, estructuraEscribir->contenido, socketSwap, socketCPU);
+
 
 				break;
 			}
