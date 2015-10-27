@@ -73,6 +73,8 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 		campoMarco = list_get(listaMemoria, a);
 		if (campoMarco->idMarco == idMarco) {
 			campoMarco->contenido = contenido;
+			variableEnvejecimientoMarco ++;
+			campoMarco->posicion = variableEnvejecimientoMarco;
 			list_replace(listaMemoria,a,campoMarco);
 			flagMemoria = 1;
 		}
@@ -94,11 +96,14 @@ void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag) {
 		campoTablaDePag= list_get(listaTablaDePag,a);
 		if(campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag){
 			campoTablaDePag->idMarco = variableIdMarcoPos;
+
 		}
 	}
 
+	variableEnvejecimientoMarco ++;
 	campoAux->idMarco = variableIdMarcoPos;
 	campoAux->contenido = contenido;
+	campoAux->posicion = variableEnvejecimientoMarco;
 
 	if(configuracion->tlbHabilitada ==0){
 		cargarNuevoEnTLB(PID,pag,campoAux->idMarco);
@@ -325,6 +330,8 @@ char* traerContenidoDeMarco(int idMarco) {
 	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
 		campoMemoria = list_get(listaMemoria, a);
 		if (campoMemoria->idMarco == idMarco) {
+			variableEnvejecimientoMarco ++;
+			campoMemoria->posicion = variableEnvejecimientoMarco;
 			flag = 1;
 		}
 	}
