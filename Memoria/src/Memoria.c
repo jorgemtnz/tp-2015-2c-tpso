@@ -71,6 +71,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
+				//sleep(configuracion->retardoMemoria);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -79,7 +80,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
-				enviarFinalizarASwap(estructuraFinalizar, socketSwap);
+				//sleep(configuracion->retardoMemoria);
+				finalizar(estructuraFinalizar,socketSwap);
 				break;
 			}
 			case (LEER_MEM): {

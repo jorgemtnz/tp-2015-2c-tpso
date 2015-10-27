@@ -71,14 +71,10 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 }
 
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
-	// 1 -ver si estan en memoria y ponerle el bit de modificada
-	// 2- si no esta mandar a escribir a swap
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
 	int idMarco;
-
-	//veo si esta en un marco de memoria
 
 	idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
 
@@ -87,8 +83,8 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 	escritura->contenido = textoAEscribir;
 
 	if (idMarco < 0) {
-		// 2
-		sleep(configuracion->retardoMemoria);
+
+		//sleep(configuracion->retardoMemoria);
 		enviarEscribirAlSwap(escritura, socketSwap);
 
 	} else {	// entonces tengo el id del marco
@@ -106,29 +102,29 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	t_contenido_pagina * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 
-		lecturaMandarCpu->PID = idProc;
-		lecturaMandarCpu->numeroPagina = a;
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = a;
 
-		id = buscarSiEstaEnMemoria(idProc, a);
+	id = buscarSiEstaEnMemoria(idProc, a);
 
-		if (id <0) {// no lo encontro
-			//sleep(configuracion->retardoMemoria);
-			traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
-		} else { // aca significa que trajo el id porque esta en memoria
+	if (id < 0) {	// no lo encontro
+		//sleep(configuracion->retardoMemoria);
+		traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
+	} else { // aca significa que trajo el id porque esta en memoria
 
-			contenido = traerContenidoDeMarco(id);
-			lecturaMandarCpu->contenido = contenido;
-			enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
+		contenido = traerContenidoDeMarco(id);
+		lecturaMandarCpu->contenido = contenido;
+		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
 
-		}
+	}
 }
 
 
 
-void finalizar(int idProc) {
+void finalizar(t_PID* estructuraFinalizar,int socketSwap) {
 	int a,tamanioListaId,id;
 	t_list * listaDeId;
-	listaDeId = buscarLosIdDeProceso(idProc);
+	listaDeId = buscarLosIdDeProceso(estructuraFinalizar->PID);
 	tamanioListaId = list_size(listaDeId);
 
 	for (a = 0; a < tamanioListaId; a++) {
@@ -142,7 +138,8 @@ void finalizar(int idProc) {
 		}
 	}
 
-	enviarASwapEliminarProceso(idProc);
+	//sleep(configuracion->retardoMemoria);
+	enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 
 }
 

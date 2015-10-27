@@ -30,7 +30,7 @@ int buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		}
 	}
 
-	return idMarco; // si no encontro retorna -1 que es lo primero que se seteo
+	return idMarco;
 
 }
 
@@ -92,11 +92,12 @@ void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag) {
 
 	variableIdMarcoPos++;
 
+	//sleep(configuracion->retardoMemoria);
 	for(a=0;a<tamanioTablaDePag && flag ==1;a++){
 		campoTablaDePag= list_get(listaTablaDePag,a);
 		if(campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag){
 			campoTablaDePag->idMarco = variableIdMarcoPos;
-
+			list_add(listaTablaDePag,campoTablaDePag);
 		}
 	}
 
@@ -167,6 +168,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
+	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->idMarco >0 && flag == 0) { // o sea esta en memoria
@@ -279,6 +281,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				bitTLB = campoTLB->bitPagModificada;
 				if (bitTLB == 1) {
 					campoTLB->bitPagModificada = 0;
+					list_add(listaTLB,campoTLB);
 					pagina = campoTablaDePag->paginaDelProceso;
 					idProc = campoTablaDePag->idProc;
 				}
@@ -293,6 +296,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
 				if (bitTablaDePag == 1) {
 					campoTablaDePag->bitPagModificada = 0;
+					list_add(listaTablaDePag,campoTablaDePag);
 					pagina = campoTablaDePag->paginaDelProceso;
 					idProc = campoTablaDePag->idProc;
 				}
@@ -326,7 +330,7 @@ char* traerContenidoDeMarco(int idMarco) {
 	t_marco* campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	sleep(configuracion->retardoMemoria);
+	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
 		campoMemoria = list_get(listaMemoria, a);
 		if (campoMemoria->idMarco == idMarco) {
@@ -495,10 +499,6 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 }
 
 
-void enviarASwapEliminarProceso(int idProc) {
-
-}
-
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
@@ -657,10 +657,10 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 
 }
 
-int finalizar_falso(int idProc) {
+t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap)  {
 	int a,tamanioListaId,id;
 		t_list * listaDeId;
-		listaDeId = buscarLosIdDeProceso(idProc);
+		listaDeId = buscarLosIdDeProceso(estructuraFinalizar->PID);
 		tamanioListaId = list_size(listaDeId);
 
 		for (a = 0; a < tamanioListaId; a++) {
@@ -673,6 +673,6 @@ int finalizar_falso(int idProc) {
 				eliminarDeTLBDefinitivamente(id);
 			}
 		}
-	return idProc;
+	return estructuraFinalizar;
 }
 

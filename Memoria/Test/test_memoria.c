@@ -450,21 +450,28 @@ static void test_llego_maximo_de_marco_del_proceso(){
 
 static void test_probar_finalizar_un_proceso_sin_TLB(){
 	int PID1=1,PID2=2,PID3=3,PID4=4;
-	int tamanioTablaDePag,tamanioMemoria;
-	int id1,id2,id3,id4;
+	int tamanioTablaDePag,tamanioMemoria,socketFalso=8;
+	t_PID* id1;
+	id1 = crearPID();
+	t_PID* id2;
+	id2 = crearPID();
+	t_PID* id3;
+	id3 = crearPID();
+	t_PID* id4;
+	id4 = crearPID();
 
-	id1=finalizar_falso(PID1);
+	id1=finalizar_falso(PID1,socketFalso);
 
-	id2=finalizar_falso(PID2);
+	id2=finalizar_falso(PID2,socketFalso);
 
-	id3=finalizar_falso(PID3);
+	id3=finalizar_falso(PID3,socketFalso);
 
-	id4=finalizar_falso(PID4);
+	id4=finalizar_falso(PID4,socketFalso);
 
-	CU_ASSERT_EQUAL(id1, 1);
-	CU_ASSERT_EQUAL(id2, 2);
-	CU_ASSERT_EQUAL(id3, 3);
-	CU_ASSERT_EQUAL(id4, 4);
+	CU_ASSERT_EQUAL(id1->PID, 1);
+	CU_ASSERT_EQUAL(id2->PID, 2);
+	CU_ASSERT_EQUAL(id3->PID, 3);
+	CU_ASSERT_EQUAL(id4->PID, 4);
 
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	tamanioMemoria = list_size(listaMemoria);

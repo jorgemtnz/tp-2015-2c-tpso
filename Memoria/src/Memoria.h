@@ -112,7 +112,7 @@ t_PID* crearPID();
 void leerArchivoDeConfiguracion();
 void iniciar(int idProc, int cantPag, int socketCPU);
 void leer(int idProc, int pag, int socketSwap, int socketCPU);
-void finalizar(int idProc);
+void finalizar(t_PID* estructuraFinalizar,int socketSwap);
 void inicializadoCorrecto(int idProc, int cantPag);
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU);
 t_TablaDePaginas* iniciarTablaDePaginas();
@@ -148,7 +148,7 @@ void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU, int socketSwap);
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
 t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
-int finalizar_falso(int idProc);
+t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
