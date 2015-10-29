@@ -17,8 +17,8 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 	return pcb;
 }
 
-void agregarPcbAColaDeListos(t_pcb* pcb) {
-	list_add(getColaDeListos(), pcb);
+void ejecutarProceso(t_pcb* pcb) {
+	list_add(getColaDeNuevos(), pcb);
 	ejecutarPlanificadorLargoPlazo();
 }
 
@@ -36,20 +36,28 @@ t_list* getColaDeListos() {
 	return colaDeListos;
 }
 
+t_list* getColaDeNuevos() {
+	return colaDeNuevos;
+}
+
 void ejecutarPlanificadorLargoPlazo() {
 	//TODO
 	//POR AHORA ENVIAMOS DIRECTAMENTE
 	if(list_all_satisfy(listaCPUs, cpuDesconectada)) {
 		putsConsola("No hay ningun CPU conectado\n");
 	} else {
-		putsConsola("Enviamos a ejecutar el programa\n");
+		putsConsola("Ejecutamos planificacion\n");
 	}
 
 	//TODO
 	//POR AHORA TOMAMOS EL PRIMERO DE LA COLA DE LISTOS Y LO MANDAMOS A EJECUTAR
-	t_pcb* pcb = list_get(colaDeListos, 0);
+	t_pcb* pcb = list_get(getColaDeNuevos(), 0);
 	t_cpu_ref* cpu = obtenerCPUDisponible();
-	correrProcesoEnCpu(pcb, cpu);
+	if(cpu != NULL) {
+		correrProcesoEnCpu(pcb, cpu);
+	} else {
+		log_info(logger, "No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+	}
 }
 
 bool cpuDesconectada(void *cpu) {
@@ -57,9 +65,18 @@ bool cpuDesconectada(void *cpu) {
 }
 
 t_cpu_ref* obtenerCPUDisponible() {
-	return (t_cpu_ref*)list_get(listaCPUs, 0);
+
+	bool estaCPUDisponible(void* elemento) {
+		return !((t_cpu_ref*) elemento)->ejecutando;
+	}
+
+	t_cpu_ref* cpuDisponible = (t_cpu_ref*) list_find(listaCPUs, estaCPUDisponible);
+
+	return cpuDisponible;
 }
 
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu) {
+	cpu->ejecutando = true;
+	cpu->pcb = pcb;
 	enviarStruct(cpu->socket, CONTEXTO_MPROC, pcb);
 }

@@ -81,6 +81,9 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 
 	//creamos la cola de listos
 	colaDeListos = list_create();
+	colaDeNuevos = list_create();
+	colaDeEjecucion = list_create();
+	colaDeEntradaSalida = list_create();
 }
 
 void registrarNuevaCPU(int socket) {
@@ -88,6 +91,8 @@ void registrarNuevaCPU(int socket) {
 	cpu->socket = socket;
 	cpu->nombre = crearNombreCPU();
 	cpu->conectada = true;
+	cpu->ejecutando = false;
+	cpu->pcb = NULL;
 	list_add(listaCPUs, cpu);
 }
 

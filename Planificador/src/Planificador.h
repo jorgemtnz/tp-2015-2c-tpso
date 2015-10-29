@@ -83,9 +83,10 @@ int cpu(int socket, t_header* header, char* buffer);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
-void agregarPcbAColaDeListos(t_pcb* pcb);
+void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
 t_list* getColaDeListos();
+t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
@@ -117,6 +118,9 @@ t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeListos;
+t_list* colaDeNuevos;
+t_list* colaDeEjecucion;
+t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
 
 //===========================================================================================
