@@ -103,6 +103,8 @@ typedef struct CPU_REF {
 	int socket;
 	char* nombre;
 	bool conectada;
+	t_pcb* pcb;
+	bool ejecutando;
 } t_cpu_ref;
 
 //SWAP Y MEMORIA
