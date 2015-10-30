@@ -1,9 +1,5 @@
-/*
- * Memoria.h
- *
- *  Created on: 29/8/2015
- *      Author: utnso
- */
+
+ //Memoria.h
 #ifndef MEMORIA_H_
 #define MEMORIA_H_
 
@@ -126,17 +122,18 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc,int nroPag,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
-void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenidoACargar,int pagACargar);
-void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int socketSwap);
+void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenidoACargar,int pagACargar, int flagEscritura);
+void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
 void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
 void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar);
 char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
-void enviarACPUContenidoPaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
+void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int socketSwap);
+void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int flagEscritura,int socketSwap);
 t_list* buscarLosIdDeProceso(int idProc);
 t_list* buscarLosMarcosDeProcesoEnMemoria( int PID);
 void eliminarDeMemoria(int id);
@@ -147,7 +144,11 @@ void eliminarDeTLBDefinitivamente(int id);
 void enviarASwapEliminarProceso(int idProc);
 void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido, int socketSwap);
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU);
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido,int socketCPU, int socketSwap);
+void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU);
+void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
+void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU);
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura,int socketCPU, int socketSwap);
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
 t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);

@@ -720,9 +720,13 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_LEER_OK_CPU, "RESUL_LEER_OK_CPU", serializar_RESUL_LEER_OK_CPU, deserializar_RESUL_LEER_OK_CPU);
 		registrarSerializadores(SOBREESCRIBIR_SWAP, "SOBREESCRIBIR_SWAP", serializar_SOBREESCRIBIR_SWAP, deserializar_SOBREESCRIBIR_SWAP);
 		registrarSerializadores(RESUL_SOBREESCRIBIR_OK, "RESUL_SOBREESCRIBIR_OK", serializar_RESUL_SOBREESCRIBIR_OK, deserializar_RESUL_SOBREESCRIBIR_OK);
+		registrarSerializadores(LEER_SWAP_POR_ESCRIBIR, "LEER_SWAP_POR_ESCRIBIR", serializar_LEER_SWAP_POR_ESCRIBIR, deserializar_LEER_SWAP_POR_ESCRIBIR);
+		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, "RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR", serializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, deserializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR);
+		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK, "RESUL_TRAER_PAG_SWAP_OK", serializar_RESUL_TRAER_PAG_SWAP_OK, deserializar_RESUL_TRAER_PAG_SWAP_OK);
+		registrarSerializadores(RESUL_ESCRIBIR, "RESUL_ESCRIBIR", serializar_RESUL_ESCRIBIR, deserializar_RESUL_ESCRIBIR);
+
 	}
 }
-
 
 
 bool existeSerializacion(t_tipo_mensaje tipoMensaje) {

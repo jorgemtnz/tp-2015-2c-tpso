@@ -98,13 +98,20 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_contenido_pagina * datosDesdeSwap = (t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraRtaLeer;
 				estructuraRtaLeer = iniciarContenidoPagina();
-				estructuraRtaLeer->PID = datosDesdeSwap->PID;
-				estructuraRtaLeer->numeroPagina= datosDesdeSwap->numeroPagina;
-				estructuraRtaLeer->contenido = datosDesdeSwap->contenido;
-				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido, socketCPU, socketSwap);
+				estructuraRtaLeer = datosDesdeSwap;
+				int flagEscritura = 0;
+				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID, estructuraRtaLeer->numeroPagina, estructuraRtaLeer->contenido,flagEscritura, socketCPU,
+						socketSwap);
 
-
-
+				break;
+			}
+			case (RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR): {
+				t_contenido_pagina * datosDesdeSwap = (t_contenido_pagina*) buffer;
+				t_contenido_pagina* estructuraRtaLeerPorEscribir;
+				estructuraRtaLeerPorEscribir = iniciarContenidoPagina();
+				estructuraRtaLeerPorEscribir = datosDesdeSwap;
+				int flagEscritura = 1;
+				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeerPorEscribir->PID, estructuraRtaLeerPorEscribir->numeroPagina, estructuraRtaLeerPorEscribir->contenido,flagEscritura, socketCPU,socketSwap);
 				break;
 			}
 			case (ESCRIBIR_MEM): {
@@ -130,7 +137,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_contenido_pagina* lecturaMandarCpu;
 				lecturaMandarCpu = iniciarContenidoPagina();
 				lecturaMandarCpu = datosDesdeCPU;
-				enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
+				enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
 
 			}
 

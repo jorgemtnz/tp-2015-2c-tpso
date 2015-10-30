@@ -82,10 +82,10 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 	escritura->PID = idProc;
 	escritura->contenido = textoAEscribir;
 
-	if (idMarco < 0) {
+	if (idMarco < 0) {// traer de swap una pag, cargarla a memoria
 
 		//sleep(configuracion->retardoMemoria);
-		enviarEscribirAlSwap(escritura, socketSwap);
+		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, socketSwap);
 
 	} else {	// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
@@ -114,7 +114,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 		contenido = traerContenidoDeMarco(id);
 		lecturaMandarCpu->contenido = contenido;
-		enviarACPUContenidoPaginaDeUnProceso(lecturaMandarCpu, socketCPU);
+		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
 
 	}
 }
@@ -154,18 +154,12 @@ void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU){
-	enviarStruct(socketCPU, RESUL_ESCRIBIR_OK, estructura);
+	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
 }
 
 void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU){
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_NO_OK_CPU, estructura);
 }
 
-void enviarASwapContenidoDePaginaDesactualizada(int idProc, int pagina, char* contenido) {
 
-}
-
-void enviarACPUContenidoDePaginaDeUnProceso(t_contenido_pagina* lecturaMandarCpu) {
-
-}
 

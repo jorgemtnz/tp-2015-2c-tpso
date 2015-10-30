@@ -1,10 +1,7 @@
-/*
- * protocolo.h
+/*Protocolo
  *
- *  Created on: 8/9/2015
- *      Author: utnso
+ *
  */
-
 #ifndef UTILES_PROTOCOLO_H_
 #define UTILES_PROTOCOLO_H_
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -34,6 +31,8 @@ typedef enum {
 	//+++memoria+++++++++++++++++++
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
+	LEER_SWAP_POR_ESCRIBIR,
+	RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR,
 	ESCRIBIR_SWAP,
 	FIN_PROCESO_SWAP,
 	RESUL_TRAER_PAG_SWAP_OK,
@@ -62,7 +61,7 @@ typedef enum {
 //	RESUL_ERROR,
 	RESUL_ESCRIBIR,  //lo usa CPU para recibir lo escrito desde la CPU
 	RESUL_ESCRIBIR_OK,
-//	RESUL_ESCRIBIR_ERROR,
+	//	RESUL_ESCRIBIR_ERROR,
 	RESUL_LEER_OK,
 	RESUL_LEER_OK_CPU, //lo usa el CPU para recibir desde la memoria lo leido.
 	RESUL_FIN_OK,
@@ -72,6 +71,7 @@ typedef enum {
 
 //+++++++++swap++++++++++++++++++
 	 RESUL_SOBREESCRIBIR_OK,
+
 
 } t_tipo_mensaje;
 
@@ -103,8 +103,6 @@ typedef struct CPU_REF {
 	int socket;
 	char* nombre;
 	bool conectada;
-	t_pcb* pcb;
-	bool ejecutando;
 } t_cpu_ref;
 
 //SWAP Y MEMORIA
@@ -247,10 +245,6 @@ void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_RESUL_LEER_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
-void serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente,
-		t_tipo_mensaje tipoMensaje, void* estructura);
-void* deserializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_ESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
@@ -336,5 +330,14 @@ void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* 
 void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
 void* deserializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_TRAER_PAG_SWAP_OK(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_RESUL_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 
 #endif /* UTILES_PROTOCOLO_H_ */
