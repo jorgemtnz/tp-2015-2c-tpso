@@ -449,7 +449,14 @@ static void test_llego_maximo_de_marco_del_proceso(){
 }
 
 static void test_probar_finalizar_un_proceso_sin_TLB(){
-	int PID1=1,PID2=2,PID3=3,PID4=4;
+	t_PID PID1;
+	PID1.PID=1;
+	t_PID PID2;
+	PID2.PID=2;
+	t_PID PID3;
+	PID3.PID=3;
+	t_PID PID4;
+	PID4.PID=4;
 	int tamanioTablaDePag,tamanioMemoria,socketFalso=8;
 	t_PID* id1;
 	id1 = crearPID();
@@ -460,13 +467,13 @@ static void test_probar_finalizar_un_proceso_sin_TLB(){
 	t_PID* id4;
 	id4 = crearPID();
 
-	id1=finalizar_falso(PID1,socketFalso);
+	id1=finalizar_falso(&PID1,socketFalso);
 
-	id2=finalizar_falso(PID2,socketFalso);
+	id2=finalizar_falso(&PID2,socketFalso);
 
-	id3=finalizar_falso(PID3,socketFalso);
+	id3=finalizar_falso(&PID3,socketFalso);
 
-	id4=finalizar_falso(PID4,socketFalso);
+	id4=finalizar_falso(&PID4,socketFalso);
 
 	CU_ASSERT_EQUAL(id1->PID, 1);
 	CU_ASSERT_EQUAL(id2->PID, 2);
