@@ -660,6 +660,11 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 
 		} else {	// entonces tengo el id del marco
 			escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
+			escritura->numeroPagina = nroPag;
+			escritura->PID = idProc;
+			escritura->contenido = textoAEscribir;
+
+			return escritura;
 		}
 
 	}
