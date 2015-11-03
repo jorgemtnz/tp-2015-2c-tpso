@@ -61,6 +61,7 @@ typedef struct {
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
+	int bitPresencia; // 1 esta en mem, 0 no
 	int posicion;
 } t_TLB;
 
@@ -69,12 +70,18 @@ typedef struct {
 	int paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
 	int idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	int bitPagModificada; // si esta en memoria ver si fue modificada
+	int bitPresencia; // 1 esta en mem, 0 no
 } t_TablaDePaginas;
 
 typedef struct {
 	int idProc;
 	int CantPag;
 }t_iniciarProc;
+
+typedef struct {
+	int idMarco;
+	int bitPresencia;
+}t_marco_y_bit;
 
 typedef struct {
 	int idProc;
@@ -116,8 +123,9 @@ t_escrituraProc* iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 t_config* iniciarArchivoConfig();
+t_marco_y_bit* iniciarMarcoYBit();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
-int buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
+t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
@@ -134,11 +142,11 @@ void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
 void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int flagEscritura,int socketSwap);
-t_list* buscarLosIdDeProceso(int idProc);
+t_list* buscarLosMarcoYBitDeProceso(int idProc);
 t_list* buscarLosMarcosDeProcesoEnMemoria( int PID);
 void eliminarDeMemoria(int id);
-int eliminarDeTablaDePaginas(int id);
-void eliminarDeTLBSiEstaPorNuevoId(int idMenor,int nuevoId);
+void eliminarDeTablaDePaginas(int id);
+void eliminarDeTLBSiEstaPorNuevoId(int idMenor);
 void eliminarDeTablaDePaginasDefinitivamente(int id);
 void eliminarDeTLBDefinitivamente(int id);
 void enviarASwapEliminarProceso(int idProc);
@@ -170,7 +178,7 @@ t_configuracion* configuracion;
 t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int variableIdMarcoNeg, variableIdMarcoPos,variableTLB,variableEnvejecimientoMarco; // contador de paginas de la tabla de paginas
+int variableIdMarco,variableTLB,variableEnvejecimientoMarco; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;
