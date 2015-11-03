@@ -20,7 +20,7 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 #include <utiles/configExtras.h>
 #include <utiles/files.h>
 #include <utiles/protocolo.h>

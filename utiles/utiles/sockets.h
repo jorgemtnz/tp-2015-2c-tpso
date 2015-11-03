@@ -8,7 +8,7 @@
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/collections/dictionary.h>
-#include "../protocolo.h"
+#include "protocolo.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>

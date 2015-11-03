@@ -1,6 +1,6 @@
 #include "CUnit/Basic.h"
 #include "cunit_def.h"
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 
 bool hayQueEjecutarTests(int argc, char *argv[]) {
 

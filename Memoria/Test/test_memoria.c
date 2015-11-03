@@ -325,7 +325,8 @@ static void test_probar_escribir_memoria_sin_TLB(){
 static void test_buscar_los_id_de_proceso(){
 	int PID1=1 ,PID2=2 ,PID3=3 ,PID4=4 ;
 	int cont1=0,cont2=0,cont3=0,cont4=0;
-	int tamaniolista,a,id,b=0;
+	//warning id sin inicializar,entonces lo inicializo a 0
+	int tamaniolista,a,id=0,b=0;
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 

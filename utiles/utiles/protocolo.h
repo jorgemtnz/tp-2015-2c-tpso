@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <commons/collections/list.h>
-//#include "sockets/sockets.h"
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #define TAMANIO_TEXTO 512
@@ -71,7 +71,6 @@ typedef enum {
 
 //+++++++++swap++++++++++++++++++
 	 RESUL_SOBREESCRIBIR_OK,
-
 
 } t_tipo_mensaje;
 
@@ -138,15 +137,10 @@ typedef struct {
 
 typedef struct {
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
-	t_list* resultadosInstrucciones;
+	char* resultadosInstrucciones;
 	bool finalizoOk;
 } t_respuesta_ejecucion;
 
-typedef struct {
-	t_tipo_mensaje tipoMensaje;
-	char* comandoInstruccion;
-	char* expresion;
-} t_resultado_instruccion;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
@@ -232,7 +226,7 @@ t_entrada_salida* deserializar_t_entrada_salida(int fdCliente,
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
-t_contenido_pagina* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
+t_PID* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
 void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
@@ -296,8 +290,7 @@ t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente,
 //+++++++++se usa en CPU como parte de los resultados a mas bajo nivel
 void serializar_t_resultado_instruccion(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
-t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
+
 //+++++++++++++++++++++++++++Fin de resultados+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++interaccion Memoria -  Swap
 void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
