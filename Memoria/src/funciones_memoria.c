@@ -57,38 +57,39 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	estructura->cantidadPaginas = cantPag;
 
 	for (contador = 0; contador < cantPag; contador++) {
-		variableIdMarcoNeg --;
+		variableIdMarco ++;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
-		tablaDePag->idMarco = variableIdMarcoNeg; // porque no esta en algun marco en mem pcpal
+		tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
 		tablaDePag->bitPagModificada = 0;
+		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
     enviarRtaIniciarOkCPU (estructura, socketCPU);
 
-	free(estructura);
 }
 
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
-	int idMarco;
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
 
-	idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag);
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
 	escritura->contenido = textoAEscribir;
 
-	if (idMarco < 0) {// traer de swap una pag, cargarla a memoria
+	if (marcoYBit->bitPresencia == 0) {// traer de swap una pag, cargarla a memoria
 
 		//sleep(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, socketSwap);
 
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
+		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco, textoAEscribir);
 		enviarRtaEscribirACPU(escritura, socketCPU);
 	}
 
@@ -97,25 +98,31 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 
 void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
-	int a, id;
 	char* contenido;
+	int tam;
 	t_contenido_pagina * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
 
 	lecturaMandarCpu->PID = idProc;
-	lecturaMandarCpu->numeroPagina = a;
+	lecturaMandarCpu->numeroPagina = pag;
 
-	id = buscarSiEstaEnMemoria(idProc, a);
+	tam = list_size(listaTablaDePag);
+	printf("%i",tam);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
+	printf("%i, %i\n",marcoYBit->bitPresencia, marcoYBit->idMarco);
 
-	if (id < 0) {	// no lo encontro
+
+	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		//sleep(configuracion->retardoMemoria);
-		traerDeSwapUnaPaginaDeUnProceso(idProc, a, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
-	} else { // aca significa que trajo el id porque esta en memoria
+		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 
-		contenido = traerContenidoDeMarco(id);
+
+	} else { // aca significa que trajo el id porque esta en memoria
+		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
 		lecturaMandarCpu->contenido = contenido;
 		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
-
 	}
 }
 
@@ -123,18 +130,21 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 void finalizar(t_PID* estructuraFinalizar,int socketSwap) {
 	int a,tamanioListaId,id;
-	t_list * listaDeId;
-	listaDeId = buscarLosIdDeProceso(estructuraFinalizar->PID);
-	tamanioListaId = list_size(listaDeId);
+	t_list * listaDemarcoYBit;
+	listaDemarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
+	tamanioListaId = list_size(listaDemarcoYBit);
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+
 
 	for (a = 0; a < tamanioListaId; a++) {
-		id = list_get(listaDeId, a);
-		eliminarDeTablaDePaginasDefinitivamente(id);
-		if (id > 0) {
-			eliminarDeMemoria(id);
+		marcoYBit = list_get(listaDemarcoYBit, a);
+		eliminarDeTablaDePaginasDefinitivamente(marcoYBit->idMarco);
+		if (marcoYBit->bitPresencia == 0) {
+			eliminarDeMemoria(marcoYBit->idMarco);
 		}
 		if (configuracion->tlbHabilitada == 0) {
-			eliminarDeTLBDefinitivamente(id);
+			eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
 		}
 	}
 

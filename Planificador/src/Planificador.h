@@ -55,6 +55,7 @@ int putsConsola (const char *msg);
 int printConsola(const char *formato, ...);
 bool cpuDesconectada(void *cpu);
 char* obtenerNombreProc(char* ruta);
+void cerrarArchivoEspacioDeDatos(int fd, t_log* logger);
 //============================================================================
 
 

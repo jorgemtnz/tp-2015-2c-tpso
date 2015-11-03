@@ -326,6 +326,9 @@ static void test_buscar_los_id_de_proceso(){
 	int PID1=1 ,PID2=2 ,PID3=3 ,PID4=4 ;
 	int cont1=0,cont2=0,cont3=0,cont4=0;
 	int tamaniolista,a,id,b=0;
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+
 	t_list* lista1;
 	lista1 = list_create();
 	t_list* lista2;
@@ -335,33 +338,33 @@ static void test_buscar_los_id_de_proceso(){
 	t_list* lista4;
 	lista4 = list_create();
 
-	lista1 = buscarLosIdDeProceso(PID1);
+	lista1 = buscarLosMarcoYBitDeProceso(PID1);
 	tamaniolista = list_size(lista1);
 	for (a = 0; a < tamaniolista; a++) {
-		id = list_get(lista1,a);
-		if (id < 0) {
+		marcoYBit = list_get(lista1,a);
+		if (marcoYBit->idMarco == 0) {
 			cont1++;
 		} else {
 			CU_ASSERT_EQUAL(id, 455);
 		}
 
 	}
-	lista2 = buscarLosIdDeProceso(PID2);
+	lista2 = buscarLosMarcoYBitDeProceso(PID2);
 	tamaniolista = list_size(lista2);
 	for (a = 0; a < tamaniolista; a++) {
-		id = list_get(lista2,a);
-		if (id < 0) {
+		marcoYBit = list_get(lista2,a);
+		if (marcoYBit->bitPresencia == 0) {
 			cont2++;
 		} else {
 			CU_ASSERT_EQUAL(id, 456);
 		}
 
 	}
-	lista3 = buscarLosIdDeProceso(PID3);
+	lista3 = buscarLosMarcoYBitDeProceso(PID3);
 	tamaniolista = list_size(lista3);
 	for (a = 0; a < tamaniolista; a++) {
-		id = list_get(lista3,a);
-		if (id < 0) {
+		marcoYBit = list_get(lista3,a);
+		if (marcoYBit->idMarco == 0) {
 			cont3++;
 		} else if (id == 457) {
 			CU_ASSERT_EQUAL(id, 457);
@@ -370,11 +373,11 @@ static void test_buscar_los_id_de_proceso(){
 		}
 
 	}
-	lista4 = buscarLosIdDeProceso(PID4);
+	lista4 = buscarLosMarcoYBitDeProceso(PID4);
 	tamaniolista = list_size(lista4);
 	for (a = 0; a < tamaniolista; a++) {
-		id = list_get(lista4,a);
-		if (id < 0) {
+		marcoYBit = list_get(lista4,a);
+		if (marcoYBit->bitPresencia == 0) {
 			cont4++;
 		} else {
 			CU_ASSERT_EQUAL(id, 459);

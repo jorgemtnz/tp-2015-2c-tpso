@@ -85,11 +85,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (LEER_MEM): {
+				printf("a\n");
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				log_info(logger, "leer pag %d del proceso %d\n", datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_leerDeProceso* estructuraLeer;
 				estructuraLeer = crearEstructuraLeer();
-
 				leer(estructuraLeer->PID,estructuraLeer->numeroPaginaInicio,socketSwap,socketCPU);
 
 				break;

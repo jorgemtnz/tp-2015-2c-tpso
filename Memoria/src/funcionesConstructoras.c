@@ -67,6 +67,15 @@ t_lectura* iniciarLectura() {
 	return lectura;
 }
 
+t_marco_y_bit* iniciarMarcoYBit(){
+	t_marco_y_bit* marcoYBit = malloc(sizeof(t_marco_y_bit));
+	if (marcoYBit == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		exit(-1);
+	}
+	return marcoYBit;
+}
 
 
 t_contenido_pagina* iniciarContenidoPagina(){
