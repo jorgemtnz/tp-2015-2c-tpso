@@ -55,6 +55,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
+	printf("cant pag  %i \n",cantPag);
 
 	for (contador = 0; contador < cantPag; contador++) {
 		variableIdMarco ++;
@@ -66,6 +67,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
+	printf("tamanio tabla %i\n",list_size(listaTablaDePag));
     enviarRtaIniciarOkCPU (estructura, socketCPU);
 
 }
