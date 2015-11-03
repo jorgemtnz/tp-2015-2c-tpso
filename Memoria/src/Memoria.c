@@ -46,6 +46,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas = datosDesdeSwap->cantidadPaginas;
+				printf("%i\n",estructuraIniciar->cantidadPaginas);
 				iniciar(estructuraIniciar->PID, estructuraIniciar->cantidadPaginas,socketCPU);
 				break;
 			}
@@ -72,6 +73,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas = datosDesdeCPU->cantidadPaginas;
 				//sleep(configuracion->retardoMemoria);
+				printf("mando a swap %i\n",estructuraIniciar->cantidadPaginas);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -85,7 +87,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				break;
 			}
 			case (LEER_MEM): {
-				printf("a\n");
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				log_info(logger, "leer pag %d del proceso %d\n", datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_leerDeProceso* estructuraLeer;
