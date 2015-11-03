@@ -82,7 +82,6 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	espacioLibre = crearEspacioLibre();
 	espacioLibreAInsertar = crearEspacioLibre();
 	int a, paginasLibresRestantes;
-	char* msjDeRta = string_new();
 
 	int cantidadDePagLibres = 0;
 	espacioLibre->ubicacion = 0;
@@ -181,7 +180,6 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	t_devolucion_escribir_o_leer* respuestaDeEscribir;
 	respuestaDeEscribir = crearDevolucionEscribirOLeer();
 	int nuevaPagina;
-	char* msjDeRta = string_new();
 	int a, ubicacion;
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
@@ -401,7 +399,6 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	l_procesosCargados* espacioProcSig;
 	espacioProcSig = crearProceso();
 	l_espacioLibre* nuevoEspacioLibre = crearEspacioLibre();
-	l_espacioLibre* espacioA = crearEspacioLibre();
 	int a;
 	espacioProcAux = list_get(listaDeProcesosCargados, 0);
 	espacioProcAux->ubicacion = 0;
@@ -419,11 +416,12 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
 
+	l_espacioLibre* espacioA = crearEspacioLibre();
 	while (list_size(listaDeEspaciosLibres) > 0) {
 		espacioA = list_get(listaDeEspaciosLibres, 0);
 		list_remove(listaDeEspaciosLibres, 0);
 //	free(espacioA);
-	}
+		}
 
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
