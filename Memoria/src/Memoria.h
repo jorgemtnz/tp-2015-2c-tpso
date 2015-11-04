@@ -142,7 +142,6 @@ void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACar
 void sacarAlPrimeroDeTLB() ;
 void eliminarDeTLB(int idMenor);
 
-
 char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);

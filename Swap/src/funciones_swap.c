@@ -423,7 +423,7 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 		list_remove(listaDeEspaciosLibres, 0);
 //	free(espacioA);
 		}
-string_append();
+
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
 	log_info(logger, "Compactacion finalizada correctamente");
