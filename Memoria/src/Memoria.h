@@ -137,6 +137,11 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenido
 void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
 void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
 void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar);
+//warning no declarado aca, entonces lo agrego
+void sacarAlPrimeroDeTLB() ;
+void eliminarDeTLB(int idMenor);
+
+
 char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
@@ -160,6 +165,16 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
 t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
+//warning no definido en test_memoria.c , entonces lo agrego aca.
+char* decirHolaMundo() ;
+//warning no definido en Memoria.c , entonces lo agrego aca.
+void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU);
+t_leerDeProceso* crearEstructuraLeer();
+t_contenido_pagina* iniciarContenidoPagina();
+//warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
+t_escrituraProc* iniciarEscrituraProc() ;
+
+
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++

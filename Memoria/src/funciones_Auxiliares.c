@@ -1,6 +1,7 @@
 #include "Memoria.h"
 
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
+	//se debe ver el usao de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
@@ -13,7 +14,9 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB; a++) {
 			campoTLB = list_get(listaTLB, a);
-			if (campoTLB->idProc == idProc && campoTLB->paginaDelProceso == nroPag /*que este en un marco*/) {
+			if (campoTLB->idProc == idProc
+					&& campoTLB->paginaDelProceso
+							== nroPag /*que este en un marco*/) {
 				marcoYBit->idMarco = campoTLB->idMarco;
 				marcoYBit->bitPresencia = campoTLB->bitPresencia;
 				flagTLB = 1;
@@ -23,11 +26,12 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		// sino veo si esta en la tabla de paginas
 
 		tamanioTablaPag = list_size(listaTablaDePag);
-		printf("%i\n",tamanioTablaPag);
+		printf("%i\n", tamanioTablaPag);
 		//sleep(configuracion->retardoMemoria);
 		for (a = 0; a < tamanioTablaPag && flagTDP == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
-			if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
+			if (campoTablaDePag->idProc == idProc
+					&& campoTablaDePag->paginaDelProceso == nroPag) {
 				marcoYBit->idMarco = campoTLB->idMarco;
 				marcoYBit->bitPresencia = campoTLB->bitPresencia;
 				flagTDP = 1;
@@ -35,13 +39,14 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		}
 	}
 
-	printf("%i\n",flagTDP);
+	printf("%i\n", flagTDP);
 	return marcoYBit;
 
 }
 
 void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
-	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTablaDePag = 0, tamanioMemoria, flagMemoria = 0;
+	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTablaDePag = 0,
+			tamanioMemoria, flagMemoria = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas * campoTablaDePag;
@@ -99,8 +104,9 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag && flag == 1; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag) {
-			 campoAux->idMarco = campoTablaDePag->idMarco;
+		if (campoTablaDePag->idProc == PID
+				&& campoTablaDePag->paginaDelProceso == pag) {
+			campoAux->idMarco = campoTablaDePag->idMarco;
 			list_add(listaTablaDePag, campoTablaDePag);
 		}
 	}
@@ -117,7 +123,9 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 }
 
 void cargarNuevoEnTLB(int PID, int pag, int id) {
-	int tamanioTLB, a;
+	//warning no se usa la variable a, entonces la comento
+//	int a;
+	int tamanioTLB;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 
@@ -171,9 +179,11 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->bitPresencia == 1 && flag == 0) { // o sea esta en memoria
+		if (campoTablaDePag->idProc == idProc
+				&& campoTablaDePag->bitPresencia == 1 && flag == 0) { // o sea esta en memoria
 			contadorMarcosEnMemoria++;
-			if (contadorMarcosEnMemoria == configuracion->maximosMarcosPorProceso) {
+			if (contadorMarcosEnMemoria
+					== configuracion->maximosMarcosPorProceso) {
 				flag = 1;
 			}
 		}
@@ -201,7 +211,8 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
+		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a, tamanioListaMarco, primero = 0;
@@ -227,17 +238,20 @@ void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACar
 
 	}
 
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
+			flagEscritura, socketSwap);
 
 }
 
-void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar, int flagEscritura) {
+void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
+		char* contenidoACargar, int pagACargar, int flagEscritura) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
-	int tamanioMemoria, idMenor, id, a, nuevoId, primero = 0;
-
+	int tamanioMemoria, a, primero = 0;
+//warning no se usan variables, entonces lo comento
+//	int nuevoId,idMenor, id;
 	tamanioMemoria = list_size(listaMemoria);
 	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria; a++) {
@@ -252,17 +266,22 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar, char* conteni
 		}
 
 	}
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
+			flagEscritura, socketSwap);
 
 }
 
-void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
+void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
+		int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
 	/* solo se usa en las funciones de sacar a un marco de memoria entonces
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
 
-	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina, idProc;
-	int bitTLB = 0, bitTablaDePag = 0, nuevoId;
+	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina,
+			idProc;
+	int bitTLB = 0, bitTablaDePag = 0;
+	//warning no usada variable, entonces comento
+//		int	nuevoId;
 	tamanioTLB = list_size(listaTLB);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TLB* campoTLB;
@@ -312,7 +331,8 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 
 		if (flagEscritura == 0) { // por leer
 			//sleep(configuracion->retardoMemoria);
-			enviarASwapContenidoPaginaDesactualizada(idProc, pagina, campoMarco->contenido, socketSwap);
+			enviarASwapContenidoPaginaDesactualizada(idProc, pagina,
+					campoMarco->contenido, socketSwap);
 		} else { // por escribir
 			t_contenido_pagina * escrituraSwap;
 			escrituraSwap = iniciarContenidoPagina();
@@ -324,377 +344,395 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 
 	}
 }
-	char* traerContenidoDeMarco(int idMarco) {
-		char* contenido;
-		int tamanioMemoria, a, flag = 0;
-		tamanioMemoria = list_size(listaMemoria);
-		t_marco* campoMemoria;
-		campoMemoria = iniciarMarco();
+char* traerContenidoDeMarco(int idMarco) {
+	char* contenido;
+	int tamanioMemoria, a, flag = 0;
+	tamanioMemoria = list_size(listaMemoria);
+	t_marco* campoMemoria;
+	campoMemoria = iniciarMarco();
 
+	//sleep(configuracion->retardoMemoria);
+	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
+		campoMemoria = list_get(listaMemoria, a);
+		if (campoMemoria->idMarco == idMarco) {
+			variableEnvejecimientoMarco++;
+			campoMemoria->posicion = variableEnvejecimientoMarco;
+			flag = 1;
+		}
+	}
+	contenido = campoMemoria->contenido;
+
+	return contenido;
+}
+
+t_list* buscarLosMarcoYBitDeProceso(int idProc) {
+	int a, tamanioTablaDePag;
+	t_list* listamarcoYBit;
+	listamarcoYBit = list_create();
+	tamanioTablaDePag = list_size(listaTablaDePag);
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+
+	//sleep(configuracion->retardoMemoria);
+	for (a = 0; a < tamanioTablaDePag; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idProc == idProc) {
+			marcoYBit->idMarco = campoTablaDePag->idMarco;
+			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
+			//warning porque necesita un puntero y recibe un int
+			list_add(listamarcoYBit, campoTablaDePag->idMarco);
+		}
+	}
+
+	return listamarcoYBit;
+
+}
+
+t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
+	int a, b, tamanioListaMarcoYBit, flag;
+	//warning no se usa variable, entonces lo comento
+//		int id, tamanioMemoria;
+	t_list* listaMarcos;
+	listaMarcos = list_create();
+	t_list* listaMarcoYBit;
+	listaMarcoYBit = list_create();
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+
+	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
+	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
+	for (a = 0; a < tamanioListaMarcoYBit; a++) {
+		marcoYBit = list_get(listaMarcoYBit, a);
+		flag = 0;
 		//sleep(configuracion->retardoMemoria);
-		for (a = 0; a < tamanioMemoria && flag == 0; a++) {
-			campoMemoria = list_get(listaMemoria, a);
-			if (campoMemoria->idMarco == idMarco) {
-				variableEnvejecimientoMarco++;
-				campoMemoria->posicion = variableEnvejecimientoMarco;
-				flag = 1;
-			}
-		}
-		contenido = campoMemoria->contenido;
-
-		return contenido;
-	}
-
-	t_list* buscarLosMarcoYBitDeProceso(int idProc) {
-		int a, tamanioTablaDePag;
-		t_list* listamarcoYBit;
-		listamarcoYBit = list_create();
-		tamanioTablaDePag = list_size(listaTablaDePag);
-		t_TablaDePaginas* campoTablaDePag;
-		campoTablaDePag = iniciarTablaDePaginas();
-		t_marco_y_bit* marcoYBit;
-		marcoYBit = iniciarMarcoYBit();
-
-		//sleep(configuracion->retardoMemoria);
-		for (a = 0; a < tamanioTablaDePag; a++) {
-			campoTablaDePag = list_get(listaTablaDePag, a);
-			if (campoTablaDePag->idProc == idProc) {
-				marcoYBit->idMarco = campoTablaDePag->idMarco;
-				marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
-				list_add(listamarcoYBit, campoTablaDePag->idMarco);
-			}
-		}
-
-		return listamarcoYBit;
-
-	}
-
-	t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
-		int a, b, tamanioMemoria, id, tamanioListaMarcoYBit, flag;
-		t_list* listaMarcos;
-		listaMarcos = list_create();
-		t_list* listaMarcoYBit;
-		listaMarcoYBit = list_create();
-		t_marco* campoMarco;
-		campoMarco = iniciarMarco();
-		t_marco_y_bit* marcoYBit;
-		marcoYBit = iniciarMarcoYBit();
-
-		listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
-		tamanioListaMarcoYBit = list_size(listaMarcoYBit);
-		for (a = 0; a < tamanioListaMarcoYBit; a++) {
-			marcoYBit = list_get(listaMarcoYBit, a);
-			flag = 0;
-			//sleep(configuracion->retardoMemoria);
-			for (b = 0; flag == 0; b++) {
-				campoMarco = list_get(listaMemoria, b);
-				if (campoMarco->idMarco == marcoYBit->idMarco) {
-					list_add(listaMarcos, campoMarco);
-					flag = 1;
-				}
-			}
-
-		}
-
-		return listaMarcos;
-	}
-
-	void eliminarDeMemoria(int id) {
-		int a, tamanioMemoria, flag = 0;
-		tamanioMemoria = list_size(listaMemoria);
-		t_marco* campoMarco;
-		campoMarco = iniciarMarco();
-
-		for (a = 0; a < tamanioMemoria && flag == 0; a++) {
-			campoMarco = list_get(listaMemoria, a);
-			if (campoMarco->idMarco == id) {
-				list_remove(listaMemoria, a);
+		for (b = 0; flag == 0; b++) {
+			campoMarco = list_get(listaMemoria, b);
+			if (campoMarco->idMarco == marcoYBit->idMarco) {
+				list_add(listaMarcos, campoMarco);
 				flag = 1;
 			}
 		}
 
 	}
 
-	void eliminarDeTablaDePaginas(int id) {
-		int a, tamanioTablaDePaginas, flag = 0;
-		tamanioTablaDePaginas = list_size(listaTablaDePag);
-		t_TablaDePaginas* campoTablaDePag;
-		campoTablaDePag = iniciarTablaDePaginas();
+	return listaMarcos;
+}
 
-		for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
-			campoTablaDePag = list_get(listaTablaDePag, a);
-			if (campoTablaDePag->idMarco == id) {
-				campoTablaDePag->bitPresencia = 0;
-				flag = 1;
-			}
+void eliminarDeMemoria(int id) {
+	int a, tamanioMemoria, flag = 0;
+	tamanioMemoria = list_size(listaMemoria);
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+
+	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (campoMarco->idMarco == id) {
+			list_remove(listaMemoria, a);
+			flag = 1;
 		}
 	}
 
-	void eliminarDeTLB(int idMenor) {
-		int a, tamanioTLB, flag = 0;
-		tamanioTLB = list_size(listaTLB);
-		t_TLB* campoTLB;
-		campoTLB = iniciarTLB();
+}
 
-		for (a = 0; a < tamanioTLB && flag == 0; a++) {
-			campoTLB = list_get(listaTLB, a);
-			if (campoTLB->idMarco == idMenor) {
-				campoTLB->bitPresencia = 0;
-				flag = 1;
-			}
-		}
+void eliminarDeTablaDePaginas(int id) {
+	int a, tamanioTablaDePaginas, flag = 0;
+	tamanioTablaDePaginas = list_size(listaTablaDePag);
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
 
-	}
-
-	void eliminarDeTLBDefinitivamente(int id) {
-		int a, tamanioTLB, flag = 0;
-		tamanioTLB = list_size(listaTLB);
-		t_TLB* campoTLB;
-		campoTLB = iniciarTLB();
-
-		for (a = 0; a < tamanioTLB && flag == 0; a++) {
-			campoTLB = list_get(listaTLB, a);
-			if (campoTLB->idMarco == id) {
-				list_remove(listaTLB, a);
-				flag = 1;
-			}
+	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idMarco == id) {
+			campoTablaDePag->bitPresencia = 0;
+			flag = 1;
 		}
 	}
+}
 
-	void eliminarDeTablaDePaginasDefinitivamente(int id) {
-		int a, tamanioTablaDePaginas, flag = 0;
-		tamanioTablaDePaginas = list_size(listaTablaDePag);
-		t_TablaDePaginas* campoTablaDePag;
-		campoTablaDePag = iniciarTablaDePaginas();
+void eliminarDeTLB(int idMenor) {
+	int a, tamanioTLB, flag = 0;
+	tamanioTLB = list_size(listaTLB);
+	t_TLB* campoTLB;
+	campoTLB = iniciarTLB();
 
-		for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
-			campoTablaDePag = list_get(listaTablaDePag, a);
-			if (campoTablaDePag->idMarco == id) {
-				list_remove(listaTablaDePag, a);
-				flag = 1;
-			}
+	for (a = 0; a < tamanioTLB && flag == 0; a++) {
+		campoTLB = list_get(listaTLB, a);
+		if (campoTLB->idMarco == idMenor) {
+			campoTLB->bitPresencia = 0;
+			flag = 1;
 		}
 	}
 
-	void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
+}
 
-		t_contenido_pagina* lecturaMandarCpu;
-		lecturaMandarCpu = iniciarContenidoPagina();
-		if (configuracion->algoritmo_reemplazo == "LRU") {
-			if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-				sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
-			} else if (estaLlenaLaMemoria()) {
-				sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
-			}
+void eliminarDeTLBDefinitivamente(int id) {
+	int a, tamanioTLB, flag = 0;
+	tamanioTLB = list_size(listaTLB);
+	t_TLB* campoTLB;
+	campoTLB = iniciarTLB();
 
-		} else { // aca significa que es el de clock
+	for (a = 0; a < tamanioTLB && flag == 0; a++) {
+		campoTLB = list_get(listaTLB, a);
+		if (campoTLB->idMarco == id) {
+			list_remove(listaTLB, a);
+			flag = 1;
+		}
+	}
+}
 
+void eliminarDeTablaDePaginasDefinitivamente(int id) {
+	int a, tamanioTablaDePaginas, flag = 0;
+	tamanioTablaDePaginas = list_size(listaTablaDePag);
+	t_TablaDePaginas* campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+
+	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idMarco == id) {
+			list_remove(listaTablaDePag, a);
+			flag = 1;
+		}
+	}
+}
+
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
+		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
+
+	t_contenido_pagina* lecturaMandarCpu;
+	lecturaMandarCpu = iniciarContenidoPagina();
+	//warning comparacion provoca resultado inesperado, entonces se corrige
+	if (string_equals(configuracion->algoritmo_reemplazo, "LRU")) {
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
+					flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
+					flagEscritura);
 		}
 
-		// aca significa que no tuvo que sacar ninguno
-		cargarNuevoMarcoAMemoria(contenido, idProc, pag);
-		lecturaMandarCpu->PID = idProc;
-		lecturaMandarCpu->numeroPagina = pag;
-		lecturaMandarCpu->contenido = contenido;
+	} else { // aca significa que es el de clock
 
-		if (flagEscritura == 0) {
-			enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
-		} else { // por escribir
-			t_contenido_pagina * escrituraSwap;
-			escrituraSwap = iniciarContenidoPagina();
-			escrituraSwap->PID = lecturaMandarCpu->PID;
-			escrituraSwap->contenido = lecturaMandarCpu->contenido;
-			escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
-			enviarRtaEscribirACPU(escrituraSwap, socketCPU);
+	}
+
+	// aca significa que no tuvo que sacar ninguno
+	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
+	lecturaMandarCpu->contenido = contenido;
+
+	if (flagEscritura == 0) {
+		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
+				socketCPU);
+	} else { // por escribir
+		t_contenido_pagina * escrituraSwap;
+		escrituraSwap = iniciarContenidoPagina();
+		escrituraSwap->PID = lecturaMandarCpu->PID;
+		escrituraSwap->contenido = lecturaMandarCpu->contenido;
+		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
+		enviarRtaEscribirACPU(escrituraSwap, socketCPU);
+	}
+
+}
+
+void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap) {
+	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
+}
+
+void enviarFinalizarASwap(t_PID *estructura, int socketSwap) {
+	enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
+}
+
+void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina,
+		char* contenido, int socketSwap) {
+	t_contenido_pagina* estructura;
+	estructura = iniciarContenidoPagina();
+	estructura->PID = idProc;
+	estructura->numeroPagina = pagina;
+	estructura->contenido = contenido;
+	enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);
+}
+
+void enviarACPUContenidoPaginaDeUnProcesoPorLeer(
+		t_contenido_pagina* lecturaMandarCpu, int socketCPU) {
+	enviarStruct(socketCPU, RESUL_LEER_OK_CPU, lecturaMandarCpu);
+}
+
+void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag, int socketSwap) {
+	t_leerDeProceso* estructura;
+	estructura = crearEstructuraLeer();
+	estructura->PID = idProc;
+	estructura->numeroPaginaFin = nroDePag;
+	estructura->numeroPaginaInicio = nroDePag;
+	printf("a\n");
+	enviarStruct(socketSwap, LEER_SWAP, estructura);
+}
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag,
+		int socketSwap) {
+	t_leerDeProceso* estructura;
+	estructura = crearEstructuraLeer();
+	estructura->PID = idProc;
+	estructura->numeroPaginaFin = nroPag;
+	estructura->numeroPaginaInicio = nroPag;
+	enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
+}
+
+void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU) {
+	enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
+}
+
+void inicializacionDesdeCero() {
+	listaMemoria = list_create();
+	listaTLB = list_create();
+	listaTablaDePag = list_create();
+	variableIdMarco = 0;
+	variableTLB = 0;
+	variableEnvejecimientoMarco = 0;
+
+}
+
+void iniciarConfiguracionTLBNoHabilitada() {
+	configuracion->tlbHabilitada = 0;
+}
+
+void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) {
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_marco * campoMemoria;
+	//warning no se usa, ojo se declara y se pide memoria en la misma linea, entonces se comenta
+	t_marco * campoMemoria1 = iniciarMarco();
+
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePag = list_get(listaTablaDePag, pag1);
+	campoTablaDePag->idMarco = 455;
+	list_replace(listaTablaDePag, 1, campoTablaDePag);
+
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePag = list_get(listaTablaDePag, pag2);
+	campoTablaDePag->idMarco = 456;
+	list_replace(listaTablaDePag, 5, campoTablaDePag);
+
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePag = list_get(listaTablaDePag, pag3);
+	campoTablaDePag->idMarco = 457;
+	list_replace(listaTablaDePag, 9, campoTablaDePag);
+
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePag = list_get(listaTablaDePag, pag4);
+	campoTablaDePag->idMarco = 458;
+	list_replace(listaTablaDePag, 14, campoTablaDePag);
+
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePag = list_get(listaTablaDePag, pag5);
+	campoTablaDePag->idMarco = 459;
+	list_replace(listaTablaDePag, 18, campoTablaDePag);
+
+	campoMemoria = iniciarMarco();
+	//warning asignacion incorrecta, se debe corregir
+	campoMemoria->contenido = 'PID 1';
+	campoMemoria->idMarco = 455;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria = iniciarMarco();
+	campoMemoria = iniciarMarco();
+	campoMemoria->contenido = 'PID 2';
+	campoMemoria->idMarco = 456;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria = iniciarMarco();
+	campoMemoria->contenido = 'PID 3';
+	campoMemoria->idMarco = 457;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria = iniciarMarco();
+	campoMemoria->contenido = 'PID 3';
+	campoMemoria->idMarco = 458;
+	list_add(listaMemoria, campoMemoria);
+
+	campoMemoria = iniciarMarco();
+	campoMemoria->contenido = 'PID 4';
+	campoMemoria->idMarco = 459;
+	list_add(listaMemoria, campoMemoria);
+
+}
+
+t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
+	int contador;
+	t_TablaDePaginas* tablaDePag;
+	t_iniciar_swap * estructura;
+	estructura = crearEstructuraIniciar();
+	estructura->PID = idProc;
+	estructura->cantidadPaginas = cantPag;
+
+	for (contador = 0; contador < cantPag; contador++) {
+		variableIdMarco++;
+		tablaDePag = iniciarTablaDePaginas();
+		tablaDePag->idProc = idProc;
+		tablaDePag->paginaDelProceso = contador;
+		tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
+		tablaDePag->bitPagModificada = 0;
+		list_add(listaTablaDePag, tablaDePag);
+	}
+	return estructura;
+}
+
+t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
+		int socketSwap) {
+	// 1 -ver si estan en memoria y ponerle el bit de modificada
+	// 2- si no esta mandar a escribir a swap
+
+	t_contenido_pagina * escritura;
+	//warning incompatible la asignacion
+	//t_escrituraProc* iniciarEscrituraProc()  y escritura es otro puntero
+	//se debe corregir
+	escritura = iniciarEscrituraProc();
+	int idMarco;
+
+	//warning incompatible la asignacion
+	// t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag)   y idMarco es un int
+	//se debe corregir
+	//veo si esta en un marco de memoria
+	idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
+
+	if (idMarco < 0) {
+		// 2
+		escritura->numeroPagina = nroPag;
+		escritura->PID = idProc;
+		escritura->contenido = textoAEscribir;
+
+		return escritura;
+
+	} else {	// entonces tengo el id del marco
+		escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
+		escritura->numeroPagina = nroPag;
+		escritura->PID = idProc;
+		escritura->contenido = textoAEscribir;
+
+		return escritura;
+	}
+
+}
+
+t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
+	int a, tamanioListaMarcoYBit;
+	t_list * listaDeMarcoYBit;
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+	listaDeMarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
+	tamanioListaMarcoYBit = list_size(listaDeMarcoYBit);
+
+	for (a = 0; a < tamanioListaMarcoYBit; a++) {
+		marcoYBit = list_get(listaDeMarcoYBit, a);
+		eliminarDeTablaDePaginasDefinitivamente(marcoYBit->idMarco);
+		if (marcoYBit->bitPresencia == 0) {
+			eliminarDeMemoria(marcoYBit->idMarco);
 		}
-
-	}
-
-	void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap) {
-		enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
-	}
-
-	void enviarFinalizarASwap(t_PID *estructura, int socketSwap) {
-		enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
-	}
-
-	void enviarASwapContenidoPaginaDesactualizada(int idProc, int pagina, char* contenido, int socketSwap) {
-		t_contenido_pagina* estructura;
-		estructura = iniciarContenidoPagina();
-		estructura->PID = idProc;
-		estructura->numeroPagina = pagina;
-		estructura->contenido = contenido;
-		enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);
-	}
-
-	void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU) {
-		enviarStruct(socketCPU, RESUL_LEER_OK_CPU, lecturaMandarCpu);
-	}
-
-	void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag, int socketSwap) {
-		t_leerDeProceso* estructura;
-		estructura = crearEstructuraLeer();
-		estructura->PID = idProc;
-		estructura->numeroPaginaFin = nroDePag;
-		estructura->numeroPaginaInicio = nroDePag;
-		printf("a\n");
-		enviarStruct(socketSwap, LEER_SWAP, estructura);
-	}
-	void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag, int socketSwap) {
-		t_leerDeProceso* estructura;
-		estructura = crearEstructuraLeer();
-		estructura->PID = idProc;
-		estructura->numeroPaginaFin = nroPag;
-		estructura->numeroPaginaInicio = nroPag;
-		enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
-	}
-
-	void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU) {
-		enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
-	}
-
-	void inicializacionDesdeCero() {
-		listaMemoria = list_create();
-		listaTLB = list_create();
-		listaTablaDePag = list_create();
-		variableIdMarco = 0;
-		variableTLB = 0;
-		variableEnvejecimientoMarco = 0;
-
-	}
-
-	void iniciarConfiguracionTLBNoHabilitada() {
-		configuracion->tlbHabilitada = 0;
-	}
-
-	void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) {
-		t_TablaDePaginas * campoTablaDePag;
-		campoTablaDePag = iniciarTablaDePaginas();
-		t_marco * campoMemoria;
-		t_marco * campoMemoria1;
-		campoMemoria1 = iniciarMarco();
-
-		campoTablaDePag = iniciarTablaDePaginas();
-		campoTablaDePag = list_get(listaTablaDePag, pag1);
-		campoTablaDePag->idMarco = 455;
-		list_replace(listaTablaDePag, 1, campoTablaDePag);
-
-		campoTablaDePag = iniciarTablaDePaginas();
-		campoTablaDePag = list_get(listaTablaDePag, pag2);
-		campoTablaDePag->idMarco = 456;
-		list_replace(listaTablaDePag, 5, campoTablaDePag);
-
-		campoTablaDePag = iniciarTablaDePaginas();
-		campoTablaDePag = list_get(listaTablaDePag, pag3);
-		campoTablaDePag->idMarco = 457;
-		list_replace(listaTablaDePag, 9, campoTablaDePag);
-
-		campoTablaDePag = iniciarTablaDePaginas();
-		campoTablaDePag = list_get(listaTablaDePag, pag4);
-		campoTablaDePag->idMarco = 458;
-		list_replace(listaTablaDePag, 14, campoTablaDePag);
-
-		campoTablaDePag = iniciarTablaDePaginas();
-		campoTablaDePag = list_get(listaTablaDePag, pag5);
-		campoTablaDePag->idMarco = 459;
-		list_replace(listaTablaDePag, 18, campoTablaDePag);
-
-		campoMemoria = iniciarMarco();
-		campoMemoria->contenido = 'PID 1';
-		campoMemoria->idMarco = 455;
-		list_add(listaMemoria, campoMemoria);
-
-		campoMemoria = iniciarMarco();
-		campoMemoria = iniciarMarco();
-		campoMemoria->contenido = 'PID 2';
-		campoMemoria->idMarco = 456;
-		list_add(listaMemoria, campoMemoria);
-
-		campoMemoria = iniciarMarco();
-		campoMemoria->contenido = 'PID 3';
-		campoMemoria->idMarco = 457;
-		list_add(listaMemoria, campoMemoria);
-
-		campoMemoria = iniciarMarco();
-		campoMemoria->contenido = 'PID 3';
-		campoMemoria->idMarco = 458;
-		list_add(listaMemoria, campoMemoria);
-
-		campoMemoria = iniciarMarco();
-		campoMemoria->contenido = 'PID 4';
-		campoMemoria->idMarco = 459;
-		list_add(listaMemoria, campoMemoria);
-
-	}
-
-	t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
-		int contador;
-		t_TablaDePaginas* tablaDePag;
-		t_iniciar_swap * estructura;
-		estructura = crearEstructuraIniciar();
-		estructura->PID = idProc;
-		estructura->cantidadPaginas = cantPag;
-
-		for (contador = 0; contador < cantPag; contador++) {
-			variableIdMarco++;
-			tablaDePag = iniciarTablaDePaginas();
-			tablaDePag->idProc = idProc;
-			tablaDePag->paginaDelProceso = contador;
-			tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
-			tablaDePag->bitPagModificada = 0;
-			list_add(listaTablaDePag, tablaDePag);
+		if (configuracion->tlbHabilitada == 0) {
+			eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
 		}
-		return estructura;
 	}
-
-	t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap) {
-		// 1 -ver si estan en memoria y ponerle el bit de modificada
-		// 2- si no esta mandar a escribir a swap
-
-		t_contenido_pagina * escritura;
-		escritura = iniciarEscrituraProc();
-		int idMarco;
-
-		//veo si esta en un marco de memoria
-
-		idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
-
-		if (idMarco < 0) {
-			// 2
-			escritura->numeroPagina = nroPag;
-			escritura->PID = idProc;
-			escritura->contenido = textoAEscribir;
-
-			return escritura;
-
-		} else {	// entonces tengo el id del marco
-			escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
-			escritura->numeroPagina = nroPag;
-			escritura->PID = idProc;
-			escritura->contenido = textoAEscribir;
-
-			return escritura;
-		}
-
-	}
-
-	t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
-		int a, tamanioListaMarcoYBit;
-		t_list * listaDeMarcoYBit;
-		t_marco_y_bit* marcoYBit;
-		marcoYBit = iniciarMarcoYBit();
-		listaDeMarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
-		tamanioListaMarcoYBit = list_size(listaDeMarcoYBit);
-
-		for (a = 0; a < tamanioListaMarcoYBit; a++) {
-			marcoYBit = list_get(listaDeMarcoYBit, a);
-			eliminarDeTablaDePaginasDefinitivamente(marcoYBit->idMarco);
-			if (marcoYBit->bitPresencia == 0) {
-				eliminarDeMemoria(marcoYBit->idMarco);
-			}
-			if (configuracion->tlbHabilitada == 0) {
-				eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
-			}
-		}
-		return estructuraFinalizar;
-	}
+	return estructuraFinalizar;
+}

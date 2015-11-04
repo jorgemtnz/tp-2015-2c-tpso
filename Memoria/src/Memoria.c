@@ -11,7 +11,8 @@ int main(int argc, char *argv[]) {
 	int socketSwap;
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap), &socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
-	t_iniciar_swap* estructura;
+	// warning variable no usada, entonces se comenta
+//	t_iniciar_swap* estructura;
 //	estructura = crearEstructuraIniciar();
 //	estructura->PID = 2;
 //	estructura->cantidadPaginas = 14;
@@ -31,8 +32,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-
-	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+//warning variable no usada, se esta declarando en cada case del switch, entonces la comento
+//	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
 
@@ -41,6 +42,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
+			//no se puede sacar este warning, porque no hace falta contemplar todos los casos del enum
 			switch (header->tipoMensaje) {
 			case (RESUL_INICIAR_PROC_OK) :{
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
