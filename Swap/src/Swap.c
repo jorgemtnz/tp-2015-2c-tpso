@@ -57,14 +57,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
 			//printf("el pid recibido %i  y cantidad de pag %i  \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			t_respuesta_iniciar_o_finalizar* resultado;
+			t_iniciar_swap* estructuraAEnviar = crearEstructuraIniciar();
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-			pid_a_enviar->PID = resultado->PID;
+			estructuraAEnviar->PID = resultado->PID;
+			estructuraAEnviar->cantidadPaginas = estructuraIniciar->cantidadPaginas;
 			if (resultado->resultado == OK) {
 
-				enviarStruct(socket, RESUL_INICIAR_PROC_OK, pid_a_enviar);
+				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
 			} else {
-				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, pid_a_enviar);
+				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
 
 			free(estructuraIniciar);

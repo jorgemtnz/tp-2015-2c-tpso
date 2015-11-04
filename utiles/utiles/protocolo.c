@@ -40,11 +40,11 @@ void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
 }
 void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_RESUL_INICIAR_PROC_OK");
-	serializar_t_PID(fdCliente, tipoMensaje, estructura);
+	serializar_t_iniciar_swap(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 void* deserializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_PID* estructura = deserializar_t_PID(fdCliente, tipoMensaje);
+	t_iniciar_swap* estructura = deserializar_t_iniciar_swap(fdCliente, tipoMensaje);
 	//puts("Deserializando serializar_RESUL_INICIAR_PROC_OK");
 	return estructura;
 }

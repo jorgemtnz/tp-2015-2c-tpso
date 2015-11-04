@@ -158,7 +158,7 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecu
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
 int a;
-t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
+//t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
 	/*void imprimirResultadoInstruccion(void* elemento) {
 		t_resultado_instruccion* resultado = (t_resultado_instruccion*) elemento;
 		printConsola("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
@@ -166,8 +166,8 @@ t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
 	list_iterate(respuestaEjecucion->resultadosInstrucciones, imprimirResultadoInstruccion);
 */
 	for(a=0 ; a < list_size(respuestaEjecucion->resultadosInstrucciones); a++){
-		resultado = list_get(respuestaEjecucion->resultadosInstrucciones, a);
-		printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
+	//	resultado = list_get(respuestaEjecucion->resultadosInstrucciones, a);
+	//	printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
 	}
 	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
 
