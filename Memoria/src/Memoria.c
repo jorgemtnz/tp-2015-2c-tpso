@@ -11,12 +11,6 @@ int main(int argc, char *argv[]) {
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap),
 			&socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
-	// warning variable no usada, entonces se comenta
-//	t_iniciar_swap* estructura;
-//	estructura = crearEstructuraIniciar();
-//	estructura->PID = 2;
-//	estructura->cantidadPaginas = 14;
-//	enviarIniciarASwap(estructura, socketSwap);
 	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();
 	}
@@ -35,8 +29,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-//warning variable no usada, se esta declarando en cada case del switch, entonces la comento
-//	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
 
@@ -82,7 +75,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
 				//sleep(configuracion->retardoMemoria);
-				printf("mando a swap %i\n", estructuraIniciar->cantidadPaginas);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -106,7 +98,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 				break;
 			}
-			case (RESUL_TRAER_PAG_SWAP_OK): {
+			case (RESUL_LEER_OK): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
 				t_contenido_pagina* estructuraRtaLeer;
@@ -144,9 +136,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
 				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
-				escribir(estructuraEscribir->PID,
-						estructuraEscribir->numeroPagina,
-						estructuraEscribir->contenido, socketSwap, socketCPU);
+				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,estructuraEscribir->contenido, socketSwap, socketCPU);
 
 				break;
 			}
