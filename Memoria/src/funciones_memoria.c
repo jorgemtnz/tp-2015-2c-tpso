@@ -24,6 +24,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	} else {
 		t_config* archivoConfig;
 		archivoConfig = config_create(nombreArchivoConfig);
+		//warning asignacion diferentes tipos
 		configuracion = iniciarArchivoConfig();
 		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
 		configuracion->puertoSwap = config_get_int_value(archivoConfig, "PUERTO_SWAP");

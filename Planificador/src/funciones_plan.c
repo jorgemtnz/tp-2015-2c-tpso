@@ -164,8 +164,8 @@ int a;
 		printConsola("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
 	}
 	list_iterate(respuestaEjecucion->resultadosInstrucciones, imprimirResultadoInstruccion);
-*/
-	for(a=0 ; a < list_size(respuestaEjecucion->resultadosInstrucciones); a++){
+*/  //warning asignacion incorrecta, es cierto yo jorge, cambie el tipo de dato, entonces corrijo  ahora es un char* no una lista
+	for(a=0 ; a < strlen(respuestaEjecucion->resultadosInstrucciones); a++){
 	//	resultado = list_get(respuestaEjecucion->resultadosInstrucciones, a);
 	//	printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
 	}

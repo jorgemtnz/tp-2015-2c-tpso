@@ -194,11 +194,12 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
-	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
+	//warning no se usan variables, entonces comento
+//	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18 ,tamanioMemoria;
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int b=0;
 	int socketMentiroso = 7;
-	int a = 1,tamanioMemoria;
+	int a = 1;
 	char* contenido1;
 	char* contenido2;
 	char* contenido3;
@@ -214,6 +215,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 	t_contenido_pagina* campoEscribir;
+	//warning diferentes estructuras, entonces corrijo, son similares, pero importa el orden
 	campoEscribir = iniciarEscrituraProc();
 
 

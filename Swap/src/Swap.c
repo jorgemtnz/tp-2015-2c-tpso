@@ -74,16 +74,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			break;
 		}
 		case (ESCRIBIR_SWAP): {
+			//conviene hacerlo en la misma linea
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
-			t_devolucion_escribir_o_leer* resultado;
-			t_contenido_pagina* paginaAEnviar;
-			t_contenido_pagina* paginaEnBlanco;
-			paginaEnBlanco = crearContenidoPagina();
-			paginaAEnviar = crearContenidoPagina();
-			resultado = crearDevolucionEscribirOLeer();
+			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
+			t_contenido_pagina* paginaAEnviar=  crearContenidoPagina();
+			//warning no se usa variable, entonces comento
+//			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
 
 			borrarContenidoPagina(procesoAEscribir);
-
 			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
@@ -185,6 +183,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			free(paginaEnBlanco);
 			break;
 		}
+		default: printf("mensaje no valido");
 
 		}
 		break;

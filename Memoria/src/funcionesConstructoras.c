@@ -47,8 +47,8 @@ t_marco * iniciarMarco() {
 	return marco;
 }
 
-t_config* iniciarArchivoConfig() {
-	t_config* archConf = malloc(sizeof(t_config));
+t_configuracion* iniciarArchivoConfig() {
+	t_configuracion* archConf = malloc(sizeof(t_config));
 	if (archConf == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarArchivoConfig");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarArchivoConfig");

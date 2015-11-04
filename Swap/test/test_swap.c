@@ -42,9 +42,11 @@ static void test_escribir_en_proceso() {
 	estructuraIniciar = crearEstructuraIniciar();
 	estructuraIniciar->PID = 3;
 	estructuraIniciar->cantidadPaginas = 30;
+	//warning no se usa respuesta, entonces le doy un uso
 	t_respuesta_iniciar_o_finalizar* respuesta;
 	respuesta = crearDevolucionIniciarOFinalizar();
 	respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	CU_ASSERT_EQUAL(respuesta->PID, 0);
 	t_contenido_pagina* procesoAEscribir;
 	procesoAEscribir = crearContenidoPagina();
 	procesoAEscribir->PID = 3;
@@ -57,6 +59,7 @@ static void test_escribir_en_proceso() {
 	CU_ASSERT_EQUAL(resultadoEscribir->PID, 3);
 	CU_ASSERT_EQUAL(resultadoEscribir->numeroPagina, 5);
 	CU_ASSERT_EQUAL(resultadoEscribir->resultado, OK);
+
 }
 
 static void test_leer_de_proceso() {
@@ -67,6 +70,7 @@ static void test_leer_de_proceso() {
 	t_respuesta_iniciar_o_finalizar* respuesta;
 	respuesta = crearDevolucionIniciarOFinalizar();
 	respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+	CU_ASSERT_EQUAL(respuesta->PID, 0);
 	t_contenido_pagina* procesoAEscribir;
 	procesoAEscribir = crearContenidoPagina();
 	procesoAEscribir->PID = 3;

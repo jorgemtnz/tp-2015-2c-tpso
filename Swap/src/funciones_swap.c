@@ -75,8 +75,8 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	l_procesosCargados* procesoAInsertarEnLista;
 	l_espacioLibre* espacioLibre;
 	l_espacioLibre* espacioLibreAInsertar;
-	t_respuesta_iniciar_o_finalizar* estructura;
-	estructura = crearDevolucionIniciarOFinalizar();
+	//según estudie conviene hacerlo en la misma linea
+	t_respuesta_iniciar_o_finalizar* estructura = crearDevolucionIniciarOFinalizar();
 
 	procesoAInsertarEnLista = crearProceso();
 	espacioLibre = crearEspacioLibre();
@@ -169,7 +169,8 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 		free(espacioLibreAInsertar);
 		free(estructura);
 	}
-
+	//warninig: no hay retorno, entonces se agrega la estructura
+	return estructura;
 }
 
 t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
@@ -415,14 +416,14 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	int ultimoLugarOcupado = espacioProcAux->ubicacion + espacioProcAux->cantPagsUso;
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
-
+//warning no se usa espacioA
 	l_espacioLibre* espacioA = crearEspacioLibre();
 	while (list_size(listaDeEspaciosLibres) > 0) {
 		espacioA = list_get(listaDeEspaciosLibres, 0);
 		list_remove(listaDeEspaciosLibres, 0);
 //	free(espacioA);
 		}
-
+string_append();
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
 	log_info(logger, "Compactacion finalizada correctamente");

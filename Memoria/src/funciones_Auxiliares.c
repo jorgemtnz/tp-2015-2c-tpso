@@ -1,7 +1,7 @@
 #include "Memoria.h"
 
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	//se debe ver el usao de flagTDP
+	//warning no usa variable, se debe ver el uso de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
@@ -631,29 +631,29 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	list_replace(listaTablaDePag, 18, campoTablaDePag);
 
 	campoMemoria = iniciarMarco();
-	//warning asignacion incorrecta, se debe corregir
-	campoMemoria->contenido = 'PID 1';
+	//warning asignacion incorrecta, se debe corregir, uso strdup para alojar con malloc, luego se debe hacer el free.
+	campoMemoria->contenido = strdup("PID 1");
 	campoMemoria->idMarco = 455;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = 'PID 2';
+	campoMemoria->contenido =strdup("PID 2");
 	campoMemoria->idMarco = 456;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = 'PID 3';
+	campoMemoria->contenido =strdup("PID 3");
 	campoMemoria->idMarco = 457;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = 'PID 3';
+	campoMemoria->contenido =strdup("PID 3");
 	campoMemoria->idMarco = 458;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = 'PID 4';
+	campoMemoria->contenido = strdup("PID 4");
 	campoMemoria->idMarco = 459;
 	list_add(listaMemoria, campoMemoria);
 

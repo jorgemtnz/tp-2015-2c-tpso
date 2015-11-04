@@ -85,8 +85,8 @@ typedef struct {
 
 typedef struct {
 	int idProc;
-	int Pag;
 	char* contenido;
+	int Pag;
 }t_escrituraProc;
 
 typedef struct {
@@ -106,6 +106,7 @@ typedef struct {
 //============================================================
 t_iniciar_swap* crearEstructuraIniciar();
 t_PID* crearPID();
+t_configuracion* iniciarArchivoConfig();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -122,7 +123,7 @@ t_TablaDePaginas* iniciarTablaDePaginas();
 t_escrituraProc* iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
-t_config* iniciarArchivoConfig();
+
 t_marco_y_bit* iniciarMarcoYBit();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
