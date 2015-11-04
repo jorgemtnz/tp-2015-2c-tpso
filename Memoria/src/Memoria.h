@@ -120,7 +120,7 @@ void finalizar(t_PID* estructuraFinalizar,int socketSwap);
 void inicializadoCorrecto(int idProc, int cantPag);
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU);
 t_TablaDePaginas* iniciarTablaDePaginas();
-t_escrituraProc* iniciarEscrituraProc();
+t_contenido_pagina * iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 
@@ -160,6 +160,7 @@ void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU);
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU);
 void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
+
 void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura,int socketCPU, int socketSwap);
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
@@ -172,7 +173,7 @@ void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU);
 t_leerDeProceso* crearEstructuraLeer();
 t_contenido_pagina* iniciarContenidoPagina();
 //warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
-t_escrituraProc* iniciarEscrituraProc() ;
+t_contenido_pagina * iniciarEscrituraProc() ;
 
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++

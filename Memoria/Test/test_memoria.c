@@ -137,27 +137,34 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginas(pag1,pag2,pag3,pag4,pag5);
+	t_marco_y_bit* marcoBit1 = malloc(sizeof(t_marco_y_bit));
+	t_marco_y_bit* marcoBit2 = malloc(sizeof(t_marco_y_bit));
+	t_marco_y_bit* marcoBit3 = malloc(sizeof(t_marco_y_bit));
+	t_marco_y_bit* marcoBit4 = malloc(sizeof(t_marco_y_bit));
+	t_marco_y_bit* marcoBit5 = malloc(sizeof(t_marco_y_bit));
 
-	int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5;
+//	 int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5;
 
+//warning asignacion incorrecta se devuelve  t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag)
+	// y se le pasa a un int se corrije
+	marcoBit1= buscarSiEstaEnMemoria(PID1,1);
+	marcoBit2= buscarSiEstaEnMemoria(PID2,1);
+	marcoBit3 = buscarSiEstaEnMemoria(PID3,0);
+	marcoBit4 = buscarSiEstaEnMemoria(PID3,5);
+	marcoBit5 = buscarSiEstaEnMemoria(PID4,3);
 
-	idMarco1 = buscarSiEstaEnMemoria(PID1,1);
-	idMarco2 = buscarSiEstaEnMemoria(PID2,1);
-	idMarco3 = buscarSiEstaEnMemoria(PID3,0);
-	idMarco4 = buscarSiEstaEnMemoria(PID3,5);
-	idMarco5 = buscarSiEstaEnMemoria(PID4,3);
-
-	CU_ASSERT_EQUAL(idMarco1,455);
-	CU_ASSERT_EQUAL(idMarco2,456);
-	CU_ASSERT_EQUAL(idMarco3,457);
-	CU_ASSERT_EQUAL(idMarco4,458);
-	CU_ASSERT_EQUAL(idMarco5,459);
+	CU_ASSERT_EQUAL(marcoBit1->idMarco,455);
+	CU_ASSERT_EQUAL(marcoBit2->idMarco,456);
+	CU_ASSERT_EQUAL(marcoBit3->idMarco,457);
+	CU_ASSERT_EQUAL(marcoBit4->idMarco,458);
+	CU_ASSERT_EQUAL(marcoBit5->idMarco,459);
 
 }
 
 static void escribir_en_marco_y_poner_bit_de_modificada(){
-	int tamanioMemoria,a;
-	tamanioMemoria= list_size(listaMemoria);
+	//warning no se usa variable, entonces se comentan
+//	int tamanioMemoria,a;
+//	tamanioMemoria= list_size(listaMemoria);
 	int idMarco1 = 455, idMarco2 = 456, idMarco3 = 457, idMarco4 = 458, idMarco5 = 459;
 	char* contenido1;
 	char* contenido2;
@@ -171,8 +178,6 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 	contenido4 = "escritura4";
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
-
-
 
 	escribirEnMarcoYponerBitDeModificada(idMarco1,contenido1);
 	escribirEnMarcoYponerBitDeModificada(idMarco2,contenido2);
@@ -328,7 +333,9 @@ static void test_buscar_los_id_de_proceso(){
 	int PID1=1 ,PID2=2 ,PID3=3 ,PID4=4 ;
 	int cont1=0,cont2=0,cont3=0,cont4=0;
 	//warning id sin inicializar,entonces lo inicializo a 0
-	int tamaniolista,a,id=0,b=0;
+	int tamaniolista,a,id=0;
+	//warning, no se usa la b, se comenta
+//	int b=0;
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 

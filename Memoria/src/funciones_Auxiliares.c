@@ -1,7 +1,7 @@
 #include "Memoria.h"
 
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
-	//warning no usa variable, se debe ver el uso de flagTDP
+	//warning no usa variable, se debe cual es el uso de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
@@ -381,7 +381,8 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 		if (campoTablaDePag->idProc == idProc) {
 			marcoYBit->idMarco = campoTablaDePag->idMarco;
 			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
-			//warning porque necesita un puntero y recibe un int
+			//warning porque necesita un puntero y se le esta mandando un int,verificar que elemento se quiere agregar
+			// int list_add(t_list *, void *element);
 			list_add(listamarcoYBit, campoTablaDePag->idMarco);
 		}
 	}
@@ -603,7 +604,7 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
 	//warning no se usa, ojo se declara y se pide memoria en la misma linea, entonces se comenta
-	t_marco * campoMemoria1 = iniciarMarco();
+//	t_marco * campoMemoria1 = iniciarMarco();
 
 	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag1);
@@ -687,17 +688,17 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 	t_contenido_pagina * escritura;
 	//warning incompatible la asignacion
 	//t_escrituraProc* iniciarEscrituraProc()  y escritura es otro puntero
-	//se debe corregir
+	//se debe corregir, se corrige tomando de protocolo.h
 	escritura = iniciarEscrituraProc();
-	int idMarco;
+	t_marco_y_bit* ptr_marco_bit = malloc(sizeof(t_marco_y_bit));
 
 	//warning incompatible la asignacion
 	// t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag)   y idMarco es un int
 	//se debe corregir
 	//veo si esta en un marco de memoria
-	idMarco = buscarSiEstaEnMemoria(idProc, nroPag);
+	ptr_marco_bit = buscarSiEstaEnMemoria(idProc, nroPag);
 
-	if (idMarco < 0) {
+	if (ptr_marco_bit->idMarco < 0) {
 		// 2
 		escritura->numeroPagina = nroPag;
 		escritura->PID = idProc;
@@ -706,7 +707,7 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 		return escritura;
 
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(idMarco, textoAEscribir);
+		escribirEnMarcoYponerBitDeModificada(ptr_marco_bit->idMarco, textoAEscribir);
 		escritura->numeroPagina = nroPag;
 		escritura->PID = idProc;
 		escritura->contenido = textoAEscribir;

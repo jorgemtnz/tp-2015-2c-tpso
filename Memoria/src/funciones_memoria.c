@@ -17,7 +17,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
-		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
+		logMsg =
+				string_from_format(
+						"Archivo de configuracion no encontrado. Parametro especificado: %s\n",
+						nombreArchivoConfig);
 		puts(logMsg);
 		log_error(logger, logMsg);
 		exit(-1);
@@ -26,20 +29,33 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		archivoConfig = config_create(nombreArchivoConfig);
 		//warning asignacion diferentes tipos
 		configuracion = iniciarArchivoConfig();
-		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
-		configuracion->puertoSwap = config_get_int_value(archivoConfig, "PUERTO_SWAP");
-		configuracion->ipSwap = strdup(config_get_string_value(archivoConfig, "IP_SWAP"));
-		configuracion->nombreMemoria = strdup(config_get_string_value(archivoConfig, "NOMBRE_MEMORIA"));
-		configuracion->maximosMarcosPorProceso = config_get_int_value(archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
-		configuracion->cantidadMarcos = config_get_int_value(archivoConfig, "CANTIDAD_MARCOS");
-		configuracion->tamanioMarcos = config_get_int_value(archivoConfig, "TAMANIO_MARCO");
-		configuracion->entradasTlb = config_get_int_value(archivoConfig, "ENTRADAS_TLB");
-		configuracion->retardoMemoria = config_get_int_value(archivoConfig, "RETARDO_MEMORIA");
-		configuracion->tlbHabilitada = config_get_int_value(archivoConfig, "TLB_HABILITADA");
-		configuracion->algoritmo_reemplazo = config_get_string_value(archivoConfig, "ALGORITMO_REEMPLAZO");
-		log_info(logger, "[INFO]: Archivo de configuracion leido correctamente");
+		configuracion->puertoEscucha = config_get_int_value(archivoConfig,
+				"PUERTO_ESCUCHA");
+		configuracion->puertoSwap = config_get_int_value(archivoConfig,
+				"PUERTO_SWAP");
+		configuracion->ipSwap = strdup(
+				config_get_string_value(archivoConfig, "IP_SWAP"));
+		configuracion->nombreMemoria = strdup(
+				config_get_string_value(archivoConfig, "NOMBRE_MEMORIA"));
+		configuracion->maximosMarcosPorProceso = config_get_int_value(
+				archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
+		configuracion->cantidadMarcos = config_get_int_value(archivoConfig,
+				"CANTIDAD_MARCOS");
+		configuracion->tamanioMarcos = config_get_int_value(archivoConfig,
+				"TAMANIO_MARCO");
+		configuracion->entradasTlb = config_get_int_value(archivoConfig,
+				"ENTRADAS_TLB");
+		configuracion->retardoMemoria = config_get_int_value(archivoConfig,
+				"RETARDO_MEMORIA");
+		configuracion->tlbHabilitada = config_get_int_value(archivoConfig,
+				"TLB_HABILITADA");
+		configuracion->algoritmo_reemplazo = config_get_string_value(
+				archivoConfig, "ALGORITMO_REEMPLAZO");
+		log_info(logger,
+				"[INFO]: Archivo de configuracion leido correctamente");
 
-		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
+		logMsg = string_from_format(
+				"Archivo de configuracion leido correctamente\n");
 		puts(logMsg);
 		log_error(logger, logMsg);
 
@@ -56,10 +72,10 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	estructura = crearEstructuraIniciar();
 	estructura->PID = idProc;
 	estructura->cantidadPaginas = cantPag;
-	printf("cant pag  %i \n",cantPag);
+	printf("cant pag  %i \n", cantPag);
 
 	for (contador = 0; contador < cantPag; contador++) {
-		variableIdMarco ++;
+		variableIdMarco++;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
@@ -68,12 +84,16 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-	printf("tamanio tabla %i\n",list_size(listaTablaDePag));
-    enviarRtaIniciarOkCPU (estructura, socketCPU);
+	printf("tamanio tabla %i\n", list_size(listaTablaDePag));
+	//warning paso incompatible para el primer parametro diferente tipo para la estructura que se pasa por lo que llega mal a CPU
+	t_PID * estructuraEnvio = malloc(sizeof(t_PID));
+	estructuraEnvio->PID = estructura->PID;
+	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
+void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
+		int socketCPU) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
@@ -86,18 +106,18 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 	escritura->PID = idProc;
 	escritura->contenido = textoAEscribir;
 
-	if (marcoYBit->bitPresencia == 0) {// traer de swap una pag, cargarla a memoria
+	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
 		//sleep(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, socketSwap);
 
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco, textoAEscribir);
+		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco,
+				textoAEscribir);
 		enviarRtaEscribirACPU(escritura, socketCPU);
 	}
 
 }
-
 
 void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
@@ -112,33 +132,31 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	lecturaMandarCpu->numeroPagina = pag;
 
 	tam = list_size(listaTablaDePag);
-	printf("%i",tam);
+	printf("%i", tam);
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
-	printf("%i, %i\n",marcoYBit->bitPresencia, marcoYBit->idMarco);
-
+	printf("%i, %i\n", marcoYBit->bitPresencia, marcoYBit->idMarco);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		//sleep(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 
-
 	} else { // aca significa que trajo el id porque esta en memoria
 		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
 		lecturaMandarCpu->contenido = contenido;
-		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
+		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
+				socketCPU);
 	}
 }
 
-
-
-void finalizar(t_PID* estructuraFinalizar,int socketSwap) {
-	int a,tamanioListaId,id;
+void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
+	//warning no uso de variable, entonces se comenta
+	int a, tamanioListaId;
+//	int id;
 	t_list * listaDemarcoYBit;
 	listaDemarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
 	tamanioListaId = list_size(listaDemarcoYBit);
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
-
 
 	for (a = 0; a < tamanioListaId; a++) {
 		marcoYBit = list_get(listaDemarcoYBit, a);
@@ -156,23 +174,20 @@ void finalizar(t_PID* estructuraFinalizar,int socketSwap) {
 
 }
 
-
 void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap){
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap) {
 	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
 }
-void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU){
+void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
-void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU){
+void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
 }
 
-void enviarRtaIniciarFalloCPU (t_PID * estructura, int socketCPU){
+void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_NO_OK_CPU, estructura);
 }
-
-
 
