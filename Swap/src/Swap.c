@@ -120,6 +120,26 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			free(paginaAEnviar);
 			break;
 		}
+		case(LEER_SWAP_POR_ESCRIBIR):{
+			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
+					t_devolucion_escribir_o_leer* resultado;
+					t_contenido_pagina* paginaAEnviar;
+					paginaAEnviar = crearContenidoPagina();
+					resultado = crearDevolucionEscribirOLeer();
+					resultado = leer(procesoRecibido, listaDeProcesosCargados);
+					paginaAEnviar->PID = resultado->PID;
+					paginaAEnviar->contenido = resultado->contenido;
+					paginaAEnviar->numeroPagina = resultado->numeroPagina;
+					if (resultado->resultado == OK) {
+						enviarStruct(socket, RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, paginaAEnviar);
+					} else {
+						log_info(logger, "FALLO EL LEER");
+					}
+					free(procesoRecibido);
+					free(resultado);
+					free(paginaAEnviar);
+			break;
+		}
 		case (FIN_PROCESO_SWAP): {
 			t_PID* estructuraFinalizar = (t_PID*) buffer;
 			t_respuesta_iniciar_o_finalizar* resultado;
