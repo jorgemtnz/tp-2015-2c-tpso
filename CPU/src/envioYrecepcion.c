@@ -84,7 +84,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				sizeof(t_PID) + strlen("mProc %i - Iniciado ;\0"));
+				sizeof(t_PID)  + strlen("mProc %i - Iniciado ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - Iniciado ;\0",
 						datosDesdeMem->PID));
@@ -116,7 +116,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				strlen(buffer) + strlen("mProc  - Fallo ;\0"));
+				strlen(buffer)   + strlen("mProc  - Fallo ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - Fallo ;\0", datosDesdeMem->PID));
 
@@ -141,7 +141,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//cambio sizeof(t_contenido_pagina) * 10
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				sizeof(t_contenido_pagina)
+				sizeof(t_contenido_pagina)*10
 						+ strlen("mProc %i; - Pagina %i; leida: %s ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i; - Pagina %i; leida: %s ;\0",
