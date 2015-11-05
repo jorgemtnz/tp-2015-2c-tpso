@@ -170,5 +170,18 @@ int a;
 	//	printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
 	}
 	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
+	char** respuestaDeCadaInstruccion = string_split(respuestaEjecucion->resultadosInstrucciones, "\0");
+	int b;
+	a = 0;
+		b = 0;
+		while (respuestaDeCadaInstruccion[a] != NULL) {
+			char** respuestaDeUnaInstruccion = string_split(respuestaDeCadaInstruccion[a], ";");
+			while (respuestaDeUnaInstruccion[b] != NULL) {
+				printConsola("%s\n", respuestaDeUnaInstruccion[b]);
+				b++;
+			}
+			a++;
+
+	 	}
 
 }
