@@ -32,7 +32,7 @@
 *.hex
 metadata/
 RemoteSystemsTempFiles/
-Debug/
+
 !Debug/makefile
 !Debug/*.mk
 settings/
