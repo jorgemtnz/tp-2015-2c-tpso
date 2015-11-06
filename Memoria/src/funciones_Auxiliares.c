@@ -27,7 +27,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 
 		tamanioTablaPag = list_size(listaTablaDePag);
 		//sleep(configuracion->retardoMemoria);
-		for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB ==0; a++) {
+		for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			if (campoTablaDePag->idProc == idProc
 					&& campoTablaDePag->paginaDelProceso == nroPag) {
@@ -102,7 +102,8 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	//sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag && flag == 1; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag) {
+		if (campoTablaDePag->idProc == PID
+				&& campoTablaDePag->paginaDelProceso == pag) {
 			campoAux->idMarco = campoTablaDePag->idMarco;
 		}
 	}
@@ -265,7 +266,8 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
 
 }
 
-void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
+void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
+		int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
 	/* solo se usa en las funciones de sacar a un marco de memoria entonces
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
@@ -490,14 +492,19 @@ void eliminarDeTablaDePaginasDefinitivamente(int id) {
 		}
 	}
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
+//	char algoritmo[4] ={'L','R','U','\0'};
+	char* algoritmo = string_new();
+	string_append(&algoritmo, "LRU");
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	//warning comparacion provoca resultado inesperado, entonces se corrige
-	if (configuracion->algoritmo_reemplazo== "LRU") {
+	printf("nada funciona");
+	printf("%d,\n", strlen(configuracion->algoritmo_reemplazo));
+	if (strcmp(configuracion->algoritmo_reemplazo, algoritmo) == 0) {
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
 					flagEscritura, socketSwap);
@@ -507,6 +514,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		}
 
 	} else { // aca significa que es el de clock
+		printf("no sale bien");
 
 	}
 
@@ -630,17 +638,17 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 
 	campoMemoria = iniciarMarco();
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido =strdup("PID 2");
+	campoMemoria->contenido = strdup("PID 2");
 	campoMemoria->idMarco = 456;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido =strdup("PID 3");
+	campoMemoria->contenido = strdup("PID 3");
 	campoMemoria->idMarco = 457;
 	list_add(listaMemoria, campoMemoria);
 
 	campoMemoria = iniciarMarco();
-	campoMemoria->contenido =strdup("PID 3");
+	campoMemoria->contenido = strdup("PID 3");
 	campoMemoria->idMarco = 458;
 	list_add(listaMemoria, campoMemoria);
 
@@ -698,7 +706,8 @@ t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
 		return escritura;
 
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(ptr_marco_bit->idMarco, textoAEscribir);
+		escribirEnMarcoYponerBitDeModificada(ptr_marco_bit->idMarco,
+				textoAEscribir);
 		escritura->numeroPagina = nroPag;
 		escritura->PID = idProc;
 		escritura->contenido = textoAEscribir;

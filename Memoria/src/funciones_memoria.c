@@ -35,8 +35,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 				"PUERTO_SWAP");
 		configuracion->ipSwap = strdup(
 				config_get_string_value(archivoConfig, "IP_SWAP"));
+
 		configuracion->nombreMemoria = strdup(
 				config_get_string_value(archivoConfig, "NOMBRE_MEMORIA"));
+
 		configuracion->maximosMarcosPorProceso = config_get_int_value(
 				archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
 		configuracion->cantidadMarcos = config_get_int_value(archivoConfig,
@@ -45,12 +47,13 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 				"TAMANIO_MARCO");
 		configuracion->entradasTlb = config_get_int_value(archivoConfig,
 				"ENTRADAS_TLB");
-		configuracion->retardoMemoria = config_get_int_value(archivoConfig,
-				"RETARDO_MEMORIA");
 		configuracion->tlbHabilitada = config_get_int_value(archivoConfig,
 				"TLB_HABILITADA");
-		configuracion->algoritmo_reemplazo = config_get_string_value(
-				archivoConfig, "ALGORITMO_REEMPLAZO");
+		configuracion->retardoMemoria = config_get_int_value(archivoConfig,
+						"RETARDO_MEMORIA");
+		configuracion->algoritmo_reemplazo =strdup( config_get_string_value(
+				archivoConfig, "ALGORITMO_REEMPLAZO"));
+
 		log_info(logger,
 				"[INFO]: Archivo de configuracion leido correctamente");
 
@@ -122,7 +125,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 	char* contenido;
-	int tam;
+
 	t_contenido_pagina * lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	t_marco_y_bit* marcoYBit;

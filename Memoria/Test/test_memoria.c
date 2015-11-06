@@ -12,6 +12,15 @@
 #include "../src/Memoria.h"
 
 static int init_suite() {
+	int a_rgc = 3;
+	char* temp = string_new();
+	string_append(&temp,
+			"./Memoria;/home/utnso/tp-2015-2c-tpso/Memoria/config_memoria.cfg;test");
+
+	char** a_rgv = string_split(temp, ";");
+	a_rgc = 3;
+	leerArchivoDeConfiguracion(a_rgc, a_rgv);
+	inicializacionDesdeCero();
 	return 0;
 }
 
@@ -21,6 +30,10 @@ static int clean_suite() {
 
 static void test_debe_devolver_hola_mundo() {
 	CU_ASSERT_STRING_EQUAL("Hola Mundo", decirHolaMundo());
+}
+
+static void test_variables_configuracion(){
+	CU_ASSERT_STRING_EQUAL(configuracion->algoritmo_reemplazo, "LRU");
 }
 
 static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
@@ -502,7 +515,9 @@ static void test_probar_finalizar_un_proceso_sin_TLB(){
 
 
 static CU_TestInfo tests[] = {
-	{ "Test Hola Mundo", test_debe_devolver_hola_mundo }, {"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
+	{ "Test Hola Mundo", test_debe_devolver_hola_mundo },
+	{"Test carga archivo configuracion lee variables",test_variables_configuracion },
+	{"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},{"Test busca 6 marcos y uno no encuentra", test_probar_buscar_si_esta_en_memoria_sin_TLB},
 	{"Test escribe 5 contenidos en memoria",escribir_en_marco_y_poner_bit_de_modificada},{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},{"Test busca los id de los procesos",test_buscar_los_id_de_proceso},
 	{"Test traer contenido",test_traer_contenido_de_marco},{"Test probar si llego al max de proc", test_llego_maximo_de_marco_del_proceso},
 

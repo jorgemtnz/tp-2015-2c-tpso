@@ -29,10 +29,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-
+	printf("nada funciona");
 	if (tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 		socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
