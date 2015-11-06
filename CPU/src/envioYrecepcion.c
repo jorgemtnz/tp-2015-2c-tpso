@@ -84,7 +84,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				sizeof(t_PID)  + strlen("mProc %i - Iniciado ;\0"));
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1  + strlen("mProc %i - Iniciado ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - Iniciado ;\0",
 						datosDesdeMem->PID));
@@ -116,7 +116,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				strlen(buffer)   + strlen("mProc  - Fallo ;\0"));
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1   + strlen("mProc  - Fallo ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - Fallo ;\0", datosDesdeMem->PID));
 
@@ -141,12 +141,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//cambio sizeof(t_contenido_pagina) * 10
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				sizeof(t_contenido_pagina)*10
+				sizeof(t_contenido_pagina)+1 + strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) +1
 						+ strlen("mProc %i; - Pagina %i; leida: %s ;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i; - Pagina %i; leida: %s ;\0",
 						datosDesdeMem->PID, datosDesdeMem->numeroPagina,
 						datosDesdeMem->contenido));
+
 
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) {
@@ -180,7 +181,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				strlen(buffer) + strlen("mProc; - Pagina; escrita:;\0"));
+				sizeof(t_contenido_pagina)+1 + strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) +1 + strlen("mProc; - Pagina; escrita:;\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i; - Pagina %i; escrita: %s ;\0",
 						datosdesdeMEmoria->PID, datosdesdeMEmoria->numeroPagina,
@@ -213,7 +214,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				strlen(buffer) + strlen("mProc - finalizado ;\0"));
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1 + strlen("mProc %i - finalizado ;\0"));
 		int socketPlanificador = atoi(
 				(char*) dictionary_get(conexiones, "Planificador"));
 		//		++++++++++++++++++++++funcion finalizar
@@ -225,6 +226,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
+
 		free(cpu->mCodCPU->respEjec);
 		break;
 	}
