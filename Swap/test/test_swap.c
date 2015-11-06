@@ -46,7 +46,7 @@ static void test_escribir_en_proceso() {
 	t_respuesta_iniciar_o_finalizar* respuesta;
 	respuesta = crearDevolucionIniciarOFinalizar();
 	respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-	CU_ASSERT_EQUAL(respuesta->PID, 0);
+	CU_ASSERT_EQUAL(respuesta->PID, 3);
 	t_contenido_pagina* procesoAEscribir;
 	procesoAEscribir = crearContenidoPagina();
 	procesoAEscribir->PID = 3;
@@ -70,7 +70,7 @@ static void test_leer_de_proceso() {
 	t_respuesta_iniciar_o_finalizar* respuesta;
 	respuesta = crearDevolucionIniciarOFinalizar();
 	respuesta = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-	CU_ASSERT_EQUAL(respuesta->PID, 0);
+	CU_ASSERT_EQUAL(respuesta->PID, 3);
 	t_contenido_pagina* procesoAEscribir;
 	procesoAEscribir = crearContenidoPagina();
 	procesoAEscribir->PID = 3;
