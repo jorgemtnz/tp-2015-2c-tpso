@@ -52,6 +52,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,cpu->mCodCPU->respEjec );
 		free(cpu->mCodCPU->respEjec);
+		cpu->estado = DISPONIBLE;
 		break;
 	}
 	}

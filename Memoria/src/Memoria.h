@@ -191,7 +191,7 @@ t_contenido_pagina* iniciarContenidoPagina();
 //warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
 t_contenido_pagina * iniciarEscrituraProc() ;
 t_escribir_falso* crearEscribirFalso();
-
+int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);

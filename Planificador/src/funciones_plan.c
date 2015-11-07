@@ -8,13 +8,14 @@
 #include "Planificador.h"
 #include <stdarg.h>
 
-
 void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 	char* logMsg = NULL;
 
-	if(argc < 2) {
-		logMsg = string_from_format("Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Planificador /home/utnso/tp-2015-2c-tpso/Planificador/config_plan.cfg\n");
+	if (argc < 2) {
+		logMsg =
+				string_from_format(
+						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Planificador /home/utnso/tp-2015-2c-tpso/Planificador/config_plan.cfg\n");
 		putsConsola(logMsg);
 		log_error(logger, logMsg);
 		exit(-1);
@@ -23,7 +24,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
-		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
+		logMsg =
+				string_from_format(
+						"Archivo de configuracion no encontrado. Parametro especificado: %s\n",
+						nombreArchivoConfig);
 		putsConsola(logMsg);
 		log_error(logger, logMsg);
 		exit(-1);
@@ -31,12 +35,18 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		t_config* archivoConfig = config_create(nombreArchivoConfig);
 
 		configuracion = (t_configuracion*) malloc(sizeof(t_configuracion));
-		configuracion->puertoEscucha = strdup(config_get_string_value(archivoConfig, "PUERTO_ESCUCHA"));
-		configuracion->algorimoPlanificacion = strdup(config_get_string_value(archivoConfig, "ALGORITMO_PLANIFICACION"));
-		configuracion->quantum = strdup(config_get_string_value(archivoConfig, "QUANTUM"));
-		crearPlanificacion(configuracion->algorimoPlanificacion, configuracion->quantum);
+		configuracion->puertoEscucha = strdup(
+				config_get_string_value(archivoConfig, "PUERTO_ESCUCHA"));
+		configuracion->algorimoPlanificacion = strdup(
+				config_get_string_value(archivoConfig,
+						"ALGORITMO_PLANIFICACION"));
+		configuracion->quantum = strdup(
+				config_get_string_value(archivoConfig, "QUANTUM"));
+		crearPlanificacion(configuracion->algorimoPlanificacion,
+				configuracion->quantum);
 
-		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
+		logMsg = string_from_format(
+				"Archivo de configuracion leido correctamente\n");
 		putsConsola(logMsg);
 		log_error(logger, logMsg);
 
@@ -52,12 +62,14 @@ void validarYCrearFIFO(char* nombreAlgoritmo) {
 
 void validarYCrearRoundRobin(char* nombreAlgoritmo, char* quantum) {
 	if (string_is_empty(quantum)) {
-		putsConsola("No se especifico el parametro QUANTUM en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+		putsConsola(
+				"No se especifico el parametro QUANTUM en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
 		exit(-1);
 	} else {
 		uint16_t tamanioRafaga = atoi(quantum);
 		if (tamanioRafaga < 1) {
-			putsConsola("No se especifico el parametro QUANTUM valido en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
+			putsConsola(
+					"No se especifico el parametro QUANTUM valido en el archivo de configuracion. Debe ser un numero entero mayor que cero\n");
 			exit(-1);
 		} else {
 			planificacion->nombreAlgoritmo = nombreAlgoritmo;
@@ -70,12 +82,13 @@ void validarYCrearRoundRobin(char* nombreAlgoritmo, char* quantum) {
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 	planificacion = malloc(sizeof(t_planificacion));
 
-	if(string_equals(nombreAlgoritmo, "FIFO")) {
+	if (string_equals(nombreAlgoritmo, "FIFO")) {
 		validarYCrearFIFO(nombreAlgoritmo);
-	} else if(string_equals(nombreAlgoritmo, "RR")) {
+	} else if (string_equals(nombreAlgoritmo, "RR")) {
 		validarYCrearRoundRobin(nombreAlgoritmo, quantum);
 	} else {
-		printConsola("No se reconoce nombre de algoritmo especificado: '%s'.\nLos algoritmos validos son FIFO y Round Robin\n");
+		printConsola(
+				"No se reconoce nombre de algoritmo especificado: '%s'.\nLos algoritmos validos son FIFO y Round Robin\n");
 		exit(-1);
 	}
 
@@ -102,22 +115,24 @@ void desregistrarCPUConectada(int socket) {
 	int var;
 
 	int listaCPUsCount = list_size(listaCPUs);
-	for (var = 0; var < listaCPUsCount && cpu == NULL ; var++) {
+	for (var = 0; var < listaCPUsCount && cpu == NULL; var++) {
 		t_cpu_ref* cpu_actual = list_get(listaCPUs, var);
-		if(cpu_actual->socket == socket) {
+		if (cpu_actual->socket == socket) {
 			cpu = cpu_actual;
 		}
 	}
 
-	if(cpu != NULL) {
+	if (cpu != NULL) {
 		cpu->conectada = false;
 	} else {
-		printConsola("No se pudo registrar la desconexion de la CPU conectada por el socket: %d\n", socket);
+		printConsola(
+				"No se pudo registrar la desconexion de la CPU conectada por el socket: %d\n",
+				socket);
 	}
 }
 
 bool cpuConSocket(void *cpu, int socket) {
-	return ((t_cpu_ref *)cpu)->socket == socket;
+	return ((t_cpu_ref *) cpu)->socket == socket;
 }
 
 char* crearNombreCPU() {
@@ -125,14 +140,14 @@ char* crearNombreCPU() {
 	return string_from_format("CPU-%d", nroCPU);
 }
 
-int putsConsola (const char *msg) {
+int putsConsola(const char *msg) {
 //	puts("putsConsola\n");
 	log_info(logger, msg);
 	return puts(msg);
 }
-int printConsola(const char *formato, ...){
+int printConsola(const char *formato, ...) {
 //	puts("printConsola\n");
-	va_list arguments;															\
+	va_list arguments;
 	va_start(arguments, formato);
 	int res = vprintf(formato, arguments);
 	va_end(arguments);
@@ -143,45 +158,77 @@ int printConsola(const char *formato, ...){
 }
 
 void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
-	switch(header->tipoMensaje) {
-		case (RESUL_EJECUCION_OK): {
-			procesar_RESUL_EJECUCION_OK(socket, header, (t_respuesta_ejecucion*)buffer);
-			break;
-		}
-		default: {
-			printConsola("No se reconoce el mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
-		}
+	switch (header->tipoMensaje) {
+	case (RESUL_EJECUCION_OK): {
+		procesar_RESUL_EJECUCION_OK(socket, header,
+				(t_respuesta_ejecucion*) buffer);
+		break;
+	}
+	case (ENTRADA_SALIDA): {
+		procesar_ENTRADA_SALIDA(socket, header,
+				(t_respuesta_ejecucion*) buffer);
+		break;
+	}
+	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
+		printf("proceso no iniciado en CPU\n");
+		break;
+	}
+	default: {
+		printConsola("No se reconoce el mensaje de tipo %s\n",
+				getNombreTipoMensaje(header->tipoMensaje));
+	}
 	}
 }
 
-void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
+void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
+		t_respuesta_ejecucion* respuestaEjecucion) {
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
-int a;
-//t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
-	/*void imprimirResultadoInstruccion(void* elemento) {
-		t_resultado_instruccion* resultado = (t_resultado_instruccion*) elemento;
-		printConsola("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
-	}
-	list_iterate(respuestaEjecucion->resultadosInstrucciones, imprimirResultadoInstruccion);
-*/  //warning asignacion incorrecta, es cierto yo jorge, cambie el tipo de dato, entonces corrijo  ahora es un char* no una lista
-	for(a=0 ; a < strlen(respuestaEjecucion->resultadosInstrucciones); a++){
-	//	resultado = list_get(respuestaEjecucion->resultadosInstrucciones, a);
-	//	printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
-	}
-	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
-	char** respuestaDeCadaInstruccion = string_split(respuestaEjecucion->resultadosInstrucciones, "\0");
+	int a;
+
+	printConsola("Finalizo OK: %s\n",
+			respuestaEjecucion->finalizoOk ? "Si" : "No");
+	char** respuestaDeCadaInstruccion = string_split(
+			respuestaEjecucion->resultadosInstrucciones, "\0");
 	int b;
 	a = 0;
-		b = 0;
-		while (respuestaDeCadaInstruccion[a] != NULL) {
-			char** respuestaDeUnaInstruccion = string_split(respuestaDeCadaInstruccion[a], ";");
-			while (respuestaDeUnaInstruccion[b] != NULL) {
-				printConsola("%s\n", respuestaDeUnaInstruccion[b]);
-				b++;
-			}
-			a++;
+	b = 0;
+	while (respuestaDeCadaInstruccion[a] != NULL) {
+		char** respuestaDeUnaInstruccion = string_split(
+				respuestaDeCadaInstruccion[a], ";");
+		while (respuestaDeUnaInstruccion[b] != NULL) {
+			printConsola("%s\n", respuestaDeUnaInstruccion[b]);
+			b++;
+		}
+		a++;
 
-	 	}
+	}
+
+}
+
+void procesar_ENTRADA_SALIDA(int socket, t_header* header,
+		t_respuesta_ejecucion* respuestaEjecucion) {
+	//por ahora para debugguear visual, pero se debe poner en cola bloqueados y hacerlo esperar
+	putsConsola("Resultado de la ejecucion:\n");
+	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+	int a;
+
+	printConsola("Finalizo OK: %s\n",
+			respuestaEjecucion->finalizoOk ? "Si" : "No");
+	char** respuestaDeCadaInstruccion = string_split(
+			respuestaEjecucion->resultadosInstrucciones, "\0");
+	int b;
+	a = 0;
+	b = 0;
+	while (respuestaDeCadaInstruccion[a] != NULL) {
+		char** respuestaDeUnaInstruccion = string_split(
+				respuestaDeCadaInstruccion[a], ";");
+		while (respuestaDeUnaInstruccion[b] != NULL) {
+			printConsola("%s\n", respuestaDeUnaInstruccion[b]);
+			b++;
+		}
+		a++;
+	}
+	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
 
 }

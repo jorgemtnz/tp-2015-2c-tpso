@@ -12,13 +12,13 @@ void levantarHilosCPU() {
 		pthread_attr_init(&atributos[i]);
 	}
 
-	for (i = 1; i < configuracion->cantidad_hilos; i++) {
+	for (i = 1; i < configuracion->cantidad_hilos + 1; i++) {
 		pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloCPU, NULL);
 	}
 	i = 0;
-	pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloCPU, NULL);
+	pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloPorcentaje, NULL);
 
-	for (i = 0; i < configuracion->cantidad_hilos; i++) {
+	for (i = 0; i < configuracion->cantidad_hilos + 1; i++) {
 		pthread_join(tidHiloCPU[i], NULL);
 	}
 }
@@ -31,7 +31,7 @@ int hiloCPU() {
 	return 0;
 }
 
-int hiloPorcentaje(){
+int hiloPorcentaje() {
 
 	return 0;
 }

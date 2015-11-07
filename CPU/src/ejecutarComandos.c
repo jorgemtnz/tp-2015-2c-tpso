@@ -48,20 +48,20 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 
 	cpu->estadoEjecucion = USO;
 	//+++++++++++++++
-	cpu->mCodCPU->respEjec->resultadosInstrucciones =
-			realloc(cpu->mCodCPU->respEjec->resultadosInstrucciones,
-					strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
-							+ strlen(
-									"mProc %d %s %d - en entrada-salida de tiempo ;\0"));
+	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+			cpu->mCodCPU->respEjec->resultadosInstrucciones,
+			strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
+					+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
+					+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
 	cpu->mCodCPU->respEjec->finalizoOk = true;
+	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]) ;
+	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
 	string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 			string_from_format("mProc %d %s %d", cpu->pcbPlanificador->pid,
-						"en entrada-salida de tiempo", separada_instruccion[1]));
+					"en entrada-salida de tiempo", atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
-	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->cantInstEjecutadas += 1;
 	cpu->estadoEjecucion = NO_USO;
 }
