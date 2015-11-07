@@ -13,7 +13,7 @@ bool hayQueEjecutarTests(int argc, char *argv[]) {
 		}
 	}
 
-	printf("No hay que ejecutar tests\n");
+	//printf("No hay que ejecutar tests\n");
 	return false;
 }
 
