@@ -38,8 +38,6 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		}
 	}
 
-	printf("flag TLB %i\n",flagTLB);
-	printf("flag TDP %i\n",flagTDP);
 	return marcoYBit;
 
 }
@@ -116,7 +114,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	campoAux->contenido = contenido;
 	campoAux->posicion = variableEnvejecimientoMarco;
 
-	printf("%i %i\n\n",PID,pag);
 	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
 	}
@@ -502,7 +499,6 @@ void eliminarDeTablaDePaginasDefinitivamente(int id) {
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
 //	char algoritmo[4] ={'L','R','U','\0'};
-	printf("EL CONTENIDOOOOOO %s \n",contenido);
 	char* algoritmo = string_new();
 	string_append(&algoritmo, "LRU");
 
@@ -523,7 +519,6 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		printf("no sale bien");
 
 	}
-	printf("llego a cargar\n\n");
 
 	// aca significa que no tuvo que sacar ninguno
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
