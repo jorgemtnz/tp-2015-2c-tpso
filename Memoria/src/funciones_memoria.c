@@ -132,6 +132,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	lecturaMandarCpu->numeroPagina = pag;
 
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
+	printf("%i %i \n",marcoYBit->idMarco,marcoYBit->bitPresencia);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		//sleep(configuracion->retardoMemoria);

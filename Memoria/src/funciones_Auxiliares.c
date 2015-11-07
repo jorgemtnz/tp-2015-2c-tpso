@@ -105,6 +105,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 		if (campoTablaDePag->idProc == PID
 				&& campoTablaDePag->paginaDelProceso == pag) {
 			campoAux->idMarco = campoTablaDePag->idMarco;
+			campoTablaDePag->bitPresencia=1;
 		}
 	}
 
@@ -136,6 +137,7 @@ void cargarNuevoEnTLB(int PID, int pag, int id) {
 	campoTLB->idProc = PID;
 	campoTLB->paginaDelProceso = pag;
 	campoTLB->posicion = variableTLB;
+	campoTLB->bitPresencia=1;
 
 	list_add(listaTLB, campoTLB);
 }
@@ -496,13 +498,13 @@ void eliminarDeTablaDePaginasDefinitivamente(int id) {
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
 //	char algoritmo[4] ={'L','R','U','\0'};
+	printf("EL CONTENIDOOOOOO %s \n",contenido);
 	char* algoritmo = string_new();
 	string_append(&algoritmo, "LRU");
 
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	//warning comparacion provoca resultado inesperado, entonces se corrige
-	printf("nada funciona");
 	printf("%d,\n", strlen(configuracion->algoritmo_reemplazo));
 	if (strcmp(configuracion->algoritmo_reemplazo, algoritmo) == 0) {
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
