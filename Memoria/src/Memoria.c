@@ -7,13 +7,13 @@ int main(int argc, char *argv[]) {
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 
 	leerArchivoDeConfiguracion(argc, argv);
+	if (hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
 	int socketSwap;
 	conectar(configuracion->ipSwap, string_itoa(configuracion->puertoSwap),
 			&socketSwap);
 	dictionary_put(conexiones, "Swap", string_itoa(socketSwap));
-	if (hayQueEjecutarTests(argc, argv)) {
-		return ejecutarTests();
-	}
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0,
 			socketSwap, procesarMensajes, NULL, logger);
 
