@@ -3,31 +3,36 @@
 void levantarHilosCPU() {
 	log_info(logger, "se va a levantar un HILO ");
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
-	pthread_attr_t atributos[configuracion->cantidad_hilos];
+	pthread_attr_t atributos[configuracion->cantidad_hilos + 1];
 	int i;
+	i = 0;
 
-	//hilos
-	for (i = 0; i < configuracion->cantidad_hilos; i++) {
+	//hilos+1 porque se va a hacer un hilo para calcular el porcentaje
+	for (i = 0; i < configuracion->cantidad_hilos + 1; i++) {
 		pthread_attr_init(&atributos[i]);
 	}
 
-	for (i = 0; i < configuracion->cantidad_hilos; i++) {
-		pthread_create(&tidHiloCPU[i], &atributos[i],(void*) hiloCPU, NULL);
+	for (i = 1; i < configuracion->cantidad_hilos; i++) {
+		pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloCPU, NULL);
 	}
+	i = 0;
+	pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloCPU, NULL);
 
 	for (i = 0; i < configuracion->cantidad_hilos; i++) {
 		pthread_join(tidHiloCPU[i], NULL);
 	}
 }
 
-int hiloCPU(){
+int hiloCPU() {
 	log_info(logger, "comienza ejecucion de un HILO ");
-
 
 	//agregar comportamiento para cada CPU. se debe reiniciar cada vez que se levante una CPU
 	//se pondran algunas cosas de lo que actualmente esta en el main
 	return 0;
 }
 
+int hiloPorcentaje(){
 
+	return 0;
+}
 

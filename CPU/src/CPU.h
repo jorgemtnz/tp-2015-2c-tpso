@@ -79,11 +79,12 @@ typedef struct {
 	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
 	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
-	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0
+	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0  para calcular el porcentaje
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
     char* nombre;
     void* respuestaInstruccion;  //para la estructura de respuesta de la instruccion ejecutada
     void* estructuraSolicitud;  //para la estructura que se envia a memoria
+    uint8_t estado;   //para si esta disponible o no la CPU
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -142,6 +143,7 @@ char* queCPUsoy(t_cpu* cpu);
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void levantarHilosCPU();
 int hiloCPU();
+int hiloPorcentaje();
 
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
 int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu);

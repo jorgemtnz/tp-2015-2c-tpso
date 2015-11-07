@@ -47,10 +47,15 @@ t_entrada_salida* ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu)
 	t_entrada_salida* estructura = malloc(sizeof(t_entrada_salida));
 	char* temporal;
 	cpu->estadoEjecucion = USO;
-	estructura->PID = cpu->pcbPlanificador->pid;
+	//+++++++++++++++
+
 	temporal = string_from_format("mProc %d %s %d", cpu->pcbPlanificador->pid,
 			"en entrada-salida de tiempo", configuracion->retardo);
 	estructura->expresion = temporal;
+
+
+
+	//+++++++++++++++++++++++++++++++++++
 	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->cantInstEjecutadas += 1;
 	cpu->estadoEjecucion = NO_USO;

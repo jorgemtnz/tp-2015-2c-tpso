@@ -139,6 +139,7 @@ typedef struct {
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 	char* resultadosInstrucciones;
 	bool finalizoOk;
+	uint8_t cant_entrada_salida;
 } t_respuesta_ejecucion;
 
 

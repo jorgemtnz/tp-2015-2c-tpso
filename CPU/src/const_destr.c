@@ -118,6 +118,7 @@ t_cpu* crearCPU() {
 	cPUHilo->pcbPlanificador = crearPcb();
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
+	cPUHilo->estado=DISPONIBLE;
 	return cPUHilo;
 }
 
