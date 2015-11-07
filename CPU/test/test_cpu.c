@@ -34,10 +34,10 @@ static void test_debe_devolver_hola_mundo() {
 }
 
 static void test_carga_ok_archv_Confg() {
-	char texto[4] ={'L','R','U','\0'};
-	char texto2[4]={'L','R','U','\0'};
-	if(strcmp(texto,texto2)==0) printf("son iguales\n");
-	else printf("no son iguales\n");
+//	char texto[4] ={'L','R','U','\0'};
+//	char texto2[4]={'L','R','U','\0'};
+//	if(strcmp(texto,texto2)==0) printf("son iguales\n");
+//	else printf("no son iguales\n");
 // se probo usando el string de la catedra y tira segmentation
 //	char* texto3 = string_new();
 //	char* texto4 = string_new();
@@ -52,9 +52,9 @@ static void test_carga_ok_archv_Confg() {
 	CU_ASSERT_EQUAL(configuracion->retardo, 0);
 	CU_ASSERT_STRING_EQUAL(configuracion->vg_ipMemoria, "127.0.0.1");
 	CU_ASSERT_STRING_EQUAL(configuracion->vg_ipPlanificador, "127.0.0.1");
-char ip[] = "127.0.0.1";
-if(strcmp(configuracion->vg_ipPlanificador,ip)==0) printf("son iguales\n");
-else printf("no son iguales\n");
+//char ip[] = "127.0.0.1";
+//if(strcmp(configuracion->vg_ipPlanificador,ip)==0) printf("son iguales\n");
+//else printf("no son iguales\n");
 
 
 }
