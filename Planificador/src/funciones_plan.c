@@ -213,8 +213,6 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header,
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
 	int a;
 
-	printConsola("Finalizo OK: %s\n",
-			respuestaEjecucion->finalizoOk ? "Si" : "No");
 	char** respuestaDeCadaInstruccion = string_split(
 			respuestaEjecucion->resultadosInstrucciones, "\0");
 	int b;
