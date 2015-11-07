@@ -10,7 +10,7 @@
 #include <unistd.h> /* close */
 
 #include "../src/Memoria.h"
-
+/*
 static int init_suite() {
 	int a_rgc = 3;
 	char* temp = string_new();
@@ -145,7 +145,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_escribir_falso* estructuraDevolucionEscribirFalso;
 	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
-	estructuraDevolucionEscribirFalso=escribir_falso(PID1, 1,contenido1, socketMentiroso);
+	//estructuraDevolucionEscribirFalso=escribir_falso(PID1, 1,contenido1, socketMentiroso);
 
 	estructuraDevolucionEscribirFalso=escribir_falso(PID2, 1,contenido2, socketMentiroso);
 	estructuraDevolucionEscribirFalso=escribir_falso(PID3, 0,contenido3, socketMentiroso);
@@ -635,3 +635,4 @@ static CU_TestInfo tests[] = {
 };
 
 CUNIT_MAKE_SUITE(memoria, "Test Memoria", init_suite, clean_suite, tests)
+*/

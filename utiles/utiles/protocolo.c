@@ -118,13 +118,13 @@ void* deserializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMens
 void* serializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_LEER_SWAP_POR_ESCRIBIR");
 	//serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
-	serializar_t_leerDeProceso(fdCliente, tipoMensaje, estructura);
+	serializar_t_leerDeProcesoPorEscribir(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 void* deserializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	//t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 	//puts("Deserializando deserializar_LEER_SWAP_POR_ESCRIBIR");
-	t_leerDeProceso* estructura = deserializar_t_leerDeProceso(fdCliente, tipoMensaje);
+	t_leerDeProcesoPorEscribir* estructura = deserializar_t_leerDeProcesoPorEscribir(fdCliente, tipoMensaje);
 	return estructura;
 }
 

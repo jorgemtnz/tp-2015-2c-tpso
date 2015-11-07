@@ -85,6 +85,7 @@ t_contenido_pagina* iniciarContenidoPagina(){
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		exit(-1);
 	}
+	contenido->contenido = string_new();
 	return contenido;
 
 }
@@ -146,5 +147,6 @@ t_leerDeProcesoPorEscribir* crearEstructuraLeerProcesoPorEscribir(){
 		contenido->PID = 0;
 		contenido->numeroPaginaFin = 0;
 		contenido->numeroPaginaInicio = 0;
+		contenido->textoAEscribir = string_new();
 		return contenido;
 }

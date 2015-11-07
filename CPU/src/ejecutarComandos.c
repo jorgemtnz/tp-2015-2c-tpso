@@ -20,6 +20,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	cpu->pcbPlanificador->proximaInstruccion++;
 	sleep(configuracion->retardo);
 	cpu->estructuraSolicitud = estructura;
+	printf("AAAAAAAAAAAA %s \n",separada_instruccion[2]);
 }
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {

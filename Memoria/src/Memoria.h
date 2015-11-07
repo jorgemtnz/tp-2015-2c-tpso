@@ -115,6 +115,7 @@ typedef struct {
 t_iniciar_swap* crearEstructuraIniciar();
 t_PID* crearPID();
 t_configuracion* iniciarArchivoConfig();
+t_leerDeProcesoPorEscribir* crearEstructuraLeerProcesoPorEscribir();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 

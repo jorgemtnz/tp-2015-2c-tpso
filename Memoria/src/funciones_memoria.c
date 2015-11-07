@@ -104,7 +104,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
-	escritura->contenido = textoAEscribir;
+	string_append(&escritura->contenido ,textoAEscribir);
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 

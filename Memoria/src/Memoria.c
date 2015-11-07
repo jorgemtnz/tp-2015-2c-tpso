@@ -114,9 +114,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
+				printf("AAAAAAAAAAAAAAAA %s \n",datosDesdeSwap->contenido);
 				t_contenido_pagina* estructuraRtaLeerPorEscribir;
 				estructuraRtaLeerPorEscribir = iniciarContenidoPagina();
-				estructuraRtaLeerPorEscribir = datosDesdeSwap;
+				string_append(&estructuraRtaLeerPorEscribir->contenido,datosDesdeSwap->contenido);
+				estructuraRtaLeerPorEscribir->PID = datosDesdeSwap->PID;
+				estructuraRtaLeerPorEscribir->numeroPagina = datosDesdeSwap->numeroPagina;
+
 				int flagEscritura = 1;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(
 						estructuraRtaLeerPorEscribir->PID,

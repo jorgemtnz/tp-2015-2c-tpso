@@ -522,7 +522,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
-	lecturaMandarCpu->contenido = contenido;
+	string_append(&lecturaMandarCpu->contenido , contenido);
 
 	if (flagEscritura == 0) {
 		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
@@ -531,7 +531,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		t_contenido_pagina * escrituraSwap;
 		escrituraSwap = iniciarContenidoPagina();
 		escrituraSwap->PID = lecturaMandarCpu->PID;
-		escrituraSwap->contenido = lecturaMandarCpu->contenido;
+		string_append(&escrituraSwap->contenido , lecturaMandarCpu->contenido);
 		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
 		enviarRtaEscribirACPU(escrituraSwap, socketCPU);
 	}
@@ -576,7 +576,7 @@ void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag, char* te
 	estructura->PID = idProc;
 	estructura->numeroPaginaFin = nroPag;
 	estructura->numeroPaginaInicio = nroPag;
-	estructura->textoAEscribir = textoAEscribir;
+	string_append(&estructura->textoAEscribir,textoAEscribir);
 	enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
 }
 

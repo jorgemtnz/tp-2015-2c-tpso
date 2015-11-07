@@ -128,7 +128,6 @@ typedef struct {
 	uint8_t PID;
 	uint8_t numeroPaginaInicio;
 	uint8_t numeroPaginaFin;
-	char* textoAEscribir;
 } t_leerDeProceso;
 
 typedef struct {
