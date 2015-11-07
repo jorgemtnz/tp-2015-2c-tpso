@@ -46,7 +46,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeSwap->cantidadPaginas;
-				printf("%i\n", estructuraIniciar->cantidadPaginas);
 				iniciar(estructuraIniciar->PID,
 						estructuraIniciar->cantidadPaginas, socketCPU);
 				break;
@@ -135,7 +134,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
 				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
-				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,estructuraEscribir->contenido, socketSwap, socketCPU);
+				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
+						estructuraEscribir->contenido, socketSwap, socketCPU);
 
 				break;
 			}

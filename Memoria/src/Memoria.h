@@ -164,7 +164,7 @@ void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
 void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura,int socketCPU, int socketSwap);
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
-t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU);
+t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
 //warning no definido en test_memoria.c , entonces lo agrego aca.
 char* decirHolaMundo() ;

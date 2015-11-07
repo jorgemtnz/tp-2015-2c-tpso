@@ -71,11 +71,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 void iniciar(int idProc, int cantPag, int socketCPU) {
 	int contador;
 	t_TablaDePaginas* tablaDePag;
-	t_iniciar_swap * estructura;
-	estructura = crearEstructuraIniciar();
-	estructura->PID = idProc;
-	estructura->cantidadPaginas = cantPag;
-	printf("cant pag  %i \n", cantPag);
+	t_PID * estructuraEnvio;
+	estructuraEnvio = crearPID();
 
 	for (contador = 0; contador < cantPag; contador++) {
 		variableIdMarco++;
@@ -87,13 +84,13 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-	printf("tamanio tabla %i\n", list_size(listaTablaDePag));
-	//warning paso incompatible para el primer parametro diferente tipo para la estructura que se pasa por lo que llega mal a CPU
-	t_PID * estructuraEnvio = malloc(sizeof(t_PID));
-	estructuraEnvio->PID = estructura->PID;
+
+	estructuraEnvio->PID = idProc;
+
 	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 
 }
+
 
 void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 		int socketCPU) {
@@ -164,7 +161,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 		if (marcoYBit->bitPresencia == 0) {
 			eliminarDeMemoria(marcoYBit->idMarco);
 		}
-		if (configuracion->tlbHabilitada == 0) {
+		if (configuracion->tlbHabilitada == 1) {
 			eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
 		}
 	}
