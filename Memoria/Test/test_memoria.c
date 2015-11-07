@@ -40,106 +40,81 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	inicializacionDesdeCero();
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
-	t_iniciar_swap* campoIniciar;
-	campoIniciar = crearEstructuraIniciar();
-	t_iniciar_swap* campoIniciar1;
-	campoIniciar1 = crearEstructuraIniciar();
-	t_iniciar_swap* campoIniciar2;
-	campoIniciar2 = crearEstructuraIniciar();
-	t_iniciar_swap* campoIniciar3;
-	campoIniciar3 = crearEstructuraIniciar();
+	t_PID* campoIniciar;
+	campoIniciar = crearPID();
+	t_PID* campoIniciar1;
+	campoIniciar1 = crearPID();
+	t_PID* campoIniciar2;
+	campoIniciar2 = crearPID();
+	t_PID* campoIniciar3;
+	campoIniciar3 = crearPID();
 
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
-	int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7;
+	int cant1 = 4, cant2 = 5, cant3 = 6, cant4 = 7, contadorVariableIdMarco = 0;
 	int socketMentiroso = 7;
 	int tamanioFinalTablaDePag, a;
 	int contadorCantProc1 = 0, contadorCantProc2 = 0, contadorCantProc3 = 0, contadorCantProc4 = 0;
 	int contadorMarcoNegativo = 0;
 	campoIniciar = iniciar_falso(PID1, cant1, socketMentiroso);
 	CU_ASSERT_EQUAL(campoIniciar->PID, PID1);
-	CU_ASSERT_EQUAL(campoIniciar->cantidadPaginas, cant1);
 	campoIniciar1 = iniciar_falso(PID2, cant2, socketMentiroso);
 	CU_ASSERT_EQUAL(campoIniciar1->PID, PID2);
-	CU_ASSERT_EQUAL(campoIniciar1->cantidadPaginas, cant2);
-	campoIniciar2 =iniciar_falso(PID3, cant3, socketMentiroso);
+	campoIniciar2 = iniciar_falso(PID3, cant3, socketMentiroso);
 	CU_ASSERT_EQUAL(campoIniciar2->PID, PID3);
-	CU_ASSERT_EQUAL(campoIniciar2->cantidadPaginas, cant3);
-	campoIniciar3 =iniciar_falso(PID4, cant4, socketMentiroso);
+	campoIniciar3 = iniciar_falso(PID4, cant4, socketMentiroso);
 	CU_ASSERT_EQUAL(campoIniciar3->PID, PID4);
-	CU_ASSERT_EQUAL(campoIniciar3->cantidadPaginas, cant4);
 
 	tamanioFinalTablaDePag = list_size(listaTablaDePag);
 
 	for (a = 0; a < tamanioFinalTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idMarco <0)
-			contadorMarcoNegativo++;
+		contadorVariableIdMarco++;
 
 		switch (campoTablaDePag->idProc) {
 		case (1): {
+			CU_ASSERT_EQUAL(campoTablaDePag->idProc, 1);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPresencia, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, contadorVariableIdMarco);
+			CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, contadorCantProc1);
+
 			contadorCantProc1++;
 			break;
 		}
 		case (2): {
+			CU_ASSERT_EQUAL(campoTablaDePag->idProc, 2);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPresencia, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, contadorVariableIdMarco);
+			CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, contadorCantProc2);
 			contadorCantProc2++;
+
 			break;
 		}
 		case (3): {
+			CU_ASSERT_EQUAL(campoTablaDePag->idProc, 3);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPresencia, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, contadorVariableIdMarco);
+			CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, contadorCantProc3);
 			contadorCantProc3++;
+
 			break;
 		}
 		case (4): {
+			CU_ASSERT_EQUAL(campoTablaDePag->idProc, 4);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->bitPresencia, 0);
+			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, contadorVariableIdMarco);
+			CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, contadorCantProc4);
 			contadorCantProc4++;
+
 			break;
 		}
 		}
 	}
 
 	CU_ASSERT_EQUAL(tamanioFinalTablaDePag, 22);
-	CU_ASSERT_EQUAL(contadorMarcoNegativo, 22);
-
-	CU_ASSERT_EQUAL(contadorCantProc1, 4);
-	CU_ASSERT_EQUAL(contadorCantProc2, 5);
-	CU_ASSERT_EQUAL(contadorCantProc3, 6);
-	CU_ASSERT_EQUAL(contadorCantProc4, 7);
-
-	int b=0;
-
-	for(a=0;a<4;a++){
-		b--;
-	campoTablaDePag = list_get(listaTablaDePag, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
-	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-	}
-
-	for(a=0;a<5;a++){
-		b--;
-	campoTablaDePag = list_get(listaTablaDePag, a+4);
-	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
-	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-	}
-
-	for(a=0;a<6;a++){
-		b--;
-	campoTablaDePag = list_get(listaTablaDePag, a+9);
-	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
-	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-	}
-
-	for(a=0;a<7;a++){
-		b--;
-	campoTablaDePag = list_get(listaTablaDePag, a+15);
-	CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-	CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
-	CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-	CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-	}
 
 }
 
@@ -150,11 +125,11 @@ static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 
 	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18;
 	hardcodearTablaDePaginas(pag1,pag2,pag3,pag4,pag5);
-	t_marco_y_bit* marcoBit1 = malloc(sizeof(t_marco_y_bit));
-	t_marco_y_bit* marcoBit2 = malloc(sizeof(t_marco_y_bit));
-	t_marco_y_bit* marcoBit3 = malloc(sizeof(t_marco_y_bit));
-	t_marco_y_bit* marcoBit4 = malloc(sizeof(t_marco_y_bit));
-	t_marco_y_bit* marcoBit5 = malloc(sizeof(t_marco_y_bit));
+	t_marco_y_bit* marcoBit1 = iniciarMarcoYBit();
+	t_marco_y_bit* marcoBit2 = iniciarMarcoYBit();
+	t_marco_y_bit* marcoBit3 = iniciarMarcoYBit();
+	t_marco_y_bit* marcoBit4 = iniciarMarcoYBit();
+	t_marco_y_bit* marcoBit5 = iniciarMarcoYBit();
 
 //	 int idMarco1,idMarco2,idMarco3,idMarco4,idMarco5;
 

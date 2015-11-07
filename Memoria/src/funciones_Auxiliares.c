@@ -10,7 +10,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 
-	if (configuracion->tlbHabilitada == 0) {
+	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB; a++) {
 			campoTLB = list_get(listaTLB, a);
@@ -52,7 +52,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	t_marco * campoMarco;
 	campoMarco = iniciarMarco();
 
-	if (configuracion->tlbHabilitada == 0) {
+	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 			campoTLB = list_get(listaTLB, a);
@@ -112,7 +112,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	campoAux->contenido = contenido;
 	campoAux->posicion = variableEnvejecimientoMarco;
 
-	if (configuracion->tlbHabilitada == 0) {
+	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
 	}
 	list_add(listaMemoria, campoAux);
@@ -284,7 +284,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	if (configuracion->tlbHabilitada == 0) {
+	if (configuracion->tlbHabilitada == 1) {
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idMarco == campoMarco->idMarco) {
@@ -317,7 +317,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	}
 	eliminarDeMemoria(campoMarco->idMarco);
 	eliminarDeTablaDePaginas(campoMarco->idMarco);
-	if (configuracion->tlbHabilitada == 0) {
+	if (configuracion->tlbHabilitada == 1) {
 		eliminarDeTLB(campoMarco->idMarco);
 	}
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar);
@@ -659,13 +659,11 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 
 }
 
-t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
+t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 	int contador;
 	t_TablaDePaginas* tablaDePag;
-	t_iniciar_swap * estructura;
-	estructura = crearEstructuraIniciar();
-	estructura->PID = idProc;
-	estructura->cantidadPaginas = cantPag;
+	t_PID * estructuraEnvio;
+	estructuraEnvio = crearPID();
 
 	for (contador = 0; contador < cantPag; contador++) {
 		variableIdMarco++;
@@ -674,9 +672,13 @@ t_iniciar_swap* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->paginaDelProceso = contador;
 		tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
 		tablaDePag->bitPagModificada = 0;
+		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
 	}
-	return estructura;
+
+	estructuraEnvio->PID = idProc;
+
+	return estructuraEnvio;
 }
 
 t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
@@ -731,7 +733,7 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 		if (marcoYBit->bitPresencia == 0) {
 			eliminarDeMemoria(marcoYBit->idMarco);
 		}
-		if (configuracion->tlbHabilitada == 0) {
+		if (configuracion->tlbHabilitada == 1) {
 			eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
 		}
 	}
