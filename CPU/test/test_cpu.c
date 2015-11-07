@@ -45,7 +45,6 @@ static void test_carga_ok_archv_Confg() {
 //	string_append(texto4,"LRU");
 //	if(string_equals(texto3,texto4)==0) printf("son iguales\n");
 //	else printf("no son iguales\n");
-
 	CU_ASSERT_EQUAL(configuracion->vg_puertoMemoria, 5000);
 	CU_ASSERT_EQUAL(configuracion->vg_puertoPlanificador, 4000);
 	CU_ASSERT_EQUAL(configuracion->cantidad_hilos, 1);
@@ -55,8 +54,6 @@ static void test_carga_ok_archv_Confg() {
 //char ip[] = "127.0.0.1";
 //if(strcmp(configuracion->vg_ipPlanificador,ip)==0) printf("son iguales\n");
 //else printf("no son iguales\n");
-
-
 }
 
 static void test_crearProcesoCPU() {
@@ -97,7 +94,45 @@ static void cargarCodigo() {
 	}
 	CU_ASSERT_STRING_EQUAL(sin_enter, "iniciar 2;leer 0;leer 1;finalizar;");
 }
+static void test_parsear_cod_leer(){
+	char* texto = { "iniciar 2;leer 0;leer 1;finalizar;" };
+		char** resultado;
+		char** subInstruccion;
+		char** palabra_instruccion;
+		resultado = string_n_split(texto, 2, ";");
+		CU_ASSERT_STRING_EQUAL(resultado[0], "iniciar 2");
+		CU_ASSERT_STRING_EQUAL(resultado[1], "leer 0;leer 1;finalizar;");
+		subInstruccion = string_split(resultado[1], ";");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[0], "leer 0");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[1], "leer 1");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[2], "finalizar");
+		palabra_instruccion = string_split(resultado[0], " ");
+		CU_ASSERT_STRING_EQUAL(palabra_instruccion[0], "iniciar");
+		CU_ASSERT_STRING_EQUAL(palabra_instruccion[1], "2");
+		int cantPaginas = 0;
+		cantPaginas = atoi(palabra_instruccion[1]);
+		CU_ASSERT_EQUAL(cantPaginas, 2);
+}
 
+static void test_parsear_cod_escribir(){
+	    char* texto = { "iniciar 2;escribir 0 \"hola\";leer 0;finalizar;" };
+	    char** resultado;
+		char** subInstruccion;
+		char** palabra_instruccion;
+		resultado = string_n_split(texto, 2, ";");
+		CU_ASSERT_STRING_EQUAL(resultado[0], "iniciar 2");
+		CU_ASSERT_STRING_EQUAL(resultado[1], "leer 0;leer 1;finalizar;");
+		subInstruccion = string_split(resultado[1], ";");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[0], "leer 0");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[1], "leer 1");
+		CU_ASSERT_STRING_EQUAL(subInstruccion[2], "finalizar");
+		palabra_instruccion = string_split(resultado[0], " ");
+		CU_ASSERT_STRING_EQUAL(palabra_instruccion[0], "iniciar");
+		CU_ASSERT_STRING_EQUAL(palabra_instruccion[1], "2");
+		int cantPaginas = 0;
+		cantPaginas = atoi(palabra_instruccion[1]);
+		CU_ASSERT_EQUAL(cantPaginas, 2);
+}
 static void test_parsear() {
 //	t_cpu* cpuPrimera = crearCPU();
 //	t_header* header = malloc(sizeof(header));
@@ -294,20 +329,24 @@ static void test_ejecuta_EntradaSalida() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //tests pertenecientes a este suite se deben agregar
 static CU_TestInfo tests[] = { { "Test Hola Mundo",
-		test_debe_devolver_hola_mundo }, { "Test carga archvConfig",
-		test_carga_ok_archv_Confg }, { "test crear procesoCPU",
-		test_crearProcesoCPU }, { "test crear CPU", test_crearCPU }, {
-				"test devuelve nombre CPU", test_queCPUsoy }, {
-		"test parsear mcod", test_parsear }, { "test RESUL_INICIAR_PROC_OK_CPU",
-		test_RESUL_INICIAR_PROC_OK_CPU }, { "test_iniciarProcNoOkCPU",
-		test_iniciarProcNoOkCPU }, { "test RESUL_FIN", test_ejecutarResul_Fin },
+		test_debe_devolver_hola_mundo },
+		{ "Test carga archvConfig",	test_carga_ok_archv_Confg },
+		{ "test crear procesoCPU",	test_crearProcesoCPU },
+		{ "test crear CPU", test_crearCPU },
+		{"test devuelve nombre CPU", test_queCPUsoy },
+		{"test parsear instruccion mcod leer",test_parsear_cod_leer},
+		{"test parsera instruccion mcod escribir",test_parsear_cod_escribir},
+		{"test parsear mcod", test_parsear },
+		{ "test RESUL_INICIAR_PROC_OK_CPU",	test_RESUL_INICIAR_PROC_OK_CPU },
+		{ "test_iniciarProcNoOkCPU",test_iniciarProcNoOkCPU },
+		{ "test RESUL_FIN", test_ejecutarResul_Fin },
 		{ "test_RESUL_LEER_OK_CPU", test_RESUL_LEER_OK_CPU },
-		{ "test_ejecuta_FinProcesoMemoria", test_ejecuta_FinProcesoMemoria }, {
-				" test_ejecuta_LeerMemoria", test_ejecuta_LeerMemoria }, {
-				"test_ejecuta_IniciarProceso", test_ejecuta_IniciarProceso }, {
-				"test_ejecuta_EscribirMemoria", test_ejecuta_EscribirMemoria },
-		{ "test_ejecuta_EntradaSalida", test_ejecuta_EntradaSalida } , {
-				"test carga codigo", cargarCodigo },
+		{ "test_ejecuta_FinProcesoMemoria", test_ejecuta_FinProcesoMemoria },
+		{" test_ejecuta_LeerMemoria", test_ejecuta_LeerMemoria },
+		{"test_ejecuta_IniciarProceso", test_ejecuta_IniciarProceso },
+		{"test_ejecuta_EscribirMemoria", test_ejecuta_EscribirMemoria },
+		{ "test_ejecuta_EntradaSalida", test_ejecuta_EntradaSalida } ,
+		{"test carga codigo", cargarCodigo },
 		CU_TEST_INFO_NULL };
 
 CUNIT_MAKE_SUITE(cpu, "Test CPU", init_suite, clean_suite, tests)
