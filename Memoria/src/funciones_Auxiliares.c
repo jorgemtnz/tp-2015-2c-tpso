@@ -38,6 +38,8 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		}
 	}
 
+	printf("flag TLB %i\n",flagTLB);
+	printf("flag TDP %i\n",flagTDP);
 	return marcoYBit;
 
 }
@@ -100,12 +102,13 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	tamanioTablaDePag = list_size(listaTablaDePag);
 
 	//sleep(configuracion->retardoMemoria);
-	for (a = 0; a < tamanioTablaDePag && flag == 1; a++) {
+	for (a = 0; a < tamanioTablaDePag && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID
 				&& campoTablaDePag->paginaDelProceso == pag) {
 			campoAux->idMarco = campoTablaDePag->idMarco;
 			campoTablaDePag->bitPresencia=1;
+			flag =1;
 		}
 	}
 
@@ -113,6 +116,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	campoAux->contenido = contenido;
 	campoAux->posicion = variableEnvejecimientoMarco;
 
+	printf("%i %i\n\n",PID,pag);
 	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
 	}
@@ -519,6 +523,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		printf("no sale bien");
 
 	}
+	printf("llego a cargar\n\n");
 
 	// aca significa que no tuvo que sacar ninguno
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
