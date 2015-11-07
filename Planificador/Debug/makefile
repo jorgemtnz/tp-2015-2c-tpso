@@ -30,8 +30,12 @@ dependents:
 	-cd /home/utnso/tp-2015-2c-tpso/commons-library/Debug && $(MAKE) all
 	-cd /home/utnso/tp-2015-2c-tpso/utiles/Debug && $(MAKE) all
 
+dependentsClean:
+	-cd /home/utnso/tp-2015-2c-tpso/commons-library/Debug && $(MAKE) clean
+	-cd /home/utnso/tp-2015-2c-tpso/utiles/Debug && $(MAKE) clean
+
 # Tool invocations
-Planificador: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpso/utiles/Debug/libutiles.so
+Planificador: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpso/utiles/Debug/libutiles.so dependents
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
 	gcc -L"/home/utnso/tp-2015-2c-tpso/utiles/Debug" -L"/home/utnso/tp-2015-2c-tpso/commons-library/Debug" -o "Planificador" $(OBJS) $(USER_OBJS) $(LIBS)
@@ -39,7 +43,7 @@ Planificador: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/D
 	@echo ' '
 
 # Other Targets
-clean:
+clean: dependentsClean
 	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) Planificador
 	-@echo ' '
 
