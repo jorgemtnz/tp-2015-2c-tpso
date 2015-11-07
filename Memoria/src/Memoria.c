@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0,
 			socketSwap, procesarMensajes, NULL, logger);
 
+	//levantarConsola();
 	return EXIT_SUCCESS;
 }
 
@@ -160,7 +161,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 
 		} else if (tipoNotificacion == TERMINAL_MESSAGE) {
-
+			procesarMensajesConsola(socket, header, buffer);
 		}
 	}
 

@@ -118,6 +118,13 @@ t_configuracion* iniciarArchivoConfig();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
+//++++++++++++++++++++++++++++++++++++Funciones Consola +++++++++++++++++++++++++++++++++++++++
+void levantarConsola();
+void mostrarComandos();
+int idFuncion(char* funcion);
+void aplicarFuncion(int idFuncion);
+int procesarMensajesConsola(int socket, t_header* header, char* buffer);
+
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
