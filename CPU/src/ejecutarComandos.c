@@ -13,6 +13,7 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->estadoEjecucion = USO;
+	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->contenido = string_new();
 	string_append(&estructura->contenido, separada_instruccion[2]);
@@ -20,7 +21,6 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	cpu->pcbPlanificador->proximaInstruccion++;
 	sleep(configuracion->retardo);
 	cpu->estructuraSolicitud = estructura;
-	printf("AAAAAAAAAAAA %s \n",separada_instruccion[2]);
 }
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {

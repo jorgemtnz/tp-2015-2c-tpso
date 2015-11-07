@@ -1,4 +1,4 @@
 iniciar 1;
-escribir 0 "Hola vago pepe";
+escribir 0 "Hola vago";
 leer 0;
 finalizar;
