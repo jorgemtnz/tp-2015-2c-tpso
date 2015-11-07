@@ -1,7 +1,5 @@
 # tp-2015-2c-tpso
 
-soy margu probando
-
 ruta para la VM  /home/utnso/tp-2015-2c-tpso
 
 utiles y commons-library son bibliotecas compartidas
@@ -14,6 +12,7 @@ luego el git pull nombreBranch, y finalmente el git push nombreBranch
 para unir branchs; parado en el master
 git merge nombreBranch    entonces el master se fusiona con el nombrebranch o hacerlo a la inversa y la fusion es al reves.
 desde la rama que  quiero unir git rebase nombreBranch(a la que quiero ser fusionado) para fusionar y mantener los commits de forma secuencial.
+
 
 correr proyecto desde eclipse
 
