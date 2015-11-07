@@ -8,12 +8,12 @@ bool hayQueEjecutarTests(int argc, char *argv[]) {
 	int i;
 	for (i = 0; i < argc; ++i) {
 		if (string_equals(argv[i], "test")) {
-			printf("Hay que ejecutar tests\n");
+			//printf("Hay que ejecutar tests\n");
 			return true;
 		}
 	}
 
-	printf("No hay que ejecutar tests\n");
+	//printf("No hay que ejecutar tests\n");
 	return false;
 }
 

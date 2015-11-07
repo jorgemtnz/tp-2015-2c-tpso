@@ -16,6 +16,9 @@ int main(int argc, char *argv[]) {
 	int resultConexion_mem = 0;
 	int resultConexion_planif = 0;
 
+	if (hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
 	resultConexion_planif = conectar(configuracion->vg_ipPlanificador,
 			string_itoa(configuracion->vg_puertoPlanificador),
 			&socketPlanificador);
@@ -31,9 +34,7 @@ int main(int argc, char *argv[]) {
 
 	dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 
-	if (hayQueEjecutarTests(argc, argv)) {
-		return ejecutarTests();
-	} // poner aca el levantar hilos y luego el
+	// poner aca el levantar hilos y luego el
 	escucharConexiones("0", socketPlanificador, socketMemoria, 0,
 			procesarMensajes, NULL, logger);
 
