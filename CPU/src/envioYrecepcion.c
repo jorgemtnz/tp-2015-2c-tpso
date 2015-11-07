@@ -268,8 +268,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (TIEMPO_CPU): {
 		log_info(logger,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
-        uint8_t res_porcentaje = malloc(sizeof(uint8_t));
-		pedirTiempo(&res_porcentaje);
+        uint8_t* res_porcentaje = malloc(sizeof(uint8_t));
+		pedirTiempo(res_porcentaje);
 		int socketPlanificador = atoi(
 					(char*) dictionary_get(conexiones, "Planificador"));
 		enviarStruct(socketPlanificador,TIEMPO_CPU,res_porcentaje);
