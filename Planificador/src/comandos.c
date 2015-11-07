@@ -42,7 +42,7 @@ int correrPath(int socket, t_header* header, char* buffer) {
 
 	t_pcb* pcb = crearPcb(split[1]);
 
-	agregarPcbAColaDeListos(pcb);
+	ejecutarProceso(pcb);
 
 	return 0;
 }

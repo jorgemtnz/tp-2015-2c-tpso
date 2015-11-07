@@ -36,9 +36,9 @@ l_espacioLibre* crearEspacioLibre(){
 
 }
 
-t_escribirEnProceso* crearEscribirEnProceso(){
+t_contenido_pagina* crearEscribirEnProceso(){
 
-	t_escribirEnProceso* contenido = malloc(sizeof(t_escribirEnProceso));
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
@@ -75,9 +75,9 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_respuesta_iniciar* crearRespuestaIniciar(){
+t_PID* crearEstructuraPid(){
 
-	t_respuesta_iniciar* contenido = malloc(sizeof(t_respuesta_iniciar));
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
@@ -87,9 +87,39 @@ t_respuesta_iniciar* crearRespuestaIniciar(){
 	return contenido;
 }
 
-t_respuesta_escribir* crearRespuestaEscribir(){
 
-	t_respuesta_escribir* contenido = malloc(sizeof(t_respuesta_escribir));
+t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer(){
+	t_devolucion_escribir_o_leer* contenido = malloc(sizeof(t_devolucion_escribir_o_leer));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+			log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->contenido = "";
+		contenido->numeroPagina = 0;
+		contenido->resultado = OK;
+		return contenido;
+
+}
+
+t_contenido_pagina* crearContenidoPagina(){
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+			log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->contenido = "";
+		contenido->numeroPagina = 0;
+
+		return contenido;
+
+}
+t_contenido_pagina* crearRespuestaLeer(){
+
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
@@ -102,29 +132,28 @@ t_respuesta_escribir* crearRespuestaEscribir(){
 
 }
 
-t_respuesta_leer* crearRespuestaLeer(){
+t_PID* crearRespuestaFinalizar(){
 
-	t_respuesta_leer* contenido = malloc(sizeof(t_respuesta_leer));
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
 		exit(-1);
 	}
 	contenido->PID = 0;
-	contenido->contenido = "";
-	contenido->numeroPagina = 0;
 	return contenido;
-
 }
 
-t_respuesta_finalizar* crearRespuestaFinalizar(){
+t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar(){
 
-	t_respuesta_finalizar* contenido = malloc(sizeof(t_respuesta_finalizar));
+	t_respuesta_iniciar_o_finalizar* contenido = malloc(sizeof(t_respuesta_iniciar_o_finalizar));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
 		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
 		exit(-1);
 	}
 	contenido->PID = 0;
+	contenido->resultado = OK;
+
 	return contenido;
 }

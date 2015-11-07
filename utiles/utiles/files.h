@@ -38,4 +38,6 @@ bool existeArchivo(char* path);
 
 void borrarArchivo(char *pathArchivo);
 
+int file_get_size(char* filename);
+
 #endif /* UTILES_FILES_H_ */

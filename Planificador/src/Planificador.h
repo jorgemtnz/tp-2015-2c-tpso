@@ -2,6 +2,7 @@
 #define PLANIFICADOR_H_
 
 // +++++++++++++++++++++++++++++++++++++++ Includes +++++++++++++++++++++++++++++++++++++
+#include "../test/test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +20,7 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 #include <utiles/configExtras.h>
 #include <utiles/files.h>
 #include <utiles/protocolo.h>
@@ -53,6 +54,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]);
 int putsConsola (const char *msg);
 int printConsola(const char *formato, ...);
 bool cpuDesconectada(void *cpu);
+char* obtenerNombreProc(char* ruta);
+void cerrarArchivoEspacioDeDatos(int fd, t_log* logger);
 //============================================================================
 
 
@@ -81,9 +84,10 @@ int cpu(int socket, t_header* header, char* buffer);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
-void agregarPcbAColaDeListos(t_pcb* pcb);
+void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
 t_list* getColaDeListos();
+t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
@@ -92,6 +96,18 @@ char* crearNombreCPU();
 void registrarNuevaCPU(int socket);
 bool cpuConSocket(void *cpu, int socket);
 void desregistrarCPUConectada(int socket);
+
+//++++++++++++++++++++++++++++++++++++ ps +++++++++++++++++++++++++++++++++++++++
+//Genera los mensajes segun el anexo, para una lista de PCBs, y le pone el estado que viene como parametro
+//Devuelve la lista de mensajes
+t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
+//Recorre los elementos del dictionary, las keys son: Listo, Ejecutando, Bloqueado, en el value te viene una t_list* listaPcb
+//para cada elemento del t_dictionary se llama a generarMensajesPsLista(value, key) y
+//se recorre la lista que te devuelve, y cada elemento se agrega a una lista resultado
+//Devuelve la lista resultado
+t_list* generarMensajesPsDictionary(t_dictionary* listas);
+t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
+
 //========================================================================================
 
 
@@ -103,6 +119,9 @@ t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeListos;
+t_list* colaDeNuevos;
+t_list* colaDeEjecucion;
+t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
 
 //===========================================================================================
@@ -111,5 +130,8 @@ t_list* listaCPUs;
 
 
 t_log* logger; //VG del logger
+
+//test
+char* decirHolaMundo();
 
 #endif /* PLANIFICADOR_H_ */

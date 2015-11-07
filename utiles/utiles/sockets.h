@@ -8,7 +8,7 @@
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/collections/dictionary.h>
-#include "../protocolo.h"
+#include "protocolo.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
@@ -44,6 +44,8 @@ typedef struct t_paquete {
 typedef struct {
 	int tamanioMensaje;
 	t_tipo_mensaje tipoMensaje;
+	char* nombre;
+	int numeroMensaje;
 }t_header;
 #pragma pack(0)
 
@@ -82,7 +84,7 @@ int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerial
 bool string_equals(char* string1, char* string2);
 int enviarSimple(int fdCliente, void *msg, int len);
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
-int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje);
+int enviarHeader(int fdCliente, t_header header);
 int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura);
 int enviar(int fdCliente, void *msg, int len);
 // Solo para el servidor
@@ -107,8 +109,11 @@ char* generarKeySerializacion(t_tipo_mensaje tipoMensaje);
 t_registro_serializacion* getSerializacion(t_tipo_mensaje tipoMensaje);
 void registrarSerializadores(t_tipo_mensaje tipoMensaje, char* descripcion, void* funcionSerializacion, void* funcionDeserializacion);
 char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje);
-int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion);
+int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_header header, void* estructura);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_header header, t_resultado_serializacion* resultadoDeserializacion);
 int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
-int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion);
+int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resultado_serializacion* resultadoSerializacion);
+
+//para identificarse
+char* getNombre();
 #endif /* SOCKETS_H_ */

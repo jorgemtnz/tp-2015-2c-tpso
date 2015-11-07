@@ -1,97 +1,233 @@
 #include "CPU.h"
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
-int ejecutar(int token, char* separada_instruccion, t_cpu* cpu) {
+void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
+
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
-		ejecutaIniciarProceso(separada_instruccion, cpu);
+		ejecuta_IniciarProceso(separada_instruccion, cpu);
+		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		enviarStruct(socketMemoria, INICIAR_PROCESO_MEM,
+				cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
 		break;
 	}
 	case (ESCRIBIR_MEM): {
 		log_info(logger, "se va a ejecutar escribir memoria");
-		ejecutaEscribirMemoria(separada_instruccion, cpu);
+		ejecuta_EscribirMemoria(separada_instruccion, cpu);
+		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		enviarStruct(socketMemoria, ESCRIBIR_MEM, cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
 		break;
 	}
 	case (LEER_MEM): {
 		log_info(logger, "se va a ejecutar leer memoria ");
-		ejecutaLeerMemoria(separada_instruccion, cpu);
+		ejecuta_LeerMemoria(separada_instruccion, cpu);
+		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		enviarStruct(socketMemoria, LEER_MEM, cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
-		ejecutaFinProcesoMemoria(cpu);
+	//	t_PID* estructura = malloc(sizeof(t_PID));
+		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		ejecuta_FinProcesoMemoria(cpu);
+		enviarStruct(socketMemoria, FIN_PROCESO_MEM, cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
 		break;
 	}
-	case (ENTRADA_SALIDA): {
+	case (ENTRADA_SALIDA): { //falta modificar
 		log_info(logger, "se va a ejecutar entrada salida ");
-		ejecutaEntradaSalida(separada_instruccion, cpu);
+		t_entrada_salida* estructura;
+		int socketPlanificador = atoi(
+				(char*) dictionary_get(conexiones, "Planificador"));
+		estructura = ejecuta_EntradaSalida(separada_instruccion, cpu);
+		enviarStruct(socketPlanificador, ENTRADA_SALIDA, estructura);
 		break;
 	}
 	}
-
-	return EXIT_SUCCESS;
 }
-//recibe las respuestas
-int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cpu* cpu) {
-	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 
+//recibe las respuestas
+void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
+		t_cpu* cpu) {
+
+	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	int token;
 	token = header->tipoMensaje;
 	switch (token) {
-	case (RESUL_ERROR): {
-		log_info(logger, "se va a ejecutar result error");
-		ejecutaResultError(cpu);
+	case (CONTEXTO_MPROC): {
+		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
+		//inicia toda la cadena de instruccion desde la CPU hacia memoria
+		t_pcb* pcbPlanificador = (t_pcb*) buffer;
+		printf("Ruta recibida del planificador: %s\n",
+				pcbPlanificador->rutaArchivoMcod);
+		preparaCPU(pcbPlanificador, cpu);
+		procesaCodigo(cpu);
+		//llama a procesa codigo
 		break;
 	}
-	case (RESUL_ESCRIBIR): {
-		log_info(logger, "se va a ejecutar result escribir ");
-		ejecutaResultEscribir(cpu);
-		break;
-	}
-	case (RESUL_FIN): {
-		log_info(logger, "se va a ejecutar result fin de proceso ");
-		t_respuesta_finalizar* datosDesdeMem = (t_respuesta_finalizar*) buffer;
-		ejecutaResulFin(cpu);
-		break;
-	}
+
 	case (RESUL_INICIAR_PROC_OK_CPU): {
+		//se cuenta aca como terminado de ejecutar la instruccion iniciar
+		cpu->cantInstEjecutadas += 1;
+		cpu->estadoEjecucion = NO_USO;
+		//recibe desde memoria y debe continuar con la ejecucion
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
-		ejecutaResulIniciarProcOK(cpu);
+		t_PID* datosDesdeMem = (t_PID*) buffer;
+		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1  + strlen("mProc %i - Iniciado ;\0"));
+		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				string_from_format("mProc %i - Iniciado ;\0",
+						datosDesdeMem->PID));
+
+		//se ejecuta la siguiente instruccion si corresponde
+		if (cpu->pcbPlanificador->tieneDesalojo == true) {
+			if (cpu->pcbPlanificador->tamanioRafaga
+					>= cpu->cantInstEjecutadas) {
+				ejecuta_Instruccion(
+						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+						cpu);
+			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
+
+				resultadoAlPlanificador(cpu);
+			}
+		} else { // es planificacion FIFO
+			ejecuta_Instruccion(
+					cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+					cpu);
+		}
 		break;
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
-			log_info(logger, "se va a ejecutar result iniciar proceso no ok");
-			ejecutaResulIniciarProc_NO_OK(cpu);
-			break;
-		}
-	case (RESUL_INSTR_EJEC): {
-		log_info(logger, "se va a ejecutar result instruccion ejecutar ");
-		ejecutaResulInstrEjec(cpu);
-		break;
-	}
-	case (RESUL_LEER_OK_CPU): {
-		log_info(logger, "se va a ejecutar resultLeer ");
-		t_respuesta_leer_CPU* datosDesdeMem = (t_respuesta_leer_CPU*) buffer;
-		char* contenido= datosDesdeMem->contenido; // este es el contenido de la pagina
-		ejecutaResultLeerOK(cpu, contenido);
-		break;
-	}
-	case (RESUL_LEER_ERROR): {
-		log_info(logger, "se va a ejecutar resultOK ");
-		ejecutaResulLeerError(cpu);
+		//se cuenta aca como terminado de ejecutar la instruccion iniciar
+		cpu->cantInstEjecutadas += 1;
+		cpu->estadoEjecucion = NO_USO;
+		//al dar error se debe devolver el proceso
+		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
+		t_PID* datosDesdeMem = (t_PID*) buffer;
+		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1   + strlen("mProc  - Fallo ;\0"));
+		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				string_from_format("mProc %i - Fallo ;\0", datosDesdeMem->PID));
 
+		int socketPlanificador = atoi(
+				(char*) dictionary_get(conexiones, "Planificador"));
+		cpu->mCodCPU->respEjec->finalizoOk = false;
+		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		//ESTO HAY QUE CAMBIARLO EN EL PLANIFICADOR PARA QUE ANDE (OJO)
+		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
+				cpu->mCodCPU->respEjec);
+		free(cpu->mCodCPU->respEjec);
 		break;
 	}
-	case (CONTEXTO_MPROC): {
-		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
-        //inicia toda la cadena de instruccion desde la CPU hacia memoria
-		t_pcb* pcbPlanificador = (t_pcb*) buffer;
-		printf("Ruta recibida del planificador: %s\n", pcbPlanificador->rutaArchivoMcod);
-		preparaCPU(pcbPlanificador);
-		//llama a procesa codigo
-		procesaCodigo(cpu);
+
+	case (RESUL_LEER_OK_CPU): {
+		//fin de la instruccion leer
+		cpu->cantInstEjecutadas += 1;
+		cpu->estadoEjecucion = NO_USO;
+		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
+		log_info(logger, "se va a ejecutar resultLeer ");
+		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
+		//cambio sizeof(t_contenido_pagina) * 10
+		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				sizeof(t_contenido_pagina)+1 + strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) +1
+						+ strlen("mProc %i; - Pagina %i; leida: %s ;\0"));
+		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				string_from_format("mProc %i; - Pagina %i; leida: %s ;\0",
+						datosDesdeMem->PID, datosDesdeMem->numeroPagina,
+						datosDesdeMem->contenido));
+
+
+		//se ejecuta la siguiente instruccion si corresponde
+		if (cpu->pcbPlanificador->tieneDesalojo == true) {
+			if (cpu->pcbPlanificador->tamanioRafaga
+					>= cpu->cantInstEjecutadas) {
+
+				ejecuta_Instruccion(
+						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+						cpu);
+				printf("dsp de ejecuta inst\n");
+			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
+
+				resultadoAlPlanificador(cpu);
+			}
+		} else { // es planificacion FIFO
+
+			ejecuta_Instruccion(
+					cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+					cpu);
+		}
+		break;
+	}
+
+	case (RESUL_ESCRIBIR): {
+		//es el fin de la ejecucion de escribir
+		cpu->cantInstEjecutadas += 1;
+		cpu->estadoEjecucion = NO_USO;
+		//++++++++++++++cpu libre
+		log_info(logger, "se va a ejecutar result escribir ");
+		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
+		// se asigna espacio contiguo para los datos del resultado
+		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				sizeof(t_contenido_pagina)+1 + strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) +1 + strlen("mProc; - Pagina; escrita:;\0"));
+		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				string_from_format("mProc %i; - Pagina %i; escrita: %s ;\0",
+						datosdesdeMEmoria->PID, datosdesdeMEmoria->numeroPagina,
+						datosdesdeMEmoria->contenido));
+		//se ejecuta la siguiente instruccion si corresponde
+		if (cpu->pcbPlanificador->tieneDesalojo == true) {
+			if (cpu->pcbPlanificador->tamanioRafaga
+					>= cpu->cantInstEjecutadas) {
+				ejecuta_Instruccion(
+						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+						cpu);
+			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
+
+				resultadoAlPlanificador(cpu);
+			}
+		} else { // es planificacion FIFO
+			ejecuta_Instruccion(
+					cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
+					cpu);
+		}
+		break;
+	}
+
+	case (RESUL_FIN): {
+		//se cuenta el fin de la instruccion finalizar
+		cpu->cantInstEjecutadas += 1;
+		cpu->estadoEjecucion = NO_USO;
+		//++++++++++++++++++++++++++
+		log_info(logger, "se va a ejecutar result fin de proceso ");
+		t_PID* datosDesdeMem = (t_PID*) buffer;
+		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				sizeof(t_PID)+ strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones)+1 + strlen("mProc %i - finalizado ;\0"));
+		int socketPlanificador = atoi(
+				(char*) dictionary_get(conexiones, "Planificador"));
+		//		++++++++++++++++++++++funcion finalizar
+		cpu->mCodCPU->respEjec->finalizoOk = true;
+		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				string_from_format("mProc %i - finalizado ;\0",
+						datosDesdeMem->PID));
+
+		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
+				cpu->mCodCPU->respEjec);
+
+		free(cpu->mCodCPU->respEjec);
 		break;
 	}
 
@@ -110,73 +246,12 @@ int recibirMensajeVarios(  t_header* header,   char*   buffer, void* extra, t_cp
 		 }*/
 		break;
 	}
-
 	case (TIEMPO_CPU): {
-		log_info(logger, "llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
-	}
+		log_info(logger,
+				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
 
 	}
-	return EXIT_SUCCESS;
-}
-
-// en todas estas funciones de ejecutar se debe mandar al palnificador su estructura del PCB del proceso en cuestion
-//debe mandar el inicio a memoria con serializacion correspondiente
-int ejecutaIniciarProceso(char* separada_instruccion, t_cpu* cpu) {
-	//TODO HACK usar un tipo especifico
-	t_iniciar_swap* estructura;
-
-	estructura = ejecuta_IniciarProceso(separada_instruccion, cpu);
-	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
-	enviarStruct(socketMemoria, INICIAR_PROCESO_MEM, estructura);
-	free(estructura);
-	return EXIT_SUCCESS;
-}
-//mandar comando a memoria con los datos y la pagina donde debe ser escrita
-int ejecutaEscribirMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_escribirMem* estructura;
-
-	estructura = ejecuta_EscribirMemoria(separada_instruccion, cpu);
-
-	if (estructura == NULL) {
-		log_error(logger, "[ERROR] no se genero la estructura para enviar EscribirMemoria");
-		return EXIT_FAILURE;
 	}
-	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
-	enviarStruct(socketMemoria, ESCRIBIR_MEM, estructura);
-	free(estructura);
-	return EXIT_SUCCESS;
-}
-//mandar comando a memoria y  el numero de pagina que se debe leer
-int ejecutaLeerMemoria(char* separada_instruccion, t_cpu* cpu) {
-	t_leerMem* estructura ;
 
-	estructura = ejecuta_LeerMemoria(separada_instruccion, cpu);
-	if (estructura == NULL) {
-		log_error(logger, "[ERROR] no se genero la estructura para enviar leerMemoria");
-		return EXIT_FAILURE;
-	}
-	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
-	enviarStruct(socketMemoria, LEER_MEM, estructura);
-	free(estructura);
-	return EXIT_SUCCESS;
 }
-//mandar el comando de finalizar y el respectivo PID IP del proceso
-int ejecutaFinProcesoMemoria(t_cpu* cpu) {
-	t_finalizarProc_Mem* estructura;
-	int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 
-	estructura = ejecuta_FinProcesoMemoria(cpu);
-	enviarStruct(socketMemoria, FIN_PROCESO_MEM, estructura);
-  free(estructura);
-  destHiloCPU(cpu);
-	return EXIT_SUCCESS;
-}
-// mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-int ejecutaEntradaSalida(char* separada_instruccion, t_cpu* cpu) {
-	t_entrada_salida* estructura ;
-	int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
-	estructura =ejecuta_EntradaSalida(separada_instruccion, cpu);
-	enviarStruct(socketPlanificador, ENTRADA_SALIDA, estructura);
-	free(estructura);
-	return EXIT_SUCCESS;
-}

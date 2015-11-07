@@ -155,14 +155,17 @@ int enviarStruct(int fdCliente, t_tipo_mensaje tipoMensaje, void *estructura) {
 	if(existeSerializacion(tipoMensaje)) {
 		return enviarSerializado(fdCliente, tipoMensaje, estructura);
 	} else {
-		char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
-		int longitudMensajeSerializado = strlen(estructuraSerializada);
-
-		//enviamos un header
-		enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
-
-		//enviamos la estructura serializada
-		return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
+		printf("No existe serializacion para el tipoMensaje %s\n", getNombreTipoMensaje(tipoMensaje));
+		exit(-1);
+		return 0;
+//		char* estructuraSerializada = serializarEstructura(tipoMensaje, estructura);
+//		int longitudMensajeSerializado = strlen(estructuraSerializada);
+//
+//		//enviamos un header
+//		enviarHeader(fdCliente, tipoMensaje, estructura, longitudMensajeSerializado);
+//
+//		//enviamos la estructura serializada
+//		return enviarSimple(fdCliente, estructura, longitudMensajeSerializado);
 	}
 }
 
@@ -172,7 +175,7 @@ int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer, t_re
 
 	//deserializamos la estructura
 	if(existeSerializacion(header->tipoMensaje)) {
-		return recibirSerializado(fdCliente, header->tipoMensaje, buffer, resultadoSerializacion);
+		return recibirSerializado(fdCliente, *header, buffer, resultadoSerializacion);
 	} else {
 		void* bufferMsgSerializado = malloc(header->tamanioMensaje);
 		int res = recibirPorSocket(fdCliente, &bufferMsgSerializado, header->tamanioMensaje);
@@ -229,19 +232,18 @@ bool string_equals(char* string1, char* string2) {
 	return strcmp(string1, string2) == 0;
 }
 
-int enviarHeader(int fdCliente, t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
-
-	//creamos el header
-	t_header header = crearHeader(tipoMensaje, msg, longitudMensaje);
-
+int enviarHeader(int fdCliente, t_header header) {
 	return enviarSimple(fdCliente, &header, sizeof(t_header));
 }
 
+int contadorMensajes = 0;
 t_header crearHeader(t_tipo_mensaje tipoMensaje, void *msg, int longitudMensaje) {
 	t_header* header = malloc(sizeof(t_header));
 
 	header->tipoMensaje = tipoMensaje;
 	header->tamanioMensaje = longitudMensaje;
+	header->numeroMensaje = contadorMensajes++;
+	header->nombre = getNombre();
 
 	return *header;
 }
@@ -579,7 +581,6 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						FD_CLR(i, &master); // remove from master set
 					} else {
 						// we got some data from a client
-						printf("Recibi mensaje por socket %d\n", i);
 //						printf("En ascii ");
 //						int var = 0;
 //						for (var = 0; var < string_length(buf); var++) {
@@ -587,11 +588,16 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 //						}
 //						printf("\n");
 						if(i == STDIN_FILENO) {
+							//printf("Recibi mensaje por socket %d\n", i);
 							funcionParaProcesarMensaje(i, NULL, textbuf, TERMINAL_MESSAGE, extra, logger);
 						} else {
 							t_header header;
 							//deserializarMensajeABuffer(HEADER, buf, sizeof(t_header), &header);
 							memcpy(&header, buf, sizeof(t_header));
+							char* nombre = deserializar_string(i);
+							header.nombre = nombre;
+
+							//printf("Recibi mensaje nro. %d por socket %d de %s\n", header.numeroMensaje, i, header.nombre);
 
 							t_resultado_serializacion resultadoSerializacion;
 							recibirStructSegunHeader(i, &header, buf, &resultadoSerializacion);
@@ -688,28 +694,39 @@ void inicializarRegistroSerializadores() {
 		registroSerializadores = dictionary_create();
 
 		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
-		registrarSerializadores(RESUL_EJECUCION_OK, "RESUL_EJECUCION_OK", serializar_RESUL_EJECUCION_OK, deserializar_RESUL_EJECUCION_OK);
 		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
-		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
-		registrarSerializadores(RESUL_INICIAR_PROC_ERROR, "RESUL_INICIAR_PROC_ERROR", serializar_RESUL_INICIAR_PROC_ERROR, deserializar_RESUL_INICIAR_PROC_ERROR);
-		registrarSerializadores(RESUL_ESCRIBIR_OK, "RESUL_ESCRIBIR_OK", serializar_RESUL_ESCRIBIR_OK, deserializar_RESUL_ESCRIBIR_OK);
-		registrarSerializadores(RESUL_ESCRIBIR_ERROR, "RESUL_ESCRIBIR_ERROR", serializar_RESUL_ESCRIBIR_ERROR, deserializar_RESUL_ESCRIBIR_ERROR);
-		registrarSerializadores(RESUL_INICIAR_PROC_OK_CPU, "RESUL_INICIAR_PROC_OK_CPU", serializar_RESUL_INICIAR_PROC_OK_CPU, deserializar_RESUL_INICIAR_PROC_OK_CPU);
-		registrarSerializadores(RESUL_INICIAR_PROC_NO_OK_CPU, "RESUL_INICIAR_PROC_NO_OK_CPU", serializar_RESUL_INICIAR_PROC_NO_OK_CPU, deserializar_RESUL_INICIAR_PROC_NO_OK_CPU);
-		registrarSerializadores(RESUL_LEER_ERROR, "RESUL_LEER_ERROR", serializar_RESUL_LEER_ERROR, deserializar_RESUL_LEER_ERROR);
-		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
-		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
-		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
 		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);
 		registrarSerializadores(LEER_MEM, "LEER_MEM", serializar_LEER_MEM, deserializar_LEER_MEM);
+		registrarSerializadores(ESCRIBIR_MEM, "ESCRIBIR_MEM", serializar_ESCRIBIR_MEM, deserializar_ESCRIBIR_MEM);
+		registrarSerializadores(ESCRIBIR_SWAP, "ESCRIBIR_SWAP", serializar_ESCRIBIR_SWAP, deserializar_ESCRIBIR_SWAP);
+		registrarSerializadores(ENTRADA_SALIDA, "ENTRADA_SALIDA", serializar_ENTRADA_SALIDA, deserializar_ENTRADA_SALIDA);
+		registrarSerializadores(INICIAR_PROCESO_MEM, "INICIAR_PROCESO_MEM", serializar_INICIAR_PROCESO_MEM, deserializar_INICIAR_PROCESO_MEM);
+		registrarSerializadores(FIN_PROCESO_MEM, "FIN_PROCESO_MEM", serializar_FIN_PROCESO_MEM, deserializar_FIN_PROCESO_MEM);
+	//+++++++++++++++++++++++ resultados++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		registrarSerializadores(RESUL_INICIAR_PROC_OK, "RESUL_INICIAR_PROC_OK", serializar_RESUL_INICIAR_PROC_OK, deserializar_RESUL_INICIAR_PROC_OK);
+		registrarSerializadores(RESUL_INICIAR_PROC_ERROR, "RESUL_INICIAR_PROC_ERROR", serializar_RESUL_INICIAR_PROC_ERROR, deserializar_RESUL_INICIAR_PROC_ERROR);
+		registrarSerializadores(RESUL_ESCRIBIR_OK, "RESUL_ESCRIBIR_OK", serializar_RESUL_ESCRIBIR_OK, deserializar_RESUL_ESCRIBIR_OK);
+//		registrarSerializadores(RESUL_ESCRIBIR_ERROR, "RESUL_ESCRIBIR_ERROR", serializar_RESUL_ESCRIBIR_ERROR, deserializar_RESUL_ESCRIBIR_ERROR);
+		registrarSerializadores(RESUL_INICIAR_PROC_OK_CPU, "RESUL_INICIAR_PROC_OK_CPU", serializar_RESUL_INICIAR_PROC_OK_CPU, deserializar_RESUL_INICIAR_PROC_OK_CPU);
+		registrarSerializadores(RESUL_INICIAR_PROC_NO_OK_CPU, "RESUL_INICIAR_PROC_NO_OK_CPU", serializar_RESUL_INICIAR_PROC_NO_OK_CPU, deserializar_RESUL_INICIAR_PROC_NO_OK_CPU);
+//		registrarSerializadores(RESUL_LEER_ERROR, "RESUL_LEER_ERROR", serializar_RESUL_LEER_ERROR, deserializar_RESUL_LEER_ERROR);
+		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
+//		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
+		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
+		registrarSerializadores(RESUL_EJECUCION_OK, "RESUL_EJECUCION_OK", serializar_RESUL_EJECUCION_OK, deserializar_RESUL_EJECUCION_OK);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
 		registrarSerializadores(RESUL_FIN, "RESUL_FIN", serializar_RESUL_FIN, deserializar_RESUL_FIN);
 		registrarSerializadores(RESUL_LEER_OK_CPU, "RESUL_LEER_OK_CPU", serializar_RESUL_LEER_OK_CPU, deserializar_RESUL_LEER_OK_CPU);
-		registrarSerializadores(INICIAR_PROCESO_MEM, "INICIAR_PROCESO_MEM", serializar_INICIAR_PROCESO_MEM, deserializar_INICIAR_PROCESO_MEM);
+		registrarSerializadores(SOBREESCRIBIR_SWAP, "SOBREESCRIBIR_SWAP", serializar_SOBREESCRIBIR_SWAP, deserializar_SOBREESCRIBIR_SWAP);
+		registrarSerializadores(RESUL_SOBREESCRIBIR_OK, "RESUL_SOBREESCRIBIR_OK", serializar_RESUL_SOBREESCRIBIR_OK, deserializar_RESUL_SOBREESCRIBIR_OK);
+		registrarSerializadores(LEER_SWAP_POR_ESCRIBIR, "LEER_SWAP_POR_ESCRIBIR", serializar_LEER_SWAP_POR_ESCRIBIR, deserializar_LEER_SWAP_POR_ESCRIBIR);
+		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, "RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR", serializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, deserializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR);
+		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK, "RESUL_TRAER_PAG_SWAP_OK", serializar_RESUL_TRAER_PAG_SWAP_OK, deserializar_RESUL_TRAER_PAG_SWAP_OK);
+		registrarSerializadores(RESUL_ESCRIBIR, "RESUL_ESCRIBIR", serializar_RESUL_ESCRIBIR, deserializar_RESUL_ESCRIBIR);
+
 	}
 }
-
 
 
 bool existeSerializacion(t_tipo_mensaje tipoMensaje) {
@@ -750,28 +767,33 @@ char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje) {
 int enviarSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
 
-	enviarHeader(fdCliente, tipoMensaje, NULL, 0);
+	//creamos el header
+	t_header header = crearHeader(tipoMensaje, NULL, 0);
+	enviarHeader(fdCliente, header);
+	serializar_string(fdCliente, header.nombre);
 
 	void* funcion = serializacion->funcionSerializacion;
 
-	return ejecutarSerializacion(funcion, fdCliente, tipoMensaje, estructura);
+	return ejecutarSerializacion(funcion, fdCliente, header, estructura);
 }
 
-int recibirSerializado(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura, t_resultado_serializacion* resultadoSerializacion) {
-	t_registro_serializacion* serializacion = getSerializacion(tipoMensaje);
+int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resultado_serializacion* resultadoSerializacion) {
+	t_registro_serializacion* serializacion = getSerializacion(header.tipoMensaje);
 
 	void* funcion = serializacion->funcionDeserializacion;
-	return ejecutarDeserializacion(funcion, fdCliente, tipoMensaje, resultadoSerializacion);
+	return ejecutarDeserializacion(funcion, fdCliente, header, resultadoSerializacion);
 }
 
-int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	(int*)funcion(fdCliente, tipoMensaje, estructura);
+int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_header header, void* estructura) {
+	printf("Envio  %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	(int*)funcion(fdCliente, header.tipoMensaje, estructura);
 	//TODO
 	return 0;
 }
 
-int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_tipo_mensaje tipoMensaje, t_resultado_serializacion* resultadoDeserializacion) {
-	void* resultado = funcion(fdCliente, tipoMensaje);
+int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_header header, t_resultado_serializacion* resultadoDeserializacion) {
+	printf("Recibo %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	void* resultado = funcion(fdCliente, header.tipoMensaje);
 	resultadoDeserializacion -> resultado = resultado;
 	//TODO
 	return 0;

@@ -17,8 +17,8 @@ t_TablaDePaginas* iniciarTablaDePaginas(){
 	return tablaDePag;
 }
 
-t_escrituraProc* iniciarEscrituraProc() {
-	t_escrituraProc* escrituraProc = malloc(sizeof(t_escrituraProc));
+t_contenido_pagina * iniciarEscrituraProc() {
+	t_contenido_pagina * escrituraProc = malloc(sizeof(t_escrituraProc));
 	if (escrituraProc == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarEscrituraProc");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarEscrituraProc");
@@ -47,8 +47,8 @@ t_marco * iniciarMarco() {
 	return marco;
 }
 
-t_config* iniciarArchivoConfig() {
-	t_config* archConf = malloc(sizeof(t_config));
+t_configuracion* iniciarArchivoConfig() {
+	t_configuracion* archConf = malloc(sizeof(t_config));
 	if (archConf == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarArchivoConfig");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarArchivoConfig");
@@ -67,16 +67,25 @@ t_lectura* iniciarLectura() {
 	return lectura;
 }
 
+t_marco_y_bit* iniciarMarcoYBit(){
+	t_marco_y_bit* marcoYBit = malloc(sizeof(t_marco_y_bit));
+	if (marcoYBit == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		exit(-1);
+	}
+	return marcoYBit;
+}
 
 
-t_rtaLecturaCpu* iniciarRtaLecturaCpu(){
-	t_rtaLecturaCpu* rtaLecturaCpu = malloc(sizeof(t_rtaLecturaCpu));
-	if (rtaLecturaCpu == NULL) {
+t_contenido_pagina* iniciarContenidoPagina(){
+	t_contenido_pagina* contenido = malloc(sizeof(t_contenido_pagina));
+	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		exit(-1);
 	}
-	return rtaLecturaCpu;
+	return contenido;
 
 }
 t_iniciar_swap* crearEstructuraIniciar(){
@@ -93,14 +102,13 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
-t_finalizar_swap* crearEstructuraFinalizar(){
-	t_finalizar_swap* contenido = malloc(sizeof(t_finalizar_swap));
+t_PID* crearPID(){
+	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {
 		perror("[ERROR] No se reservo memoria para crearEstructuraFinalizar");
 		log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraFinalizar");
 		exit(-1);
 	}
-	contenido->PID = 0;
 	return contenido;
 }
 

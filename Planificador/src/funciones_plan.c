@@ -81,6 +81,9 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 
 	//creamos la cola de listos
 	colaDeListos = list_create();
+	colaDeNuevos = list_create();
+	colaDeEjecucion = list_create();
+	colaDeEntradaSalida = list_create();
 }
 
 void registrarNuevaCPU(int socket) {
@@ -88,6 +91,8 @@ void registrarNuevaCPU(int socket) {
 	cpu->socket = socket;
 	cpu->nombre = crearNombreCPU();
 	cpu->conectada = true;
+	cpu->ejecutando = false;
+	cpu->pcb = NULL;
 	list_add(listaCPUs, cpu);
 }
 
@@ -152,13 +157,31 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
-
-	void imprimirResultadoInstruccion(void* elemento) {
+int a;
+//t_resultado_instruccion* resultado = malloc(sizeof(t_resultado_instruccion));
+	/*void imprimirResultadoInstruccion(void* elemento) {
 		t_resultado_instruccion* resultado = (t_resultado_instruccion*) elemento;
 		printConsola("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
 	}
 	list_iterate(respuestaEjecucion->resultadosInstrucciones, imprimirResultadoInstruccion);
-
+*/  //warning asignacion incorrecta, es cierto yo jorge, cambie el tipo de dato, entonces corrijo  ahora es un char* no una lista
+	for(a=0 ; a < strlen(respuestaEjecucion->resultadosInstrucciones); a++){
+	//	resultado = list_get(respuestaEjecucion->resultadosInstrucciones, a);
+	//	printf("Inst: %s\nResp: %s;\n", resultado->comandoInstruccion, resultado->expresion);
+	}
 	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk?"Si":"No");
+	char** respuestaDeCadaInstruccion = string_split(respuestaEjecucion->resultadosInstrucciones, "\0");
+	int b;
+	a = 0;
+		b = 0;
+		while (respuestaDeCadaInstruccion[a] != NULL) {
+			char** respuestaDeUnaInstruccion = string_split(respuestaDeCadaInstruccion[a], ";");
+			while (respuestaDeUnaInstruccion[b] != NULL) {
+				printConsola("%s\n", respuestaDeUnaInstruccion[b]);
+				b++;
+			}
+			a++;
+
+	 	}
 
 }

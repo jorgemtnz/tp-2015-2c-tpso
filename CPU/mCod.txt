@@ -1,5 +1,5 @@
 iniciar 1;
 escribir 1 "hola";
 leer 1;
-entrada-salida 500
+entrada-salida 500;
 finalizar;

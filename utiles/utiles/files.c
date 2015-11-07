@@ -158,3 +158,9 @@ char *dame_md5(char *archivo){
 	strcpy(resultado,result);
 	return resultado;
 }
+
+int file_get_size(char* filename){
+	struct stat st;
+	stat(filename, &st);
+	return st.st_size;
+}

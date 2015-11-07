@@ -1,188 +1,37 @@
 #include "Swap.h"
 
-	t_list* listaDeProcesosCargados;
-	t_list* listaDeEspaciosLibres;
-t_dictionary* conexiones;
 int main(int argc, char *argv[]) {
+	l_procesosCargados* proceso;
+	proceso = crearProceso();
+	l_espacioLibre* espacioLibre;
+	espacioLibre = crearEspacioLibre();
 	conexiones = dictionary_create();
 
 	logger = log_create("LOG_SWAP.log", "Swap", false, LOG_LEVEL_INFO); //Inicializacion logger
 	leerArchivoDeConfiguracion(argc, argv);
-
+	inicializarListas();
 	crearArchivo();
-
-	//empieza prueba(NO BORRAR)
-
-	int a;
-	l_procesosCargados* proceso;
-	l_espacioLibre* espacioLibre;
-	l_espacioLibre* espacioLibre2;
-	l_espacioLibre* espacioLibre3;
-	t_iniciar_swap* estructuraIniciar;
-	t_iniciar_swap* estructuraIniciar3;
-	t_iniciar_swap* estructuraIniciar4;
-	t_iniciar_swap* estructuraIniciar5;
-	estructuraIniciar = crearEstructuraIniciar();
-	estructuraIniciar3 = crearEstructuraIniciar();
-	estructuraIniciar4 = crearEstructuraIniciar();
-	estructuraIniciar5 = crearEstructuraIniciar();
-	proceso = crearProceso();
-	espacioLibre = crearEspacioLibre();
-	espacioLibre2 = crearEspacioLibre();
-	espacioLibre3 = crearEspacioLibre();
-
-	listaDeEspaciosLibres = list_create();
-	listaDeProcesosCargados = list_create();
-	estructuraIniciar->PID = 2;
-	estructuraIniciar3->PID = 3;
-	estructuraIniciar4->PID = 5;
-	estructuraIniciar5->PID = 6;
-	estructuraIniciar->cantidadPaginas = 8;
-	estructuraIniciar3->cantidadPaginas = 5;
-	estructuraIniciar4->cantidadPaginas = 15;
-	estructuraIniciar5->cantidadPaginas = 3;
-	t_escribirEnProceso* procesoAEscribir;
-	procesoAEscribir = crearEscribirEnProceso();
-	t_leerDeProceso *procesoRecibido;
-	procesoRecibido = crearLeerDeProceso();
+	if (hayQueEjecutarTests(argc, argv)) {
+		return ejecutarTests();
+	}
 
 	escucharConexiones(string_itoa(configuracion->puertoEscucha), 0, 0, 0, procesarMensajes, NULL, logger);
-	/*
-	 prueba para borrar el contenido mapeado cuando se va un proceso
-	 iniciar(cantidadPaginas, listaDeEspaciosLibres, listaDeProcesosCargados, pid);
-	 procesoAEscribir->PID = pid;
-	 procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
-	 procesoAEscribir->numeroPagina = 1;
 
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-	 finalizar(pid, listaDeProcesosCargados, listaDeEspaciosLibres);
-	 procesoRecibido->numeroPaginaFin = 2;
-	 procesoRecibido->numeroPaginaInicio = 1;
-	 procesoRecibido->PID = pid;
-
-
-	 char* datosLeidos4 = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 printf("los datos leidos : %s\n", datosLeidos4);
-
-	 */
-	/*
-	 iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	 iniciar(estructuraIniciar3, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	 iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	 finalizar(&estructuraIniciar3->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
-
-	 iniciar(estructuraIniciar5, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	 finalizar(&estructuraIniciar5->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "HOLA DON PEPITO HOLA DON JOSE";
-	 procesoAEscribir->numeroPagina = 5;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "PASO USTED POR MI CASA , POR SU CASA YO PASE";
-	 procesoAEscribir->numeroPagina = 6;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "los wachiturros";
-	 procesoAEscribir->numeroPagina = 10;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "que tp del ortooo";
-	 procesoAEscribir->numeroPagina = 9;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 finalizar(&estructuraIniciar4->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
-
-	 iniciar(estructuraIniciar4, listaDeEspaciosLibres, listaDeProcesosCargados);
-
-	 procesoRecibido->numeroPaginaFin = 10;
-	 procesoRecibido->numeroPaginaInicio = 10;
-	 procesoRecibido->PID = estructuraIniciar4->PID;
-
-	 char* datosLeidos5 = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 printf("los datos leidos5 : %s\n", datosLeidos5);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "my name is juan";
-	 procesoAEscribir->numeroPagina = 11;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoRecibido->PID = estructuraIniciar4->PID;
-	 procesoRecibido->numeroPaginaFin = 12;
-	 procesoRecibido->numeroPaginaInicio = 11;
-
-	 char* datosLeidos = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "lalalalallalalalallaa";
-	 procesoAEscribir->numeroPagina = 6;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "nose que poneer";
-	 procesoAEscribir->numeroPagina = 7;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoAEscribir->PID = estructuraIniciar4->PID;
-	 procesoAEscribir->contenido = "pepepepeppepee";
-	 procesoAEscribir->numeroPagina = 8;
-
-	 escribir(listaDeProcesosCargados, procesoAEscribir);
-
-	 procesoRecibido->numeroPaginaFin = 9;
-	 procesoRecibido->numeroPaginaInicio = 6;
-
-	 char* datosLeidos2 = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 procesoRecibido->numeroPaginaFin = 6;
-	 procesoRecibido->numeroPaginaInicio = 6;
-
-	 char* datosLeidos3 = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 procesoRecibido->numeroPaginaFin = 11;
-	 procesoRecibido->numeroPaginaInicio = 10;
-
-	 char* datosLeidos4 = leer(procesoRecibido, listaDeProcesosCargados);
-
-	 printf("los datos leidos : %s\n", datosLeidos);
-	 printf("los datos leidos2 : %s\n", datosLeidos2);
-	 printf("los datos leidos3 : %s\n", datosLeidos3);
-	 printf("los datos leidos4 : %s \n", datosLeidos4);
-	 */
-	printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
-	for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
-		proceso = list_get(listaDeProcesosCargados, a);
-		printf("\n\n");
-		printf("el pid :  %i\n", proceso->PID);
-		printf("la ubicacion es : %i\n", proceso->ubicacion);
-		printf("cantidad paginas : %i \n", proceso->cantPagsUso);
-
+	free(configuracion);
+	free(logger);
+	while (list_size(listaDeProcesosCargados) > 0) {
+		proceso = list_get(listaDeProcesosCargados, 0);
+		list_remove(listaDeProcesosCargados, 0);
+		free(proceso);
 	}
-	for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
-		espacioLibre = list_get(listaDeEspaciosLibres, a);
-		printf("\nempieza espacio libre\n\n\n");
-		printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
-		printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
-
+	while (list_size(listaDeEspaciosLibres) > 0) {
+		espacioLibre = list_get(listaDeEspaciosLibres, 0);
+		list_remove(listaDeEspaciosLibres, 0);
+		free(espacioLibre);
 	}
 
-	//termina prueba
+	free(listaDeEspaciosLibres);
+	free(conexiones);
 
 	return EXIT_SUCCESS;
 }
@@ -190,10 +39,8 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
-//	t_list* listaDeProcesosCargados;
-//	t_list* listaDeEspaciosLibres;
-//	listaDeEspaciosLibres = list_create();
-//	listaDeProcesosCargados = list_create();
+	t_PID* pid_a_enviar;
+	pid_a_enviar = crearEstructuraPid();
 
 	switch (tipoNotificacion) {
 	case (NEW_CONNECTION): {
@@ -208,54 +55,135 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		case (INICIAR_PROC_SWAP): {
 
 			t_iniciar_swap* estructuraIniciar = (t_iniciar_swap*) buffer;
-			printf("el pid recibido %i  y cantidad de pag %i \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
-			iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados, socket);
+			//printf("el pid recibido %i  y cantidad de pag %i  \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
+			t_respuesta_iniciar_o_finalizar* resultado;
+			t_iniciar_swap* estructuraAEnviar = crearEstructuraIniciar();
+			resultado = crearDevolucionIniciarOFinalizar();
+			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
+			estructuraAEnviar->PID = resultado->PID;
+			estructuraAEnviar->cantidadPaginas = estructuraIniciar->cantidadPaginas;
+			if (resultado->resultado == OK) {
 
-
-			//EMPIEZA PRUEBA
-			int a;
-			l_procesosCargados* proceso;
-			l_espacioLibre* espacioLibre;
-
-			espacioLibre = crearEspacioLibre();
-
-			printf("\nEMPIEZA LISTA DE PROCESOS\n\n");
-
-			for (a = 0; a < list_size(listaDeProcesosCargados); a++) {
-				proceso = list_get(listaDeProcesosCargados, a);
-				printf("\n\n");
-				printf("el pid :  %i\n", proceso->PID);
-				printf("la ubicacion es : %i\n", proceso->ubicacion);
-				printf("cantidad paginas : %i \n", proceso->cantPagsUso);
-
+				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
+			} else {
+				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
-			printf("lista %i \n", list_size(listaDeEspaciosLibres));
-			for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
-				espacioLibre = list_get(listaDeEspaciosLibres, a);
 
-				printf("\nempieza espacio libre\n\n\n");
-				printf("ubicacion espacio libre : %i \n", espacioLibre->ubicacion);
-				printf("cant pag libres :  %i\n", espacioLibre->cantPagsLibres);
-
-			}
-			//TERMINA PRUEBA
+			free(estructuraIniciar);
+			free(resultado);
 			break;
 		}
 		case (ESCRIBIR_SWAP): {
-			t_escribirEnProceso* procesoAEscribir = (t_escribirEnProceso*) buffer;
-			escribir(listaDeProcesosCargados, procesoAEscribir, socket);
+			//conviene hacerlo en la misma linea
+			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
+			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
+			t_contenido_pagina* paginaAEnviar=  crearContenidoPagina();
+			//warning no se usa variable, entonces comento
+//			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
+
+			borrarContenidoPagina(procesoAEscribir);
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+
+			if (resultado->resultado == OK) {
+
+				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
+			} else {
+				log_info(logger, "FALLO EL ESCRIBIR");
+			}
+			free(procesoAEscribir);
+			free(resultado);
+			free(paginaAEnviar);
 			break;
 		}
 		case (LEER_SWAP): {
 			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
-			leer(procesoRecibido, listaDeProcesosCargados, socket);
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+			resultado = leer(procesoRecibido, listaDeProcesosCargados);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+			if (resultado->resultado == OK) {
+				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
+			} else {
+				log_info(logger, "FALLO EL LEER");
+			}
+			free(procesoRecibido);
+			free(resultado);
+			free(paginaAEnviar);
+			break;
+		}
+		case(LEER_SWAP_POR_ESCRIBIR):{
+			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
+					t_devolucion_escribir_o_leer* resultado;
+					t_contenido_pagina* paginaAEnviar;
+					paginaAEnviar = crearContenidoPagina();
+					resultado = crearDevolucionEscribirOLeer();
+					resultado = leer(procesoRecibido, listaDeProcesosCargados);
+					paginaAEnviar->PID = resultado->PID;
+					paginaAEnviar->contenido = resultado->contenido;
+					paginaAEnviar->numeroPagina = resultado->numeroPagina;
+					if (resultado->resultado == OK) {
+						enviarStruct(socket, RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, paginaAEnviar);
+					} else {
+						log_info(logger, "FALLO EL LEER");
+					}
+					free(procesoRecibido);
+					free(resultado);
+					free(paginaAEnviar);
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {
-			t_finalizar_swap* estructuraFinalizar = (t_finalizar_swap*) buffer;
-			finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres, socket);
+			t_PID* estructuraFinalizar = (t_PID*) buffer;
+			t_respuesta_iniciar_o_finalizar* resultado;
+			resultado = crearDevolucionIniciarOFinalizar();
+			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+			pid_a_enviar->PID = resultado->PID;
+			if (resultado->resultado == OK) {
+				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
+			} else {
+				log_info(logger, "FALLO EL FINALIZAR");
+			}
+			free(estructuraFinalizar);
+			free(resultado);
 			break;
 		}
+		case (SOBREESCRIBIR_SWAP): {
+			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
+			t_devolucion_escribir_o_leer* resultado;
+			t_contenido_pagina* paginaAEnviar;
+			t_contenido_pagina* paginaEnBlanco;
+			paginaEnBlanco = crearContenidoPagina();
+			paginaAEnviar = crearContenidoPagina();
+			resultado = crearDevolucionEscribirOLeer();
+
+			borrarContenidoPagina(procesoAEscribir);
+
+			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
+
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->contenido = resultado->contenido;
+			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+
+			if (resultado->resultado == OK) {
+
+				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
+			} else {
+				log_info(logger, "FALLO EL SOBREESCRIBIR");
+			}
+			free(procesoAEscribir);
+			free(resultado);
+			free(paginaAEnviar);
+			free(paginaEnBlanco);
+			break;
+		}
+		default: printf("mensaje no valido");
 
 		}
 		break;
@@ -264,5 +192,15 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		break;
 	}
 	}
+
+	free(pid_a_enviar);
 	return 0;
+}
+
+char* decirHolaMundo() {
+	return "Hola Mundo";
+}
+
+char* getNombre() {
+	return "Swap";
 }

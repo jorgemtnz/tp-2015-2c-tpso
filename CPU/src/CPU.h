@@ -8,11 +8,12 @@
 #ifndef CPU_H_
 #define CPU_H_
 // +++++++++++++++++++++++++++++++++++++++ Includes +++++++++++++++++++++++++++++++++++++
+#include "../test/test.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>  // read write
+#include <unistd.h>  // read write  /* para STDIN_FILENO */
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,11 +27,12 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 #include <utiles/configExtras.h>
 #include<utiles/espacioDeDatos.h>
 #include<utiles/mapeoAMemoria.h>
 #include<utiles/protocolo.h>
+#include<utiles/files.h>
 
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
@@ -50,14 +52,10 @@
 //--------------------------------estructura para manejar las instrucciones en el CPU----------------
 typedef struct {
 	char** instruccion_separada;  //arreglo de instruccion separada en palabras, separado el token del resto de la instruccion
-	char* ptrComienzoInstruccion;  // puntero al comienzo de la instruccion
-
 } t_instruccion;
 
 typedef struct {
-	char** bufferInstrucciones; // son todas las instrucciones ya separadas por barra n
-	char* ptrCMemoriaMap; // puntero al comienzo de la memoria mapeada
-	uint16_t ptrTamPagina;	// puntero al tamaño de página,este parametro lo necesito para desmapear posteriormente
+	char** bufferInstrucciones; // son todas las instrucciones sin barra n ni punto y coma
 	uint8_t cantidadInstrucciones;  // cantidad de instrucciones a ejecutar
 	t_respuesta_ejecucion* respEjec; //resultado de las rafagas
 } t_mCod;
@@ -83,6 +81,9 @@ typedef struct {
 	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
 	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
+    char* nombre;
+    void* respuestaInstruccion;  //para la estructura de respuesta de la instruccion ejecutada
+    void* estructuraSolicitud;  //para la estructura que se envia a memoria
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -95,13 +96,13 @@ typedef struct {
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
-t_resultado_instruccion* creaResultadoInstruccion();
 t_respuesta_ejecucion* creaRespuestaEjecucion();
 t_instruccion* creaInstruccion();
 t_mCod* crearmCod();
 t_configuracion* crearConfiguracion();
 t_cpu* crearCPU();
 t_ProcCPU* crearProcCPU();
+t_pcb * crearPcb();
 
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
@@ -113,61 +114,45 @@ void destProcCPU(t_ProcCPU* unCPU);
 void destInstruccion(t_instruccion* unaInstruccion);
 void destVectorInstruccion(char** vectorInstruccion);
 void destIniciarSwap(t_iniciar_swap* estructura);
-void destEscrMem(t_escribirMem* estruc);
+void destEscrMem(t_contenido_pagina* estruc);
 void destEntradSalid(t_entrada_salida* entradSalid );
-void destResInstruc(t_resultado_instruccion* resultInstrucc);
 void destRespEjec(t_respuesta_ejecucion* respEjec);
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares y ejecucion y ejecucionResult
 //============================================================================
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
-int ejecutar(int token, char* separada_instruccion, t_cpu*  cpu);
-int leerInstruccion(char** instruccion, t_cpu* cpu);
+void  ejecutar(int token, char** separada_instruccion, t_cpu*  cpu);
 int descargaProcesoCPU(t_mCod* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
 
-t_iniciar_swap* ejecuta_IniciarProceso(char* separada_instruccion, t_cpu* cpu);
-t_escribirMem* ejecuta_EscribirMemoria(char* separada_instruccion, t_cpu* cpu);
-t_leerMem* ejecuta_LeerMemoria(char* separada_instruccion, t_cpu* cpu);
-t_finalizarProc_Mem* ejecuta_FinProcesoMemoria(t_cpu* cpu);
-t_entrada_salida*  ejecuta_EntradaSalida(char* separada_instruccion, t_cpu* cpu);
-
-int ejecutaResultError(t_cpu* cpu);
-int  ejecutaResultEscribir(t_cpu* cpu);
-int  ejecutaResulFin(t_cpu* cpu);
-int ejecutaResulIniciarProcOK(t_cpu* cpu) ;
-int ejecutaResulIniciarProc_NO_OK(t_cpu* cpu) ;
-int  ejecutaResulInstrEjec(t_cpu* cpu);
-int ejecutaResultLeerOK(t_cpu* cpu, char* contenido);
-int ejecutaResulLeerError(t_cpu* cpu);
-int  ejecutaResulOk(t_cpu* cpu);
+void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_FinProcesoMemoria(t_cpu* cpu);
+void resultadoAlPlanificador( t_cpu* cpu);
+t_entrada_salida*  ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
+int putsConsola (const char *msg) ;
+t_cpu* ejecutarResul_Fin(t_cpu* cpu);
+char* queCPUsoy(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
-void leerArchivoDeConfiguracion();
-int cargaProcesoaCPU(char* dirArchivo, t_mCod* mCodCPU);
+void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void levantarHilosCPU();
 int hiloCPU();
-int ejecutaInstrucciones( t_cpu* cpu);
-int ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
-int ejecutaInstruccion(int token, char* separada_instruccion, t_cpu* cpu);
-int preparaCPU(t_pcb* pcbPlanificador);
-int procesaCodigo(t_cpu* cpu);
+
+void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
+int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu);
+void procesaCodigo(t_cpu* cpu);
 
 //++++++++++++++++++++++++++++++++++++funciones envio por comando ejecutado en CPU+++++++++++++++++++++++++++++++++++++++
-
-int ejecutaIniciarProceso(char* separada_instruccion,  t_cpu* cpu );
-int ejecutaEscribirMemoria(char* separada_instruccion,  t_cpu* cpu);
-int ejecutaLeerMemoria(char* separada_instruccion,  t_cpu* cpu);
-int ejecutaFinProcesoMemoria( t_cpu* cpu) ;
-int ejecutaEntradaSalida(char* separada_instruccion,  t_cpu* cpu);
 
 //========================================================================================
 //++++++++++++++++++++++++++++++++++++Funciones recepcion y envio a planificador++++++++++++++++++++
 int procesarMensajes(int socket, t_header* , char* buffer, t_tipo_notificacion , void* extra, t_log* );
-int recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
+void recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
@@ -175,10 +160,13 @@ int recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
 t_configuracion* configuracion;
 t_log* logger; //VG del logger
 t_ProcCPU* procCPU;  //proceso CPU que controla la lista de los hilos CPU
-
+char* resultadoFinal;
 
 
 t_equipo* un;
 t_dictionary* conexiones;
+
+//test
+char* decirHolaMundo();
 
 #endif /* CPU_H_ */
