@@ -92,9 +92,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				log_info(logger, "leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
-				t_leerDeProceso* estructuraLeer;
-				estructuraLeer = crearEstructuraLeer();
-				leer(estructuraLeer->PID, estructuraLeer->numeroPaginaInicio,
+				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
 						socketSwap, socketCPU);
 
 				break;
