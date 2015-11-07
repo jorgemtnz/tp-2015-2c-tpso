@@ -139,7 +139,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
-void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc,int nroPag,int socketSwap);
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc,int nroPag, char* textoAEscribir,int socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenidoACargar,int pagACargar, int flagEscritura);

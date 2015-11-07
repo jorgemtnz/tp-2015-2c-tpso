@@ -135,3 +135,16 @@ t_leerDeProceso* crearEstructuraLeer(){
 		contenido->numeroPaginaInicio = 0;
 		return contenido;
 }
+
+t_leerDeProcesoPorEscribir* crearEstructuraLeerProcesoPorEscribir(){
+	t_leerDeProcesoPorEscribir* contenido = malloc(sizeof(t_leerDeProcesoPorEscribir));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para crearEstructuraLeerProcesoPorEscribir");
+			log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraLeerProcesoPorEscribir");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->numeroPaginaFin = 0;
+		contenido->numeroPaginaInicio = 0;
+		return contenido;
+}

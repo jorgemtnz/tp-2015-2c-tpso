@@ -128,7 +128,17 @@ typedef struct {
 	uint8_t PID;
 	uint8_t numeroPaginaInicio;
 	uint8_t numeroPaginaFin;
+	char* textoAEscribir;
 } t_leerDeProceso;
+
+typedef struct {
+	uint8_t PID;
+	uint8_t numeroPaginaInicio;
+	uint8_t numeroPaginaFin;
+	char* textoAEscribir;
+} t_leerDeProcesoPorEscribir;
+
+
 
 typedef struct {
 	uint8_t PID;
@@ -233,7 +243,13 @@ void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, t_PID* estructura);
 t_PID* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+
+t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura);
+
+
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
+
 
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

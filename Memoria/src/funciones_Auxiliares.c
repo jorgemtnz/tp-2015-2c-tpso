@@ -569,13 +569,14 @@ void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag, int socketSwap) {
 	estructura->numeroPaginaInicio = nroDePag;
 	enviarStruct(socketSwap, LEER_SWAP, estructura);
 }
-void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag,
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag, char* textoAEscribir,
 		int socketSwap) {
-	t_leerDeProceso* estructura;
-	estructura = crearEstructuraLeer();
+	t_leerDeProcesoPorEscribir* estructura;
+	estructura = crearEstructuraLeerProcesoPorEscribir();
 	estructura->PID = idProc;
 	estructura->numeroPaginaFin = nroPag;
 	estructura->numeroPaginaInicio = nroPag;
+	estructura->textoAEscribir = textoAEscribir;
 	enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
 }
 

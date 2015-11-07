@@ -300,6 +300,25 @@ t_entrada_salida* deserializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipo
 	return estructura;
 }
 
+
+
+void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+	serializar_int8_t(fdCliente, estructura->numeroPaginaFin);
+	serializar_int8_t(fdCliente, estructura->numeroPaginaInicio);
+	serializar_string(fdCliente, estructura->textoAEscribir);
+
+	return 0;
+}
+t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_leerDeProcesoPorEscribir* estructura = malloc(sizeof(t_leerDeProcesoPorEscribir));
+	estructura->PID = deserializar_int8_t(fdCliente);
+	estructura->numeroPaginaFin = deserializar_int8_t(fdCliente);
+	estructura->numeroPaginaInicio = deserializar_int8_t(fdCliente);
+	estructura->textoAEscribir = deserializar_string(fdCliente);
+	return estructura;
+}
+
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProceso* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);
 	serializar_int8_t(fdCliente, estructura->numeroPaginaFin);
