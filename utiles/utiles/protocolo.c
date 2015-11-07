@@ -281,6 +281,14 @@ void* deserializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
 }
 
+void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, t_respuesta_porcentaje*  estructura){
+	serializar_int8_t(fdCliente, *estructura->res_porcentaje );
+}
+void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		){
+	t_respuesta_porcentaje* estructura = malloc(sizeof(t_respuesta_porcentaje));
+	estructura->res_porcentaje = deserializar_int8_t(fdCliente);
+	return estructura ;
+}
 
 
 void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura) {

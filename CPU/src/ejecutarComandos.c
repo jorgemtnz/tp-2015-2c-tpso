@@ -76,3 +76,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 			cpu->mCodCPU->respEjec);
 ///	free(cpu->mCodCPU->respEjec);
 }
+
+void pedirTiempo(uint8_t* res_porcentaje){
+
+}

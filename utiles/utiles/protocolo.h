@@ -137,13 +137,6 @@ typedef struct {
 	char* textoAEscribir;
 } t_leerDeProcesoPorEscribir;
 
-
-
-typedef struct {
-	uint8_t PID;
-	char* expresion;
-} t_entrada_salida;
-
 typedef struct {
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 	char* resultadosInstrucciones;
@@ -151,6 +144,9 @@ typedef struct {
 	uint8_t cant_entrada_salida;// vale 0 si no hay que hacer entrada salida
 } t_respuesta_ejecucion;
 
+typedef struct {
+	uint8_t* res_porcentaje;
+}t_respuesta_porcentaje;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
@@ -229,11 +225,6 @@ void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
-void serializar_t_entrada_salida(int fdCliente, t_tipo_mensaje tipoMensaje,
-		t_entrada_salida* estructura);
-t_entrada_salida* deserializar_t_entrada_salida(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
-
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
 t_PID* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
@@ -249,7 +240,9 @@ void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMe
 
 
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
-
+void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
+		t_respuesta_porcentaje* estructura);
+void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		);
 
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

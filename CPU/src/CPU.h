@@ -134,6 +134,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
+void pedirTiempo(uint8_t* res_porcentaje);
 t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 char* queCPUsoy(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
