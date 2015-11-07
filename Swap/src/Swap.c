@@ -119,14 +119,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			break;
 		}
 		case(LEER_SWAP_POR_ESCRIBIR):{
-			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
+			t_leerDeProcesoPorEscribir* procesoRecibido = (t_leerDeProcesoPorEscribir*) buffer;
 					t_devolucion_escribir_o_leer* resultado;
 					t_contenido_pagina* paginaAEnviar;
+					t_leerDeProceso* procesoALeer;
+					procesoALeer = crearLeerDeProceso();
+					procesoALeer->PID = procesoRecibido->PID;
+					procesoALeer->numeroPaginaFin = procesoRecibido->numeroPaginaFin;
+					procesoALeer->numeroPaginaInicio = procesoRecibido->numeroPaginaInicio;
 					paginaAEnviar = crearContenidoPagina();
 					resultado = crearDevolucionEscribirOLeer();
-					resultado = leer(procesoRecibido, listaDeProcesosCargados);
+					resultado = leer(procesoALeer, listaDeProcesosCargados);
 					paginaAEnviar->PID = resultado->PID;
-					paginaAEnviar->contenido = resultado->contenido;
+					paginaAEnviar->contenido = procesoRecibido->textoAEscribir;
 					paginaAEnviar->numeroPagina = resultado->numeroPagina;
 					if (resultado->resultado == OK) {
 						enviarStruct(socket, RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, paginaAEnviar);

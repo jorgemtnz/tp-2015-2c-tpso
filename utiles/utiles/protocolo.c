@@ -118,13 +118,13 @@ void* deserializar_RESUL_SOBREESCRIBIR_OK(int fdCliente, t_tipo_mensaje tipoMens
 void* serializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_LEER_SWAP_POR_ESCRIBIR");
 	//serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
-	serializar_t_leerDeProceso(fdCliente, tipoMensaje, estructura);
+	serializar_t_leerDeProcesoPorEscribir(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 void* deserializar_LEER_SWAP_POR_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	//t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 	//puts("Deserializando deserializar_LEER_SWAP_POR_ESCRIBIR");
-	t_leerDeProceso* estructura = deserializar_t_leerDeProceso(fdCliente, tipoMensaje);
+	t_leerDeProcesoPorEscribir* estructura = deserializar_t_leerDeProcesoPorEscribir(fdCliente, tipoMensaje);
 	return estructura;
 }
 
@@ -279,6 +279,25 @@ void serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* 
 
 void* deserializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
+}
+
+
+
+void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura) {
+	serializar_int8_t(fdCliente, estructura->PID);
+	serializar_int8_t(fdCliente, estructura->numeroPaginaFin);
+	serializar_int8_t(fdCliente, estructura->numeroPaginaInicio);
+	serializar_string(fdCliente, estructura->textoAEscribir);
+
+	return 0;
+}
+t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_leerDeProcesoPorEscribir* estructura = malloc(sizeof(t_leerDeProcesoPorEscribir));
+	estructura->PID = deserializar_int8_t(fdCliente);
+	estructura->numeroPaginaFin = deserializar_int8_t(fdCliente);
+	estructura->numeroPaginaInicio = deserializar_int8_t(fdCliente);
+	estructura->textoAEscribir = deserializar_string(fdCliente);
+	return estructura;
 }
 
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProceso* estructura) {

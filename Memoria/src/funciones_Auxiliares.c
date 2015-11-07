@@ -522,7 +522,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
-	lecturaMandarCpu->contenido = contenido;
+	string_append(&lecturaMandarCpu->contenido , contenido);
 
 	if (flagEscritura == 0) {
 		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
@@ -531,7 +531,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		t_contenido_pagina * escrituraSwap;
 		escrituraSwap = iniciarContenidoPagina();
 		escrituraSwap->PID = lecturaMandarCpu->PID;
-		escrituraSwap->contenido = lecturaMandarCpu->contenido;
+		string_append(&escrituraSwap->contenido , lecturaMandarCpu->contenido);
 		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
 		enviarRtaEscribirACPU(escrituraSwap, socketCPU);
 	}
@@ -567,16 +567,16 @@ void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag, int socketSwap) {
 	estructura->PID = idProc;
 	estructura->numeroPaginaFin = nroDePag;
 	estructura->numeroPaginaInicio = nroDePag;
-	printf("a\n");
 	enviarStruct(socketSwap, LEER_SWAP, estructura);
 }
-void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag,
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc, int nroPag, char* textoAEscribir,
 		int socketSwap) {
-	t_leerDeProceso* estructura;
-	estructura = crearEstructuraLeer();
+	t_leerDeProcesoPorEscribir* estructura;
+	estructura = crearEstructuraLeerProcesoPorEscribir();
 	estructura->PID = idProc;
 	estructura->numeroPaginaFin = nroPag;
 	estructura->numeroPaginaInicio = nroPag;
+	string_append(&estructura->textoAEscribir,textoAEscribir);
 	enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
 }
 
@@ -602,8 +602,7 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
-	//warning no se usa, ojo se declara y se pide memoria en la misma linea, entonces se comenta
-//	t_marco * campoMemoria1 = iniciarMarco();
+	t_marco * campoMemoria1 = iniciarMarco();
 
 	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag1);
@@ -681,40 +680,36 @@ t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 	return estructuraEnvio;
 }
 
-t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir,
-		int socketSwap) {
-	// 1 -ver si estan en memoria y ponerle el bit de modificada
-	// 2- si no esta mandar a escribir a swap
+t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
+		int socketCPU) {
 
 	t_contenido_pagina * escritura;
-	//warning incompatible la asignacion
-	//t_escrituraProc* iniciarEscrituraProc()  y escritura es otro puntero
-	//se debe corregir, se corrige tomando de protocolo.h
-	escritura = iniciarEscrituraProc();
-	t_marco_y_bit* ptr_marco_bit = malloc(sizeof(t_marco_y_bit));
+	escritura = iniciarContenidoPagina();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+	t_escribir_falso* estructuraDevolucionEscribirFalso;
+	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
-	//warning incompatible la asignacion
-	// t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag)   y idMarco es un int
-	//se debe corregir
-	//veo si esta en un marco de memoria
-	ptr_marco_bit = buscarSiEstaEnMemoria(idProc, nroPag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag);
 
-	if (ptr_marco_bit->idMarco < 0) {
-		// 2
-		escritura->numeroPagina = nroPag;
-		escritura->PID = idProc;
-		escritura->contenido = textoAEscribir;
+	escritura->numeroPagina = nroPag;
+	escritura->PID = idProc;
+	escritura->contenido = textoAEscribir;
 
-		return escritura;
+	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
+		//sleep(configuracion->retardoMemoria);
+		estructuraDevolucionEscribirFalso->PID = idProc;
+		estructuraDevolucionEscribirFalso->pagina = nroPag;
+		estructuraDevolucionEscribirFalso->socketSwap = socketSwap;
+
+		return estructuraDevolucionEscribirFalso;
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(ptr_marco_bit->idMarco,
+		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco,
 				textoAEscribir);
-		escritura->numeroPagina = nroPag;
-		escritura->PID = idProc;
-		escritura->contenido = textoAEscribir;
 
-		return escritura;
+		estructuraDevolucionEscribirFalso->contenido = textoAEscribir;
+		return estructuraDevolucionEscribirFalso;
 	}
 
 }

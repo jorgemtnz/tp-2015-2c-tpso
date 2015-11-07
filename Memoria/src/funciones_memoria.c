@@ -104,12 +104,12 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
-	escritura->contenido = textoAEscribir;
+	string_append(&escritura->contenido ,textoAEscribir);
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
 		//sleep(configuracion->retardoMemoria);
-		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, socketSwap);
+		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag,textoAEscribir, socketSwap);
 
 	} else {	// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco,
