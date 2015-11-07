@@ -102,6 +102,17 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
+
+t_escribir_falso* crearEscribirFalso(){
+	t_escribir_falso* contenido = malloc(sizeof(t_escribir_falso));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para crearEscribirFalso");
+		log_error(logger, "[ERROR] No se reservo memoria para crearEscribirFalso");
+		exit(-1);
+	}
+	return contenido;
+}
+
 t_PID* crearPID(){
 	t_PID* contenido = malloc(sizeof(t_PID));
 	if (contenido == NULL) {

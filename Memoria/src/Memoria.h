@@ -100,6 +100,14 @@ typedef struct {
 	pid_t idProc;
 }t_finalizarProc;
 
+typedef struct {
+	int PID;
+	int pagina;
+	int socketSwap;
+	int idMarco;
+	char* contenido;
+}t_escribir_falso;
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
@@ -163,7 +171,7 @@ void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
 
 void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura,int socketCPU, int socketSwap);
-t_contenido_pagina* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap);
+t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap,int socketCPU);
 t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
 //warning no definido en test_memoria.c , entonces lo agrego aca.
@@ -174,6 +182,7 @@ t_leerDeProceso* crearEstructuraLeer();
 t_contenido_pagina* iniciarContenidoPagina();
 //warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
 t_contenido_pagina * iniciarEscrituraProc() ;
+t_escribir_falso* crearEscribirFalso();
 
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
