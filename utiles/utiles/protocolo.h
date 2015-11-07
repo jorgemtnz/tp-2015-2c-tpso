@@ -131,15 +131,10 @@ typedef struct {
 } t_leerDeProceso;
 
 typedef struct {
-	uint8_t PID;
-	char* expresion;
-} t_entrada_salida;
-
-typedef struct {
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
 	char* resultadosInstrucciones;
 	bool finalizoOk;
-	uint8_t cant_entrada_salida;
+	uint8_t cant_entrada_salida;// vale 0 si no hay que hacer entrada salida
 } t_respuesta_ejecucion;
 
 
@@ -218,11 +213,6 @@ t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente,
 void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_contenido_pagina* estructura);
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
-
-void serializar_t_entrada_salida(int fdCliente, t_tipo_mensaje tipoMensaje,
-		t_entrada_salida* estructura);
-t_entrada_salida* deserializar_t_entrada_salida(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
@@ -307,9 +297,9 @@ void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,
+void serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
-t_entrada_salida* deserializar_ENTRADA_SALIDA(int fdCliente,
+void* deserializar_ENTRADA_SALIDA(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje,

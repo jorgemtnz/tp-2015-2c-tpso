@@ -236,6 +236,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//		++++++++++++++++++++++funcion finalizar
 		cpu->mCodCPU->respEjec->finalizoOk = true;
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		cpu->mCodCPU->respEjec->cant_entrada_salida=0;
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - finalizado ;\0",
 						datosDesdeMem->PID));

@@ -161,8 +161,6 @@ void* deserializar_RESUL_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return estructura;
 }
 
-
-
 //OK
 void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje, t_contenido_pagina* estructura) {
 	serializar_int8_t(fdCliente, estructura->PID);
@@ -176,19 +174,6 @@ t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente, t_tipo_mensaj
 	estructura->PID = deserializar_int8_t(fdCliente);
 	estructura->contenido = deserializar_string(fdCliente);
 	estructura->numeroPagina = deserializar_int8_t(fdCliente);
-
-	return estructura;
-}
-void serializar_t_entrada_salida(int fdCliente, t_tipo_mensaje tipoMensaje, t_entrada_salida* estructura) {
-	serializar_int8_t(fdCliente, estructura->PID);
-	serializar_string(fdCliente, estructura->expresion);
-}
-
-//OK
-t_entrada_salida* deserializar_t_entrada_salida(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_entrada_salida* estructura = malloc(sizeof(t_entrada_salida));
-	estructura->PID = deserializar_int8_t(fdCliente);
-	estructura->expresion = deserializar_string(fdCliente);
 
 	return estructura;
 }
@@ -288,16 +273,12 @@ void* deserializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	return estructura;
 }
 
-void* serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
-	//puts("Serializando serializar_ENTRADA_SALIDA");
-	serializar_t_entrada_salida(fdCliente, tipoMensaje, estructura);
-	return 0;
+void serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	serializar_t_respuesta_ejecucion(fdCliente, tipoMensaje, estructura);
 }
 
-t_entrada_salida* deserializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_entrada_salida* estructura = deserializar_t_entrada_salida(fdCliente, tipoMensaje);
-	//puts("Deserializando deserializar_ENTRADA_SALIDA");
-	return estructura;
+void* deserializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
 }
 
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProceso* estructura) {
@@ -331,6 +312,7 @@ void* serializar_t_respuesta_ejecucion(int fdCliente,
 	serializar_t_pcb(fdCliente, tipoMensaje, respuestaEjecucion->pcb);
 	serializar_string(fdCliente, respuestaEjecucion->resultadosInstrucciones);
 	serializar_bool(fdCliente, respuestaEjecucion->finalizoOk);
+	serializar_int8_t(fdCliente,respuestaEjecucion->cant_entrada_salida);
 	return 0;
 }
 
@@ -341,6 +323,7 @@ t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente,
 	respuestaEjecucion->pcb = deserializar_t_pcb(fdCliente, tipoMensaje);
 	respuestaEjecucion->resultadosInstrucciones = deserializar_string(fdCliente);
 	respuestaEjecucion->finalizoOk = deserializar_bool(fdCliente);
+	respuestaEjecucion->cant_entrada_salida = deserializar_int8_t(fdCliente);
 	return respuestaEjecucion;
 }
 
