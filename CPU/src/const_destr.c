@@ -175,10 +175,6 @@ void destEscrMem(t_contenido_pagina* estruc) {
 	free(estruc);
 }
 
-void destEntradSalid(t_entrada_salida* entradSalid) {
-	free(entradSalid);
-}
-
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
 	free(respEjec);
 }

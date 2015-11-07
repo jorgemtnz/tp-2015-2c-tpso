@@ -116,7 +116,6 @@ void destInstruccion(t_instruccion* unaInstruccion);
 void destVectorInstruccion(char** vectorInstruccion);
 void destIniciarSwap(t_iniciar_swap* estructura);
 void destEscrMem(t_contenido_pagina* estruc);
-void destEntradSalid(t_entrada_salida* entradSalid );
 void destRespEjec(t_respuesta_ejecucion* respEjec);
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares y ejecucion y ejecucionResult
@@ -133,7 +132,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
-t_entrada_salida*  ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
 t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 char* queCPUsoy(t_cpu* cpu);
