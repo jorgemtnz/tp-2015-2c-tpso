@@ -95,6 +95,9 @@ t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
+void finalizarProcesoEnEjecucion(t_pcb* pcb);
+t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
+void quitarProcesoDeCpu(t_cpu_ref* cpu);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket);

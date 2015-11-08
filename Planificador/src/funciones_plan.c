@@ -202,6 +202,7 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
 		a++;
 
 	}
+	finalizarProcesoEnEjecucion(respuestaEjecucion->pcb);
 
 }
 
