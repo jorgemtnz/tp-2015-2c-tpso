@@ -34,7 +34,7 @@
 								<option id="gnu.c.compiler.option.misc.pic.506898792" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.75860390" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.577806646" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug">
+							<tool command="gcc -pthread" id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.577806646" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug">
 								<option id="gnu.c.link.option.paths.324055279" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/utiles/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/commons-library/Debug}&quot;"/>

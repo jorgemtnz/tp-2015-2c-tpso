@@ -95,6 +95,9 @@ t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
+void finalizarProcesoEnEjecucion(t_pcb* pcb);
+t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
+void quitarProcesoDeCpu(t_cpu_ref* cpu);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket);
@@ -124,7 +127,6 @@ uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeListos;
 t_list* colaDeNuevos;
-t_list* colaDeEjecucion;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
 

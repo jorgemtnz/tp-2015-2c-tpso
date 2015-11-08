@@ -70,6 +70,7 @@ void mostrarComandos() {
 }
 
 int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
+	pthread_t hilo1, hilo2;
 	if(buffer != NULL && strstr(buffer, "\n")) {
 		if(string_starts_with(buffer, "\n")){
 			buffer = "";
@@ -80,9 +81,12 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 	}
 	if(string_equals(buffer, "TLB_FLUSH")) {
 		puts("Limpiar TLB");
+		pthread_create(&hilo1,NULL,(void*) limpiarTLB,NULL);
+		pthread_join(hilo1,NULL);
 		//limpiarTLB();
 	} else if(string_equals(buffer, "MEM_FLUSH")) {
 		puts("Limpiar Memoria");
+		pthread_create(&hilo2,NULL,(void*) limpiarMemoria,NULL);
 		//limpiarMemoria();
 	} else if(string_equals(buffer, "MEM_DUMP")) {
 		puts("Volcar Memoria");
@@ -93,5 +97,34 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 	return 0;
 }
 
+void limpiarTLB(){
+	if (configuracion->tlbHabilitada==1){
+		list_clean(listaTLB);
+	} else {
+		puts("TLB inactiva");
+	}
+}
+void limpiarMemoria(){
+	int a,i;
+	t_TablaDePaginas* campoTabla;
+	t_marco* campoMarco;
+	int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	for (i=0;i<list_size(listaTablaDePag);i++){
+		campoTabla = list_get(listaTablaDePag,i);
+		campoTabla->bitPresencia=0;
+		if (campoTabla->bitPagModificada==1){
+			t_contenido_pagina * escrituraSwap;
+			escrituraSwap = iniciarContenidoPagina();
+			escrituraSwap->PID = campoTabla->idProc;
+			escrituraSwap->contenido = traerContenidoDeMarco(campoTabla->idMarco);
+			escrituraSwap->numeroPagina = campoTabla->paginaDelProceso;
+			enviarEscribirAlSwap(escrituraSwap, socketSwap);
+		}
+	}
+	for (a=0;a<list_size(listaMemoria);a++){
+		campoMarco=list_get(listaMemoria,a);
+	}
+}
+void volcarMemoria(){
 
-
+}

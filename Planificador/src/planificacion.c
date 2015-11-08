@@ -64,9 +64,11 @@ void ejecutarPlanificadorLargoPlazo() {
 	t_pcb* pcb = list_get(getColaDeNuevos(), 0);
 	t_cpu_ref* cpu = obtenerCPUDisponible();
 	if(cpu != NULL) {
+		list_remove(getColaDeNuevos(), 0);
 		correrProcesoEnCpu(pcb, cpu);
+		printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
 	} else {
-		log_info(logger, "No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+		printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 	}
 }
 
@@ -89,4 +91,31 @@ void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu) {
 	cpu->ejecutando = true;
 	cpu->pcb = pcb;
 	enviarStruct(cpu->socket, CONTEXTO_MPROC, pcb);
+}
+
+
+void finalizarProcesoEnEjecucion(t_pcb* pcb) {
+	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
+	if(cpu == NULL) {
+		printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", pcb->pid);
+		abort();
+	}
+
+	quitarProcesoDeCpu(cpu);
+}
+
+t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb) {
+	bool estaCPUEnUsoPorPcb(void* elemento) {
+		t_cpu_ref* cpu = (t_cpu_ref*) elemento;
+		return cpu->pcb != NULL && cpu->pcb->pid == pcb->pid;
+	}
+
+	t_cpu_ref* cpuEnUso = (t_cpu_ref*) list_find(listaCPUs, estaCPUEnUsoPorPcb);
+
+	return cpuEnUso;
+}
+
+void quitarProcesoDeCpu(t_cpu_ref* cpu) {
+	cpu->ejecutando = false;
+	cpu->pcb = NULL;
 }
