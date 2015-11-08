@@ -49,11 +49,75 @@ int correrPath(int socket, t_header* header, char* buffer) {
 
 int finalizarPid(int socket, t_header* header, char* buffer) {
 	putsConsola("comando: finalizar PID");
+	char** split = string_split(buffer, " ");
+
+		if(!string_equals_ignore_case(split[0], "finalizar")) {
+			printConsola("Comando no valido: %s\n", split[0]);
+			return -1;
+		}
+
+		if(!existePID(split[1])) {
+			printConsola("El PID especificado es invalido: %i\n", split[1]);
+			return -1;
+		}
+	/*	int a;
+		t_cpu_ref * cpu = crearCpuRef();
+		for(a=0 ; a < list_size(listaCPUs); a++){
+		cpu = list_get(listaCPUs,a);
+		if(cpu->pcb->pid == split[1]){
+			a = list_size(listaCPUs) +1;
+		}
+		}
+		cpu->pcb->
+*/
 	return 0;
 }
 
 int ps(int socket, t_header* header, char* buffer) {
 	putsConsola("comando: ps");
+	int a,b,cont;
+	cont =0;
+	b = 0;
+	t_cpu_ref * cpu = crearCpuRef();
+	//EJECUTANDO
+	for(a=0 ; a < list_size(listaCPUs); a++){
+		cpu = list_get(listaCPUs,a);
+		char** splitRuta = string_split(cpu->pcb->rutaArchivoMcod,"/");
+		while(splitRuta[b] != NULL){
+			cont ++;
+			b++;
+		}
+	printf("mProc %i: %s -> Ejecutando\n",cpu->pcb->pid,splitRuta[cont-1]);
+	}
+	//LISTO
+	char* ruta = string_new();
+	t_pcb* pcb = crearPcb(ruta);
+	b =0;
+	cont = 0;
+	for(a=0 ; a < list_size(colaDeListos); a++){
+		pcb = list_get(colaDeListos,a);
+		char** splitRuta = string_split(pcb->rutaArchivoMcod,"/");
+			while(splitRuta[b] != NULL){
+				cont ++;
+				b++;
+			}
+		printf("mProc %i: %s -> Listo\n",pcb->pid,splitRuta[cont-1]);
+		}
+	//BLOQUEADOS
+
+		b =0;
+		cont = 0;
+		for(a=0 ; a < list_size(colaDeEntradaSalida); a++){
+			pcb = list_get(colaDeEntradaSalida,a);
+			char** splitRuta = string_split(pcb->rutaArchivoMcod,"/");
+				while(splitRuta[b] != NULL){
+					cont ++;
+					b++;
+				}
+			printf("mProc %i: %s -> Bloqueado\n",pcb->pid,splitRuta[cont-1]);
+			}
+
+
 	return 0;
 }
 

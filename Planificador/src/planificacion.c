@@ -13,8 +13,18 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 	pcb->tieneDesalojo = planificacion->tieneDesalojo;
 	pcb->tamanioRafaga = planificacion->tamanioRafaga;
 	pcb->proximaInstruccion = 0;
-	printConsola("Se creo el proceso PID: %d\n", pcb->pid);
+//	printConsola("Se creo el proceso PID: %d\n", pcb->pid);
 	return pcb;
+}
+t_cpu_ref* crearCpuRef(){
+	t_cpu_ref* cpu = malloc(sizeof(t_cpu_ref));
+	cpu->conectada = false;
+	cpu->ejecutando = false;
+	cpu->nombre = string_new();
+	cpu->socket = 0;
+	char* ruta = string_new();
+	cpu->pcb = crearPcb(ruta);
+	return cpu;
 }
 
 void ejecutarProceso(t_pcb* pcb) {
