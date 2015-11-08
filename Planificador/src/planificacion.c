@@ -65,8 +65,9 @@ void ejecutarPlanificadorLargoPlazo() {
 	t_cpu_ref* cpu = obtenerCPUDisponible();
 	if(cpu != NULL) {
 		correrProcesoEnCpu(pcb, cpu);
+		printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
 	} else {
-		log_info(logger, "No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+		printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 	}
 }
 
