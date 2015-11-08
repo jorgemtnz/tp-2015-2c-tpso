@@ -230,3 +230,16 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header,
 	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
 
 }
+
+bool existePID(int pid){
+	int a ;
+	t_cpu_ref * cpu = crearCpuRef();
+	for(a=0 ; a < list_size(listaCPUs);a++){
+		cpu = list_get(listaCPUs,a);
+		if(cpu->pcb->pid == pid){
+			return true;
+		}
+	}
+	return false;
+
+}

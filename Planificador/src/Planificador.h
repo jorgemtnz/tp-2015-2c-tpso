@@ -82,9 +82,12 @@ int correrPath(int socket, t_header* header, char* buffer);
 int finalizarPid(int socket, t_header* header, char* buffer);
 int ps(int socket, t_header* header, char* buffer);
 int cpu(int socket, t_header* header, char* buffer);
+//++++++++++++++++++++++++++++++++++++Comando finalizar pid +++++++++++++++++++++++++++++++
+bool existePID(int pid);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
+t_cpu_ref* crearCpuRef();
 void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
 t_list* getColaDeListos();
