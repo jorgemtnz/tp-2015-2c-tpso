@@ -1,5 +1,6 @@
 #include "CPU.h"
-
+//nota
+//no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 	cpu->estadoEjecucion = USO;
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
@@ -75,8 +76,4 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
 ///	free(cpu->mCodCPU->respEjec);
-}
-
-void pedirTiempo(uint8_t* res_porcentaje){
-
 }

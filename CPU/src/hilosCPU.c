@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include<math.h>
 
 void levantarHilosCPU() {
 	log_info(logger, "se va a levantar un HILO ");
@@ -34,5 +35,18 @@ int hiloCPU() {
 int hiloPorcentaje() {
 
 	return 0;
+}
+
+void calcularPorcentaje(){
+	while(1){
+		sleep(60); //duerme cada 60 segundos
+		void sacaPorcentaje(t_cpu* cpu){
+			// 60 instrucciones equivale al 100%
+			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);
+			cpu->cantInstEjecutadas =0;
+		}
+		list_iterate(procCPU->listaCPU,(void*) sacaPorcentaje)	;
+
+	}
 }
 

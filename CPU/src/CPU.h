@@ -134,7 +134,6 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
-void pedirTiempo(uint8_t* res_porcentaje);
 t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 char* queCPUsoy(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
@@ -144,7 +143,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void levantarHilosCPU();
 int hiloCPU();
 int hiloPorcentaje();
-
+void calcularPorcentaje();
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
 int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu);
 void procesaCodigo(t_cpu* cpu);
