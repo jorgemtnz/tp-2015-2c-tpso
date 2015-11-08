@@ -124,7 +124,6 @@ uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeListos;
 t_list* colaDeNuevos;
-t_list* colaDeEjecucion;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
 

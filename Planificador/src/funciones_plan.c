@@ -95,7 +95,6 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 	//creamos la cola de listos
 	colaDeListos = list_create();
 	colaDeNuevos = list_create();
-	colaDeEjecucion = list_create();
 	colaDeEntradaSalida = list_create();
 }
 
