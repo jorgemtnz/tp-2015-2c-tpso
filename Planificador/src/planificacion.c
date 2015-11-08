@@ -64,6 +64,7 @@ void ejecutarPlanificadorLargoPlazo() {
 	t_pcb* pcb = list_get(getColaDeNuevos(), 0);
 	t_cpu_ref* cpu = obtenerCPUDisponible();
 	if(cpu != NULL) {
+		list_remove(getColaDeNuevos(), 0);
 		correrProcesoEnCpu(pcb, cpu);
 		printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
 	} else {
