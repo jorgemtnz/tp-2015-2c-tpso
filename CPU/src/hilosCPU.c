@@ -80,6 +80,7 @@ void calcularPorcentaje(){
 			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);
 			cpu->cantInstEjecutadas =0;
 			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+			printf("%s,\n",(queCPUsoy(cpu)));
 			printf("Para el minuto %d, \n", i);
 			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
 			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
