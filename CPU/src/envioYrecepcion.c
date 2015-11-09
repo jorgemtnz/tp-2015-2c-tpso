@@ -270,6 +270,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
 		int socketPlanificador = atoi(
 					(char*) dictionary_get(conexiones, "Planificador"));
+
 		enviarStruct(socketPlanificador,TIEMPO_CPU,&cpu->porcentajeUso);
 		break;
 	}
