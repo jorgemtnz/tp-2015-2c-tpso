@@ -101,6 +101,8 @@ void procesaCodigo(t_cpu* cpu) {
 			mCodCPU->bufferInstrucciones);
 	cpu->mCodCPU->bufferInstrucciones = mCodCPU->bufferInstrucciones;
 	cpu->mCodCPU->cantidadInstrucciones = mCodCPU->cantidadInstrucciones;
+	//se resta uno, porque se conto el cero anteriormente
+	cpu->pcbPlanificador->instruccionFinal= mCodCPU->cantidadInstrucciones-1;
 
 //	printf("%i\n", mCodCPU->cantidadInstrucciones);
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
