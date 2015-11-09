@@ -388,7 +388,7 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 }
 
 t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
-	int a, b, tamanioListaMarcoYBit, flag;
+	int a, b, tamanioListaMarcoYBit,tamanioListaMarcos, flag;
 	//warning no se usa variable, entonces lo comento
 //		int id, tamanioMemoria;
 	t_list* listaMarcos;
@@ -402,13 +402,14 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 
 	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
 	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
+	tamanioListaMarcos = list_size(listaMemoria);
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = 0;
 		//sleep(configuracion->retardoMemoria);
-		for (b = 0; flag == 0; b++) {
+		for (b = 0;b <tamanioListaMarcos &&  flag == 0; b++) {
 			campoMarco = list_get(listaMemoria, b);
-			if (campoMarco->idMarco == marcoYBit->idMarco) {
+			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
 				list_add(listaMarcos, campoMarco);
 				flag = 1;
 			}
