@@ -69,20 +69,27 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 	for (a = 0; a < list_size(listaCPUs); a++) {
 		cpu = list_get(listaCPUs, a);
 		if (cpu->pcb->pid == pid) {
+			list_remove(listaCPUs, a);
+			cpu->pcb->proximaInstruccion = cpu->pcb->instruccionFinal;
+			list_add_in_index(listaCPUs,a,cpu);
 			a = list_size(listaCPUs) + 1;
 		}
 	}
-	cpu->pcb->proximaInstruccion = cpu->pcb->instruccionFinal;
+
+
 
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
 		pcb = list_get(colaDeEntradaSalida, a);
 
 		if (pcb->pid == pid) {
+			list_remove(colaDeEntradaSalida, a);
+			pcb->proximaInstruccion = pcb->instruccionFinal;
+			list_add_in_index(colaDeEntradaSalida,a,pcb);
 			a = list_size(colaDeEntradaSalida) + 1;
 
 		}
 	}
-	pcb->proximaInstruccion = pcb->instruccionFinal;
+
 
 	return 0;
 }
