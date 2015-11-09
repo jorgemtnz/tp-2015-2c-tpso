@@ -505,7 +505,8 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
 	//warning comparacion provoca resultado inesperado, entonces se corrige
-	printf("%d,\n", strlen(configuracion->algoritmo_reemplazo));
+
+
 	if (strcmp(configuracion->algoritmo_reemplazo, algoritmo) == 0) {
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
