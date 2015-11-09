@@ -450,6 +450,8 @@ void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estruct
 	serializar_bool(fdCliente, estructura->tieneDesalojo);
 	serializar_int16_t(fdCliente, estructura->tamanioRafaga);
 	serializar_int16_t(fdCliente, estructura->proximaInstruccion);
+	serializar_int16_t(fdCliente, estructura->instruccionFinal);
+
 	return 0;
 }
 t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
@@ -459,6 +461,8 @@ t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	estructura->tieneDesalojo = deserializar_bool(fdCliente);
 	estructura->tamanioRafaga = deserializar_int16_t(fdCliente);
 	estructura->proximaInstruccion = deserializar_int16_t(fdCliente);
+	estructura->instruccionFinal = deserializar_int16_t(fdCliente);
+
 	return estructura;
 }
 

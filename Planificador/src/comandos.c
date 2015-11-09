@@ -60,16 +60,30 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 			printConsola("El PID especificado es invalido: %i\n", split[1]);
 			return -1;
 		}
-	/*	int a;
+
+			int a;
 		t_cpu_ref * cpu = crearCpuRef();
+		char* ruta = string_new();
+		t_pcb* pcb = crearPcb(ruta);
 		for(a=0 ; a < list_size(listaCPUs); a++){
 		cpu = list_get(listaCPUs,a);
 		if(cpu->pcb->pid == split[1]){
 			a = list_size(listaCPUs) +1;
 		}
 		}
-		cpu->pcb->
-*/
+		cpu->pcb->proximaInstruccion = cpu->pcb->instruccionFinal;
+
+	  for(a=0 ; a < list_size(colaDeEntradaSalida); a++){
+						pcb = list_get(colaDeEntradaSalida,a);
+
+						if(cpu->pcb->pid == split[1]){
+							a = list_size(listaCPUs) +1;
+
+						}
+	  }
+	  pcb->proximaInstruccion = pcb->instruccionFinal;
+
+
 	return 0;
 }
 

@@ -90,6 +90,7 @@ typedef struct PCB {
 	bool tieneDesalojo;
 	uint16_t tamanioRafaga;
 	uint16_t proximaInstruccion;
+	uint16_t instruccionFinal;
 } t_pcb;
 
 typedef struct Planificacion {
