@@ -145,7 +145,7 @@ typedef struct {
 } t_respuesta_ejecucion;
 
 typedef struct {
-	uint8_t* res_porcentaje;
+	uint8_t res_porcentaje;
 }t_respuesta_porcentaje;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

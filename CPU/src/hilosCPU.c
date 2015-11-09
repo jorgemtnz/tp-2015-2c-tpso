@@ -33,7 +33,7 @@ int hiloCPU() {
 }
 
 int hiloPorcentaje() {
-
+calcularPorcentaje();
 	return 0;
 }
 
