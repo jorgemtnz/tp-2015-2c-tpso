@@ -210,7 +210,6 @@ void hardcodearTablaDePaginas(int pag1,int pag2,int pag3,int pag4,int pag5);
 
 //===========================================================================================
 t_configuracion* configuracion;
-t_log* logger;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
 int variableIdMarco,variableTLB,variableEnvejecimientoMarco; // contador de paginas de la tabla de paginas

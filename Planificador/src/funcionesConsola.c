@@ -25,7 +25,7 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 	} else if(string_equals(buffer, "cpu")) {
 		cpu(socket, header, buffer);
 	} else {
-		printConsola("Comando no reconocido: %s\n", buffer);
+		//printConsola("Comando no reconocido: %s\n", buffer);
 	}
 	return 0;
 }
