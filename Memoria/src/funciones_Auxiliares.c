@@ -389,8 +389,6 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 
 t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 	int a, b, tamanioListaMarcoYBit,tamanioListaMarcos, flag;
-	//warning no se usa variable, entonces lo comento
-//		int id, tamanioMemoria;
 	t_list* listaMarcos;
 	listaMarcos = list_create();
 	t_list* listaMarcoYBit;
@@ -669,7 +667,7 @@ t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 	estructuraEnvio = crearPID();
 
 	for (contador = 0; contador < cantPag; contador++) {
-		variableIdMarco++;
+
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
@@ -677,6 +675,8 @@ t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPagModificada = 0;
 		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
+
+		variableIdMarco++;
 	}
 
 	estructuraEnvio->PID = idProc;
@@ -706,6 +706,7 @@ t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, i
 		estructuraDevolucionEscribirFalso->PID = idProc;
 		estructuraDevolucionEscribirFalso->pagina = nroPag;
 		estructuraDevolucionEscribirFalso->socketSwap = socketSwap;
+		estructuraDevolucionEscribirFalso->idMarco = marcoYBit->idMarco;
 
 		return estructuraDevolucionEscribirFalso;
 	} else {	// entonces tengo el id del marco
@@ -714,6 +715,50 @@ t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, i
 
 		estructuraDevolucionEscribirFalso->contenido = textoAEscribir;
 		return estructuraDevolucionEscribirFalso;
+	}
+
+}
+
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, int pag,
+		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
+
+	char* algoritmo = string_new();
+	string_append(&algoritmo, "LRU");
+
+	t_contenido_pagina* lecturaMandarCpu;
+	lecturaMandarCpu = iniciarContenidoPagina();
+	//warning comparacion provoca resultado inesperado, entonces se corrige
+
+
+	if (strcmp(configuracion->algoritmo_reemplazo, algoritmo) == 0) {
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
+					flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
+					flagEscritura);
+		}
+
+	} else { // aca significa que es el de clock
+		printf("no sale bien");
+
+	}
+
+	// aca significa que no tuvo que sacar ninguno
+	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
+	string_append(&lecturaMandarCpu->contenido , contenido);
+
+	if (flagEscritura == 0) {
+		return lecturaMandarCpu;
+	} else { // por escribir
+		t_contenido_pagina * escrituraSwap;
+		escrituraSwap = iniciarContenidoPagina();
+		escrituraSwap->PID = lecturaMandarCpu->PID;
+		string_append(&escrituraSwap->contenido , lecturaMandarCpu->contenido);
+		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
+		return escrituraSwap;
 	}
 
 }

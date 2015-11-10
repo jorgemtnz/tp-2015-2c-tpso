@@ -75,7 +75,6 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	estructuraEnvio = crearPID();
 
 	for (contador = 0; contador < cantPag; contador++) {
-		variableIdMarco++;
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
@@ -83,6 +82,8 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->bitPagModificada = 0;
 		tablaDePag->bitPresencia = 0;
 		list_add(listaTablaDePag, tablaDePag);
+
+		variableIdMarco++;
 	}
 
 	estructuraEnvio->PID = idProc;

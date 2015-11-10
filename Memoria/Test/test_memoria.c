@@ -10,7 +10,7 @@
 #include <unistd.h> /* close */
 
 #include "../src/Memoria.h"
-/*
+
 static int init_suite() {
 	int a_rgc = 3;
 	char* temp = string_new();
@@ -54,7 +54,6 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 	int socketMentiroso = 7;
 	int tamanioFinalTablaDePag, a;
 	int contadorCantProc1 = 0, contadorCantProc2 = 0, contadorCantProc3 = 0, contadorCantProc4 = 0;
-	int contadorMarcoNegativo = 0;
 	campoIniciar = iniciar_falso(PID1, cant1, socketMentiroso);
 	CU_ASSERT_EQUAL(campoIniciar->PID, PID1);
 	campoIniciar1 = iniciar_falso(PID2, cant2, socketMentiroso);
@@ -119,12 +118,8 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
-	//warning no se usan variables, entonces comento
-//	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18 ,tamanioMemoria;
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
-	int b=0;
 	int socketMentiroso = 7;
-	int a = 1;
 	char* contenido1;
 	char* contenido2;
 	char* contenido3;
@@ -145,109 +140,121 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	t_escribir_falso* estructuraDevolucionEscribirFalso;
 	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
-	//estructuraDevolucionEscribirFalso=escribir_falso(PID1, 1,contenido1, socketMentiroso);
 
-	estructuraDevolucionEscribirFalso=escribir_falso(PID2, 1,contenido2, socketMentiroso);
-	estructuraDevolucionEscribirFalso=escribir_falso(PID3, 0,contenido3, socketMentiroso);
-	estructuraDevolucionEscribirFalso=escribir_falso(PID3, 5,contenido3Bis, socketMentiroso);
-	estructuraDevolucionEscribirFalso=escribir_falso(PID4, 3,contenido4, socketMentiroso);
-	estructuraDevolucionEscribirFalso=escribir_falso(PID4, 4,contenido4, socketMentiroso);
+	estructuraDevolucionEscribirFalso=escribir_falso(PID1, 1,contenido1, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID1);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,1);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 1);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+	estructuraDevolucionEscribirFalso=escribir_falso(PID2, 1,contenido2, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID2);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4 + 1);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 1);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+	estructuraDevolucionEscribirFalso=escribir_falso(PID3, 0,contenido3, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID3);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4+5+0);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 0);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+	estructuraDevolucionEscribirFalso=escribir_falso(PID3, 5,contenido3Bis, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID3);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4 +5+5);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 5);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+	estructuraDevolucionEscribirFalso=escribir_falso(PID4, 3,contenido4, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID4);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4 +5+6+3);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 3);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+	estructuraDevolucionEscribirFalso=escribir_falso(PID4, 4,contenido4, socketMentiroso,socketMentiroso);
+
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->PID, PID4);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4 +5+6+4);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 4);
+	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
+
+}
+
+static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
+	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
+	int socketMentiroso = 7, flagEscritura =1,flagNoEscritura=0;
+	int tamanioMemoria,a;
+	char* contenido1;
+	char* contenido2;
+	char* contenido3;
+	char* contenido3Bis;
+	char* contenido4;
+	contenido1 = "escritura1";
+	contenido2 = "escritura2";
+	contenido3 = "escritura3";
+	contenido3Bis = "escritura3Bis";
+	contenido4 = "escritura4";
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	t_marco * campoMemoria;
+	campoMemoria = iniciarMarco();
+	t_contenido_pagina* campoEscribir;
+	campoEscribir = iniciarEscrituraProc();
+
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID1, 1, contenido1, flagEscritura, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoEscribir->PID, PID1);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,1);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido1);
+
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID2, 5, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoEscribir->PID, PID2);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,5);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
+
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID3, 4, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoEscribir->PID, PID3);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,4);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
+
+
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 3, contenido3Bis, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
-	CU_ASSERT_EQUAL(campoEscribir->contenido, contenido4);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 4);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,3);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3Bis);
 
-	for (a = 0; a < 4; a++) {
-		campoTablaDePag = list_get(listaTablaDePag, a);
-		b--;
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		} else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 455);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
+
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 2, contenido4, flagNoEscritura, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,2);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
+
+	tamanioMemoria = list_size(listaMemoria);
+
+	CU_ASSERT_EQUAL(tamanioMemoria, 5);
+
+	for(a=0;a<tamanioMemoria;a++){
+		campoMemoria = list_get(listaMemoria,a);
+
+		CU_ASSERT_EQUAL(campoMemoria->idMarco,1);
+		CU_ASSERT_EQUAL(campoMemoria->posicion,0);
+		CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
 	}
-
-	for (a = 0; a < 5; a++) {
-		b --;
-		campoTablaDePag = list_get(listaTablaDePag, a + 4);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 456);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for (a = 0; a < 6; a++) {
-		b--;
-		campoTablaDePag = list_get(listaTablaDePag, a + 9);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(0 != a && 5 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		} else if ( 5 != a){
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 457);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 458);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for (a = 0; a < 7; a++) {
-		b--;
-		campoTablaDePag = list_get(listaTablaDePag, a + 15);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(3 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 459);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for(a=0;a<5;a++){
-		campoMemoria= list_get(listaMemoria,a);
-		switch(a){
-		case 0: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,455);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
-			break;
-		}
-		case 1: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,456);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
-			break;
-		}
-		case 2: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,457);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
-			break;
-		}
-		case 3: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,458);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
-			break;
-		}
-		case 4: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,459);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
-			break;
-		}
-		}
-	}
-
-
 
 }
 
@@ -317,137 +324,6 @@ static void escribir_en_marco_y_poner_bit_de_modificada(){
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
 	campoMemoria = list_get(listaMemoria, 4);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
-
-}
-
-static void test_probar_escribir_memoria_sin_TLB(){
-	//warning no se usan variables, entonces comento
-//	int pag1 = 1, pag2 = 5, pag3 = 9, pag4 = 14,pag5 = 18 ,tamanioMemoria;
-	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
-	int b=0;
-	int socketMentiroso = 7;
-	int a = 1;
-	char* contenido1;
-	char* contenido2;
-	char* contenido3;
-	char* contenido3Bis;
-	char* contenido4;
-	contenido1 = "escritura1";
-	contenido2 = "escritura2";
-	contenido3 = "escritura3";
-	contenido3Bis = "escritura3Bis";
-	contenido4 = "escritura4";
-	t_TablaDePaginas * campoTablaDePag;
-	campoTablaDePag = iniciarTablaDePaginas();
-	t_marco * campoMemoria;
-	campoMemoria = iniciarMarco();
-	t_contenido_pagina* campoEscribir;
-	//warning diferentes estructuras, entonces corrijo, son similares, pero importa el orden
-	campoEscribir = iniciarEscrituraProc();
-
-
-	escribir_falso(PID1, 1,contenido1, socketMentiroso);
-	escribir_falso(PID2, 1,contenido2, socketMentiroso);
-	escribir_falso(PID3, 0,contenido3, socketMentiroso);
-	escribir_falso(PID3, 5,contenido3Bis, socketMentiroso);
-	escribir_falso(PID4, 3,contenido4, socketMentiroso);
-	campoEscribir = escribir_falso(PID4, 4,contenido4, socketMentiroso);
-
-	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
-	CU_ASSERT_EQUAL(campoEscribir->contenido, contenido4);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 4);
-
-	for (a = 0; a < 4; a++) {
-		campoTablaDePag = list_get(listaTablaDePag, a);
-		b--;
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID1);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		} else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 455);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for (a = 0; a < 5; a++) {
-		b --;
-		campoTablaDePag = list_get(listaTablaDePag, a + 4);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID2);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(1 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 456);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for (a = 0; a < 6; a++) {
-		b--;
-		campoTablaDePag = list_get(listaTablaDePag, a + 9);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID3);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(0 != a && 5 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		} else if ( 5 != a){
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 457);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 458);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for (a = 0; a < 7; a++) {
-		b--;
-		campoTablaDePag = list_get(listaTablaDePag, a + 15);
-		CU_ASSERT_EQUAL(campoTablaDePag->idProc, PID4);
-		CU_ASSERT_EQUAL(campoTablaDePag->paginaDelProceso, a);
-		if(3 != a){
-		CU_ASSERT_EQUAL(campoTablaDePag->idMarco, b);
-		CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 0);
-		}else {
-			CU_ASSERT_EQUAL(campoTablaDePag->idMarco, 459);
-			CU_ASSERT_EQUAL(campoTablaDePag->bitPagModificada, 1);
-		}
-	}
-
-	for(a=0;a<5;a++){
-		campoMemoria= list_get(listaMemoria,a);
-		switch(a){
-		case 0: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,455);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido1);
-			break;
-		}
-		case 1: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,456);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
-			break;
-		}
-		case 2: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,457);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
-			break;
-		}
-		case 3: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,458);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
-			break;
-		}
-		case 4: {
-			CU_ASSERT_EQUAL(campoMemoria->idMarco,459);
-			CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
-			break;
-		}
-		}
-	}
-
-
 
 }
 
@@ -622,7 +498,16 @@ static void test_probar_finalizar_un_proceso_sin_TLB(){
 	CU_ASSERT_EQUAL(tamanioMemoria, 0);
 }
 
+static CU_TestInfo tests[] = {
+		{ "Test Hola Mundo", test_debe_devolver_hola_mundo },
+		{"Test carga archivo configuracion lee variables",test_variables_configuracion },
+		{"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},
+		{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
+		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
+	CU_TEST_INFO_NULL,
+};
 
+/*
 static CU_TestInfo tests[] = {
 	{ "Test Hola Mundo", test_debe_devolver_hola_mundo },
 	{"Test carga archivo configuracion lee variables",test_variables_configuracion },
@@ -633,6 +518,7 @@ static CU_TestInfo tests[] = {
 	{"Test finalizar los 4 procesos",test_probar_finalizar_un_proceso_sin_TLB},
 	CU_TEST_INFO_NULL,
 };
+*/
 
 CUNIT_MAKE_SUITE(memoria, "Test Memoria", init_suite, clean_suite, tests)
-*/
+

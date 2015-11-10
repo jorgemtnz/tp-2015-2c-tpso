@@ -184,6 +184,8 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap,int socketCPU);
 t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, int pag,
+		char* contenido, int flagEscritura, int socketCPU, int socketSwap);
 //warning no definido en test_memoria.c , entonces lo agrego aca.
 char* decirHolaMundo() ;
 //warning no definido en Memoria.c , entonces lo agrego aca.
