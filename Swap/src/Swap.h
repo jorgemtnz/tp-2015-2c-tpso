@@ -121,7 +121,6 @@ int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
 t_configuracion* configuracion;
-t_log* logger;
 char *espacioDatos;
 t_list* listaDeProcesosCargados;
 t_list* listaDeEspaciosLibres;

@@ -62,13 +62,15 @@ void ejecutarPlanificadorLargoPlazo() {
 	//TODO
 	//POR AHORA TOMAMOS EL PRIMERO DE LA COLA DE LISTOS Y LO MANDAMOS A EJECUTAR
 	t_pcb* pcb = list_get(getColaDeNuevos(), 0);
-	t_cpu_ref* cpu = obtenerCPUDisponible();
-	if(cpu != NULL) {
-		list_remove(getColaDeNuevos(), 0);
-		correrProcesoEnCpu(pcb, cpu);
-		printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
-	} else {
-		printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+	if (pcb != NULL) {
+		t_cpu_ref* cpu = obtenerCPUDisponible();
+		if(cpu != NULL) {
+			list_remove(getColaDeNuevos(), 0);
+			correrProcesoEnCpu(pcb, cpu);
+			printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
+		} else {
+			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+		}
 	}
 }
 
@@ -102,6 +104,7 @@ void finalizarProcesoEnEjecucion(t_pcb* pcb) {
 	}
 
 	quitarProcesoDeCpu(cpu);
+	ejecutarPlanificadorLargoPlazo();
 }
 
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb) {

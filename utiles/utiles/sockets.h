@@ -116,4 +116,11 @@ int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resul
 
 //para identificarse
 char* getNombre();
+
+//para debuggear
+void debug(const char *formato, ...);
+
+//variables globales
+t_log* logger;
+bool mustDebug;
 #endif /* SOCKETS_H_ */

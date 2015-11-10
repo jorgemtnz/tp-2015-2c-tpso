@@ -159,7 +159,6 @@ void recibirMensajeVarios( t_header*,   char*   buffer,void* extra,t_cpu* cpu );
 //===========================================================================================
 
 t_configuracion* configuracion;
-t_log* logger; //VG del logger
 t_ProcCPU* procCPU;  //proceso CPU que controla la lista de los hilos CPU
 char* resultadoFinal;
 
