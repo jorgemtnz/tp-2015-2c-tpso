@@ -121,7 +121,6 @@ t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 
 t_configuracion* configuracion;
-t_log* logger;
 t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
@@ -129,13 +128,11 @@ t_list* colaDeListos;
 t_list* colaDeNuevos;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
-
+t_list* porcentajesCPUs;
 //===========================================================================================
 
 
 
-
-t_log* logger; //VG del logger
 
 //test
 char* decirHolaMundo();

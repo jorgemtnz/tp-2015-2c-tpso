@@ -684,6 +684,24 @@ int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_n
 	} else {
 //		printf("Nuevo mensaje desde socket %d\n", socket);
 	}
+
+	if(tipoNotificacion == TERMINAL_MESSAGE) {
+		if(buffer != NULL && strstr(buffer, "\n")) {
+			if(string_starts_with(buffer, "\n")){
+				buffer = "";
+			} else {
+				char** split = string_split(buffer, "\n");
+				buffer = split[0];
+			}
+		} else {
+			debug("Recibi el mensaje por consola: %s\n", buffer);
+		}
+		if(string_equals(buffer, "debug")) {
+			mustDebug = true;
+		} else if(string_equals(buffer, "nodebug")) {
+			mustDebug = false;
+		}
+	}
 	return 0;
 }
 
@@ -724,6 +742,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, "RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR", serializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, deserializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR);
 		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK, "RESUL_TRAER_PAG_SWAP_OK", serializar_RESUL_TRAER_PAG_SWAP_OK, deserializar_RESUL_TRAER_PAG_SWAP_OK);
 		registrarSerializadores(RESUL_ESCRIBIR, "RESUL_ESCRIBIR", serializar_RESUL_ESCRIBIR, deserializar_RESUL_ESCRIBIR);
+  registrarSerializadores(TIEMPO_CPU_RESUL,"TIEMPO_CPU_RESUL", serializar_TIEMPO_CPU_RESUL, deserializar_TIEMPO_CPU_RESUL);
   registrarSerializadores(TIEMPO_CPU,"TIEMPO_CPU", serializar_TIEMPO_CPU, deserializar_TIEMPO_CPU);
 	}
 }
@@ -785,16 +804,32 @@ int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resul
 }
 
 int ejecutarSerializacion(void* (*funcion)(int, t_tipo_mensaje, void*), int fdCliente, t_header header, void* estructura) {
-	printf("Envio  %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	debug("Envio  %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
 	(int*)funcion(fdCliente, header.tipoMensaje, estructura);
 	//TODO
 	return 0;
 }
 
 int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente, t_header header, t_resultado_serializacion* resultadoDeserializacion) {
-	printf("Recibo %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
+	debug("Recibo %-35s       desde %-12s   Id_msg: %5d\n", getNombreTipoMensaje(header.tipoMensaje), header.nombre, header.numeroMensaje);
 	void* resultado = funcion(fdCliente, header.tipoMensaje);
 	resultadoDeserializacion -> resultado = resultado;
 	//TODO
 	return 0;
 }
+
+bool mustDebug = true;
+
+void debug(const char *formato, ...) {
+	if (mustDebug) {
+	//	puts("printConsola\n");
+		va_list arguments;
+		va_start(arguments, formato);
+		int res = vprintf(formato, arguments);
+		va_end(arguments);
+
+		char* nuevo = string_from_vformat(formato, arguments);
+		log_debug(logger, nuevo);
+	}
+}
+
