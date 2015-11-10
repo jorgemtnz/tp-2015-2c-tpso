@@ -111,8 +111,10 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	}
 
 	variableEnvejecimientoMarco++;
-	campoAux->contenido = contenido;
+	campoAux->contenido = string_new();
+	string_append(&campoAux->contenido, contenido);
 	campoAux->posicion = variableEnvejecimientoMarco;
+	printf("\n%s %s\n",contenido, campoAux->contenido);
 
 	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
@@ -756,7 +758,7 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 		t_contenido_pagina * escrituraSwap;
 		escrituraSwap = iniciarContenidoPagina();
 		escrituraSwap->PID = lecturaMandarCpu->PID;
-		string_append(&escrituraSwap->contenido , lecturaMandarCpu->contenido);
+		string_append(&escrituraSwap->contenido , contenido);
 		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
 		return escrituraSwap;
 	}

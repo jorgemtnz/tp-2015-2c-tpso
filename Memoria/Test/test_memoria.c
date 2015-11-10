@@ -67,7 +67,6 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 
 	for (a = 0; a < tamanioFinalTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		contadorVariableIdMarco++;
 
 		switch (campoTablaDePag->idProc) {
 		case (1): {
@@ -110,7 +109,10 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 
 			break;
 		}
+
+
 		}
+		contadorVariableIdMarco++;
 	}
 
 	CU_ASSERT_EQUAL(tamanioFinalTablaDePag, 22);
@@ -193,8 +195,8 @@ static void test_probar_escribir_memoria_sin_TLB(){
 
 static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
-	int socketMentiroso = 7, flagEscritura =1,flagNoEscritura=0;
-	int tamanioMemoria,a;
+	int socketMentiroso = 7, flagEscritura = 1, flagNoEscritura = 0;
+	int tamanioMemoria, a;
 	char* contenido1;
 	char* contenido2;
 	char* contenido3;
@@ -215,45 +217,71 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID1, 1, contenido1, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID1);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,1);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 1);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido1);
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID2, 5, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID2);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,5);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 5);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID3, 4, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID3);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,4);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 4);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
-
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 3, contenido3Bis, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,3);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 3);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3Bis);
-
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 2, contenido4, flagNoEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina,2);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 2);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
 
 	tamanioMemoria = list_size(listaMemoria);
 
 	CU_ASSERT_EQUAL(tamanioMemoria, 5);
 
-	for(a=0;a<tamanioMemoria;a++){
-		campoMemoria = list_get(listaMemoria,a);
+	campoMemoria = list_get(listaMemoria, 0);
 
-		CU_ASSERT_EQUAL(campoMemoria->idMarco,1);
-		CU_ASSERT_EQUAL(campoMemoria->posicion,0);
-		CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 1);
+	CU_ASSERT_EQUAL(campoMemoria->posicion, 1);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, "escritura1");
+
+	campoMemoria = list_get(listaMemoria, 1);
+
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5);
+	CU_ASSERT_EQUAL(campoMemoria->posicion, 2);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
+
+	campoMemoria = list_get(listaMemoria, 2);
+
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+4);
+	CU_ASSERT_EQUAL(campoMemoria->posicion, 3);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
+
+	campoMemoria = list_get(listaMemoria, 3);
+
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+6+3);
+	CU_ASSERT_EQUAL(campoMemoria->posicion, 4);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3Bis);
+
+	campoMemoria = list_get(listaMemoria, 4);
+
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+6+2);
+	CU_ASSERT_EQUAL(campoMemoria->posicion, 5);
+	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
+
+	for(a=0;a<tamanioMemoria;a++){
+		campoMemoria=list_get(listaMemoria,a);
+
+		printf("\n%i %i %s \n",campoMemoria->idMarco,campoMemoria->posicion,campoMemoria->contenido);
 	}
 
 }
