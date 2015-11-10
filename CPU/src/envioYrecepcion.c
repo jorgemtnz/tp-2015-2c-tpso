@@ -285,7 +285,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		for (; i <= list_size(procCPU->listaCPU); i++) {
 			list_iterate(procCPU->listaCPU,(void*) tomaPorcentaje)	;
 		}
-//		enviarStruct(socketPlanificador, TIEMPO_CPU, porcentajeCPUs);
+		porcentajeCPUs->cantidadDeElementos = list_size(porcentajeCPUs->respuestasPorcentaje);
+		enviarStruct(socketPlanificador, TIEMPO_CPU_RESUL, porcentajeCPUs);
 		break;
 	}
 	}

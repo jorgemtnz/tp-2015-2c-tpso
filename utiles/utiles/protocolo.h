@@ -47,6 +47,7 @@ typedef enum {
 	//++++++++++++++++cpu+++++++++++++++++++
 	ENTRADA_SALIDA,  //CPU le devuelve el proceso a planificador
 	TIEMPO_CPU,     //solicitud del planificador al cpu
+	TIEMPO_CPU_RESUL,
 	RESULT_TIEMPO_CPU,
 	RESUL_ENT_SAL,
 
@@ -152,6 +153,7 @@ typedef struct {
 
 typedef struct {
 	t_list* respuestasPorcentaje;
+	uint8_t cantidadDeElementos;
 }t_porcentajeCPUs;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -185,6 +187,10 @@ void* serializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_INICIAR_PROCESO_MEM(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+void 	serializar_lista_porcentajes(int fdCliente, t_list* estructura);
+t_list* deserializar_lista_porcentajes(int fdCliente,int8_t cantidad);
+void serializar_TIEMPO_CPU_RESUL(int fdCliente, t_tipo_mensaje tipoMensaje, t_porcentajeCPUs*  estructura);
+void* deserializar_TIEMPO_CPU_RESUL(int fdCliente, t_tipo_mensaje tipoMensaje		);
 //--------------------------------------------++++++++++++++ Especificar donde se utiliza
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_iniciar_swap* estructura);
@@ -246,8 +252,8 @@ void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMe
 
 
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
-void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
-		t_respuesta_porcentaje* estructura);
+void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura);
+
 void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		);
 
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,

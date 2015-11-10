@@ -742,6 +742,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, "RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR", serializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, deserializar_RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR);
 		registrarSerializadores(RESUL_TRAER_PAG_SWAP_OK, "RESUL_TRAER_PAG_SWAP_OK", serializar_RESUL_TRAER_PAG_SWAP_OK, deserializar_RESUL_TRAER_PAG_SWAP_OK);
 		registrarSerializadores(RESUL_ESCRIBIR, "RESUL_ESCRIBIR", serializar_RESUL_ESCRIBIR, deserializar_RESUL_ESCRIBIR);
+  registrarSerializadores(TIEMPO_CPU_RESUL,"TIEMPO_CPU_RESUL", serializar_TIEMPO_CPU_RESUL, deserializar_TIEMPO_CPU_RESUL);
   registrarSerializadores(TIEMPO_CPU,"TIEMPO_CPU", serializar_TIEMPO_CPU, deserializar_TIEMPO_CPU);
 	}
 }

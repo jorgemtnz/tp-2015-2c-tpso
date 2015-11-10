@@ -172,6 +172,16 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		printf("proceso no iniciado en CPU\n");
 		break;
 	}
+	case(TIEMPO_CPU_RESUL): {
+		t_porcentajeCPUs* listaRecibida = (t_porcentajeCPUs*) buffer;
+		t_respuesta_porcentaje *contenido = malloc(sizeof(t_respuesta_porcentaje));
+		int a;
+		for(a=0;a<listaRecibida->cantidadDeElementos;a++){
+			contenido=list_get(listaRecibida->respuestasPorcentaje,a);
+		list_add(porcentajesCPUs, contenido);
+		}
+		break;
+	}
 	default: {
 		printConsola("No se reconoce el mensaje de tipo %s\n",
 				getNombreTipoMensaje(header->tipoMensaje));
