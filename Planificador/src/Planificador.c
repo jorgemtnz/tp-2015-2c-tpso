@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
 	crearLogger();
 	putsConsola("Iniciando programa");
 	listaCPUs = list_create();
+	porcentajesCPUs = list_create();
 	leerArchivoDeConfiguracion(argc, argv);
 	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();

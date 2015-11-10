@@ -155,7 +155,7 @@ pid->PID = 3;
 	t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
 	for(a=0 ; a< list_size(porcentajesCPUs);a++){
 	porcentaje = list_get(porcentajesCPUs,a);
-	printf("cpu %i: %i %",porcentaje->idCpu,porcentaje->res_porcentaje);
+	printf("cpu %i: %i porciento \n",porcentaje->idCpu,porcentaje->res_porcentaje);
 	}
 	return 0;
 }

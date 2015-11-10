@@ -286,6 +286,15 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			list_iterate(procCPU->listaCPU,(void*) tomaPorcentaje)	;
 		}
 		porcentajeCPUs->cantidadDeElementos = list_size(porcentajeCPUs->respuestasPorcentaje);
+
+		//PRUEBA PARA VER QUE SE ESTA ENVIANDO
+		t_respuesta_porcentaje *contenido = malloc(sizeof(t_respuesta_porcentaje));
+			int a;
+			for(a=0;a<porcentajeCPUs->cantidadDeElementos;a++){
+				contenido=list_get(porcentajeCPUs->respuestasPorcentaje,a);
+
+			printf("ESTOY ENVIANDO A PLANIF CPU: %i  PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
+			}
 		enviarStruct(socketPlanificador, TIEMPO_CPU_RESUL, porcentajeCPUs);
 		break;
 	}

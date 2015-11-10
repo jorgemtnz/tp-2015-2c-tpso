@@ -179,6 +179,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		for(a=0;a<listaRecibida->cantidadDeElementos;a++){
 			contenido=list_get(listaRecibida->respuestasPorcentaje,a);
 		list_add(porcentajesCPUs, contenido);
+		printf("RECIBO DE CPU CPU: %i   PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
 		}
 		break;
 	}
