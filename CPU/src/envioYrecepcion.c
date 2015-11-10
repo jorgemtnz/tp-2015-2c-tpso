@@ -50,7 +50,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 				(char*) dictionary_get(conexiones, "Planificador"));
 		ejecuta_EntradaSalida(separada_instruccion, cpu);
 
-		enviarStruct(socketPlanificador, ENTRADA_SALIDA,cpu->mCodCPU->respEjec );
+		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
+				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
 		break;
@@ -72,7 +73,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n",
 				pcbPlanificador->rutaArchivoMcod);
-		cpu->estado=NO_DISPONIBLE;
+		cpu->estado = NO_DISPONIBLE;
 		preparaCPU(pcbPlanificador, cpu);
 		procesaCodigo(cpu);
 		//llama a procesa codigo
@@ -238,7 +239,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//		++++++++++++++++++++++funcion finalizar
 		cpu->mCodCPU->respEjec->finalizoOk = true;
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-		cpu->mCodCPU->respEjec->cant_entrada_salida=0;
+		cpu->mCodCPU->respEjec->cant_entrada_salida = 0;
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - finalizado ;\0",
 						datosDesdeMem->PID));
@@ -269,9 +270,22 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
 		int socketPlanificador = atoi(
-					(char*) dictionary_get(conexiones, "Planificador"));
+				(char*) dictionary_get(conexiones, "Planificador"));
 
-		enviarStruct(socketPlanificador,TIEMPO_CPU,&cpu->porcentajeUso);
+		t_porcentajeCPUs* porcentajeCPUs = malloc(sizeof(t_porcentajeCPUs));
+		t_respuesta_porcentaje* respuestaProcentaje = malloc(sizeof(t_respuesta_porcentaje));
+		porcentajeCPUs->respuestasPorcentaje = list_create();
+
+		void tomaPorcentaje(t_cpu* cpu){
+			respuestaProcentaje->res_porcentaje=  cpu->porcentajeUso;
+			respuestaProcentaje->idCpu  = cpu->idCPU;
+			list_add(porcentajeCPUs->respuestasPorcentaje, respuestaProcentaje);
+		}
+		int i = 0;
+		for (; i <= list_size(procCPU->listaCPU); i++) {
+			list_iterate(procCPU->listaCPU,(void*) tomaPorcentaje)	;
+		}
+//		enviarStruct(socketPlanificador, TIEMPO_CPU, porcentajeCPUs);
 		break;
 	}
 	}

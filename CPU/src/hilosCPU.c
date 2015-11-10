@@ -79,12 +79,13 @@ void calcularPorcentaje(){
 			// 60 instrucciones equivale al 100%
 			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);
 			cpu->cantInstEjecutadas =0;
-			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-			printf("%s,\n",(queCPUsoy(cpu)));
-			printf("Para el minuto %d, \n", i);
-			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
-			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+//			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+//			printf("%s,\n",(queCPUsoy(cpu)));
+//			printf("Para el minuto %d, \n", i);
+//			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
+//			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		}
+
 		list_iterate(procCPU->listaCPU,(void*) sacaPorcentaje)	;
 
 	}

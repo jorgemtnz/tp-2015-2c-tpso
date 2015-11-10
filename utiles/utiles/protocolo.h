@@ -147,7 +147,12 @@ typedef struct {
 
 typedef struct {
 	uint8_t res_porcentaje;
+	uint8_t idCpu;
 }t_respuesta_porcentaje;
+
+typedef struct {
+	t_list* respuestasPorcentaje;
+}t_porcentajeCPUs;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
