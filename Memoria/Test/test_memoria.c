@@ -252,37 +252,33 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 1);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 1);
-	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, "escritura1");
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, "escritura1");
 
 	campoMemoria = list_get(listaMemoria, 1);
 
+	printf("\n%i\n",campoMemoria->idMarco);
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 2);
-	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
 
 	campoMemoria = list_get(listaMemoria, 2);
 
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+4);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 3);
-	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
 
 	campoMemoria = list_get(listaMemoria, 3);
 
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+6+3);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 4);
-	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3Bis);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3Bis);
 
 	campoMemoria = list_get(listaMemoria, 4);
 
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+6+2);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 5);
-	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
+	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
 
-	for(a=0;a<tamanioMemoria;a++){
-		campoMemoria=list_get(listaMemoria,a);
-
-		printf("\n%i %i %s \n",campoMemoria->idMarco,campoMemoria->posicion,campoMemoria->contenido);
-	}
 
 }
 

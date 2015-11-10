@@ -109,12 +109,12 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 			flag =1;
 		}
 	}
+	printf("%i %i %i \n",campoAux->idMarco,PID,pag);
 
 	variableEnvejecimientoMarco++;
 	campoAux->contenido = string_new();
 	string_append(&campoAux->contenido, contenido);
 	campoAux->posicion = variableEnvejecimientoMarco;
-	printf("\n%s %s\n",contenido, campoAux->contenido);
 
 	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
@@ -746,11 +746,23 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 
 	}
 
+	t_marco * campoMemoria1 ;
+				campoMemoria1 = iniciarMarco();
 	// aca significa que no tuvo que sacar ninguno
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido , contenido);
+
+	int tamanioMemoria;
+		tamanioMemoria=list_size(listaMemoria);
+		printf("%i aa\n",tamanioMemoria);
+		if(tamanioMemoria==5){
+
+			campoMemoria1 =  list_get(listaMemoria,5);
+			printf("\n aa  aa\n");
+
+		}
 
 	if (flagEscritura == 0) {
 		return lecturaMandarCpu;
@@ -762,6 +774,7 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
 		return escrituraSwap;
 	}
+
 
 }
 
