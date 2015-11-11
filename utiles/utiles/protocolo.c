@@ -529,9 +529,10 @@ char* deserializar_string(int fdCliente) {
 	return string;
 }
 void 	serializar_lista_porcentajes(int fdCliente, t_list* estructura){
-	t_respuesta_porcentaje* respuesta = malloc(sizeof(t_respuesta_porcentaje));
+
 	int a;
 	for(a=0;a<list_size(estructura);a++){
+		t_respuesta_porcentaje* respuesta = malloc(sizeof(t_respuesta_porcentaje));
 		respuesta = list_get(estructura,a);
 		serializar_int8_t( fdCliente, respuesta->res_porcentaje);
 		serializar_int8_t(fdCliente, respuesta->idCpu);
@@ -559,10 +560,10 @@ int8_t deserializar_int8_t(int fdCliente) {
 t_list* deserializar_lista_porcentajes(int fdCliente,int8_t cantidad){
 	int a;
 	t_list* lista = list_create();
-	t_respuesta_porcentaje* res = malloc(sizeof(t_respuesta_porcentaje));
+
 
 	for(a= 0 ; a<cantidad;a++){
-
+		t_respuesta_porcentaje* res = malloc(sizeof(t_respuesta_porcentaje));
 		res->res_porcentaje = deserializar_int8_t( fdCliente);
 		res->idCpu = deserializar_int8_t( fdCliente);
 		list_add(lista,res);

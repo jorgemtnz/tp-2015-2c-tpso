@@ -67,23 +67,26 @@ int hiloCPU() {
 }
 
 int hiloPorcentaje() {
+	printf("hilo calculo de porcentaje iniciado \n");
+	//este es el hilo 0
 calcularPorcentaje();
 	return 0;
 }
 
 void calcularPorcentaje(){
-	int i=1;
+	int i=0;
 	while(1){
+		i++;
 		sleep(60); //duerme cada 60 segundos
 		void sacaPorcentaje(t_cpu* cpu){
 			// 60 instrucciones equivale al 100%
 			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);
 			cpu->cantInstEjecutadas =0;
-//			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-//			printf("%s,\n",(queCPUsoy(cpu)));
-//			printf("Para el minuto %d, \n", i);
-//			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
-//			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+			printf("%s,\n",(queCPUsoy(cpu)));
+			printf("Para el minuto %d, \n", i);
+			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
+			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		}
 
 		list_iterate(procCPU->listaCPU,(void*) sacaPorcentaje)	;

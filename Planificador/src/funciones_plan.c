@@ -174,13 +174,18 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 	}
 	case(TIEMPO_CPU_RESUL): {
 		t_porcentajeCPUs* listaRecibida = (t_porcentajeCPUs*) buffer;
-		t_respuesta_porcentaje *contenido = malloc(sizeof(t_respuesta_porcentaje));
-		int a;
-		for(a=0;a<listaRecibida->cantidadDeElementos;a++){
-			contenido=list_get(listaRecibida->respuestasPorcentaje,a);
-		list_add(porcentajesCPUs, contenido);
-		printf("RECIBO DE CPU CPU: %i   PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
+		void muestraElem(t_respuesta_porcentaje *contenido){
+			printf(" DE CPU; para la CPU: %i   PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
 		}
+		list_iterate(listaRecibida->respuestasPorcentaje, (void*)muestraElem);
+
+//		int a;
+//		for(a=0;a<listaRecibida->cantidadDeElementos;a++){
+//			t_respuesta_porcentaje *contenido = malloc(sizeof(t_respuesta_porcentaje));
+//			contenido=list_get(listaRecibida->respuestasPorcentaje,a);
+//		list_add(porcentajesCPUs, contenido);
+//		printf("RECIBO DE CPU; para la CPU: %i   PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
+//		}
 		break;
 	}
 	default: {

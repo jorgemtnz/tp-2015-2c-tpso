@@ -70,6 +70,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (CONTEXTO_MPROC): {
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		//inicia toda la cadena de instruccion desde la CPU hacia memoria
+		printf("%s\n",queCPUsoy(cpu));
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n",
 				pcbPlanificador->rutaArchivoMcod);
@@ -273,18 +274,18 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				(char*) dictionary_get(conexiones, "Planificador"));
 
 		t_porcentajeCPUs* porcentajeCPUs = malloc(sizeof(t_porcentajeCPUs));
-		t_respuesta_porcentaje* respuestaProcentaje = malloc(sizeof(t_respuesta_porcentaje));
+
 		porcentajeCPUs->respuestasPorcentaje = list_create();
 
 		void tomaPorcentaje(t_cpu* cpu){
-			respuestaProcentaje->res_porcentaje=  cpu->porcentajeUso;
-			respuestaProcentaje->idCpu  = cpu->idCPU;
-			list_add(porcentajeCPUs->respuestasPorcentaje, respuestaProcentaje);
+			t_respuesta_porcentaje* respuestaPorcentaje = malloc(sizeof(t_respuesta_porcentaje));
+			respuestaPorcentaje->res_porcentaje=  cpu->porcentajeUso;
+			respuestaPorcentaje->idCpu  = cpu->idCPU;
+			list_add(porcentajeCPUs->respuestasPorcentaje, respuestaPorcentaje);
 		}
-		int i = 0;
-		for (; i <= list_size(procCPU->listaCPU); i++) {
+
 			list_iterate(procCPU->listaCPU,(void*) tomaPorcentaje)	;
-		}
+
 		porcentajeCPUs->cantidadDeElementos = list_size(porcentajeCPUs->respuestasPorcentaje);
 
 		//PRUEBA PARA VER QUE SE ESTA ENVIANDO
