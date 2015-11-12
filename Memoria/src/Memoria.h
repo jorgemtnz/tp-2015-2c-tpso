@@ -129,6 +129,8 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 void limpiarTLB();
 void limpiarMemoria();
 void volcarMemoria();
+void atencionSIGUSR1();
+void atencionSIGUSR2();
 
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
