@@ -17,15 +17,7 @@ t_TablaDePaginas* iniciarTablaDePaginas(){
 	return tablaDePag;
 }
 
-t_contenido_pagina * iniciarEscrituraProc() {
-	t_contenido_pagina * escrituraProc = malloc(sizeof(t_escrituraProc));
-	if (escrituraProc == NULL) {
-		perror("[ERROR] No se reservo memoria para iniciarEscrituraProc");
-		log_error(logger, "[ERROR] No se reservo memoria para iniciarEscrituraProc");
-		exit(-1);
-	}
-	return escrituraProc;
-}
+
 
 t_TLB* iniciarTLB() {
 	t_TLB* TLB = malloc(sizeof(t_TLB));

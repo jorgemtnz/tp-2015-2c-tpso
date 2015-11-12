@@ -138,7 +138,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	campoMemoria = iniciarMarco();
 	t_contenido_pagina* campoEscribir;
 	//warning diferentes estructuras, entonces corrijo, son similares, pero importa el orden
-	campoEscribir = iniciarEscrituraProc();
+	campoEscribir = iniciarContenidoPagina();
 	t_escribir_falso* estructuraDevolucionEscribirFalso;
 	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
@@ -212,7 +212,7 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 	t_contenido_pagina* campoEscribir;
-	campoEscribir = iniciarEscrituraProc();
+	campoEscribir = iniciarContenidoPagina();
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID1, 1, contenido1, flagEscritura, socketMentiroso, socketMentiroso);
 
@@ -220,16 +220,16 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 1);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido1);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID2, 5, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID2, 1, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID2);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 5);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 1);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID3, 4, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID3, 0, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID3);
-	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 4);
+	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 0);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
 
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 3, contenido3Bis, flagEscritura, socketMentiroso, socketMentiroso);
@@ -257,13 +257,13 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	campoMemoria = list_get(listaMemoria, 1);
 
 	printf("\n%i\n",campoMemoria->idMarco);
-	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5);
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+1);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 2);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
 
 	campoMemoria = list_get(listaMemoria, 2);
 
-	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+4);
+	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+0);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 3);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido3);
 
@@ -278,6 +278,63 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+5+6+2);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 5);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido4);
+
+
+
+}
+
+static void test_probar_leer_falso() {
+	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
+	int socketMentiroso = 7;
+	t_contenido_pagina* campoLeer;
+	campoLeer = iniciarContenidoPagina();
+	char* contenido1;
+	char* contenido2;
+	char* contenido3;
+	char* contenido3Bis;
+	char* contenido4;
+	contenido1 = "escritura1";
+	contenido2 = "escritura2";
+	contenido3 = "escritura3";
+	contenido3Bis = "escritura3Bis";
+	contenido4 = "escritura4";
+
+	campoLeer = leer_falso(PID1, 1, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, PID1);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 1);
+	CU_ASSERT_STRING_EQUAL(campoLeer->contenido, contenido1);
+
+	campoLeer = leer_falso(PID2, 1, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, PID2);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 1);
+	CU_ASSERT_STRING_EQUAL(campoLeer->contenido, contenido2);
+
+	campoLeer = leer_falso(PID3, 0, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, PID3);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 0);
+	CU_ASSERT_STRING_EQUAL(campoLeer->contenido, contenido3);
+
+	campoLeer = leer_falso(PID4, 3, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, PID4);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 3);
+	CU_ASSERT_STRING_EQUAL(campoLeer->contenido, contenido3Bis);
+
+	campoLeer = leer_falso(PID4, 2, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, PID4);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 2);
+	CU_ASSERT_STRING_EQUAL(campoLeer->contenido, contenido4);
+
+	campoLeer = leer_falso(PID4, 0, socketMentiroso, socketMentiroso);
+
+	printf("\n%i %i \n",campoLeer->PID,campoLeer->numeroPagina);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, 999);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 999);
 
 
 }
@@ -528,7 +585,8 @@ static CU_TestInfo tests[] = {
 		{"Test iniciar 4 procesos con 22 paginas en memoria", test_iniciar_4_procesos_con_22_paginas_en_memoria},
 		{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
 		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
-	CU_TEST_INFO_NULL,
+		{"Test probar leer",test_probar_leer_falso},
+		CU_TEST_INFO_NULL,
 };
 
 /*

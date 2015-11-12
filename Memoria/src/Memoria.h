@@ -188,6 +188,7 @@ void enviarRtaIniciarOkCPU (t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* contenido, int flagEscritura,int socketCPU, int socketSwap);
 t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, int socketSwap,int socketCPU);
 t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU);
+t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCPU);
 t_PID* finalizar_falso(t_PID* estructuraFinalizar,int socketSwap);
 t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, int pag,
 		char* contenido, int flagEscritura, int socketCPU, int socketSwap);
