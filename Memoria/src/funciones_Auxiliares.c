@@ -788,8 +788,8 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 		//sleep(configuracion->retardoMemoria);
 
 		// estos valores me hacen ver que entro aca en el test
-		traerDeSwapUnaPaginaDeUnProceso->PID =999;
-		traerDeSwapUnaPaginaDeUnProceso->numeroPagina = 999;
+		traerDeSwapUnaPaginaDeUnProceso->PID =11;
+		traerDeSwapUnaPaginaDeUnProceso->numeroPagina = 11;
 
 		return traerDeSwapUnaPaginaDeUnProceso;
 	} else { // aca significa que trajo el id porque esta en memoria

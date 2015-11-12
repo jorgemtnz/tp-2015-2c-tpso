@@ -256,7 +256,6 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 
 	campoMemoria = list_get(listaMemoria, 1);
 
-	printf("\n%i\n",campoMemoria->idMarco);
 	CU_ASSERT_EQUAL(campoMemoria->idMarco, 4+1);
 	CU_ASSERT_EQUAL(campoMemoria->posicion, 2);
 	CU_ASSERT_STRING_EQUAL(campoMemoria->contenido, contenido2);
@@ -331,10 +330,13 @@ static void test_probar_leer_falso() {
 
 	campoLeer = leer_falso(PID4, 0, socketMentiroso, socketMentiroso);
 
-	printf("\n%i %i \n",campoLeer->PID,campoLeer->numeroPagina);
+	CU_ASSERT_EQUAL(campoLeer->PID, 11);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 11);
 
-	CU_ASSERT_EQUAL(campoLeer->PID, 999);
-	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 999);
+	campoLeer = leer_falso(PID1, 4, socketMentiroso, socketMentiroso);
+
+	CU_ASSERT_EQUAL(campoLeer->PID, 11);
+	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 11);
 
 
 }
