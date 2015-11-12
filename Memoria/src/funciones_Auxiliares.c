@@ -26,7 +26,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 		// sino veo si esta en la tabla de paginas
 
 		tamanioTablaPag = list_size(listaTablaDePag);
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 		for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			if (campoTablaDePag->idProc == idProc
@@ -67,7 +67,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	// en la Tabla de Pag)
 
 	tamanioTablaPag = list_size(listaTablaDePag);
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
@@ -77,7 +77,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 		}
 	}
 	tamanioMemoria = list_size(listaMemoria);
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria && flagMemoria == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
 		if (campoMarco->idMarco == idMarco) {
@@ -99,7 +99,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	int tamanioTablaDePag, a, flag = 0;
 	tamanioTablaDePag = list_size(listaTablaDePag);
 
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID
@@ -175,7 +175,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc
@@ -252,7 +252,7 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
 //warning no se usan variables, entonces lo comento
 //	int nuevoId,idMenor, id;
 	tamanioMemoria = list_size(listaMemoria);
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria; a++) {
 		campoMarco = list_get(listaMemoria, a);
 		if (primero == 0) {
@@ -329,7 +329,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	if (bitTablaDePag == 1 || bitTLB == 1) { // teoricamente los dos tienen que estar en uno
 
 		if (flagEscritura == 0) { // por leer
-			//sleep(configuracion->retardoMemoria);
+			sleep(configuracion->retardoMemoria);
 			enviarASwapContenidoPaginaDesactualizada(idProc, pagina,
 					campoMarco->contenido, socketSwap);
 		} else { // por escribir
@@ -350,7 +350,7 @@ char* traerContenidoDeMarco(int idMarco) {
 	t_marco* campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
 		campoMemoria = list_get(listaMemoria, a);
 		if (campoMemoria->idMarco == idMarco) {
@@ -374,7 +374,7 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc) {
@@ -405,7 +405,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = 0;
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 		for (b = 0;b <tamanioListaMarcos &&  flag == 0; b++) {
 			campoMarco = list_get(listaMemoria, b);
 			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
@@ -703,7 +703,7 @@ t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, i
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 		estructuraDevolucionEscribirFalso->PID = idProc;
 		estructuraDevolucionEscribirFalso->pagina = nroPag;
 		estructuraDevolucionEscribirFalso->socketSwap = socketSwap;
@@ -752,8 +752,6 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido , contenido);
 
-
-
 	if (flagEscritura == 0) {
 		return lecturaMandarCpu;
 	} else { // por escribir
@@ -785,7 +783,7 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 
 		// estos valores me hacen ver que entro aca en el test
 		traerDeSwapUnaPaginaDeUnProceso->PID =11;

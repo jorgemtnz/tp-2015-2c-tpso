@@ -108,7 +108,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag,textoAEscribir, socketSwap);
 
 	} else {	// entonces tengo el id del marco
@@ -134,7 +134,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
-		//sleep(configuracion->retardoMemoria);
+		sleep(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 
 	} else { // aca significa que trajo el id porque esta en memoria
@@ -166,7 +166,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 		}
 	}
 
-	//sleep(configuracion->retardoMemoria);
+	sleep(configuracion->retardoMemoria);
 	enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 
 }
