@@ -400,8 +400,6 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	sleep(configuracion->retardo_compactacion);
 	log_info(logger, "Compactacion iniciada por fragmentacion externa");
-	//ORDENAR LISTA POR UBICACION
-	//list_sort(listaDeProcesosCargados, comparador(list_get(listaDeProcesosCargados,i)));
 	l_procesosCargados* espacioProcAux;
 	espacioProcAux = crearProceso();
 	l_procesosCargados* espacioProcSig;
@@ -423,23 +421,12 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 	int ultimoLugarOcupado = espacioProcAux->ubicacion + espacioProcAux->cantPagsUso;
 	nuevoEspacioLibre->ubicacion = ultimoLugarOcupado;
 	nuevoEspacioLibre->cantPagsLibres = configuracion->cantidadPaginas - ultimoLugarOcupado;
-//warning no se usa espacioA
-	l_espacioLibre* espacioA = crearEspacioLibre();
-	while (list_size(listaDeEspaciosLibres) > 0) {
-		espacioA = list_get(listaDeEspaciosLibres, 0);
-		list_remove(listaDeEspaciosLibres, 0);
-//	free(espacioA);
-		}
+	list_clean(listaDeEspaciosLibres);
 
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
 	log_info(logger, "Compactacion finalizada correctamente");
 
-}
-_Bool comparador(l_procesosCargados proc1, l_procesosCargados proc2) {
-	int ub1 = proc1.ubicacion;
-	int ub2 = proc2.ubicacion;
-	return (ub1 < ub2);
 }
 
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres) {

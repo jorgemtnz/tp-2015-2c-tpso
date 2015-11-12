@@ -24,7 +24,7 @@ int idFuncion(char* funcion) {
 	int i;
 	char* funcionesConsola[] = {  "TLB_FLUSH", "MEM_FLUSH", "MEM_DUMP"};
 	for (i=0;(i < 3) && (strcmp(funcion, funcionesConsola[i]) != 0); i++);
-		return (i <= 3 - 1) ? (i + 1) : -1;
+	return (i <= 3 - 1) ? (i + 1) : -1;
 }
 
 void aplicarFuncion(int idFuncion) {
@@ -47,7 +47,7 @@ void aplicarFuncion(int idFuncion) {
 	case MOSTRAR_COMANDOS: {
 		mostrarComandos();
 	}
-		break;
+	break;
 	case -1:
 		puts("--Ojo ese comando no existe!! proba con mostrarComandos \n");
 	}
@@ -105,9 +105,8 @@ void limpiarTLB(){
 	}
 }
 void limpiarMemoria(){
-	int a,i;
+	int i;
 	t_TablaDePaginas* campoTabla;
-	t_marco* campoMarco;
 	int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 	for (i=0;i<list_size(listaTablaDePag);i++){
 		campoTabla = list_get(listaTablaDePag,i);
@@ -121,10 +120,29 @@ void limpiarMemoria(){
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
 		}
 	}
-	for (a=0;a<list_size(listaMemoria);a++){
-		campoMarco=list_get(listaMemoria,a);
-	}
+	list_clean(listaMemoria);
 }
 void volcarMemoria(){
+	int pid,a;
+	pid = fork();
+	if (pid<0) {
+		log_error(logger,"Fallo la creación del proceso hijo");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0) {
+		t_marco* campoMarco;
+		char* texto = string_new();
+		for (a=0;a<list_size(listaMemoria);a++){
+			campoMarco= list_get(listaMemoria,a);
+			string_append_with_format(&texto,"El marco %s ubicado en la posición %s contiene: %s /n",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
+			log_info(logger,texto);
+		}
+		kill(pid,SIGTERM);
+	}
+	else {
+		wait(NULL);
+		log_info(logger,"El proceso hijo termino correctamente");
+		exit(0);
+	}
 
 }
