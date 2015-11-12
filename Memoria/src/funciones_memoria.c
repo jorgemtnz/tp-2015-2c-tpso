@@ -155,10 +155,11 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 
+	eliminarDeTablaDePaginasDefinitivamente(estructuraFinalizar->PID);
+
 	for (a = 0; a < tamanioListaId; a++) {
 		marcoYBit = list_get(listaDemarcoYBit, a);
-		eliminarDeTablaDePaginasDefinitivamente(marcoYBit->idMarco);
-		if (marcoYBit->bitPresencia == 0) {
+		if (marcoYBit->bitPresencia == 1) {
 			eliminarDeMemoria(marcoYBit->idMarco);
 		}
 		if (configuracion->tlbHabilitada == 1) {

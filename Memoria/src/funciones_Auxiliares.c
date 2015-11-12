@@ -441,6 +441,7 @@ void eliminarDeTablaDePaginas(int id) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
+	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == id) {
@@ -481,17 +482,17 @@ void eliminarDeTLBDefinitivamente(int id) {
 	}
 }
 
-void eliminarDeTablaDePaginasDefinitivamente(int id) {
-	int a, tamanioTablaDePaginas, flag = 0;
+void eliminarDeTablaDePaginasDefinitivamente(int PID) {
+	int a, tamanioTablaDePaginas;
 	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
+	sleep(configuracion->retardoMemoria);
+	for (a = 0; a < tamanioTablaDePaginas; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idMarco == id) {
+		if (campoTablaDePag->idProc == PID) {
 			list_remove(listaTablaDePag, a);
-			flag = 1;
 		}
 	}
 }
@@ -798,6 +799,8 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 }
 
 t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
+
+
 	int a, tamanioListaMarcoYBit;
 	t_list * listaDeMarcoYBit;
 	t_marco_y_bit* marcoYBit;
@@ -805,10 +808,15 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 	listaDeMarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
 	tamanioListaMarcoYBit = list_size(listaDeMarcoYBit);
 
+
+
+	eliminarDeTablaDePaginasDefinitivamente(estructuraFinalizar->PID);
+
+
+
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaDeMarcoYBit, a);
-		eliminarDeTablaDePaginasDefinitivamente(marcoYBit->idMarco);
-		if (marcoYBit->bitPresencia == 0) {
+		if (marcoYBit->bitPresencia == 1) {
 			eliminarDeMemoria(marcoYBit->idMarco);
 		}
 		if (configuracion->tlbHabilitada == 1) {

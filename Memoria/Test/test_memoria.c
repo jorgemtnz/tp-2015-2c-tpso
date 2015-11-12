@@ -342,6 +342,57 @@ static void test_probar_leer_falso() {
 }
 
 
+static void test_probar_finalizar_un_proceso_sin_TLB() {
+	t_PID* id1;
+	id1 = crearPID();
+	t_PID* id2;
+	id2 = crearPID();
+	t_PID* id3;
+	id3 = crearPID();
+	t_PID* id4;
+	id4 = crearPID();
+
+	t_PID* PID1;
+	PID1 = crearPID();
+	PID1->PID = 1;
+	t_PID* PID2;
+	PID2 = crearPID();
+	PID2->PID = 2;
+	t_PID* PID3;
+	PID3 = crearPID();
+	PID3->PID = 3;
+	t_PID* PID4;
+	PID4 = crearPID();
+	PID4->PID = 4;
+
+
+	int tamanioTablaDePag, tamanioMemoria, socketFalso = 8;
+
+	id1 = finalizar_falso(PID1, socketFalso);
+
+	id2 = finalizar_falso(PID2, socketFalso);
+
+	id3 = finalizar_falso(PID3, socketFalso);
+
+	id4 = finalizar_falso(PID4, socketFalso);
+
+
+
+	CU_ASSERT_EQUAL(id1->PID, 1);
+	CU_ASSERT_EQUAL(id2->PID, 2);
+	CU_ASSERT_EQUAL(id3->PID, 3);
+	CU_ASSERT_EQUAL(id4->PID, 4);
+
+	tamanioTablaDePag = list_size(listaTablaDePag);
+	tamanioMemoria = list_size(listaMemoria);
+
+	printf("\n%i %i\n",tamanioTablaDePag,tamanioMemoria);
+
+	CU_ASSERT_EQUAL(tamanioTablaDePag, 0);
+	CU_ASSERT_EQUAL(tamanioMemoria, 0);
+}
+
+
 static void test_probar_buscar_si_esta_en_memoria_sin_TLB(){
 	iniciarConfiguracionTLBNoHabilitada();
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
@@ -542,44 +593,6 @@ static void test_llego_maximo_de_marco_del_proceso(){
 
 }
 
-static void test_probar_finalizar_un_proceso_sin_TLB(){
-	t_PID PID1;
-	PID1.PID=1;
-	t_PID PID2;
-	PID2.PID=2;
-	t_PID PID3;
-	PID3.PID=3;
-	t_PID PID4;
-	PID4.PID=4;
-	int tamanioTablaDePag,tamanioMemoria,socketFalso=8;
-	t_PID* id1;
-	id1 = crearPID();
-	t_PID* id2;
-	id2 = crearPID();
-	t_PID* id3;
-	id3 = crearPID();
-	t_PID* id4;
-	id4 = crearPID();
-
-	id1=finalizar_falso(&PID1,socketFalso);
-
-	id2=finalizar_falso(&PID2,socketFalso);
-
-	id3=finalizar_falso(&PID3,socketFalso);
-
-	id4=finalizar_falso(&PID4,socketFalso);
-
-	CU_ASSERT_EQUAL(id1->PID, 1);
-	CU_ASSERT_EQUAL(id2->PID, 2);
-	CU_ASSERT_EQUAL(id3->PID, 3);
-	CU_ASSERT_EQUAL(id4->PID, 4);
-
-	tamanioTablaDePag = list_size(listaTablaDePag);
-	tamanioMemoria = list_size(listaMemoria);
-
-	CU_ASSERT_EQUAL(tamanioTablaDePag, 0);
-	CU_ASSERT_EQUAL(tamanioMemoria, 0);
-}
 
 static CU_TestInfo tests[] = {
 		{ "Test Hola Mundo", test_debe_devolver_hola_mundo },
@@ -588,6 +601,7 @@ static CU_TestInfo tests[] = {
 		{"Test probar escribir en memoria",test_probar_escribir_memoria_sin_TLB},
 		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
 		{"Test probar leer",test_probar_leer_falso},
+		{"Test probar finalizar los procesos",test_probar_finalizar_un_proceso_sin_TLB},
 		CU_TEST_INFO_NULL,
 };
 
