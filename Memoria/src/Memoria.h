@@ -24,6 +24,7 @@
 #include <sys/wait.h>
 #include <utiles/sockets.h>
 #include <utiles/configExtras.h>
+#include <unistd.h>
 #include "../Test/test.h"
 
 

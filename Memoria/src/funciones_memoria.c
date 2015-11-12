@@ -60,7 +60,6 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		logMsg = string_from_format(
 				"Archivo de configuracion leido correctamente\n");
 		puts(logMsg);
-		log_error(logger, logMsg);
 
 		//config_destroy(archivoConfig);
 

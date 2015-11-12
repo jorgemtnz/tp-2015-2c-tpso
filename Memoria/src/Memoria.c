@@ -175,7 +175,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 
 		} else if (tipoNotificacion == TERMINAL_MESSAGE) {
-			//Aquí iban los mensajes de consola antiguos
+			procesarMensajesConsola(socket,header,buffer);
 		}
 	}
 

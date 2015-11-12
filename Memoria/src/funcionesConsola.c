@@ -121,6 +121,7 @@ void volcarMemoria(){
 	int pid,a;
 	pid = fork();
 	if (pid<0) {
+		puts(string_itoa(errno));
 		log_error(logger,"Fallo la creación del proceso hijo");
 		exit(EXIT_FAILURE);
 	}
