@@ -70,7 +70,7 @@ void mostrarComandos() {
 }
 
 int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
-	pthread_t hilo1, hilo2;
+	pid_t pid=getpid();
 	if(buffer != NULL && strstr(buffer, "\n")) {
 		if(string_starts_with(buffer, "\n")){
 			buffer = "";
@@ -80,23 +80,17 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 		}
 	}
 	if(string_equals(buffer, "TLB_FLUSH")) {
-		puts("Limpiar TLB");
-		pthread_create(&hilo1,NULL,(void*) limpiarTLB,NULL);
-		pthread_join(hilo1,NULL);
-		//limpiarTLB();
+		kill(pid,SIGUSR1);
 	} else if(string_equals(buffer, "MEM_FLUSH")) {
-		puts("Limpiar Memoria");
-		pthread_create(&hilo2,NULL,(void*) limpiarMemoria,NULL);
-		//limpiarMemoria();
+		kill(pid,SIGUSR2);
 	} else if(string_equals(buffer, "MEM_DUMP")) {
 		puts("Volcar Memoria");
-		//volcarMemoria();
+		kill(pid,SIGPOLL);
 	} else {
 		puts("Comando no reconocido");
 	}
 	return 0;
 }
-
 void limpiarTLB(){
 	if (configuracion->tlbHabilitada==1){
 		list_clean(listaTLB);
@@ -121,6 +115,7 @@ void limpiarMemoria(){
 		}
 	}
 	list_clean(listaMemoria);
+	limpiarTLB();
 }
 void volcarMemoria(){
 	int pid,a;
@@ -142,7 +137,20 @@ void volcarMemoria(){
 	else {
 		wait(NULL);
 		log_info(logger,"El proceso hijo termino correctamente");
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
+}
 
+void atencionSIGUSR1(){
+	pthread_t hilo1;
+	puts("Limpiar TLB");
+	pthread_create(&hilo1,NULL,(void*) limpiarTLB,NULL);
+	pthread_join(hilo1,NULL);
+}
+
+void atencionSIGUSR2(){
+	pthread_t hilo2;
+	puts("Limpiar Memoria");
+	pthread_create(&hilo2,NULL,(void*) limpiarMemoria,NULL);
+	pthread_join(hilo2,NULL);
 }

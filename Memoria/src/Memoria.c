@@ -30,10 +30,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+	//Variable no usada
+	//t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
+	if (signal(SIGUSR1,atencionSIGUSR1)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGUSR1");
+	}
+	if(signal(SIGUSR2,atencionSIGUSR2)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGUSR2");
+	}
+	if(signal(SIGPOLL,volcarMemoria)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGPOLL");
+	}
 
 	if (tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
@@ -166,7 +175,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 
 		} else if (tipoNotificacion == TERMINAL_MESSAGE) {
-			procesarMensajesConsola(socket, header, buffer);
+			//Aquí iban los mensajes de consola antiguos
 		}
 	}
 

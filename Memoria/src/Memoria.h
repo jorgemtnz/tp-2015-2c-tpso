@@ -18,6 +18,7 @@
 #include <commons/log.h>
 #include <pthread.h>
 #include <string.h>
+#include <signal.h>
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
@@ -127,6 +128,7 @@ void aplicarFuncion(int idFuncion);
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 void limpiarTLB();
 void limpiarMemoria();
+void volcarMemoria();
 
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
