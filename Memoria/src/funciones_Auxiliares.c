@@ -109,7 +109,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 			flag =1;
 		}
 	}
-	printf("%i %i %i \n",campoAux->idMarco,PID,pag);
 
 	variableEnvejecimientoMarco++;
 	campoAux->contenido = string_new();
@@ -746,23 +745,14 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 
 	}
 
-	t_marco * campoMemoria1 ;
-				campoMemoria1 = iniciarMarco();
+
 	// aca significa que no tuvo que sacar ninguno
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido , contenido);
 
-	int tamanioMemoria;
-		tamanioMemoria=list_size(listaMemoria);
-		printf("%i aa\n",tamanioMemoria);
-		if(tamanioMemoria==5){
 
-			campoMemoria1 =  list_get(listaMemoria,5);
-			printf("\n aa  aa\n");
-
-		}
 
 	if (flagEscritura == 0) {
 		return lecturaMandarCpu;
@@ -776,6 +766,37 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 	}
 
 
+}
+
+t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCPU) {
+
+	char* contenido;
+
+	t_contenido_pagina * lecturaMandarCpu;
+	lecturaMandarCpu = iniciarContenidoPagina();
+	t_contenido_pagina * traerDeSwapUnaPaginaDeUnProceso;
+	traerDeSwapUnaPaginaDeUnProceso = iniciarContenidoPagina();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
+
+	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
+
+	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
+		//sleep(configuracion->retardoMemoria);
+
+		// estos valores me hacen ver que entro aca en el test
+		traerDeSwapUnaPaginaDeUnProceso->PID =999;
+		traerDeSwapUnaPaginaDeUnProceso->numeroPagina = 999;
+
+		return traerDeSwapUnaPaginaDeUnProceso;
+	} else { // aca significa que trajo el id porque esta en memoria
+		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
+		lecturaMandarCpu->contenido = contenido;
+		return lecturaMandarCpu;
+	}
 }
 
 t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
