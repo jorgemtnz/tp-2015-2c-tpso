@@ -92,6 +92,7 @@ typedef struct PCB {
 	uint16_t tamanioRafaga;
 	uint16_t proximaInstruccion;
 	uint16_t instruccionFinal;
+	bool finalizar;
 } t_pcb;
 
 typedef struct Planificacion {

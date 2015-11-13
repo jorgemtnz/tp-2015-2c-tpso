@@ -70,7 +70,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		cpu = list_get(listaCPUs, a);
 		if (cpu->pcb->pid == pid) {
 			list_remove(listaCPUs, a);
-			cpu->pcb->proximaInstruccion = cpu->pcb->instruccionFinal;
+			cpu->pcb->finalizar = true;
 			list_add_in_index(listaCPUs, a, cpu);
 			a = list_size(listaCPUs) + 1;
 		}
@@ -83,6 +83,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 			list_remove(colaDeEntradaSalida, a);
 			pcb->proximaInstruccion = pcb->instruccionFinal;
 			list_add_in_index(colaDeEntradaSalida, a, pcb);
+			list_add(colaDeListos,pcb);
 			a = list_size(colaDeEntradaSalida) + 1;
 
 		}
