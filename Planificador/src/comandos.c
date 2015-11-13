@@ -151,13 +151,7 @@ int cpu(int socket, t_header* header, char* buffer) {
 	pid->PID = 3;
 	t_cpu_ref * cpu = crearCpuRef();
 	cpu = list_get(listaCPUs, 0);
-	t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
 	enviarStruct(cpu->socket,TIEMPO_CPU,pid);
-	int a;
 
-	for(a=0 ; a< list_size(porcentajesCPUs);a++){
-	porcentaje = list_get(porcentajesCPUs,a);
-	printf("cpu %i: %i porciento \n",porcentaje->idCpu,porcentaje->res_porcentaje);
-	}
 	return 0;
 }
