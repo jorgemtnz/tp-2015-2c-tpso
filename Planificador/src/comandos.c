@@ -76,6 +76,18 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		}
 	}
 
+	for (a = 0; a < list_size(colaDeListos); a++) {
+		pcb = list_get(colaDeListos, a);
+
+		if (pcb->pid == pid) {
+			list_remove(colaDeListos, a);
+			pcb->proximaInstruccion = pcb->instruccionFinal;
+			list_add_in_index(colaDeListos, a, pcb);
+
+			a = list_size(colaDeListos) + 1;
+
+		}
+	}
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
 		pcb = list_get(colaDeEntradaSalida, a);
 
@@ -83,7 +95,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 			list_remove(colaDeEntradaSalida, a);
 			pcb->proximaInstruccion = pcb->instruccionFinal;
 			list_add_in_index(colaDeEntradaSalida, a, pcb);
-			list_add(colaDeListos,pcb);
+			list_add(colaDeListos, pcb);
 			a = list_size(colaDeEntradaSalida) + 1;
 
 		}
@@ -151,7 +163,7 @@ int cpu(int socket, t_header* header, char* buffer) {
 	pid->PID = 3;
 	t_cpu_ref * cpu = crearCpuRef();
 	cpu = list_get(listaCPUs, 0);
-	enviarStruct(cpu->socket,TIEMPO_CPU,pid);
+	enviarStruct(cpu->socket, TIEMPO_CPU, pid);
 
 	return 0;
 }
