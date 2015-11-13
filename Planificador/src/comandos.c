@@ -146,13 +146,14 @@ int ps(int socket, t_header* header, char* buffer) {
 
 int cpu(int socket, t_header* header, char* buffer) {
 	putsConsola("comando: cpu");
-	int a;
+	t_PID* pid = malloc(sizeof(t_PID));
+	pid->PID = 3;
 	t_cpu_ref * cpu = crearCpuRef();
 	cpu = list_get(listaCPUs, 0);
-t_PID* pid = malloc(sizeof(t_PID));
-pid->PID = 3;
-	enviarStruct(cpu->socket,TIEMPO_CPU,pid);
 	t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
+	enviarStruct(cpu->socket,TIEMPO_CPU,pid);
+	int a;
+
 	for(a=0 ; a< list_size(porcentajesCPUs);a++){
 	porcentaje = list_get(porcentajesCPUs,a);
 	printf("cpu %i: %i porciento \n",porcentaje->idCpu,porcentaje->res_porcentaje);

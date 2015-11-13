@@ -129,6 +129,8 @@ t_list* colaDeNuevos;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
 t_list* porcentajesCPUs;
+int c;
+
 //===========================================================================================
 
 
