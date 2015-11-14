@@ -95,7 +95,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 			list_remove(colaDeEntradaSalida, a);
 			pcb->proximaInstruccion = pcb->instruccionFinal;
 			list_add_in_index(colaDeEntradaSalida, a, pcb);
-			list_add(colaDeListos, pcb);
+		//	list_add(colaDeListos, pcb);
 			a = list_size(colaDeEntradaSalida) + 1;
 
 		}

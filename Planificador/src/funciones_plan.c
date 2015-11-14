@@ -195,6 +195,10 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
 	int a;
+	//ESTO ES PARA EL COMANDO FINALIZAR
+		if(respuestaEjecucion->pcb->finalizar == true){
+			respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;
+		}
 
 	printConsola("Finalizo OK: %s\n",
 			respuestaEjecucion->finalizoOk ? "Si" : "No");
@@ -223,6 +227,12 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header,
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
 	int a;
+
+//ESTO ES PARA EL COMANDO FINALIZAR
+	if(respuestaEjecucion->pcb->finalizar == true){
+		respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;
+	}
+
 
 	char** respuestaDeCadaInstruccion = string_split(
 			respuestaEjecucion->resultadosInstrucciones, "\0");

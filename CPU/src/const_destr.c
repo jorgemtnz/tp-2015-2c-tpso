@@ -69,6 +69,7 @@ t_pcb * crearPcb() {
 	pcb->rutaArchivoMcod = '\0';
 	pcb->tamanioRafaga = 0;
 	pcb->tieneDesalojo = true;
+	pcb->finalizar = false;
 	return pcb;
 }
 
