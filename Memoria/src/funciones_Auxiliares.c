@@ -372,11 +372,12 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco_y_bit* marcoYBit;
-	marcoYBit = iniciarMarcoYBit();
+
 
 	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
+		marcoYBit = iniciarMarcoYBit();
 		if (campoTablaDePag->idProc == idProc) {
 			marcoYBit->idMarco = campoTablaDePag->idMarco;
 			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
@@ -488,18 +489,13 @@ void eliminarDeTablaDePaginasDefinitivamente(int PID) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	printf("%i\n",tamanioTablaDePaginas);
-	for (a = 0; a < tamanioTablaDePaginas; a++) {
-		campoTablaDePag = list_get(listaTablaDePag, a);
-		printf("%i", campoTablaDePag->idProc);
-	}
-
 	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePaginas; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		printf("\n%i",campoTablaDePag->idProc);
 		if (campoTablaDePag->idProc == PID) {
 			list_remove(listaTablaDePag, a);
+			a --;
+			tamanioTablaDePaginas --;
 		}
 	}
 
