@@ -117,6 +117,7 @@ static void test_iniciar_4_procesos_con_22_paginas_en_memoria() {
 
 	CU_ASSERT_EQUAL(tamanioFinalTablaDePag, 22);
 
+
 }
 
 static void test_probar_escribir_memoria_sin_TLB(){
@@ -189,6 +190,7 @@ static void test_probar_escribir_memoria_sin_TLB(){
 	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->idMarco,4 +5+6+4);
 	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->pagina, 4);
 	CU_ASSERT_EQUAL(estructuraDevolucionEscribirFalso->socketSwap, socketMentiroso);
+
 
 
 }
@@ -339,6 +341,7 @@ static void test_probar_leer_falso() {
 	CU_ASSERT_EQUAL(campoLeer->numeroPagina, 11);
 
 
+
 }
 
 
@@ -365,8 +368,10 @@ static void test_probar_finalizar_un_proceso_sin_TLB() {
 	PID4 = crearPID();
 	PID4->PID = 4;
 
+	int tamanioTablaDePag, tamanioMemoria, socketFalso = 8,a;
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
 
-	int tamanioTablaDePag, tamanioMemoria, socketFalso = 8;
 
 	id1 = finalizar_falso(PID1, socketFalso);
 

@@ -488,13 +488,21 @@ void eliminarDeTablaDePaginasDefinitivamente(int PID) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
+	printf("%i\n",tamanioTablaDePaginas);
+	for (a = 0; a < tamanioTablaDePaginas; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		printf("%i", campoTablaDePag->idProc);
+	}
+
 	sleep(configuracion->retardoMemoria);
 	for (a = 0; a < tamanioTablaDePaginas; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
+		printf("\n%i",campoTablaDePag->idProc);
 		if (campoTablaDePag->idProc == PID) {
 			list_remove(listaTablaDePag, a);
 		}
 	}
+
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
@@ -801,12 +809,13 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 
 
-	int a, tamanioListaMarcoYBit;
+	int a, tamanioListaMarcoYBit,tamanioTDP;
 	t_list * listaDeMarcoYBit;
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 	listaDeMarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
 	tamanioListaMarcoYBit = list_size(listaDeMarcoYBit);
+
 
 
 
