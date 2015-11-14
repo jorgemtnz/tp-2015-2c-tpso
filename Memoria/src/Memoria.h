@@ -132,7 +132,7 @@ void limpiarMemoria();
 void volcarMemoria();
 void atencionSIGUSR1();
 void atencionSIGUSR2();
-
+void asignarSeniales();
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================

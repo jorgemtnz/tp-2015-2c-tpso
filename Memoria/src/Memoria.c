@@ -3,6 +3,7 @@
 int main(int argc, char *argv[]) {
 	conexiones = dictionary_create();
 	inicializacionDesdeCero();
+	asignarSeniales();
 
 	logger = log_create("LOG_Memoria.log", "Memoria", false, LOG_LEVEL_INFO); //Inicializacion logger
 
@@ -34,16 +35,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	//t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
-	if (signal(SIGUSR1,atencionSIGUSR1)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGUSR1");
-	}
-	if(signal(SIGUSR2,atencionSIGUSR2)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGUSR2");
-	}
-	if(signal(SIGPOLL,volcarMemoria)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGPOLL");
-	}
-
 	if (tipoNotificacion == NEW_CONNECTION) {
 		dictionary_put(conexiones, "CPU", string_itoa(socket));
 		socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
@@ -181,6 +172,19 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 	return 0;
 	pthread_mutex_unlock(&mutexProcesadorMensajes);
+}
+
+void asignarSeniales(){
+	if (signal(SIGUSR1,atencionSIGUSR1)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGUSR1");
+	}
+	if(signal(SIGUSR2,atencionSIGUSR2)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGUSR2");
+	}
+	if(signal(SIGPOLL,volcarMemoria)==SIG_ERR){
+		log_error(logger, "No pudo cambiarse la señal SIGPOLL");
+	}
+
 }
 
 char* decirHolaMundo() {
