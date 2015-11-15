@@ -126,6 +126,7 @@ void volcarMemoria(){
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0) {
+		puts("Soy el proceso hijo");
 		t_marco* campoMarco;
 		char* texto = string_new();
 		for (a=0;a<list_size(listaMemoria);a++){
@@ -133,9 +134,9 @@ void volcarMemoria(){
 			string_append_with_format(&texto,"El marco %s ubicado en la posición %s contiene: %s /n",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
 			log_info(logger,texto);
 		}
-		kill(pid,SIGTERM);
 	}
 	else {
+		puts("Soy el proceso padre");
 		wait(NULL);
 		log_info(logger,"El proceso hijo termino correctamente");
 		exit(EXIT_SUCCESS);
