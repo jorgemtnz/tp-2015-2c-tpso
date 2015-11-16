@@ -75,6 +75,11 @@ typedef struct {
 	t_resultado_funcion resultado;
 } t_devolucion_escribir_o_leer;
 
+
+typedef struct {
+	int lecturas;
+	int escrituras;
+}t_contador;
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
@@ -88,6 +93,7 @@ t_PID* crearEstructuraPid();
 t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar();
 t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer();
 t_contenido_pagina* crearContenidoPagina();
+t_contador * crearContador();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -125,6 +131,7 @@ char *espacioDatos;
 t_list* listaDeProcesosCargados;
 t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
+t_list* contadorLecturasYEscrituras;
 
 //test
 char* decirHolaMundo();

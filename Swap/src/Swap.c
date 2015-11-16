@@ -58,6 +58,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			//printf("el pid recibido %i  y cantidad de pag %i  \n\n", estructuraIniciar->PID, estructuraIniciar->cantidadPaginas);
 			t_respuesta_iniciar_o_finalizar* resultado;
 			t_iniciar_swap* estructuraAEnviar = crearEstructuraIniciar();
+			t_contador* contador = crearContador();
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 			estructuraAEnviar->PID = resultado->PID;
@@ -65,6 +66,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
+				list_add_in_index(contadorLecturasYEscrituras,estructuraIniciar->PID,contador);
 			} else {
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
@@ -78,6 +80,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar=  crearContenidoPagina();
+			t_contador* contador = crearContador();
 			//warning no se usa variable, entonces comento
 //			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
 
@@ -90,6 +93,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
+				contador = list_get(contadorLecturasYEscrituras,procesoAEscribir->PID);
+				contador->escrituras ++;
+				list_replace(contadorLecturasYEscrituras,procesoAEscribir->PID,contador);
 			} else {
 				log_info(logger, "FALLO EL ESCRIBIR");
 			}
@@ -102,6 +108,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_leerDeProceso* procesoRecibido = (t_leerDeProceso*) buffer;
 			t_devolucion_escribir_o_leer* resultado;
 			t_contenido_pagina* paginaAEnviar;
+			t_contador* contador = crearContador();
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
 			resultado = leer(procesoRecibido, listaDeProcesosCargados);
@@ -110,6 +117,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
+
+				contador = list_get(contadorLecturasYEscrituras,procesoRecibido->PID);
+				contador->lecturas ++;
+				list_replace(contadorLecturasYEscrituras,procesoRecibido->PID,contador);
 			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
@@ -146,11 +157,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		case (FIN_PROCESO_SWAP): {
 			t_PID* estructuraFinalizar = (t_PID*) buffer;
 			t_respuesta_iniciar_o_finalizar* resultado;
+			t_contador *contador = crearContador();
 			resultado = crearDevolucionIniciarOFinalizar();
 			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 			pid_a_enviar->PID = resultado->PID;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
+
+					contador = list_get(contadorLecturasYEscrituras,estructuraFinalizar->PID);
+					printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n",estructuraFinalizar->PID,contador->lecturas,contador->lecturas );
+
 			} else {
 				log_info(logger, "FALLO EL FINALIZAR");
 			}

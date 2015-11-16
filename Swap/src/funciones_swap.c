@@ -5,6 +5,7 @@ void inicializarListas() {
 
 	listaDeEspaciosLibres = list_create();
 	listaDeProcesosCargados = list_create();
+	contadorLecturasYEscrituras = list_create();
 }
 void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
