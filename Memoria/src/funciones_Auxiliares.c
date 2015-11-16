@@ -12,29 +12,26 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 
 	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
-		for (a = 0; a < tamanioTLB; a++) {
+		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 			campoTLB = list_get(listaTLB, a);
-			if (campoTLB->idProc == idProc
-					&& campoTLB->paginaDelProceso
-							== nroPag /*que este en un marco*/) {
+			if (campoTLB->idProc == idProc && campoTLB->paginaDelProceso == nroPag /*que este en un marco*/) {
 				marcoYBit->idMarco = campoTLB->idMarco;
 				marcoYBit->bitPresencia = campoTLB->bitPresencia;
 				flagTLB = 1;
 			}
 		}
-	} else {
-		// sino veo si esta en la tabla de paginas
+	}
 
-		tamanioTablaPag = list_size(listaTablaDePag);
-		sleep(configuracion->retardoMemoria);
-		for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
-			campoTablaDePag = list_get(listaTablaDePag, a);
-			if (campoTablaDePag->idProc == idProc
-					&& campoTablaDePag->paginaDelProceso == nroPag) {
-				marcoYBit->idMarco = campoTablaDePag->idMarco;
-				marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
-				flagTDP = 1;
-			}
+	// sino veo si esta en la tabla de paginas
+
+	tamanioTablaPag = list_size(listaTablaDePag);
+	sleep(configuracion->retardoMemoria);
+	for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
+		campoTablaDePag = list_get(listaTablaDePag, a);
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
+			marcoYBit->idMarco = campoTablaDePag->idMarco;
+			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
+			flagTDP = 1;
 		}
 	}
 
@@ -606,6 +603,10 @@ void iniciarConfiguracionTLBNoHabilitada() {
 	configuracion->tlbHabilitada = 0;
 }
 
+void iniciarConfiguracionTLBHabilitada() {
+	configuracion->tlbHabilitada = 1;
+}
+
 void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) {
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
@@ -664,6 +665,20 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	campoMemoria->idMarco = 459;
 	list_add(listaMemoria, campoMemoria);
 
+}
+
+void hardcodearValoresEnTLB(int PID,int id, int pag){
+	t_TLB* campoTLB;
+	campoTLB = iniciarTLB();
+
+	campoTLB->idProc = PID;
+	campoTLB->idMarco = id;
+	campoTLB->paginaDelProceso = pag;
+	campoTLB->bitPagModificada = 0;
+	campoTLB->bitPresencia =0;
+	campoTLB->posicion=0;
+
+	list_add(listaTLB,campoTLB);
 }
 
 t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
