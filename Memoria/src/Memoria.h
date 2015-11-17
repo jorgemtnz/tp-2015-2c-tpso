@@ -232,5 +232,8 @@ t_list* listaTablaDePag;
 // ----------- Semaforos ---------- //
 pthread_mutex_t mutexProcesadorMensajes;
 pthread_mutex_t mutexParaInicializado;
+pthread_mutex_t mutexListaMemoria;
+pthread_mutex_t mutexListaTLB;
+pthread_mutex_t mutexTablaPags;
 
 #endif /* MEMORIA_H_ */
