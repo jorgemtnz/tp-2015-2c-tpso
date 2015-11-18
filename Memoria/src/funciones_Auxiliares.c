@@ -299,10 +299,20 @@ t_marco_con_flag* buscarModificadaYUsoEnCero() {
 		}
 	}
 
+	indiceClockM = a + 1;
+
+	if(indiceClockM == tamanioMemoria){
+			indiceClockM =0;
+	}
+
 	marcoYFlag->flag = flagReemplazo;
 	if(flagReemplazo == 1){
 		marcoYFlag->marco = campoMarco;
 	}
+
+
+
+	return marcoYFlag;
 }
 
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
@@ -335,10 +345,18 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 		}
 	}
 
+	indiceClockM = a + 1;
+
+	if(indiceClockM == tamanioMemoria){
+		indiceClockM =0;
+	}
+
 	marcoYFlag->flag = flagReemplazo;
 	if (flagReemplazo == 1) {
 		marcoYFlag->marco = campoMarco;
 	}
+
+	return marcoYFlag;
 }
 
 void sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
