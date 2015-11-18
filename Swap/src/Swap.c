@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 	while (list_size(contadorLecturasYEscrituras) > 0) {
 			contador = list_get(contadorLecturasYEscrituras, 0);
 			list_remove(contadorLecturasYEscrituras, 0);
-			free(contadorLecturasYEscrituras);
+			free(contador);
 		}
 
 	//free(listaDeEspaciosLibres);
