@@ -88,7 +88,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 
 }
 
-void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
+void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritura) {
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
 	t_TablaDePaginas * campoTablaDePag;
@@ -115,6 +115,14 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag) {
 	if (configuracion->tlbHabilitada == 1) {
 		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
 	}
+
+	if(flagEscritura == 0){
+		campoAux->bitUso =0;
+		campoAux->bitModificada = 1;
+	}else {
+		campoAux->bitUso = 0;
+	}
+
 	list_add(listaMemoria, campoAux);
 
 }
@@ -267,6 +275,98 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
 
 }
 
+t_marco_con_flag* buscarModificadaYUsoEnCero() {
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag= iniciarMarcoYFlag();
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	int a, tamanioMemoria, flagReemplazo = 0;
+	tamanioMemoria = list_size(listaMemoria);
+
+	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+										  // si no se entiende por que, preguntarle a los matis
+	for (a = indiceClockM; a < tamanioMemoria && flagReemplazo == 0; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (campoMarco->bitModificada == 0 && campoMarco->bitUso == 0) {
+			flagReemplazo = 1;
+		}
+	}
+
+	for (a = 0; a < indiceClockM && flagReemplazo == 0; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (campoMarco->bitModificada == 0 && campoMarco->bitUso == 0) {
+			flagReemplazo = 1;
+		}
+	}
+
+	marcoYFlag->flag = flagReemplazo;
+	if(flagReemplazo == 1){
+		marcoYFlag->marco = campoMarco;
+	}
+}
+
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag = iniciarMarcoYFlag();
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	int a, tamanioMemoria, flagReemplazo = 0;
+	tamanioMemoria = list_size(listaMemoria);
+
+	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+										  // si no se entiende por que, preguntarle a los matis
+	for (a = indiceClockM; a < tamanioMemoria && flagReemplazo == 0; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (campoMarco->bitModificada == 1 && campoMarco->bitUso == 0) {
+			flagReemplazo = 1;
+		} else {
+			campoMarco->bitUso = 0;
+			list_replace(listaMemoria, a, campoMarco);
+		}
+	}
+
+	for (a = 0; a < indiceClockM && flagReemplazo == 0; a++) {
+		campoMarco = list_get(listaMemoria, a);
+		if (campoMarco->bitModificada == 1 && campoMarco->bitUso == 0) {
+			flagReemplazo = 1;
+		} else {
+			campoMarco->bitUso = 0;
+			list_replace(listaMemoria, a, campoMarco);
+		}
+	}
+
+	marcoYFlag->flag = flagReemplazo;
+	if (flagReemplazo == 1) {
+		marcoYFlag->marco = campoMarco;
+	}
+}
+
+void sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
+		char* contenidoACargar, int pagACargar, int flagEscritura){
+
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag= iniciarMarcoYFlag();
+
+
+	marcoYFlag = buscarModificadaYUsoEnCero();
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
+	}
+
+	if(marcoYFlag->flag == 0){
+		marcoYFlag = buscarModificadaYUsoEnCero();
+	}
+
+	if(marcoYFlag->flag == 0){
+		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
+	}
+
+
+	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar,
+				flagEscritura, socketSwap);
+}
+
 void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 		int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
 	/* solo se usa en las funciones de sacar a un marco de memoria entonces
@@ -321,7 +421,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	if (configuracion->tlbHabilitada == 1) {
 		eliminarDeTLB(campoMarco->idMarco);
 	}
-	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar);
+	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar,flagEscritura);
 
 	if (bitTablaDePag == 1 || bitTLB == 1) { // teoricamente los dos tienen que estar en uno
 
@@ -519,12 +619,15 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 		}
 
 	} else { // aca significa que es el de clock
-		printf("no sale bien");
-
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
+		}
 	}
 
 	// aca significa que no tuvo que sacar ninguno
-	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
+	cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido , contenido);
@@ -596,6 +699,7 @@ void inicializacionDesdeCero() {
 	variableIdMarco = 0;
 	variableTLB = 0;
 	variableEnvejecimientoMarco = 0;
+	indiceClockM=0;
 
 }
 
@@ -767,7 +871,7 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 
 
 	// aca significa que no tuvo que sacar ninguno
-	cargarNuevoMarcoAMemoria(contenido, idProc, pag);
+	cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido , contenido);

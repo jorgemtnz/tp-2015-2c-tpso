@@ -56,6 +56,8 @@ typedef struct { // estructura que se carga en la lista de memoria principal
 	int idMarco; // la memoria identificara a cada marco a traves de este id
 	char* contenido; // el texto que tendra esa posicion
 	int posicion;
+	int bitModificada;
+	int bitUso;
 } t_marco;
 
 typedef struct {
@@ -110,6 +112,12 @@ typedef struct {
 	char* contenido;
 }t_escribir_falso;
 
+typedef struct{
+	t_marco* marco;
+	int flag; //0 no lo encontro, 1 si lo encontro
+}t_marco_con_flag;
+
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
@@ -146,6 +154,7 @@ t_TablaDePaginas* iniciarTablaDePaginas();
 t_contenido_pagina * iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
+t_marco_con_flag * iniciarMarcoYFlag();
 
 t_marco_y_bit* iniciarMarcoYBit();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
@@ -155,12 +164,16 @@ void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
 void traerDeSwapUnaPaginaDeUnProceso(int idProc, int nroDePag,int socketSwap);
 void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc,int nroPag, char* textoAEscribir,int socketSwap);
-void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag);
+void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag, int flagEscritura);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenidoACargar,int pagACargar, int flagEscritura);
 void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
 void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
 void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar);
+void sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
+		char* contenidoACargar, int pagACargar, int flagEscritura);
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
+t_marco_con_flag* buscarModificadaYUsoEnCero();
 //warning no declarado aca, entonces lo agrego
 void sacarAlPrimeroDeTLB() ;
 void eliminarDeTLB(int idMenor);
@@ -222,7 +235,7 @@ void hardcodearValoresEnTLB(int PID,int id, int pag);
 t_configuracion* configuracion;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int variableIdMarco,variableTLB,variableEnvejecimientoMarco; // contador de paginas de la tabla de paginas
+int variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;
