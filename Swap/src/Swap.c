@@ -124,6 +124,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 				contador = list_get(contadorLecturasYEscrituras, procesoRecibido->PID);
 				contador->lecturas++;
+
 				list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
 			} else {
 				log_info(logger, "FALLO EL LEER");
@@ -174,7 +175,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 				contador = list_get(contadorLecturasYEscrituras, estructuraFinalizar->PID);
 				printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
-						contador->lecturas, contador->lecturas);
+						contador->lecturas, contador->escrituras);
 
 			} else {
 				log_info(logger, "FALLO EL FINALIZAR");
