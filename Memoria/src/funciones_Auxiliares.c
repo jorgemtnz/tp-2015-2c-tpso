@@ -672,7 +672,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 
 	} else { // aca significa que es el de clock
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-			sacarDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
+			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
 		}
@@ -768,7 +768,6 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
-	t_marco * campoMemoria1 = iniciarMarco();
 
 	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag1);
@@ -977,7 +976,7 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 
 
-	int a, tamanioListaMarcoYBit,tamanioTDP;
+	int a, tamanioListaMarcoYBit;
 	t_list * listaDeMarcoYBit;
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
