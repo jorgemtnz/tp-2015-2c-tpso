@@ -215,6 +215,38 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
+void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
+		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+
+	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
+	int a, tamanioListaMarco, primero = 0;
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_marco* campoAux;
+	campoAux = iniciarMarco();
+	t_list* listaMarco;
+	listaMarco = list_create();
+
+	listaMarco = buscarLosMarcosDeProcesoEnMemoria(PIDACargar);
+	tamanioListaMarco = list_size(listaMarco);
+	for (a = 0; a < tamanioListaMarco; a++) {
+		campoMarco = list_get(listaMarco, a);
+		if (primero == 0) {
+			primero++;
+			campoAux = campoMarco;
+		} else {
+			if (campoMarco->posicion < campoAux->posicion) {
+				campoAux = campoMarco;
+			}
+		}
+
+	}
+
+	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
+			flagEscritura, socketSwap);
+
+}
+
 void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
 
@@ -359,7 +391,9 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 	return marcoYFlag;
 }
 
-void sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
+
+
+void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
 		char* contenidoACargar, int pagACargar, int flagEscritura){
 
 	t_marco_con_flag* marcoYFlag;
@@ -638,9 +672,9 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag,
 
 	} else { // aca significa que es el de clock
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
+			sacarDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
-			sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
+			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
 		}
 	}
 
@@ -714,6 +748,7 @@ void inicializacionDesdeCero() {
 	listaMemoria = list_create();
 	listaTLB = list_create();
 	listaTablaDePag = list_create();
+	listaIndices = list_create();
 	variableIdMarco = 0;
 	variableTLB = 0;
 	variableEnvejecimientoMarco = 0;

@@ -170,8 +170,10 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenido
 void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
 void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
 void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar);
-void sacarAlMasViejoUsadoDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
+void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
 		char* contenidoACargar, int pagACargar, int flagEscritura);
+void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
+		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
 //warning no declarado aca, entonces lo agrego
@@ -241,6 +243,7 @@ int variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM; // con
 t_list* listaMemoria;
 t_list* listaTLB;
 t_list* listaTablaDePag;
+t_list* listaIndices;
 
 // ----------- Semaforos ---------- //
 pthread_mutex_t mutexProcesadorMensajes;
