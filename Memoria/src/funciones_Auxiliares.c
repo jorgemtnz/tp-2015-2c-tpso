@@ -9,7 +9,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
-
+	pthread_mutex_lock(&mutexListaTLB);
 	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
@@ -21,11 +21,11 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 			}
 		}
 	}
-
+	pthread_mutex_unlock(&mutexListaTLB);
 	// sino veo si esta en la tabla de paginas
-
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaPag = list_size(listaTablaDePag);
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
@@ -34,7 +34,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 			flagTDP = 1;
 		}
 	}
-
+	pthread_mutex_unlock(&mutexTablaPags);
 	return marcoYBit;
 
 }
@@ -48,7 +48,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMarco;
 	campoMarco = iniciarMarco();
-
+	pthread_mutex_lock(&mutexListaTLB);
 	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
@@ -60,11 +60,12 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 			}
 		}
 	}
+	pthread_mutex_unlock(&mutexListaTLB);
 	// veo si esta en la tabla de paginas y la modifico ( por mas que este en la TLB, tambien tengo que modificarlo
 	// en la Tabla de Pag)
-
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaPag = list_size(listaTablaDePag);
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
@@ -73,8 +74,10 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 			flagTablaDePag = 1;
 		}
 	}
+	pthread_mutex_unlock(&mutexTablaPags);
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioMemoria && flagMemoria == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
 		if (campoMarco->idMarco == idMarco) {
@@ -85,7 +88,7 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 			flagMemoria = 1;
 		}
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 }
 
 void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritura) {
@@ -94,9 +97,10 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 	t_TablaDePaginas * campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	int tamanioTablaDePag, a, flag = 0;
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePag && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID
@@ -106,6 +110,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 			flag =1;
 		}
 	}
+	pthread_mutex_unlock(&mutexTablaPags);
 
 	variableEnvejecimientoMarco++;
 	campoAux->contenido = string_new();
@@ -122,8 +127,9 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 	}else {
 		campoAux->bitUso = 0;
 	}
-
+	pthread_mutex_lock(&mutexListaMemoria);
 	list_add(listaMemoria, campoAux);
+	pthread_mutex_unlock(&mutexListaMemoria);
 
 }
 
@@ -132,8 +138,9 @@ void cargarNuevoEnTLB(int PID, int pag, int id) {
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
 
+	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
-
+	pthread_mutex_unlock(&mutexListaTLB);
 	if (tamanioTLB == configuracion->entradasTlb) {
 		sacarAlPrimeroDeTLB();
 	}
@@ -146,7 +153,9 @@ void cargarNuevoEnTLB(int PID, int pag, int id) {
 	campoTLB->posicion = variableTLB;
 	campoTLB->bitPresencia=1;
 
+	pthread_mutex_lock(&mutexListaTLB);
 	list_add(listaTLB, campoTLB);
+	pthread_mutex_unlock(&mutexListaTLB);
 }
 
 void sacarAlPrimeroDeTLB() {
@@ -156,6 +165,7 @@ void sacarAlPrimeroDeTLB() {
 	t_TLB * campoMasViejoTLB;
 	campoMasViejoTLB = iniciarTLB();
 
+	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
 
 	for (a = 0; a < tamanioTLB; a++) {
@@ -170,17 +180,19 @@ void sacarAlPrimeroDeTLB() {
 		}
 	}
 	list_remove(listaTLB, posicionEnLista);
+	pthread_mutex_unlock(&mutexListaTLB);
 
 }
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	bool respuesta;
 	int a, tamanioTablaDePag, contadorMarcosEnMemoria = 0, flag = 0;
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc
@@ -192,26 +204,12 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 			}
 		}
 	}
-
+	pthread_mutex_unlock(&mutexTablaPags);
 	if (flag == 0) {
 		respuesta = false;
 	} else {
 		respuesta = true;
 	}
-	return respuesta;
-}
-
-bool estaLlenaLaMemoria() {
-	bool respuesta;
-	int tamanioMemoria;
-	tamanioMemoria = list_size(listaMemoria);
-
-	if (tamanioMemoria < configuracion->cantidadMarcos) {
-		respuesta = false;
-	} else {
-		respuesta = true;
-	}
-
 	return respuesta;
 }
 
@@ -245,6 +243,23 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
 			flagEscritura, socketSwap);
 
+}
+
+
+bool estaLlenaLaMemoria() {
+	bool respuesta;
+	int tamanioMemoria;
+	pthread_mutex_lock(&mutexListaMemoria);
+	tamanioMemoria = list_size(listaMemoria);
+	pthread_mutex_unlock(&mutexListaMemoria);
+
+	if (tamanioMemoria < configuracion->cantidadMarcos) {
+		respuesta = false;
+	} else {
+		respuesta = true;
+	}
+
+	return respuesta;
 }
 
 void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
@@ -288,8 +303,9 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
 	int tamanioMemoria, a, primero = 0;
 //warning no se usan variables, entonces lo comento
 //	int nuevoId,idMenor, id;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioMemoria; a++) {
 		campoMarco = list_get(listaMemoria, a);
 		if (primero == 0) {
@@ -302,6 +318,7 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar,
 		}
 
 	}
+	pthread_mutex_unlock(&mutexListaMemoria);
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
 			flagEscritura, socketSwap);
 
@@ -313,9 +330,10 @@ t_marco_con_flag* buscarModificadaYUsoEnCero() {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	int a, tamanioMemoria, flagReemplazo = 0;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
 
-	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+	usleep(configuracion->retardoMemoria*1000); // este usleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
 	for (a = indiceClockM; a < tamanioMemoria && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
@@ -330,7 +348,7 @@ t_marco_con_flag* buscarModificadaYUsoEnCero() {
 			flagReemplazo = 1;
 		}
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 	indiceClockM = a + 1;
 
 	if(indiceClockM == tamanioMemoria){
@@ -353,9 +371,10 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	int a, tamanioMemoria, flagReemplazo = 0;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
 
-	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+	usleep(configuracion->retardoMemoria*1000); // este usleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
 	for (a = indiceClockM; a < tamanioMemoria && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
@@ -376,7 +395,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 			list_replace(listaMemoria, a, campoMarco);
 		}
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 	indiceClockM = a + 1;
 
 	if(indiceClockM == tamanioMemoria){
@@ -390,8 +409,6 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 
 	return marcoYFlag;
 }
-
-
 
 void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
 		char* contenidoACargar, int pagACargar, int flagEscritura){
@@ -430,7 +447,9 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	int bitTLB = 0, bitTablaDePag = 0;
 	//warning no usada variable, entonces comento
 //		int	nuevoId;
+	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
@@ -451,6 +470,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 				}
 			}
 		}
+
 	} else {
 
 		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0; a++) {
@@ -466,8 +486,9 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 				}
 			}
 		}
-
 	}
+	pthread_mutex_unlock(&mutexListaTLB);
+	pthread_mutex_unlock(&mutexTablaPags);
 	eliminarDeMemoria(campoMarco->idMarco);
 	eliminarDeTablaDePaginas(campoMarco->idMarco);
 	if (configuracion->tlbHabilitada == 1) {
@@ -478,7 +499,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 	if (bitTablaDePag == 1 || bitTLB == 1) { // teoricamente los dos tienen que estar en uno
 
 		if (flagEscritura == 0) { // por leer
-			sleep(configuracion->retardoMemoria);
+			usleep(configuracion->retardoMemoria*1000);
 			enviarASwapContenidoPaginaDesactualizada(idProc, pagina,
 					campoMarco->contenido, socketSwap);
 		} else { // por escribir
@@ -495,11 +516,12 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
 char* traerContenidoDeMarco(int idMarco) {
 	char* contenido;
 	int tamanioMemoria, a, flag = 0;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
 	t_marco* campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioMemoria && flag == 0; a++) {
 		campoMemoria = list_get(listaMemoria, a);
 		if (campoMemoria->idMarco == idMarco) {
@@ -508,6 +530,7 @@ char* traerContenidoDeMarco(int idMarco) {
 			flag = 1;
 		}
 	}
+	pthread_mutex_unlock(&mutexListaMemoria);
 	contenido = campoMemoria->contenido;
 
 	return contenido;
@@ -517,13 +540,14 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 	int a, tamanioTablaDePag;
 	t_list* listamarcoYBit;
 	listamarcoYBit = list_create();
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco_y_bit* marcoYBit;
 
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		marcoYBit = iniciarMarcoYBit();
@@ -533,7 +557,7 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 			list_add(listamarcoYBit, marcoYBit);
 		}
 	}
-
+	pthread_mutex_unlock(&mutexTablaPags);
 	return listamarcoYBit;
 
 }
@@ -551,11 +575,12 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 
 	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
 	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioListaMarcos = list_size(listaMemoria);
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = 0;
-		sleep(configuracion->retardoMemoria);
+		usleep(configuracion->retardoMemoria*1000);
 		for (b = 0;b <tamanioListaMarcos &&  flag == 0; b++) {
 			campoMarco = list_get(listaMemoria, b);
 			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
@@ -565,12 +590,13 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 		}
 
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 	return listaMarcos;
 }
 
 void eliminarDeMemoria(int id) {
 	int a, tamanioMemoria, flag = 0;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
@@ -582,16 +608,17 @@ void eliminarDeMemoria(int id) {
 			flag = 1;
 		}
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 }
 
 void eliminarDeTablaDePaginas(int id) {
 	int a, tamanioTablaDePaginas, flag = 0;
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == id) {
@@ -599,10 +626,12 @@ void eliminarDeTablaDePaginas(int id) {
 			flag = 1;
 		}
 	}
+	pthread_mutex_unlock(&mutexListaMemoria);
 }
 
 void eliminarDeTLB(int idMenor) {
 	int a, tamanioTLB, flag = 0;
+	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
@@ -614,11 +643,13 @@ void eliminarDeTLB(int idMenor) {
 			flag = 1;
 		}
 	}
+	pthread_mutex_unlock(&mutexListaTLB);
 
 }
 
 void eliminarDeTLBDefinitivamente(int id) {
 	int a, tamanioTLB, flag = 0;
+	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
@@ -630,15 +661,17 @@ void eliminarDeTLBDefinitivamente(int id) {
 			flag = 1;
 		}
 	}
+	pthread_mutex_unlock(&mutexListaTLB);
 }
 
 void eliminarDeTablaDePaginasDefinitivamente(int PID) {
 	int a, tamanioTablaDePaginas;
+	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	sleep(configuracion->retardoMemoria);
+	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePaginas; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID) {
@@ -647,6 +680,7 @@ void eliminarDeTablaDePaginasDefinitivamente(int PID) {
 			tamanioTablaDePaginas --;
 		}
 	}
+	pthread_mutex_unlock(&mutexTablaPags);
 
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -769,6 +803,7 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
 
+	pthread_mutex_lock(&mutexTablaPags);
 	campoTablaDePag = iniciarTablaDePaginas();
 	campoTablaDePag = list_get(listaTablaDePag, pag1);
 	campoTablaDePag->idMarco = 455;
@@ -793,9 +828,11 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	campoTablaDePag = list_get(listaTablaDePag, pag5);
 	campoTablaDePag->idMarco = 459;
 	list_replace(listaTablaDePag, 18, campoTablaDePag);
+	pthread_mutex_unlock(&mutexTablaPags);
 
 	campoMemoria = iniciarMarco();
 	//warning asignacion incorrecta, se debe corregir, uso strdup para alojar con malloc, luego se debe hacer el free.
+	pthread_mutex_lock(&mutexListaMemoria);
 	campoMemoria->contenido = strdup("PID 1");
 	campoMemoria->idMarco = 455;
 	list_add(listaMemoria, campoMemoria);
@@ -820,6 +857,7 @@ void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) 
 	campoMemoria->contenido = strdup("PID 4");
 	campoMemoria->idMarco = 459;
 	list_add(listaMemoria, campoMemoria);
+	pthread_mutex_unlock(&mutexListaMemoria);
 
 }
 
@@ -833,8 +871,9 @@ void hardcodearValoresEnTLB(int PID,int id, int pag){
 	campoTLB->bitPagModificada = 0;
 	campoTLB->bitPresencia =0;
 	campoTLB->posicion=0;
-
+	pthread_mutex_lock(&mutexListaTLB);
 	list_add(listaTLB,campoTLB);
+	pthread_mutex_unlock(&mutexListaTLB);
 }
 
 t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
@@ -851,7 +890,9 @@ t_PID* iniciar_falso(int idProc, int cantPag, int socketCPU) {
 		tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
 		tablaDePag->bitPagModificada = 0;
 		tablaDePag->bitPresencia = 0;
+		pthread_mutex_lock(&mutexTablaPags);
 		list_add(listaTablaDePag, tablaDePag);
+		pthread_mutex_unlock(&mutexTablaPags);
 
 		variableIdMarco++;
 	}
@@ -879,7 +920,7 @@ t_escribir_falso* escribir_falso(int idProc, int nroPag, char* textoAEscribir, i
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
-		sleep(configuracion->retardoMemoria);
+		usleep(configuracion->retardoMemoria*1000);
 		estructuraDevolucionEscribirFalso->PID = idProc;
 		estructuraDevolucionEscribirFalso->pagina = nroPag;
 		estructuraDevolucionEscribirFalso->socketSwap = socketSwap;
@@ -959,7 +1000,7 @@ t_contenido_pagina* leer_falso(int idProc, int pag, int socketSwap, int socketCP
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
-		sleep(configuracion->retardoMemoria);
+		usleep(configuracion->retardoMemoria*1000);
 
 		// estos valores me hacen ver que entro aca en el test
 		traerDeSwapUnaPaginaDeUnProceso->PID =11;

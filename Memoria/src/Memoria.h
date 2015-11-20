@@ -174,8 +174,6 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
 		char* contenidoACargar, int pagACargar, int flagEscritura);
 void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
-void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
-		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
 //warning no declarado aca, entonces lo agrego
