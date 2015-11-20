@@ -93,7 +93,9 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 }
 void limpiarTLB(){
 	if (configuracion->tlbHabilitada==1){
+		pthread_mutex_lock(&mutexListaTLB);
 		list_clean(listaTLB);
+		pthread_mutex_unlock(&mutexListaTLB);
 	} else {
 		puts("TLB inactiva");
 	}
@@ -102,6 +104,7 @@ void limpiarMemoria(){
 	int i;
 	t_TablaDePaginas* campoTabla;
 	int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	pthread_mutex_lock(&mutexTablaPags);
 	for (i=0;i<list_size(listaTablaDePag);i++){
 		campoTabla = list_get(listaTablaDePag,i);
 		campoTabla->bitPresencia=0;
@@ -114,8 +117,13 @@ void limpiarMemoria(){
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
 		}
 	}
+	pthread_mutex_unlock(&mutexTablaPags);
+	pthread_mutex_lock(&mutexListaMemoria);
 	list_clean(listaMemoria);
-	limpiarTLB();
+	pthread_mutex_unlock(&mutexListaMemoria);
+	pthread_mutex_lock(&mutexListaTLB);
+	list_clean(listaTLB);
+	pthread_mutex_unlock(&mutexListaTLB);
 }
 void volcarMemoria(){
 	int pid,a;
@@ -129,11 +137,13 @@ void volcarMemoria(){
 		puts("Soy el proceso hijo");
 		t_marco* campoMarco;
 		char* texto = string_new();
+		pthread_mutex_lock(&mutexListaMemoria);
 		for (a=0;a<list_size(listaMemoria);a++){
 			campoMarco= list_get(listaMemoria,a);
 			string_append_with_format(&texto,"El marco %s ubicado en la posición %s contiene: %s /n",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
 			log_info(logger,texto);
 		}
+		pthread_mutex_unlock(&mutexListaMemoria);
 	}
 	else {
 		puts("Soy el proceso padre");
