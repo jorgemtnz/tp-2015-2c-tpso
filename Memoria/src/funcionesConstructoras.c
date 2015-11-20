@@ -49,6 +49,15 @@ t_marco_con_flag * iniciarMarcoYFlag() {
 	return marcoConBit;
 }
 
+t_marco_con_indice* iniciarMarcoYIndice() {
+	t_marco_con_indice* marcoConIndice = malloc(sizeof(t_marco_con_indice));
+	if (marcoConIndice == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		exit(-1);
+	}
+	return marcoConIndice;
+}
 
 t_configuracion* iniciarArchivoConfig() {
 	t_configuracion* archConf = malloc(sizeof(t_config));

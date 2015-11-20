@@ -73,6 +73,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	t_PID * estructuraEnvio;
 	estructuraEnvio = crearPID();
 
+
 	for (contador = 0; contador < cantPag; contador++) {
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
@@ -86,6 +87,8 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	}
 
 	estructuraEnvio->PID = idProc;
+
+	list_add(listaIndices,idProc,0);
 
 	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 

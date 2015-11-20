@@ -117,6 +117,10 @@ typedef struct{
 	int flag; //0 no lo encontro, 1 si lo encontro
 }t_marco_con_flag;
 
+typedef struct{
+	t_marco* marco;
+	int indice;
+}t_marco_con_indice;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -155,7 +159,7 @@ t_contenido_pagina * iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();
 t_marco_con_flag * iniciarMarcoYFlag();
-
+t_marco_con_indice* iniciarMarcoYIndice();
 t_marco_y_bit* iniciarMarcoYBit();
 void* interpretarPaquete(Paquete* unPaquete, int fdReceptor);
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag); // retorna o el id o un -1 si no esta en memoria
@@ -178,10 +182,12 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
+t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices, int PID);
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYIndices,int PID);
 //warning no declarado aca, entonces lo agrego
 void sacarAlPrimeroDeTLB() ;
 void eliminarDeTLB(int idMenor);
-
+t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID);
 char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);

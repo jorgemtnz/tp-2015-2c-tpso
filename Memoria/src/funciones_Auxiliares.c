@@ -215,35 +215,126 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
-		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices, int PID){
+	t_marco_con_flag* marcoYFlag;
+		marcoYFlag= iniciarMarcoYFlag();
+		t_marco* campoMarco;
+		campoMarco = iniciarMarco();
+		t_marco_con_indice* marcoYIndice;
+			marcoYIndice = iniciarMarcoYIndice();
+		int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+		tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
+		indice = list_get(listaIndices, PID);
 
-	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
-	int a, tamanioListaMarco, primero = 0;
-	t_marco* campoMarco;
-	campoMarco = iniciarMarco();
-	t_marco* campoAux;
-	campoAux = iniciarMarco();
-	t_list* listaMarco;
-	listaMarco = list_create();
-
-	listaMarco = buscarLosMarcosDeProcesoEnMemoria(PIDACargar);
-	tamanioListaMarco = list_size(listaMarco);
-	for (a = 0; a < tamanioListaMarco; a++) {
-		campoMarco = list_get(listaMarco, a);
-		if (primero == 0) {
-			primero++;
-			campoAux = campoMarco;
-		} else {
-			if (campoMarco->posicion < campoAux->posicion) {
-				campoAux = campoMarco;
+		sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+											  // si no se entiende por que, preguntarle a los matis
+		for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+			marcoYIndice = list_get(listaMarcoYIndices, a);
+			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
+				flagReemplazo = 1;
 			}
 		}
 
+		for (a = 0; a < indice && flagReemplazo == 0; a++) {
+			marcoYIndice = list_get(listaMarcoYIndices, a);
+			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
+				flagReemplazo = 1;
+			}
+		}
+
+		indice = a + 1;
+
+		if(indice == tamanioMarcosDelProceso){
+			indice =0;
+		}
+
+		list_replace(listaIndices,PID,indice);
+
+		marcoYFlag->flag = flagReemplazo;
+		if(flagReemplazo == 1){
+			marcoYFlag->marco = campoMarco;
+		}
+
+
+
+		return marcoYFlag;
+}
+
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYIndices,int PID) {
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag = iniciarMarcoYFlag();
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
+	t_marco_con_indice* marcoYIndice;
+	marcoYIndice = iniciarMarcoYIndice();
+	indice = list_get(listaIndices, PID);
+
+	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
+										  // si no se entiende por que, preguntarle a los matis
+	for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+		marcoYIndice = list_get(listaMarcoYIndices, a);
+		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
+			flagReemplazo = 1;
+		} else {
+			marcoYIndice->marco->bitUso = 0;
+			list_replace(listaMemoria, marcoYIndice->indice, marcoYIndice->marco);
+		}
 	}
 
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
-			flagEscritura, socketSwap);
+	for (a = 0; a < indice && flagReemplazo == 0; a++) {
+		marcoYIndice = list_get(listaMarcoYIndices, a);
+		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
+			flagReemplazo = 1;
+		} else {
+			marcoYIndice->marco->bitUso = 0;
+			list_replace(listaMemoria, marcoYIndice->indice, marcoYIndice->marco);
+		}
+	}
+
+	indice = a + 1;
+
+	if (indice == tamanioMarcosDelProceso) {
+		indice = 0;
+	}
+
+	list_replace(listaIndices,PID,indice);
+
+	marcoYFlag->flag = flagReemplazo;
+	if (flagReemplazo == 1) {
+		marcoYFlag->marco = campoMarco;
+	}
+
+	return marcoYFlag;
+}
+
+void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+
+	t_list* listaMarcoYIndices;
+	listaMarcoYIndices = list_create();
+
+	listaMarcoYIndices = buscarLosMarcosDeProcesoEnMemoriaConSusIndices(PIDACargar);
+
+
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag = iniciarMarcoYFlag();
+
+	marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices, PIDACargar);
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+
+	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
 
@@ -567,6 +658,41 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 	}
 
 	return listaMarcos;
+}
+
+t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID) {
+	int a, b, tamanioListaMarcoYBit,tamanioListaMarcos, flag;
+	t_list* listaMarcosYIndices;
+	listaMarcosYIndices = list_create();
+	t_list* listaMarcoYBit;
+	listaMarcoYBit = list_create();
+	t_marco* campoMarco;
+	campoMarco = iniciarMarco();
+	t_marco_y_bit* marcoYBit;
+	marcoYBit = iniciarMarcoYBit();
+	t_marco_con_indice* marcoYIndice;
+	marcoYIndice = iniciarMarcoYIndice();
+
+	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
+	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
+	tamanioListaMarcos = list_size(listaMemoria);
+	for (a = 0; a < tamanioListaMarcoYBit; a++) {
+		marcoYBit = list_get(listaMarcoYBit, a);
+		flag = 0;
+		sleep(configuracion->retardoMemoria);
+		for (b = 0;b <tamanioListaMarcos &&  flag == 0; b++) {
+			campoMarco = list_get(listaMemoria, b);
+			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
+				marcoYIndice->marco = campoMarco;
+				marcoYIndice->indice = b;
+				list_add(listaMarcosYIndices, marcoYIndice);
+				flag = 1;
+			}
+		}
+
+	}
+
+	return listaMarcosYIndices;
 }
 
 void eliminarDeMemoria(int id) {
