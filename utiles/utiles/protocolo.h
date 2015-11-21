@@ -72,6 +72,7 @@ typedef enum {
 
 //+++++++++swap++++++++++++++++++
 	 RESUL_SOBREESCRIBIR_OK,
+	 NOTIFICACION_HILO_ENTRADA_SALIDA
 
 } t_tipo_mensaje;
 
@@ -256,6 +257,10 @@ void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMe
 void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura);
 
 void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		);
+
+void serializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
+
+void* deserializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

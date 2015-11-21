@@ -294,6 +294,12 @@ void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		){
 	return estructura;
 
 }
+void serializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura){
+
+}
+void* deserializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje		){
+	return NULL;
+}
 void* deserializar_TIEMPO_CPU_RESUL(int fdCliente, t_tipo_mensaje tipoMensaje		){
 	t_porcentajeCPUs* estructura = malloc(sizeof(t_porcentajeCPUs));
 	estructura->cantidadDeElementos = deserializar_int8_t(fdCliente);

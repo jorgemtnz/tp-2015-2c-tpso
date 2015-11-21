@@ -35,6 +35,19 @@ typedef struct {
 	char* algorimoPlanificacion;
 	char* quantum;
 } t_configuracion;
+
+typedef struct {
+	uint8_t cantidadCiclos;
+	bool finalizoEntradaSalida;
+	t_pcb* pcb;
+} t_estado_entrada_salida;
+
+typedef struct {
+	uint8_t cantidadCiclos;
+	t_pcb* pcb;
+} t_pcb_entrada_salida;
+
+
 //=======================================================================================
 
 
@@ -90,14 +103,18 @@ t_pcb* crearPcb(char* rutaArchivoMcod);
 t_cpu_ref* crearCpuRef();
 void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
+t_list* getColaDeFinalizados();
+t_list* getColaDeEntradaSalida();
 t_list* getColaDeListos();
 t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
-void finalizarProcesoEnEjecucion(t_pcb* pcb);
+void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
+//++++++++++++++++++++++++++++++++++++entrada salida +++++++++++++++++++++++++++++++++++++++
+void *ejecutarEntradaSalida(void *param);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket);
@@ -124,10 +141,16 @@ t_configuracion* configuracion;
 t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
+t_list* colaDeFinalizados;
 t_list* colaDeListos;
 t_list* colaDeNuevos;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
+
+t_estado_entrada_salida estadoEntradaSalida;
+pthread_mutex_t mutexEstadoEntradaSalida;
+pthread_mutex_t mutexHayEntradaSalidaParaEjecutar;
+
 int c;
 
 //===========================================================================================
