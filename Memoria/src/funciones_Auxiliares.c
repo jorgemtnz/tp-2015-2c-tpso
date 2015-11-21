@@ -220,33 +220,35 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 		campoMarco = iniciarMarco();
 		t_marco_con_indice* marcoYIndice;
 			marcoYIndice = iniciarMarcoYIndice();
-		int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+		int a, tamanioMarcosDelProceso, flagReemplazo = 0;
+		int* indice;
+		indice = malloc(sizeof(int));
 		tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 		indice = list_get(listaIndices, PID);
 
 		sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 											  // si no se entiende por que, preguntarle a los matis
-		for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+		for (a = *indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
 			marcoYIndice = list_get(listaMarcoYIndices, a);
 			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
 				flagReemplazo = 1;
 			}
 		}
 
-		for (a = 0; a < indice && flagReemplazo == 0; a++) {
+		for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 			marcoYIndice = list_get(listaMarcoYIndices, a);
 			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
 				flagReemplazo = 1;
 			}
 		}
 
-		indice = a + 1;
+		*indice = a + 1;
 
-		if(indice == tamanioMarcosDelProceso){
-			indice =0;
+		if(*indice == tamanioMarcosDelProceso){
+			*indice =0;
 		}
 
-		list_replace(listaIndices,PID,indice);
+		list_replace(listaIndices,PID,*indice);
 
 		marcoYFlag->flag = flagReemplazo;
 		if(flagReemplazo == 1){
@@ -263,7 +265,9 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 	marcoYFlag = iniciarMarcoYFlag();
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
-	int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+	int a, tamanioMarcosDelProceso, flagReemplazo = 0;
+	int* indice;
+	indice = malloc(sizeof(int));
 	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 	t_marco_con_indice* marcoYIndice;
 	marcoYIndice = iniciarMarcoYIndice();
@@ -271,7 +275,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 
 	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
-	for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+	for (a = *indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
 		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
 			flagReemplazo = 1;
@@ -281,7 +285,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 		}
 	}
 
-	for (a = 0; a < indice && flagReemplazo == 0; a++) {
+	for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
 		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
 			flagReemplazo = 1;
@@ -291,13 +295,13 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 		}
 	}
 
-	indice = a + 1;
+	*indice = a + 1;
 
-	if (indice == tamanioMarcosDelProceso) {
-		indice = 0;
+	if (*indice == tamanioMarcosDelProceso) {
+		*indice = 0;
 	}
 
-	list_replace(listaIndices,PID,indice);
+	list_replace(listaIndices,PID,*indice);
 
 	marcoYFlag->flag = flagReemplazo;
 	if (flagReemplazo == 1) {
