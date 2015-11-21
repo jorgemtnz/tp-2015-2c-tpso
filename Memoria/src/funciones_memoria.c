@@ -90,7 +90,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 	estructuraEnvio->PID = idProc;
 
-	list_add(listaIndices,idProc,0);
+	list_add_in_index(listaIndices,idProc,0);
 
 	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 
