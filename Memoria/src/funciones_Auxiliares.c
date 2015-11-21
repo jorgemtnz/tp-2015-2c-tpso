@@ -248,7 +248,7 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 			*indice =0;
 		}
 
-		list_replace(listaIndices,PID,*indice);
+		list_replace(listaIndices,PID,indice);
 
 		marcoYFlag->flag = flagReemplazo;
 		if(flagReemplazo == 1){
@@ -301,7 +301,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 		*indice = 0;
 	}
 
-	list_replace(listaIndices,PID,*indice);
+	list_replace(listaIndices,PID,indice);
 
 	marcoYFlag->flag = flagReemplazo;
 	if (flagReemplazo == 1) {
