@@ -142,7 +142,6 @@ t_ProcCPU* crearProcCPU() {
 void destmCod(t_mCod* unmCod) {
 //	eliminarEspacioDeDatos(unmCod->ptrCMemoriaMap, unmCod->ptrTamPagina,
 //			logger);
-	destRespEjec(unmCod->respEjec); // elimina y hace free a todos los elementos de la lista
 	free(unmCod);
 }
 
