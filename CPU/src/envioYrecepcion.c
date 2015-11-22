@@ -140,6 +140,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
+	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
 		break;
 	}
 
@@ -244,11 +245,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - finalizado ;\0",
 						datosDesdeMem->PID));
-
+printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
 		free(cpu->mCodCPU->respEjec);
+	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
 		break;
 	}
 

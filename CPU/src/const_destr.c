@@ -11,7 +11,6 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 		exit(-1);
 	}
 	respEjec->resultadosInstrucciones = string_new();
-//	respEjec->pcb = crearPcb();
 	respEjec->finalizoOk = false;
 	return respEjec;
 }
@@ -56,22 +55,22 @@ t_configuracion* crearConfiguracion() {
 
 	return configuracion;
 }
-
-t_pcb * crearPcb() {
-	t_pcb* pcb = malloc(sizeof(t_pcb));
-	if (pcb == NULL) {
-		perror("[ERROR] No se reservo memoria para CPU>..>pcb");
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>pcb");
-		exit(-1);
-	}
-	pcb->pid = 0;
-	pcb->proximaInstruccion = 0;
-	pcb->rutaArchivoMcod = '\0';
-	pcb->tamanioRafaga = 0;
-	pcb->tieneDesalojo = true;
-	pcb->finalizar = false;
-	return pcb;
-}
+//no se esta usando
+//t_pcb * crearPcb() {
+//	t_pcb* pcb = malloc(sizeof(t_pcb));
+//	if (pcb == NULL) {
+//		perror("[ERROR] No se reservo memoria para CPU>..>pcb");
+//		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>pcb");
+//		exit(-1);
+//	}
+//	pcb->pid = 0;
+//	pcb->proximaInstruccion = 0;
+//	pcb->rutaArchivoMcod = '\0';
+//	pcb->tamanioRafaga = 0;
+//	pcb->tieneDesalojo = true;
+//	pcb->finalizar = false;
+//	return pcb;
+//}
 
 t_cpu* crearCPU() {
 	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
@@ -83,31 +82,31 @@ t_cpu* crearCPU() {
 	int token = procCPU->contadorIdCPU;
 	switch (token) {
 	case 0: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU;
+		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
 		cPUHilo->nombre = strdup("CPU primera");
 		procCPU->contadorIdCPU++;
 		break;
 	}
 	case 1: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU;
+		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
 		cPUHilo->nombre = strdup("CPU segunda");
 		procCPU->contadorIdCPU++;
 		break;
 	}
 	case 2: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU;
+		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
 		cPUHilo->nombre = strdup("CPU tercera");
 		procCPU->contadorIdCPU++;
 		break;
 	}
 	case 3: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU;
+		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
 		cPUHilo->nombre = strdup("CPU cuarta");
 		procCPU->contadorIdCPU++;
 		break;
 	}
 	default:
-		cPUHilo->idCPU = procCPU->contadorIdCPU;
+		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
 		cPUHilo->nombre = strdup("CPU mayor a 4");
 		procCPU->contadorIdCPU++;
 
@@ -116,7 +115,6 @@ t_cpu* crearCPU() {
 	cPUHilo->estadoEjecucion = NO_USO;
 	cPUHilo->cantInstEjecutadas = 0;
 	cPUHilo->mCodCPU = crearmCod();
-	cPUHilo->pcbPlanificador = crearPcb();
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
 	cPUHilo->estado=DISPONIBLE;
@@ -140,6 +138,9 @@ t_ProcCPU* crearProcCPU() {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
+	destRespEjec(unmCod->respEjec);
+	destVectorInstruccion(unmCod->bufferInstrucciones);
+
 	free(unmCod);
 }
 
@@ -148,11 +149,16 @@ void destConfig(t_configuracion* unaConfig) {
 }
 
 void destHiloCPU(t_cpu* unHiloCPU) {
+	free(unHiloCPU->nombre);
+	free(unHiloCPU->estructuraSolicitud);
+	free(unHiloCPU->respuestaInstruccion);
+//	free(unHiloCPU->pcbPlanificador);
 	destmCod(unHiloCPU->mCodCPU);
 	free(unHiloCPU);
 }
 
 void destProcCPU(t_ProcCPU* unCPU) {
+
 	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
 	free(unCPU);
 }
@@ -162,6 +168,11 @@ void destInstruccion(t_instruccion* unaInstruccion) {
 }
 
 void destVectorInstruccion(char** vectorInstruccion) {
+	int i=0;
+	while(vectorInstruccion[i]!=NULL){
+		free(vectorInstruccion[i]);
+		i++;
+	}
 	free(vectorInstruccion);
 }
 
@@ -174,5 +185,6 @@ void destEscrMem(t_contenido_pagina* estruc) {
 }
 
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
+	free(respEjec->resultadosInstrucciones);
 	free(respEjec);
 }
