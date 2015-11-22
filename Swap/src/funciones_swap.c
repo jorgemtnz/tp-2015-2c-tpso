@@ -69,6 +69,9 @@ void crearArchivo() {
 	char* espacioVacio = string_new();
 			espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
 	escribirEnEspacioDatos(espacioDatos, espacioVacio, offset, configuracion->tamanioPagina);
+	free(espacioVacio);
+	free(pathArchivo);
+	free(tamanioArchivoString);
 
 }
 
