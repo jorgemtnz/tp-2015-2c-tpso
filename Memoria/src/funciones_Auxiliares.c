@@ -186,12 +186,12 @@ void sacarAlPrimeroDeTLB() {
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	bool respuesta;
+
 	int a, tamanioTablaDePag, contadorMarcosEnMemoria = 0, flag = 0;
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
-
 	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
@@ -204,12 +204,15 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 			}
 		}
 	}
+
+
 	pthread_mutex_unlock(&mutexTablaPags);
 	if (flag == 0) {
 		respuesta = false;
 	} else {
 		respuesta = true;
 	}
+
 	return respuesta;
 }
 
@@ -344,9 +347,9 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 bool estaLlenaLaMemoria() {
 	bool respuesta;
 	int tamanioMemoria;
-	pthread_mutex_lock(&mutexListaMemoria);
+	//pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
-	pthread_mutex_unlock(&mutexListaMemoria);
+	//pthread_mutex_unlock(&mutexListaMemoria);
 
 	if (tamanioMemoria < configuracion->cantidadMarcos) {
 		respuesta = false;
@@ -1083,13 +1086,17 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
 					flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
-			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
+			 sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
 					flagEscritura);
+
 		}
 
 	} else { // aca significa que es el de clock
-		printf("no sale bien");
-
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
+		}
 	}
 
 
@@ -1172,3 +1179,5 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 	}
 	return estructuraFinalizar;
 }
+
+
