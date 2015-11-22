@@ -94,6 +94,7 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 
 	//creamos la cola de listos
 	colaDeListos = list_create();
+	colaDeFinalizados = list_create();
 	colaDeNuevos = list_create();
 	colaDeEntradaSalida = list_create();
 }
@@ -183,6 +184,10 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		}
 		break;
 	}
+	case(NOTIFICACION_HILO_ENTRADA_SALIDA): {
+		ejecutarPlanificadorLargoPlazo();
+		break;
+	}
 	default: {
 		printConsola("No se reconoce el mensaje de tipo %s\n",
 				getNombreTipoMensaje(header->tipoMensaje));
@@ -194,7 +199,6 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
 		t_respuesta_ejecucion* respuestaEjecucion) {
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
-	int a;
 	//ESTO ES PARA EL COMANDO FINALIZAR
 		if(respuestaEjecucion->pcb->finalizar == true){
 			respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;
@@ -202,23 +206,30 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
 
 	printConsola("Finalizo OK: %s\n",
 			respuestaEjecucion->finalizoOk ? "Si" : "No");
-	char** respuestaDeCadaInstruccion = string_split(
-			respuestaEjecucion->resultadosInstrucciones, "\0");
-	int b;
-	a = 0;
-	b = 0;
+
+	imprimirRespuestasDeInstrucciones(respuestaEjecucion);
+
+	if(respuestaEjecucion->finalizoOk) {
+		ejecucionAFinalizado(respuestaEjecucion->pcb);
+	} else {
+		ejecucionAColaDeListos(respuestaEjecucion->pcb);
+	}
+	ejecutarPlanificadorLargoPlazo();
+
+}
+
+void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion) {
+	char** respuestaDeCadaInstruccion = string_split(respuestaEjecucion->resultadosInstrucciones, "\0");
+	int a = 0;
+	int b = 0;
 	while (respuestaDeCadaInstruccion[a] != NULL) {
-		char** respuestaDeUnaInstruccion = string_split(
-				respuestaDeCadaInstruccion[a], ";");
+		char** respuestaDeUnaInstruccion = string_split(respuestaDeCadaInstruccion[a], ";");
 		while (respuestaDeUnaInstruccion[b] != NULL) {
 			printConsola("%s\n", respuestaDeUnaInstruccion[b]);
 			b++;
 		}
 		a++;
-
 	}
-	finalizarProcesoEnEjecucion(respuestaEjecucion->pcb);
-
 }
 
 void procesar_ENTRADA_SALIDA(int socket, t_header* header,
@@ -226,7 +237,6 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header,
 	//por ahora para debugguear visual, pero se debe poner en cola bloqueados y hacerlo esperar
 	putsConsola("Resultado de la ejecucion:\n");
 	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
-	int a;
 
 //ESTO ES PARA EL COMANDO FINALIZAR
 	if(respuestaEjecucion->pcb->finalizar == true){
@@ -234,21 +244,24 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header,
 	}
 
 
-	char** respuestaDeCadaInstruccion = string_split(
-			respuestaEjecucion->resultadosInstrucciones, "\0");
-	int b;
-	a = 0;
-	b = 0;
-	while (respuestaDeCadaInstruccion[a] != NULL) {
-		char** respuestaDeUnaInstruccion = string_split(
-				respuestaDeCadaInstruccion[a], ";");
-		while (respuestaDeUnaInstruccion[b] != NULL) {
-			printConsola("%s\n", respuestaDeUnaInstruccion[b]);
-			b++;
-		}
-		a++;
+	imprimirRespuestasDeInstrucciones(respuestaEjecucion);
+
+	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(respuestaEjecucion->pcb);
+
+	if(cpu != NULL) {
+		quitarProcesoDeCpu(cpu);
+	} else {
+		printConsola("Hay una inconsistencia, recibi una entrada salida y el pcb pid: %d, no se encuentra en ninguna CPU\n", respuestaEjecucion->pcb->pid);
 	}
+
+	t_pcb_entrada_salida* pcbEntradaSalida = malloc(sizeof(t_pcb_entrada_salida));
+	pcbEntradaSalida->pcb = respuestaEjecucion->pcb;
+	pcbEntradaSalida->cantidadCiclos = respuestaEjecucion->cant_entrada_salida;
+	list_add(getColaDeEntradaSalida(), pcbEntradaSalida);
+
 	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
+
+	ejecutarPlanificadorLargoPlazo();
 
 }
 

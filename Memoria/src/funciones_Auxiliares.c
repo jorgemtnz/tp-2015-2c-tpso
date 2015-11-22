@@ -186,12 +186,12 @@ void sacarAlPrimeroDeTLB() {
 
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	bool respuesta;
+
 	int a, tamanioTablaDePag, contadorMarcosEnMemoria = 0, flag = 0;
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
-
 	usleep(configuracion->retardoMemoria*1000);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
@@ -204,12 +204,15 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 			}
 		}
 	}
+
+
 	pthread_mutex_unlock(&mutexTablaPags);
 	if (flag == 0) {
 		respuesta = false;
 	} else {
 		respuesta = true;
 	}
+
 	return respuesta;
 }
 
@@ -220,30 +223,32 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 		campoMarco = iniciarMarco();
 		t_marco_con_indice* marcoYIndice;
 			marcoYIndice = iniciarMarcoYIndice();
-		int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+		int a, tamanioMarcosDelProceso, flagReemplazo = 0;
+		int* indice;
+		indice = malloc(sizeof(int));
 		tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 		indice = list_get(listaIndices, PID);
 
 		sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 											  // si no se entiende por que, preguntarle a los matis
-		for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+		for (a = *indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
 			marcoYIndice = list_get(listaMarcoYIndices, a);
 			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
 				flagReemplazo = 1;
 			}
 		}
 
-		for (a = 0; a < indice && flagReemplazo == 0; a++) {
+		for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 			marcoYIndice = list_get(listaMarcoYIndices, a);
 			if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
 				flagReemplazo = 1;
 			}
 		}
 
-		indice = a + 1;
+		*indice = a + 1;
 
-		if(indice == tamanioMarcosDelProceso){
-			indice =0;
+		if(*indice == tamanioMarcosDelProceso){
+			*indice =0;
 		}
 
 		list_replace(listaIndices,PID,indice);
@@ -263,7 +268,9 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 	marcoYFlag = iniciarMarcoYFlag();
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
-	int a, tamanioMarcosDelProceso, flagReemplazo = 0,indice;
+	int a, tamanioMarcosDelProceso, flagReemplazo = 0;
+	int* indice;
+	indice = malloc(sizeof(int));
 	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 	t_marco_con_indice* marcoYIndice;
 	marcoYIndice = iniciarMarcoYIndice();
@@ -271,7 +278,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 
 	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
-	for (a = indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
+	for (a = *indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
 		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
 			flagReemplazo = 1;
@@ -281,7 +288,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 		}
 	}
 
-	for (a = 0; a < indice && flagReemplazo == 0; a++) {
+	for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
 		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
 			flagReemplazo = 1;
@@ -291,10 +298,10 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 		}
 	}
 
-	indice = a + 1;
+	*indice = a + 1;
 
-	if (indice == tamanioMarcosDelProceso) {
-		indice = 0;
+	if (*indice == tamanioMarcosDelProceso) {
+		*indice = 0;
 	}
 
 	list_replace(listaIndices,PID,indice);
@@ -340,9 +347,9 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 bool estaLlenaLaMemoria() {
 	bool respuesta;
 	int tamanioMemoria;
-	pthread_mutex_lock(&mutexListaMemoria);
+	//pthread_mutex_lock(&mutexListaMemoria);
 	tamanioMemoria = list_size(listaMemoria);
-	pthread_mutex_unlock(&mutexListaMemoria);
+	//pthread_mutex_unlock(&mutexListaMemoria);
 
 	if (tamanioMemoria < configuracion->cantidadMarcos) {
 		respuesta = false;
@@ -1079,13 +1086,17 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(int idProc, in
 			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
 					flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
-			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
+			 sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
 					flagEscritura);
+
 		}
 
 	} else { // aca significa que es el de clock
-		printf("no sale bien");
-
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
+		}
 	}
 
 
@@ -1168,3 +1179,5 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 	}
 	return estructuraFinalizar;
 }
+
+

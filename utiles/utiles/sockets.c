@@ -744,6 +744,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(RESUL_ESCRIBIR, "RESUL_ESCRIBIR", serializar_RESUL_ESCRIBIR, deserializar_RESUL_ESCRIBIR);
   registrarSerializadores(TIEMPO_CPU_RESUL,"TIEMPO_CPU_RESUL", serializar_TIEMPO_CPU_RESUL, deserializar_TIEMPO_CPU_RESUL);
   registrarSerializadores(TIEMPO_CPU,"TIEMPO_CPU", serializar_TIEMPO_CPU, deserializar_TIEMPO_CPU);
+		registrarSerializadores(NOTIFICACION_HILO_ENTRADA_SALIDA,"NOTIFICACION_HILO_ENTRADA_SALIDA", serializar_NOTIFICACION_HILO_ENTRADA_SALIDA, deserializar_NOTIFICACION_HILO_ENTRADA_SALIDA);
 	}
 }
 
