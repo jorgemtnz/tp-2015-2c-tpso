@@ -826,7 +826,7 @@ void debug(const char *formato, ...) {
 	//	puts("printConsola\n");
 		va_list arguments;
 		va_start(arguments, formato);
-		int res = vprintf(formato, arguments);
+//		int res = vprintf(formato, arguments);
 		va_end(arguments);
 
 		char* nuevo = string_from_vformat(formato, arguments);

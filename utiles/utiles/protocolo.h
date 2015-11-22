@@ -150,7 +150,7 @@ typedef struct {
 
 typedef struct {
 	uint8_t res_porcentaje;
-	uint8_t idCpu;
+	pthread_t idCpu;
 }t_respuesta_porcentaje;
 
 typedef struct {
@@ -184,6 +184,9 @@ int8_t deserializar_int8_t(int fdCliente);
 //++++++SE USA como nivel inferior para serializar un bool
 void serializar_bool(int fdCliente, bool estructura);
 bool deserializar_bool(int fdCliente);
+void serializar_pthread(int fdCliente, pthread_t pthread);
+pthread_t deserializar_pthread(int fdCliente);
+
 // +++++++++interaccion CPU - Memoria
 void* serializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

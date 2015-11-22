@@ -541,7 +541,8 @@ void 	serializar_lista_porcentajes(int fdCliente, t_list* estructura){
 		t_respuesta_porcentaje* respuesta = malloc(sizeof(t_respuesta_porcentaje));
 		respuesta = list_get(estructura,a);
 		serializar_int8_t( fdCliente, respuesta->res_porcentaje);
-		serializar_int8_t(fdCliente, respuesta->idCpu);
+//		serializar_int8_t(fdCliente, respuesta->idCpu);
+		serializar_pthread(fdCliente, respuesta->idCpu);
 	}
 
 }
@@ -571,7 +572,8 @@ t_list* deserializar_lista_porcentajes(int fdCliente,int8_t cantidad){
 	for(a= 0 ; a<cantidad;a++){
 		t_respuesta_porcentaje* res = malloc(sizeof(t_respuesta_porcentaje));
 		res->res_porcentaje = deserializar_int8_t( fdCliente);
-		res->idCpu = deserializar_int8_t( fdCliente);
+//		res->idCpu = deserializar_int8_t( fdCliente);
+		res->idCpu =  deserializar_pthread(fdCliente);
 		list_add(lista,res);
 	}
 
@@ -585,6 +587,16 @@ bool deserializar_bool(int fdCliente) {
 	bool* res = malloc(sizeof(bool));
 	recibirPorSocket(fdCliente, res, sizeof(bool));
 	return *res;
+}
+
+void serializar_pthread(int fdCliente, pthread_t pthread){
+	enviarSimple(fdCliente, &pthread, sizeof(pthread_t));
+}
+
+pthread_t deserializar_pthread(int fdCliente){
+	pthread_t* pthread = malloc(sizeof(pthread_t));
+	recibirPorSocket(fdCliente,pthread, sizeof(pthread_t));
+	return *pthread;
 }
 
 void serializar_pid_t(int fdCliente, pid_t estructura) {

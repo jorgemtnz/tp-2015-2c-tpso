@@ -57,7 +57,7 @@ static void test_carga_ok_archv_Confg() {
 }
 
 static void test_crearProcesoCPU() {
-	CU_ASSERT_EQUAL(procCPU->contadorIdCPU, 0);
+
 }
 
 static void test_crearCPU() {

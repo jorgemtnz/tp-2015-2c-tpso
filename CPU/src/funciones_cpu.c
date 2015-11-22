@@ -45,12 +45,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar preparaCPU");
 
-	if (procCPU->contadorIdCPU != 0) {
-		cpu = list_get(procCPU->listaCPU, procCPU->contadorIdCPU - 1);
-	} else {
-		cpu = list_get(procCPU->listaCPU, procCPU->contadorIdCPU);
-	}
-	cpu->pcbPlanificador = pcbPlanificador;
+
 	return EXIT_SUCCESS;
 }
 // se debe agregar funcion que intreprente instruccion ya mapeada
@@ -66,7 +61,6 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 	token = reconoceTokenInstruccion(instruccion->instruccion_separada[0]);
 
 	//le estoy mandando solo la instruccion sin el token
-	//log_info(logger, "ejecutar ");
 	ejecutar(token, instruccion->instruccion_separada, cpu);
 }
 // ejecuta las instrucciones del mCod

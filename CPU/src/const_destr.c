@@ -55,22 +55,6 @@ t_configuracion* crearConfiguracion() {
 
 	return configuracion;
 }
-//no se esta usando
-//t_pcb * crearPcb() {
-//	t_pcb* pcb = malloc(sizeof(t_pcb));
-//	if (pcb == NULL) {
-//		perror("[ERROR] No se reservo memoria para CPU>..>pcb");
-//		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>pcb");
-//		exit(-1);
-//	}
-//	pcb->pid = 0;
-//	pcb->proximaInstruccion = 0;
-//	pcb->rutaArchivoMcod = '\0';
-//	pcb->tamanioRafaga = 0;
-//	pcb->tieneDesalojo = true;
-//	pcb->finalizar = false;
-//	return pcb;
-//}
 
 t_cpu* crearCPU() {
 	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
@@ -82,33 +66,33 @@ t_cpu* crearCPU() {
 	int token = procCPU->contadorIdCPU;
 	switch (token) {
 	case 0: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
+	cPUHilo->idCPU =queHiloSoy();
 		cPUHilo->nombre = strdup("CPU primera");
-		procCPU->contadorIdCPU++;
+		procCPU->contadorIdCPU+=1;
 		break;
 	}
 	case 1: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
+		cPUHilo->idCPU = queHiloSoy();
 		cPUHilo->nombre = strdup("CPU segunda");
-		procCPU->contadorIdCPU++;
+		procCPU->contadorIdCPU+=1;
 		break;
 	}
 	case 2: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
+	cPUHilo->idCPU = queHiloSoy();
 		cPUHilo->nombre = strdup("CPU tercera");
-		procCPU->contadorIdCPU++;
+		procCPU->contadorIdCPU+=1;
 		break;
 	}
 	case 3: {
-		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
+	cPUHilo->idCPU =queHiloSoy();
 		cPUHilo->nombre = strdup("CPU cuarta");
-		procCPU->contadorIdCPU++;
+		procCPU->contadorIdCPU+=1;
 		break;
 	}
 	default:
-		cPUHilo->idCPU = procCPU->contadorIdCPU+1;
+		cPUHilo->idCPU = queHiloSoy();
 		cPUHilo->nombre = strdup("CPU mayor a 4");
-		procCPU->contadorIdCPU++;
+		procCPU->contadorIdCPU+=1;
 
 	}
 	cPUHilo->porcentajeUso = 0;

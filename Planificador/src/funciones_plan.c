@@ -180,7 +180,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
 		for(f=0 ; f< listaRecibida->cantidadDeElementos;f++){
 		porcentaje = list_get(listaRecibida->respuestasPorcentaje,f);
-		printf("cpu %i: %i porciento \n",porcentaje->idCpu,porcentaje->res_porcentaje);
+		printf("cpu %lu: %i porciento \n",porcentaje->idCpu,porcentaje->res_porcentaje);
 		}
 		break;
 	}

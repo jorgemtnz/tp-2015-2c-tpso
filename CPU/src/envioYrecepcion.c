@@ -70,14 +70,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (CONTEXTO_MPROC): {
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		//inicia toda la cadena de instruccion desde la CPU hacia memoria
-		printf("%s\n",queCPUsoy(cpu));
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		printf("Ruta recibida del planificador: %s\n",
 				pcbPlanificador->rutaArchivoMcod);
 		cpu->estado = NO_DISPONIBLE;
-		preparaCPU(pcbPlanificador, cpu);
+		cpu->pcbPlanificador = pcbPlanificador;
 		procesaCodigo(cpu);
-		//llama a procesa codigo
+
 		break;
 	}
 
@@ -296,7 +295,7 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 			for(a=0;a<porcentajeCPUs->cantidadDeElementos;a++){
 				contenido=list_get(porcentajeCPUs->respuestasPorcentaje,a);
 
-			printf("ESTOY ENVIANDO A PLANIF CPU: %i  PORCENTAJE: %i\n",contenido->idCpu,contenido->res_porcentaje);
+			printf("ESTOY ENVIANDO A PLANIF CPU:  PORCENTAJE: %i\n",contenido->res_porcentaje);
 			}
 		enviarStruct(socketPlanificador, TIEMPO_CPU_RESUL, porcentajeCPUs);
 		break;

@@ -75,7 +75,7 @@ typedef struct {
 
 //---------------------------------------------estructura de una CPU, seria la de un hilo--------
 typedef struct {
-	uint8_t idCPU;
+	pthread_t idCPU;
 	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
 	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
@@ -136,6 +136,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
 t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 char* queCPUsoy(t_cpu* cpu);
+pthread_t queHiloSoy();
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
@@ -145,7 +146,6 @@ int hiloCPU();
 int hiloPorcentaje();
 void calcularPorcentaje();
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu);
-int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu);
 void procesaCodigo(t_cpu* cpu);
 
 //++++++++++++++++++++++++++++++++++++funciones envio por comando ejecutado en CPU+++++++++++++++++++++++++++++++++++++++

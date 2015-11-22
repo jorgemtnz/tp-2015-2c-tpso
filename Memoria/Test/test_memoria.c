@@ -139,13 +139,13 @@ static void test_probar_escribir_memoria_con_hardcodeo_de_TLB(){
 	contenido3 = "escritura3";
 	contenido3Bis = "escritura3Bis";
 	contenido4 = "escritura4";
-	t_TablaDePaginas * campoTablaDePag;
-	campoTablaDePag = iniciarTablaDePaginas();
-	t_marco * campoMemoria;
-	campoMemoria = iniciarMarco();
-	t_contenido_pagina* campoEscribir;
-	//warning diferentes estructuras, entonces corrijo, son similares, pero importa el orden
-	campoEscribir = iniciarContenidoPagina();
+//	t_TablaDePaginas * campoTablaDePag;
+//	campoTablaDePag = iniciarTablaDePaginas();
+//	t_marco * campoMemoria;
+//	campoMemoria = iniciarMarco();
+//	t_contenido_pagina* campoEscribir;
+//	//warning diferentes estructuras, entonces corrijo, son similares, pero importa el orden
+//	campoEscribir = iniciarContenidoPagina();
 	t_escribir_falso* estructuraDevolucionEscribirFalso;
 	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
@@ -208,7 +208,7 @@ static void test_probar_escribir_memoria_con_hardcodeo_de_TLB(){
 static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	int PID1 = 1, PID2 = 2, PID3 = 3, PID4 = 4;
 	int socketMentiroso = 7, flagEscritura = 1, flagNoEscritura = 0;
-	int tamanioMemoria, a;
+	int tamanioMemoria;
 	char* contenido1;
 	char* contenido2;
 	char* contenido3;
@@ -219,8 +219,8 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	contenido3 = "escritura3";
 	contenido3Bis = "escritura3Bis";
 	contenido4 = "escritura4";
-	t_TablaDePaginas * campoTablaDePag;
-	campoTablaDePag = iniciarTablaDePaginas();
+//	t_TablaDePaginas * campoTablaDePag;
+//	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
 	t_contenido_pagina* campoEscribir;

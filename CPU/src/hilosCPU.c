@@ -4,43 +4,41 @@
 void levantarHilosCPU() {
 	log_info(logger, "se va a levantar un HILO ");
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
-	pthread_attr_t atributos[configuracion->cantidad_hilos + 1];
-	int i;
-	i = 0;
+	pthread_t tidHiloporcentaje;
+	pthread_attr_t atributosPorcentaje;
+	pthread_attr_t atributos[configuracion->cantidad_hilos];
+	int i = 0;
 
-	//hilos+1 porque se va a hacer un hilo para calcular el porcentaje
-	for (i = 0; i < configuracion->cantidad_hilos + 1; i++) {
+	for (i = 0; i < configuracion->cantidad_hilos; i++) {
 		pthread_attr_init(&atributos[i]);
 	}
+	pthread_attr_init(&atributosPorcentaje);
 
-	for (i = 1; i < configuracion->cantidad_hilos + 1; i++) {
+	for (i = 0; i < configuracion->cantidad_hilos; i++) {
 		pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloCPU, NULL);
 	}
-	i = 0;
-	pthread_create(&tidHiloCPU[i], &atributos[i], (void*) hiloPorcentaje, NULL);
+	pthread_create(&tidHiloporcentaje, &atributosPorcentaje, (void*) hiloPorcentaje, NULL);
 
-	for (i = 0; i < configuracion->cantidad_hilos + 1; i++) {
+	for (i = 0; i < configuracion->cantidad_hilos; i++) {
 		pthread_join(tidHiloCPU[i], NULL);
 	}
+	pthread_join(tidHiloporcentaje, NULL);
 }
 
 int hiloCPU() {
 	log_info(logger, "comienza ejecucion de un HILO ");
 
-	//agregar comportamiento para cada CPU. se debe reiniciar cada vez que se levante una CPU
-	//se pondran algunas cosas de lo que actualmente esta en el main
-
 	t_cpu* cpu = crearCPU();
-		resultadoFinal = string_new();
+
 		list_add(procCPU->listaCPU, cpu);
-        printf("soy la cpu N° %d, y mi nombre es, %s \n", cpu->idCPU,cpu->nombre);
+        printf("Me estoy levantando soy la cpu , %s \n",cpu->nombre);
+        printf("la id del hilo es %lu \n", cpu->idCPU);
 		conexiones = dictionary_create();
 
 		int socketPlanificador;
 		int socketMemoria;
 		int resultConexion_mem = 0;
 		int resultConexion_planif = 0;
-
 
 		resultConexion_planif = conectar(configuracion->vg_ipPlanificador,
 				string_itoa(configuracion->vg_puertoPlanificador),
@@ -57,11 +55,8 @@ int hiloCPU() {
 
 		dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 
-		// poner aca el levantar hilos y luego el
-		escucharConexiones("0", socketPlanificador, socketMemoria, 0,
+			escucharConexiones("0", socketPlanificador, socketMemoria, 0,
 				procesarMensajes, NULL, logger);
-
-
 
 	return 0;
 }

@@ -6,13 +6,11 @@ int main(int argc, char *argv[]) {
 	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
 
 	if (hayQueEjecutarTests(argc, argv)) {
-			return ejecutarTests();
-		}
+		return ejecutarTests();
+	}
 	leerArchivoDeConfiguracion(argc, argv);
 
 	levantarHilosCPU();
-
-
 
 	log_info(logger, "se destruye proceso CPU");
 	destProcCPU(procCPU);
@@ -21,18 +19,33 @@ int main(int argc, char *argv[]) {
 
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
+
+	log_info(logger, "se va a procesar un mensaje");
 	t_cpu* cpu;
-if(procCPU->contadorIdCPU != 0){
-	cpu = list_get(procCPU->listaCPU, procCPU->contadorIdCPU - 1);
-}else{
-	cpu = list_get(procCPU->listaCPU, 0);
-}
+	int tamanio = 0;
+	tamanio = list_size(procCPU->listaCPU);
+	if (tamanio != 0) {
+		pthread_t hiloactual = queHiloSoy();
+
+		bool buscaHilo(t_cpu* unaCPU) {
+			return hiloactual == unaCPU->idCPU;
+		}
+
+		cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
+	} else {
+		printf("no hay cpu conectadas \n");
+	}
+
 	int resultConexion_planif = 0;
 	int resultConexion_Memoria = 0;
+
 	puts("CPU procesar mensajes");
+	printf("%s\n", queCPUsoy(cpu));
+	   printf("la id del hilo es %lu \n", cpu->idCPU);
+
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
-	log_info(logger, "se va a procesar un mensaje");
+
 	if (tipoNotificacion == NEW_CONNECTION) {
 		log_info(logger, "se realizo nueva conección");
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
@@ -61,10 +74,6 @@ if(procCPU->contadorIdCPU != 0){
 		}
 
 	} else if (tipoNotificacion == MESSAGE) {
-
-		//como espero varios resultados, entonces los deje en una sola fucnion+++++++++++++++++++++++++++++++++++++++++
-		// devuelve la estructura que se envia, la que se crea por la ejecucion de los comandos ++++++++++++++++++++++++++++++++++++++
-		// se encuentra en enviaryrecibir.c  esta funcion++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 		recibirMensajeVarios(header, buffer, extra, cpu);
 

@@ -113,6 +113,9 @@ void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
 void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
+
+void ejecucionAColaDeListos(t_pcb* pcb);
+void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion);
 //++++++++++++++++++++++++++++++++++++entrada salida +++++++++++++++++++++++++++++++++++++++
 void *ejecutarEntradaSalida(void *param);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++

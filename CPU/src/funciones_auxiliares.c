@@ -122,6 +122,13 @@ return cpu;
 
 char* queCPUsoy(t_cpu* cpu){
 	char* resultado = string_new();
-	resultado = string_from_format("soy la %s con numero %d \n",cpu->nombre,cpu->idCPU );
+	resultado = string_from_format("soy la %s \n",cpu->nombre );
 	return resultado;
+
 }
+
+pthread_t queHiloSoy(){
+	return pthread_self();
+}
+
+
