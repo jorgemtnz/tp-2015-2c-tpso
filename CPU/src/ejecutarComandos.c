@@ -68,8 +68,9 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 }
 
 void resultadoAlPlanificador(t_cpu* cpu) {
-	int socketPlanificador = atoi(
-			(char*) dictionary_get(conexiones, "Planificador"));
+	//int socketPlanificador = atoi(
+	//		(char*) dictionary_get(conexiones, "Planificador"));
+	int socketPlanificador = cpu->socketPlanificador;
 	//		++++++++++++++++++++++funcion finalizar
 	cpu->mCodCPU->respEjec->finalizoOk = true;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;

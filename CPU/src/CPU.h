@@ -85,6 +85,8 @@ typedef struct {
     void* respuestaInstruccion;  //para la estructura de respuesta de la instruccion ejecutada
     void* estructuraSolicitud;  //para la estructura que se envia a memoria
     uint8_t estado;   //para si esta disponible o no la CPU
+    int socketPlanificador;
+    int socketMemoria;
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -164,7 +166,7 @@ char* resultadoFinal;
 
 
 t_equipo* un;
-t_dictionary* conexiones;
+//t_dictionary* conexiones;
 
 //test
 char* decirHolaMundo();

@@ -59,8 +59,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			if (resultConexion_planif == -1)
 				log_error(logger,
 						"[ERROR]no se reconecto el CPU al Planificador");
-			dictionary_put(conexiones, "Planificador",
-					string_itoa(socketPlanificador));
+			//dictionary_put(conexiones, "Planificador",
+			//		string_itoa(socketPlanificador));
+			cpu->socketPlanificador = socketPlanificador;
 		}
 
 		if (string_starts_with(buffer, "cm")) {
@@ -70,7 +71,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					&socketMemoria);
 			if (resultConexion_Memoria == -1)
 				log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
-			dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
+			//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
+			cpu->socketMemoria = socketMemoria;
 		}
 
 	} else if (tipoNotificacion == MESSAGE) {

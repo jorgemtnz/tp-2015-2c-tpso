@@ -8,7 +8,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	case (INICIAR_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
-		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, INICIAR_PROCESO_MEM,
 				cpu->estructuraSolicitud);
 		free(cpu->estructuraSolicitud);
@@ -18,7 +19,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	case (ESCRIBIR_MEM): {
 		log_info(logger, "se va a ejecutar escribir memoria");
 		ejecuta_EscribirMemoria(separada_instruccion, cpu);
-		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, ESCRIBIR_MEM, cpu->estructuraSolicitud);
 		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
@@ -27,7 +29,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	case (LEER_MEM): {
 		log_info(logger, "se va a ejecutar leer memoria ");
 		ejecuta_LeerMemoria(separada_instruccion, cpu);
-		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, LEER_MEM, cpu->estructuraSolicitud);
 		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
@@ -36,7 +39,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	case (FIN_PROCESO_MEM): {
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
 		//	t_PID* estructura = malloc(sizeof(t_PID));
-		int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
+		int socketMemoria = cpu->socketMemoria;
 		ejecuta_FinProcesoMemoria(cpu);
 		enviarStruct(socketMemoria, FIN_PROCESO_MEM, cpu->estructuraSolicitud);
 		free(cpu->estructuraSolicitud);
@@ -46,8 +50,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	case (ENTRADA_SALIDA): { //falta modificar
 		log_info(logger, "se va a ejecutar entrada salida ");
 
-		int socketPlanificador = atoi(
-				(char*) dictionary_get(conexiones, "Planificador"));
+		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+		int socketPlanificador = cpu->socketPlanificador;
 		ejecuta_EntradaSalida(separada_instruccion, cpu);
 
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
@@ -131,8 +135,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i - Fallo ;\0", datosDesdeMem->PID));
 
-		int socketPlanificador = atoi(
-				(char*) dictionary_get(conexiones, "Planificador"));
+		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+		int socketPlanificador = cpu->socketPlanificador;
 		cpu->mCodCPU->respEjec->finalizoOk = false;
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 		//ESTO HAY QUE CAMBIARLO EN EL PLANIFICADOR PARA QUE ANDE (OJO)
@@ -235,8 +239,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						+ strlen(
 								cpu->mCodCPU->respEjec->resultadosInstrucciones)
 						+ 1 + strlen("mProc %i - finalizado ;\0"));
-		int socketPlanificador = atoi(
-				(char*) dictionary_get(conexiones, "Planificador"));
+		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+		int socketPlanificador = cpu->socketPlanificador;
 		//		++++++++++++++++++++++funcion finalizar
 		cpu->mCodCPU->respEjec->finalizoOk = true;
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
@@ -271,8 +275,8 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 	case (TIEMPO_CPU): {
 		log_info(logger,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
-		int socketPlanificador = atoi(
-				(char*) dictionary_get(conexiones, "Planificador"));
+		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
+		int socketPlanificador = cpu->socketPlanificador;
 
 		t_porcentajeCPUs* porcentajeCPUs = malloc(sizeof(t_porcentajeCPUs));
 

@@ -33,7 +33,7 @@ int hiloCPU() {
 		list_add(procCPU->listaCPU, cpu);
         printf("Me estoy levantando soy la cpu , %s \n",cpu->nombre);
         printf("la id del hilo es %lu \n", cpu->idCPU);
-		conexiones = dictionary_create();
+		//conexiones = dictionary_create();
 
 		int socketPlanificador;
 		int socketMemoria;
@@ -46,14 +46,16 @@ int hiloCPU() {
 		if (resultConexion_planif == -1)
 			log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
 
-		dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
+		//dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
+		cpu->socketPlanificador = socketPlanificador;
 
 		resultConexion_mem = conectar(configuracion->vg_ipMemoria,
 				string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
 		if (resultConexion_mem == -1)
 			log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
 
-		dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
+		//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
+		cpu->socketMemoria = socketMemoria;
 
 			escucharConexiones("0", socketPlanificador, socketMemoria, 0,
 				procesarMensajes, NULL, logger);
