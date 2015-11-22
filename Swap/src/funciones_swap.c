@@ -45,6 +45,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		config_destroy(archivoConfig);
 	}
 
+	free(logMsg);
+
 }
 
 void crearArchivo() {
