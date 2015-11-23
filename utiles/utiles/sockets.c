@@ -712,6 +712,8 @@ void inicializarRegistroSerializadores() {
 		registroSerializadores = dictionary_create();
 
 		registrarSerializadores(CONTEXTO_MPROC, "CONTEXTO_MPROC", serializar_CONTEXTO_MPROC, deserializar_CONTEXTO_MPROC);
+		registrarSerializadores(HANDSHAKE_ENTRADA_SALIDA, "HANDSHAKE_ENTRADA_SALIDA", serializar_HANDSHAKE_ENTRADA_SALIDA, deserializar_HANDSHAKE_ENTRADA_SALIDA);
+		registrarSerializadores(HANDSHAKE_CPU, "HANDSHAKE_CPU", serializar_HANDSHAKE_CPU, deserializar_HANDSHAKE_CPU);
 		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
 		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
 		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);

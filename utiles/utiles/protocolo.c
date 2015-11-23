@@ -38,6 +38,20 @@ void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	//puts("Deserializando serializar_CONTEXTO_MPROC");
 	return estructura;
 }
+void* serializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	serializar_string(fdCliente, estructura);
+	return 0;
+}
+void* deserializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return deserializar_string(fdCliente);
+}
+void* serializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	return 0;
+}
+void* deserializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return NULL;
+}
+
 void* serializar_RESUL_INICIAR_PROC_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_RESUL_INICIAR_PROC_OK");
 	serializar_t_iniciar_swap(fdCliente, tipoMensaje, estructura);

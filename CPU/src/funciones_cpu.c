@@ -61,6 +61,7 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 	token = reconoceTokenInstruccion(instruccion->instruccion_separada[0]);
 
 	//le estoy mandando solo la instruccion sin el token
+	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);
 	ejecutar(token, instruccion->instruccion_separada, cpu);
 }
 // ejecuta las instrucciones del mCod

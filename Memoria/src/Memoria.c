@@ -21,10 +21,13 @@ int main(int argc, char *argv[]) {
 	//levantarConsola();
 	return EXIT_SUCCESS;
 }
-
-int socketCPU;
+t_list* listaSocketsCPU;
+//int socketCPU;
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
+	if(listaSocketsCPU == NULL) {
+		listaSocketsCPU = list_create();
+	}
 
 	puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
@@ -36,10 +39,12 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
 	if (tipoNotificacion == NEW_CONNECTION) {
-		dictionary_put(conexiones, "CPU", string_itoa(socket));
-		socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+		//dictionary_put(conexiones, "CPU", string_itoa(socket));
+		//socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+		list_add(listaSocketsCPU, string_itoa(socket));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
+
 			//no se puede sacar este warning, porque no hace falta contemplar todos los casos del enum
 			switch (header->tipoMensaje) {
 			case (RESUL_INICIAR_PROC_OK): {
@@ -48,25 +53,25 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeSwap->cantidadPaginas;
 				iniciar(estructuraIniciar->PID,
-						estructuraIniciar->cantidadPaginas, socketCPU);
+						estructuraIniciar->cantidadPaginas, getSocketCPU(estructuraIniciar->PID));
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
 				t_PID* rtaDesdeSwap = (t_PID*) buffer;
-				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+				int socketCPU = getSocketCPU(rtaDesdeSwap->PID);
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap, socketCPU);
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
 				t_contenido_pagina* datosdesdeSwap =
 						(t_contenido_pagina*) buffer;
-				enviarRtaEscribirACPU(datosdesdeSwap, socketCPU);
+				enviarRtaEscribirACPU(datosdesdeSwap, getSocketCPU(datosdesdeSwap->PID));
 
 				break;
 			}
 			case (RESUL_FIN_OK): {
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
-				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 				break;
 			}
@@ -76,6 +81,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
 				sleep(configuracion->retardoMemoria);
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -85,6 +91,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				sleep(configuracion->retardoMemoria);
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
 			}
@@ -92,8 +99,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				log_info(logger, "leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
-						socketSwap, socketCPU);
+						socketSwap, getSocketCPU(datosDesdeCPU->PID));
 
 				break;
 			}
@@ -106,7 +114,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				int flagEscritura = 0;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
-						estructuraRtaLeer->contenido, flagEscritura, socketCPU,
+						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
 						socketSwap);
 
 				break;
@@ -127,7 +135,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 						estructuraRtaLeerPorEscribir->PID,
 						estructuraRtaLeerPorEscribir->numeroPagina,
 						estructuraRtaLeerPorEscribir->contenido, flagEscritura,
-						socketCPU, socketSwap);
+						getSocketCPU(datosDesdeSwap->PID), socketSwap);
 				break;
 			}
 			case (ESCRIBIR_MEM): {
@@ -139,7 +147,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
+				registrarPidCpu(socket, datosDesdeCPU->PID);
+				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 
@@ -157,7 +166,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				lecturaMandarCpu = iniciarContenidoPagina();
 				lecturaMandarCpu = datosDesdeCPU;
 				enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
-						socketCPU);
+						getSocketCPU(datosDesdeCPU->PID));
 				break;
 			}
 			default:
@@ -193,4 +202,29 @@ char* decirHolaMundo() {
 
 char* getNombre() {
 	return "Memoria";
+}
+
+int getSocketCPU(int pid) {
+	return atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid)));
+}
+
+bool hayQueRegistrarPidCpu(int socket) {
+	bool esSocketCPU(void* elemento) {
+		return string_equals((char*) elemento, string_itoa(socket));
+	}
+
+	char* encontrado = list_find(listaSocketsCPU, esSocketCPU);
+	return encontrado != NULL;
+}
+
+char* getKeyPidCpu(int pid) {
+	return string_from_format("CPU-PID:%d", pid);
+}
+
+void registrarPidCpu(int socket, int pid) {
+
+	if(hayQueRegistrarPidCpu(socket)){
+		char* keyCPU = getKeyPidCpu(pid);
+		dictionary_put(conexiones, keyCPU, string_itoa(socket));
+	}
 }

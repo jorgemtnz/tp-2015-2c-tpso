@@ -99,10 +99,10 @@ void crearPlanificacion(char* nombreAlgoritmo, char* quantum) {
 	colaDeEntradaSalida = list_create();
 }
 
-void registrarNuevaCPU(int socket) {
+void registrarNuevaCPU(int socket, char* nombre) {
 	t_cpu_ref* cpu = malloc(sizeof(t_cpu_ref));
 	cpu->socket = socket;
-	cpu->nombre = crearNombreCPU();
+	cpu->nombre = nombre;
 	cpu->conectada = true;
 	cpu->ejecutando = false;
 	cpu->pcb = NULL;
@@ -159,6 +159,13 @@ int printConsola(const char *formato, ...) {
 
 void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 	switch (header->tipoMensaje) {
+	case (HANDSHAKE_CPU): {
+			registrarNuevaCPU(socket, buffer);
+			break;
+		}
+	case (HANDSHAKE_ENTRADA_SALIDA): {
+			break;
+		}
 	case (RESUL_EJECUCION_OK): {
 		procesar_RESUL_EJECUCION_OK(socket, header,
 				(t_respuesta_ejecucion*) buffer);
@@ -198,7 +205,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header,
 		t_respuesta_ejecucion* respuestaEjecucion) {
 	putsConsola("Resultado de la ejecucion:\n");
-	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+	printConsola("Socket: %d, PID: %d\n", socket, respuestaEjecucion->pcb->pid);
 	//ESTO ES PARA EL COMANDO FINALIZAR
 		if(respuestaEjecucion->pcb->finalizar == true){
 			respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;

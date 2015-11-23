@@ -60,6 +60,8 @@ t_list* getColaDeNuevos() {
 }
 
 void ejecutarPlanificadorLargoPlazo() {
+	putsConsola("Inicio planificador");
+	imprimirEstadoCpus();
 	//TODO
 	//POR AHORA ENVIAMOS DIRECTAMENTE
 	if(list_all_satisfy(listaCPUs, cpuDesconectada)) {
@@ -133,7 +135,7 @@ void ejecutarPlanificadorLargoPlazo() {
 		if(cpu != NULL) {
 			list_remove(getColaDeNuevos(), 0);
 			correrProcesoEnCpu(pcb, cpu);
-			printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
+			printConsola("Se envia a ejecutar el proceso %d en la cpu %d por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
 		} else {
 			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 		}
@@ -147,11 +149,14 @@ void ejecutarPlanificadorLargoPlazo() {
 		if(cpu != NULL) {
 			list_remove(getColaDeListos(), 0);
 			correrProcesoEnCpu(pcb, cpu);
-			printConsola("Se envia a ejecutar el proceso %d\n", pcb->pid);
+			printConsola("Se envia a ejecutar el proceso %d en la cpu %d por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
 		} else {
 			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 		}
 	}
+
+	putsConsola("Fin planificador");
+	imprimirEstadoCpus();
 }
 
 bool cpuDesconectada(void *cpu) {
@@ -180,6 +185,7 @@ void ejecucionAFinalizado(t_pcb* pcb) {
 	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
 	if(cpu == NULL) {
 		printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", pcb->pid);
+		imprimirEstadoCpus();
 		abort();
 	}
 
@@ -191,6 +197,7 @@ void ejecucionAColaDeListos(t_pcb* pcb) {
 	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
 	if(cpu == NULL) {
 		printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", pcb->pid);
+		imprimirEstadoCpus();
 		abort();
 	}
 
@@ -212,4 +219,14 @@ t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb) {
 void quitarProcesoDeCpu(t_cpu_ref* cpu) {
 	cpu->ejecutando = false;
 	cpu->pcb = NULL;
+}
+
+void imprimirEstadoCpus() {
+	int cantCpus = list_size(listaCPUs);
+	int i = 0;
+	putsConsola("\n");
+	for (i = 0; i < cantCpus; ++i) {
+		t_cpu_ref* cpu = list_get(listaCPUs, i);
+		printConsola("Cpu: %s, pid: %d\n", cpu->nombre, cpu->pcb != NULL?cpu->pcb->pid:-1);
+	}
 }

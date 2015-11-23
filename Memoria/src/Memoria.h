@@ -235,6 +235,13 @@ void iniciarConfiguracionTLBNoHabilitada();
 void hardcodearTablaDePaginas(int pag1,int pag2,int pag3,int pag4,int pag5);
 void iniciarConfiguracionTLBHabilitada();
 void hardcodearValoresEnTLB(int PID,int id, int pag);
+
+
+
+int getSocketCPU(int pid);
+bool hayQueRegistrarPidCpu(int socket);
+char* getKeyPidCpu(int pid);
+void registrarPidCpu(int socket, int pid);
 //========================================================================================
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++

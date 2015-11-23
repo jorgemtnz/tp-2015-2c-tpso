@@ -91,5 +91,19 @@ char* decirHolaMundo() {
 }
 
 char* getNombre() {
-	return "CPU"; //ver si conviene responder un nombre distinto por cada hilo de CPU
+//	return "CPU"; //ver si conviene responder un nombre distinto por cada hilo de CPU
+	t_cpu* cpu;
+	int tamanio = 0;
+	pthread_t hiloactual = queHiloSoy();
+
+	bool buscaHilo(t_cpu* unaCPU) {
+		return hiloactual == unaCPU->idCPU;
+	}
+
+	cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
+
+	if(cpu != NULL) {
+		return cpu->nombre;
+	}
+	return "CPU-main";
 }

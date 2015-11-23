@@ -25,6 +25,8 @@ typedef enum {
 	HEADER = 1, STRING,  //mensaje 1er checkpoint
 
 	CONTEXTO_MPROC, //solicitud del planificador para que se levante el proceso desde el path dado.
+	HANDSHAKE_CPU,
+	HANDSHAKE_ENTRADA_SALIDA,
 	RESUL_EJECUCION_OK,
 //	RESUL_EJECUCION_ERROR,
 	RESUL_INSTR_EJEC,
@@ -168,6 +170,10 @@ Paquete* deserializar(void* buffer, int tamanioMensaje);
 void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje);
 //++++++ SE USA  dentro de serializar_CONTEXTO_MPROC  deserializar_CONTEXTO_MPROC
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_pcb* estructura);

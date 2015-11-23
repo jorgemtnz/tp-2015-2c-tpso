@@ -32,7 +32,7 @@ int hiloCPU() {
 
 		list_add(procCPU->listaCPU, cpu);
         printf("Me estoy levantando soy la cpu , %s \n",cpu->nombre);
-        printf("la id del hilo es %lu \n", cpu->idCPU);
+        printf("Creando CPU la id del hilo es %lu \n", cpu->idCPU);
 		//conexiones = dictionary_create();
 
 		int socketPlanificador;
@@ -48,6 +48,7 @@ int hiloCPU() {
 
 		//dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 		cpu->socketPlanificador = socketPlanificador;
+		enviarStruct(socketPlanificador, HANDSHAKE_CPU, getNombre());
 
 		resultConexion_mem = conectar(configuracion->vg_ipMemoria,
 				string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);

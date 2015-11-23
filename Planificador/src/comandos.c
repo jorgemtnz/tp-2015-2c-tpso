@@ -8,10 +8,9 @@
 #include "Planificador.h"
 
 int correrPrograma(int socket, t_header* header, char* buffer) {
-	char* socketCPU = (char*) dictionary_get(conexiones, "CPU");
-	putsConsola("Enviando \"correr programa\" a la CPU");
-	//enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-	enviarStruct(atoi(socketCPU), STRING, "correr programa");
+	//char* socketCPU = (char*) dictionary_get(conexiones, "CPU");
+	//putsConsola("Enviando \"correr programa\" a la CPU");
+	//enviarStruct(atoi(socketCPU), STRING, "correr programa");
 
 	return 0;
 }

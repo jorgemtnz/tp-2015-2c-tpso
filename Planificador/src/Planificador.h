@@ -113,6 +113,7 @@ void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
 void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
+void imprimirEstadoCpus();
 
 void ejecucionAColaDeListos(t_pcb* pcb);
 void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion);
@@ -120,7 +121,7 @@ void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion
 void *ejecutarEntradaSalida(void *param);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
-void registrarNuevaCPU(int socket);
+void registrarNuevaCPU(int socket, char* nombre);
 bool cpuConSocket(void *cpu, int socket);
 void desregistrarCPUConectada(int socket);
 
@@ -141,7 +142,7 @@ t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 
 t_configuracion* configuracion;
-t_dictionary* conexiones;
+//t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
 t_list* colaDeFinalizados;
