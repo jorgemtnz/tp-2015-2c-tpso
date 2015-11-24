@@ -141,6 +141,7 @@ t_contador * crearContador(){
 	}
 	contenido->escrituras = 0;
 	contenido->lecturas = 0;
+	contenido->PID = 0;
 
 	return contenido;
 

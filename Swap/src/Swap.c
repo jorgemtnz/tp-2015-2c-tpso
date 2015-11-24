@@ -29,10 +29,10 @@ int main(int argc, char *argv[]) {
 		free(espacioLibre);
 	}
 	while (list_size(contadorLecturasYEscrituras) > 0) {
-			contador = list_get(contadorLecturasYEscrituras, 0);
-			list_remove(contadorLecturasYEscrituras, 0);
-			free(contador);
-		}
+		contador = list_get(contadorLecturasYEscrituras, 0);
+		list_remove(contadorLecturasYEscrituras, 0);
+		free(contador);
+	}
 
 	//free(listaDeEspaciosLibres);
 	free(conexiones);
@@ -70,7 +70,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
-				list_add_in_index(contadorLecturasYEscrituras, estructuraIniciar->PID, contador);
+				contador->PID = estructuraIniciar->PID;
+				list_add(contadorLecturasYEscrituras, contador);
 			} else {
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
@@ -85,6 +86,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar = crearContenidoPagina();
 			t_contador* contador = crearContador();
+			int a;
 			//warning no se usa variable, entonces comento
 //			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
 
@@ -97,9 +99,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
-				contador = list_get(contadorLecturasYEscrituras, procesoAEscribir->PID);
-				contador->escrituras++;
-				list_replace(contadorLecturasYEscrituras, procesoAEscribir->PID, contador);
+				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
+					contador = list_get(contadorLecturasYEscrituras, a);
+					if (a == procesoAEscribir->PID) {
+						contador->escrituras++;
+						list_replace(contadorLecturasYEscrituras, a, contador);
+						a = list_size(contadorLecturasYEscrituras) + 1;
+					}
+				}
 			} else {
 				log_info(logger, "FALLO EL ESCRIBIR");
 			}
@@ -114,18 +121,28 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* paginaAEnviar;
 			t_contador* contador = crearContador();
 			paginaAEnviar = crearContenidoPagina();
+			int a;
 			resultado = crearDevolucionEscribirOLeer();
 			resultado = leer(procesoRecibido, listaDeProcesosCargados);
+
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
+
 			if (resultado->resultado == OK) {
+
 				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
 
-				contador = list_get(contadorLecturasYEscrituras, procesoRecibido->PID);
-				contador->lecturas++;
 
-				list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
+				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
+					contador = list_get(contadorLecturasYEscrituras, a);
+					if (procesoRecibido->PID == a) {
+						contador->lecturas++;
+						list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
+						a = list_size(contadorLecturasYEscrituras) + 1;
+					}
+				}
+
 			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
@@ -140,6 +157,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_contenido_pagina* paginaAEnviar;
 			t_leerDeProceso* procesoALeer;
 			t_contador* contador = crearContador();
+			int a;
 			procesoALeer = crearLeerDeProceso();
 			procesoALeer->PID = procesoRecibido->PID;
 			procesoALeer->numeroPaginaFin = procesoRecibido->numeroPaginaFin;
@@ -152,9 +170,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, paginaAEnviar);
-				contador = list_get(contadorLecturasYEscrituras, procesoRecibido->PID);
-				contador->lecturas++;
-				list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
+				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
+					contador = list_get(contadorLecturasYEscrituras, a);
+					if (procesoRecibido->PID == a) {
+						contador->lecturas++;
+						list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
+						a = list_size(contadorLecturasYEscrituras) + 1;
+					}
+				}
 			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
@@ -176,6 +199,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				contador = list_get(contadorLecturasYEscrituras, estructuraFinalizar->PID);
 				printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
 						contador->lecturas, contador->escrituras);
+				contador->escrituras = 0;
+				contador->lecturas = 0;
+				list_add_in_index(contadorLecturasYEscrituras, estructuraFinalizar->PID, contador);
 
 			} else {
 				log_info(logger, "FALLO EL FINALIZAR");
@@ -193,6 +219,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaEnBlanco = crearContenidoPagina();
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
+			int a;
 
 			borrarContenidoPagina(procesoAEscribir);
 
@@ -206,9 +233,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
-				contador = list_get(contadorLecturasYEscrituras, procesoAEscribir->PID);
-				contador->escrituras++;
-				list_replace(contadorLecturasYEscrituras, procesoAEscribir->PID, contador);
+				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
+					contador = list_get(contadorLecturasYEscrituras, a);
+					if (a == procesoAEscribir->PID) {
+						contador->escrituras++;
+						list_replace(contadorLecturasYEscrituras, a, contador);
+						a = list_size(contadorLecturasYEscrituras) + 1;
+					}
+				}
 			} else {
 				log_info(logger, "FALLO EL SOBREESCRIBIR");
 			}

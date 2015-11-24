@@ -273,17 +273,26 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
 		for (x = 0; x <= procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio; x++) {
-
-			datosLeidos = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) * (configuracion->tamanioPagina)),
-					(configuracion->tamanioPagina));
+			if ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) != 0) {
+				datosLeidos = leerEspacioDatos(espacioDatos,
+						((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio + x) * (configuracion->tamanioPagina)), (configuracion->tamanioPagina));
+			} else {
+				datosLeidos = leerEspacioDatos(espacioDatos, (configuracion->tamanioPagina), (configuracion->tamanioPagina));
+			}
 			string_append(&datosLeidosFinal, datosLeidos);
 			string_append(&datosLeidosFinal, " ");
 
 		}
 
 	} else {
-		datosLeidosFinal = leerEspacioDatos(espacioDatos, ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)),
-				configuracion->tamanioPagina);
+
+		if ((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) != 0) {
+			datosLeidosFinal = leerEspacioDatos(espacioDatos,
+					((procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * (configuracion->tamanioPagina)), configuracion->tamanioPagina);
+		} else {
+			datosLeidosFinal = leerEspacioDatos(espacioDatos, (configuracion->tamanioPagina), configuracion->tamanioPagina);
+		}
+
 	}
 
 	respuestaDeLeer->PID = procesoAleer->PID;
@@ -291,14 +300,18 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	respuestaDeLeer->numeroPagina = procesoRecibido->numeroPaginaInicio;
 	//enviarResultadoLeerOK(socket, respuestaDeLeer);
 	respuestaDeLeer->resultado = OK;
+
 	contenidoLogger = string_from_format(
 			"Finalizo leer correctamente , el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i , el contenido es: %s", procesoRecibido->PID,
 			byteInicial, tamanioEnBytes, respuestaDeLeer->contenido);
 	log_info(logger, contenidoLogger);
+
 	return respuestaDeLeer;
-	free(unProceso);
-	free(respuestaDeLeer);
-	free(procesoAleer);
+
+//	free(unProceso);
+//	free(respuestaDeLeer);
+//	free(procesoAleer);
+
 }
 
 t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres) {
