@@ -1,0 +1,7 @@
+inicializar 5;
+escribir 1 "hola";
+escribir 2 "que";
+escribir 3 "tal";
+escribir 4 "swap";
+escribir 4 "escribeme";
+finalizar;
