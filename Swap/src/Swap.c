@@ -101,7 +101,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (a == procesoAEscribir->PID) {
+					if (contador->PID == procesoAEscribir->PID) {
 						contador->escrituras++;
 						list_replace(contadorLecturasYEscrituras, a, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;
@@ -128,7 +128,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
-
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
@@ -136,7 +135,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (procesoRecibido->PID == a) {
+					if (procesoRecibido->PID == contador->PID) {
 						contador->lecturas++;
 						list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;
@@ -164,7 +163,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			procesoALeer->numeroPaginaInicio = procesoRecibido->numeroPaginaInicio;
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
+
 			resultado = leer(procesoALeer, listaDeProcesosCargados);
+
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = procesoRecibido->textoAEscribir;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
@@ -172,7 +173,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR, paginaAEnviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (procesoRecibido->PID == a) {
+					if (procesoRecibido->PID == contador->PID) {
 						contador->lecturas++;
 						list_replace(contadorLecturasYEscrituras, procesoRecibido->PID, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;
@@ -181,33 +182,41 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
-			free(procesoRecibido);
-			free(resultado);
-			free(paginaAEnviar);
+		//	free(procesoRecibido);
+			//free(resultado);
+			//free(paginaAEnviar);
 			break;
 		}
 		case (FIN_PROCESO_SWAP): {
 			t_PID* estructuraFinalizar = (t_PID*) buffer;
 			t_respuesta_iniciar_o_finalizar* resultado;
 			t_contador *contador = crearContador();
+			int a;
 			resultado = crearDevolucionIniciarOFinalizar();
+
 			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
+
 			pid_a_enviar->PID = resultado->PID;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
+for(a=0 ; a<list_size(contadorLecturasYEscrituras); a++){
+				contador = list_get(contadorLecturasYEscrituras, a);
+if(estructuraFinalizar->PID == contador->PID){
+	printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
+							contador->lecturas, contador->escrituras);
+	list_remove(contadorLecturasYEscrituras, a);
+	a = list_size(contadorLecturasYEscrituras) +1;
+}
+}
 
-				contador = list_get(contadorLecturasYEscrituras, estructuraFinalizar->PID);
-				printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
-						contador->lecturas, contador->escrituras);
-				contador->escrituras = 0;
-				contador->lecturas = 0;
-				list_add_in_index(contadorLecturasYEscrituras, estructuraFinalizar->PID, contador);
+
+
 
 			} else {
 				log_info(logger, "FALLO EL FINALIZAR");
 			}
-			free(estructuraFinalizar);
-			free(resultado);
+			//free(estructuraFinalizar);
+			//free(resultado);
 			break;
 		}
 		case (SOBREESCRIBIR_SWAP): {

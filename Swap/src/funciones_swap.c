@@ -215,11 +215,17 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
-		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, configuracion->tamanioPagina);
+		if(nuevaPagina != 0){
+		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, configuracion->tamanioPagina);}
+		else{
+			escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, configuracion->tamanioPagina, configuracion->tamanioPagina);
+		}
 	} else {
 		int longitud = string_length(procesoAEscribir->contenido);
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
-		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, longitud);
+		if(nuevaPagina != 0){
+		escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, nuevaPagina, longitud);}
+		else{escribirEnEspacioDatos(espacioDatos, procesoAEscribir->contenido, configuracion->tamanioPagina, longitud);}
 	}
 
 	respuestaDeEscribir->PID = unProceso->PID;
@@ -232,8 +238,8 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 			byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
 	log_info(logger, contenidoLogger);
 	return respuestaDeEscribir;
-	free(unProceso);
-	free(respuestaDeEscribir);
+	//free(unProceso);
+	//free(respuestaDeEscribir);
 
 }
 
@@ -366,10 +372,10 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	log_info(logger, contenidoLogger);
 
 	return respuestaDeFinalizar;
-	free(respuestaDeFinalizar);
-	free(unProceso);
-	free(espacioLibre);
-	free(procesoAEscribir);
+	//free(respuestaDeFinalizar);
+	//free(unProceso);
+	//free(espacioLibre);
+	//free(procesoAEscribir);
 }
 
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
