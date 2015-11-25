@@ -650,6 +650,38 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 
 }
 
+int my_log_some(bool info, const char *formato, ...) {
+//	puts("printConsola\n");
+	va_list arguments;
+	va_start(arguments, formato);
+	int res = vprintf(formato, arguments);
+	va_end(arguments);
+
+	char* nuevo = string_from_vformat(formato, arguments);
+	if (info) {
+		log_info(logger, nuevo);
+	} else {
+		log_error(logger, nuevo);
+	}
+	return res;
+}
+
+int my_log_info(const char *formato, ...) {
+	int myLogSome;
+	pthread_mutex_lock(&mutexLogs);
+	myLogSome = my_log_some(true, formato);
+	pthread_mutex_unlock(&mutexLogs);
+	return myLogSome;
+}
+
+int my_log_error(const char *formato, ...) {
+	int myLogSome;
+	pthread_mutex_lock(&mutexLogs);
+	myLogSome = my_log_some(false, formato);
+	pthread_mutex_unlock(&mutexLogs);
+	return myLogSome;
+}
+
 int conectar(char* ip, char* puerto, int *sock) {
 	printf("Conectando a %s:%s\n", ip, puerto);
 	struct sockaddr_in dirCent;
@@ -677,7 +709,7 @@ int conectar(char* ip, char* puerto, int *sock) {
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
 	if(header != NULL) {
-		log_info(logger, "BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
+		my_log_info(logger, "BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
 	}
 	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);
@@ -781,7 +813,7 @@ char* getNombreTipoMensaje(t_tipo_mensaje tipoMensaje) {
 	char* keySerializacion = generarKeySerializacion(tipoMensaje);
 	t_registro_serializacion* registroSerializacion = (t_registro_serializacion *)dictionary_get(registroSerializadores, keySerializacion);
 	if(registroSerializacion == NULL) {
-		return NULL;
+		return "TIPO_MENSAJE_SIN_NOMBRE";
 	}
 	return registroSerializacion->descripcion;
 }

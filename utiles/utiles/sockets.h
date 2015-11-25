@@ -97,6 +97,11 @@ int conectarSocketPorPrimeraVez(int sockfd, char* ip_Destino, int puerto);
 
 int conectar(char* ip, char* puerto, int *sock);
 
+pthread_mutex_t mutexLogs;
+int my_log_some(bool info, const char *formato, ...);
+int my_log_info(const char *formato, ...);
+int my_log_error(const char *formato, ...);
+
 
 // Para cliente y/o servidor
 void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger);
