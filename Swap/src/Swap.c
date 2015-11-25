@@ -82,6 +82,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		}
 		case (ESCRIBIR_SWAP): {
 			//conviene hacerlo en la misma linea
+			printf("ESCRIBIR LLEGO \n");
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar = crearContenidoPagina();
@@ -220,6 +221,7 @@ if(estructuraFinalizar->PID == contador->PID){
 			break;
 		}
 		case (SOBREESCRIBIR_SWAP): {
+			printf("llego sobreesscribir \n");
 			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
 			t_devolucion_escribir_o_leer* resultado;
 			t_contenido_pagina* paginaAEnviar;
@@ -244,7 +246,7 @@ if(estructuraFinalizar->PID == contador->PID){
 				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (a == procesoAEscribir->PID) {
+					if (contador->PID == procesoAEscribir->PID) {
 						contador->escrituras++;
 						list_replace(contadorLecturasYEscrituras, a, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;

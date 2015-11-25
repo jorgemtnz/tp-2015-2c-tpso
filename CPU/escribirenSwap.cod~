@@ -1,7 +1,7 @@
-iniciar 6;
+iniciar 5;
 escribir 1 "hola";
 escribir 2 "que";
 escribir 3 "tal";
 escribir 4 "swap";
-escribir 5 "escribeme";
+escribir 4 "escribeme";
 finalizar;
