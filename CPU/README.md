@@ -14,3 +14,4 @@ Para solo probar las comunicaciones lo que se puede hacer es en envioYrecepcion.
 LD_LIBRARY_PATH
 /home/utnso/tp-2015-2c-tpso/utiles/Debug:/home/utnso/tp-2015-2c-tpso/commons-library/Debug
 
+en hilosCpu.c debo poner que se iguale a cero la cantidad de instrucciones ejecutadas, solo cuando la CPU ese disponible, hago un if donde pregunte por este valor que esta en la cpu. Y como ya tengo el list iterate se hace para cada cpu. 
