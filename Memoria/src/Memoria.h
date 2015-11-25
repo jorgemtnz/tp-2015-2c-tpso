@@ -46,7 +46,7 @@ typedef struct {
 	uint8_t cantidadMarcos;
 	uint8_t tamanioMarcos;
 	uint8_t entradasTlb;
-	uint8_t tlbHabilitada;
+	uint8_t tlbHabilitada; // 0 no -- 1 si
 	uint8_t retardoMemoria;
 	char* algoritmo_reemplazo;
 
@@ -222,7 +222,11 @@ t_contenido_pagina* iniciarContenidoPagina();
 //warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
 t_contenido_pagina * iniciarEscrituraProc() ;
 t_escribir_falso* crearEscribirFalso();
-
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(int idProc, int pag,
+		char* contenido, int flagEscritura, int socketCPU, int socketSwap);
+t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
+t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(int socketSwap, int PIDACargar,
+		char* contenidoACargar, int pagACargar, int flagEscritura);
 
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 
