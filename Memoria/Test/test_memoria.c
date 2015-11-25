@@ -409,6 +409,45 @@ static void test_probar_finalizar_un_proceso_con_TLB() {
 	CU_ASSERT_EQUAL(tamanioTLB,0);
 }
 
+static void traer_falso_a_fondo_con_Clock() {
+	int tamanioMemoria,a=0;
+	tamanioMemoria = list_size(listaMemoria);
+
+	t_marco * campoMemoria;
+	campoMemoria = iniciarMarco();
+	t_contenido_pagina* campoEscribir;
+	campoEscribir = iniciarContenidoPagina();
+
+	campoMemoria = list_get(listaMemoria, a);
+	campoMemoria->bitModificada = 1;
+	campoMemoria->bitUso = 0;
+	a++;
+	campoMemoria = list_get(listaMemoria, a);
+	campoMemoria->bitModificada = 1;
+	campoMemoria->bitUso = 0;
+	a++;
+	campoMemoria = list_get(listaMemoria, a);
+	campoMemoria->bitModificada = 1;
+	campoMemoria->bitUso = 0;
+	a++;
+	campoMemoria = list_get(listaMemoria, a);
+	campoMemoria->bitModificada = 1;
+	campoMemoria->bitUso = 0;
+	a++;
+	campoMemoria = list_get(listaMemoria, a);
+	campoMemoria->bitModificada = 1;
+	campoMemoria->bitUso = 0;
+	a++;
+
+	configuracion->cantidadMarcos= 5;
+	printf("\n%i\n",tamanioMemoria);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(4, 4,"escritura4", 1, 54,45);
+
+	printf("\n%i\n",campoEscribir->PID);
+	printf("\n%s\n",campoEscribir->contenido);
+
+
+}
 
 static CU_TestInfo tests[] = {
 		{ "Test Hola Mundo", test_debe_devolver_hola_mundo },
@@ -416,6 +455,7 @@ static CU_TestInfo tests[] = {
 		{"Test inicar proceso",test_iniciar_4_procesos_con_22_paginas_en_memoria},
 		{"Test escribir con TLB",test_probar_escribir_memoria_con_hardcodeo_de_TLB},
 		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
+		{"Test traer con clock",traer_falso_a_fondo_con_Clock},
 		{"Test probar leer",test_probar_leer_falso},
 		{"Test probar finalizar los procesos",test_probar_finalizar_un_proceso_con_TLB},
 		CU_TEST_INFO_NULL,

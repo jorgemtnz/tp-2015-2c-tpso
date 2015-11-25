@@ -244,19 +244,18 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 				flagReemplazo = 1;
 			}
 		}
-
+		marcoYFlag->flag = flagReemplazo;
+		if(marcoYFlag->flag ){
 		*indice = a + 1;
 
 		if(*indice == tamanioMarcosDelProceso){
 			*indice =0;
 		}
+		marcoYFlag->marco = campoMarco;
+		}
 
 		list_replace(listaIndices,PID,indice);
 
-		marcoYFlag->flag = flagReemplazo;
-		if(flagReemplazo == 1){
-			marcoYFlag->marco = campoMarco;
-		}
 
 
 
@@ -271,6 +270,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 	int a, tamanioMarcosDelProceso, flagReemplazo = 0;
 	int* indice;
 	indice = malloc(sizeof(int));
+
 	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 	t_marco_con_indice* marcoYIndice;
 	marcoYIndice = iniciarMarcoYIndice();
@@ -297,19 +297,17 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 			list_replace(listaMemoria, marcoYIndice->indice, marcoYIndice->marco);
 		}
 	}
-
-	*indice = a + 1;
-
-	if (*indice == tamanioMarcosDelProceso) {
-		*indice = 0;
-	}
-
-	list_replace(listaIndices,PID,indice);
-
 	marcoYFlag->flag = flagReemplazo;
-	if (flagReemplazo == 1) {
+	if (marcoYFlag->flag) {
+		*indice = a + 1;
+
+		if (*indice == tamanioMarcosDelProceso) {
+			*indice = 0;
+		}
 		marcoYFlag->marco = campoMarco;
 	}
+
+	list_replace(listaIndices, PID, indice);
 
 	return marcoYFlag;
 }
@@ -371,7 +369,7 @@ void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
 	campoAux = iniciarMarco();
 	t_list* listaMarco;
 	listaMarco = list_create();
-
+	pthread_mutex_lock(&mutexListaMemoria);
 	listaMarco = buscarLosMarcosDeProcesoEnMemoria(PIDACargar);
 	tamanioListaMarco = list_size(listaMarco);
 	for (a = 0; a < tamanioListaMarco; a++) {
@@ -386,7 +384,7 @@ void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
 		}
 
 	}
-
+	pthread_mutex_unlock(&mutexListaMemoria);
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar,
 			flagEscritura, socketSwap);
 
@@ -447,15 +445,16 @@ t_marco_con_flag* buscarModificadaYUsoEnCero() {
 		}
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
-	indiceClockM = a + 1;
-
-	if(indiceClockM == tamanioMemoria){
-			indiceClockM =0;
-	}
 
 	marcoYFlag->flag = flagReemplazo;
-	if(flagReemplazo == 1){
+
+	if(marcoYFlag->flag ==1){
+		indiceClockM = a + 1;
+		if(indiceClockM == tamanioMemoria){
+			indiceClockM =0;
+		}
 		marcoYFlag->marco = campoMarco;
+
 	}
 
 
@@ -494,15 +493,15 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 		}
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
-	indiceClockM = a + 1;
-
-	if(indiceClockM == tamanioMemoria){
-		indiceClockM =0;
-	}
-
 	marcoYFlag->flag = flagReemplazo;
-	if (flagReemplazo == 1) {
+
+	if (marcoYFlag->flag == 1) {
+		indiceClockM = a + 1;
+		if (indiceClockM == tamanioMemoria) {
+			indiceClockM = 0;
+		}
 		marcoYFlag->marco = campoMarco;
+
 	}
 
 	return marcoYFlag;
@@ -707,6 +706,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID) {
 
 	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
 	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
+	pthread_mutex_lock(&mutexListaMemoria);
 	tamanioListaMarcos = list_size(listaMemoria);
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
@@ -723,6 +723,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID) {
 		}
 
 	}
+	pthread_mutex_unlock(&mutexListaMemoria);
 
 	return listaMarcosYIndices;
 }
@@ -912,6 +913,7 @@ void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU) {
 }
 
 void inicializacionDesdeCero() {
+
 	listaMemoria = list_create();
 	listaTLB = list_create();
 	listaTablaDePag = list_create();
@@ -1180,4 +1182,114 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 	return estructuraFinalizar;
 }
 
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(int idProc, int pag,
+		char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
 
+	char* algoritmo = string_new();
+	string_append(&algoritmo, "LRU");
+
+	t_contenido_pagina* lecturaMandarCpu;
+	lecturaMandarCpu = iniciarContenidoPagina();
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag = iniciarMarcoYFlag();
+
+	//warning comparacion provoca resultado inesperado, entonces se corrige
+
+
+	if (strcmp(configuracion->algoritmo_reemplazo, algoritmo) == 0) {
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag,
+					flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			 sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag,
+					flagEscritura);
+
+		}
+
+	} else { // aca significa que es el de clock
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			marcoYFlag = sacaProcesoDeMemoriaSegunClockModificadoFalso(contenido, idProc, pag, flagEscritura, socketSwap);
+		} else if (estaLlenaLaMemoria()) {
+			printf("\na\n");
+			marcoYFlag = sacarDeMemoriaSegunClockModificadoFalso(socketSwap, idProc, contenido, pag, flagEscritura);
+			lecturaMandarCpu->contenido = marcoYFlag->marco->contenido;
+			lecturaMandarCpu->PID = marcoYFlag->flag;
+			return lecturaMandarCpu;
+		}
+	}
+
+
+	// aca significa que no tuvo que sacar ninguno
+	cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
+	lecturaMandarCpu->PID = idProc;
+	lecturaMandarCpu->numeroPagina = pag;
+	string_append(&lecturaMandarCpu->contenido , contenido);
+
+	if (flagEscritura == 0) {
+		return lecturaMandarCpu;
+	} else { // por escribir
+		t_contenido_pagina * escrituraSwap;
+		escrituraSwap = iniciarContenidoPagina();
+		escrituraSwap->PID = lecturaMandarCpu->PID;
+		string_append(&escrituraSwap->contenido , contenido);
+		escrituraSwap->numeroPagina = lecturaMandarCpu->numeroPagina;
+		return escrituraSwap;
+	}
+
+
+}
+
+t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+
+	t_list* listaMarcoYIndices;
+	listaMarcoYIndices = list_create();
+
+	listaMarcoYIndices = buscarLosMarcosDeProcesoEnMemoriaConSusIndices(PIDACargar);
+
+
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag = iniciarMarcoYFlag();
+
+	marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices, PIDACargar);
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(listaMarcoYIndices,PIDACargar);
+	}
+	return marcoYFlag;
+	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+
+}
+
+t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(int socketSwap, int PIDACargar,
+		char* contenidoACargar, int pagACargar, int flagEscritura){
+
+	t_marco_con_flag* marcoYFlag;
+	marcoYFlag= iniciarMarcoYFlag();
+
+
+	marcoYFlag = buscarModificadaYUsoEnCero();
+
+	if (marcoYFlag->flag == 0) {
+		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
+	}
+
+	if(marcoYFlag->flag == 0){
+		marcoYFlag = buscarModificadaYUsoEnCero();
+	}
+
+	if(marcoYFlag->flag == 0){
+		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
+	}
+
+	return marcoYFlag;
+	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar,
+				flagEscritura, socketSwap);
+}
