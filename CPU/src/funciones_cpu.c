@@ -4,15 +4,15 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	t_config* archivoConfig = NULL;
 	int result = 0;
 	char* logMsg = NULL;
-//	log_info(logger,identificaCPU(queHiloSoy()));
-//	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
+	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
 	if (argc < 2) {
 		logMsg =
 				string_from_format(
 						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./CPU /home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg\n");
 		putsConsola(logMsg);
-//		log_info(logger,identificaCPU(queHiloSoy()));
-//		log_error(logger, logMsg);
+		log_info(logger,identificaCPU(queHiloSoy()));
+		log_error(logger, logMsg);
 		exit(-1);
 	}
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
@@ -21,8 +21,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
-//		log_info(logger,identificaCPU(queHiloSoy()));
-//		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
+	log_info(logger,identificaCPU(queHiloSoy()));
+		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
 	} else {
 		archivoConfig = config_create(nombreArchivoConfig);
@@ -38,9 +38,9 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidad_hilos = config_get_int_value(archivoConfig,
 				"CANTIDAD_HILOS");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO");
-//		log_info(logger,identificaCPU(queHiloSoy()));
-//		log_info(logger,
-//				"[INFO]: Archivo de configuracion leido correctamente");
+		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger,
+				"[INFO]: Archivo de configuracion leido correctamente");
 	}
 	config_destroy(archivoConfig);
 }
@@ -108,7 +108,6 @@ void procesaCodigo(t_cpu* cpu) {
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
 //aca estoy haciendo la ejecucion de una de las instrucciones
 	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, queCPUsoy(cpu));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	i = 1;
 	ejecuta_Instruccion(

@@ -1,13 +1,6 @@
 #include "CPU.h"
 //si es inicializar me devuelve el token sino -1 como error
 int reconoceTokenInstruccion(char* string) {
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger,
-			"se va a ejecutar reconoce token segun el comando de la instruccion ");
-//	if (string_ends_with(string, ";")) {
-//		int tamanioString = strlen(string);
-//		string[tamanioString - 1] = '\0';
-//	}
 	string_to_lower(string);
 	if (string_equals(string, "iniciar"))
 		return INICIAR_PROCESO_MEM;
@@ -22,13 +15,8 @@ int reconoceTokenInstruccion(char* string) {
 //si no entro a ningun if
 	return -1;
 }
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++preguntar
+
 char** separaInstruccion(char* instruccionCompleta) {
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, "se va a ejecutar separaInstruccion ");
-	//char** vector_Instruccion = malloc(sizeof(char**));
-
-
 	char ** vector_Instruccion = string_split(instruccionCompleta, " ");
 
 	if(string_equals_ignore_case(vector_Instruccion[0], "escribir")){
@@ -60,33 +48,25 @@ char** separaInstruccion(char* instruccionCompleta) {
 				aux2 =     string_substring(vector_Instruccion[a], 1, longitud - 3);
 			}
 
-
 			string_append(&b , aux2);
 			string_append(&b , " ");
-
 	a++;
 		}
 		string_append(&b , ",NULL]");
 		string_append(&vector_escribir , b);
 		char** vectorADevolver =  string_get_string_as_array(vector_escribir);
 		return vectorADevolver ;
-
 	}
-
 	return vector_Instruccion;
 }
 
 int devuelveCantidadElementosArreglo(char** arreglo) {
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, "se va a ejecutar devuelveCantidadElementosArreglo");
 	int contador = 0;
 	while (arreglo[contador] != NULL) {
 		contador++;
 	}
 	if (contador == 0){
 		perror("[ERROR] arreglo vacio");
-		log_info(logger,identificaCPU(queHiloSoy()));
-	log_error(logger, "[ERROR] arreglo vacio");
 	}
 	return contador;
 }

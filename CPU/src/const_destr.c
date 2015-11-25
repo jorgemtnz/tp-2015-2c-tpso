@@ -7,7 +7,7 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 	t_respuesta_ejecucion* respEjec = malloc(sizeof(t_respuesta_ejecucion));
 	if (respEjec == NULL) {
 		perror("[ERROR] No se reservo memoria respuesta ejecucion CPU");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria respuesta ejecucion CPU");
 		exit(-1);
@@ -21,7 +21,7 @@ t_instruccion* creaInstruccion() {
 	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
 	if (instruccion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>instruccion");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>instruccion");
 		exit(-1);
@@ -33,7 +33,7 @@ t_mCod* crearmCod() {
 	t_mCod* mCod = malloc(sizeof(t_mCod));
 	if (mCod == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>mCod");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
 		exit(-1);
 	}
@@ -46,7 +46,7 @@ t_configuracion* crearConfiguracion() {
 	t_configuracion* configuracion = malloc(sizeof(t_configuracion));
 	if (configuracion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>configuracion");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>configuracion");
 		exit(-1);
@@ -65,7 +65,7 @@ t_cpu* crearCPU() {
 	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
 	if (cPUHilo == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		exit(-1);
 	} //si esta vacia la lista
@@ -116,7 +116,7 @@ t_ProcCPU* crearProcCPU() {
 	t_ProcCPU* procCPU = malloc(sizeof(t_ProcCPU));
 	if (procCPU == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>procCPU");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>procCPU");
 		exit(-1);
 	}

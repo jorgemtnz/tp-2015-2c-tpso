@@ -3,8 +3,7 @@
 int main(int argc, char *argv[]) {
 
 	procCPU = crearProcCPU();
-//	log_info(logger,identificaCPU(queHiloSoy()));
-//	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
+	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
 
 	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();
@@ -13,7 +12,7 @@ int main(int argc, char *argv[]) {
 
 	levantarHilosCPU();
 
-	log_info(logger, "se destruye proceso CPU");
+//	log_info(logger, "se destruye proceso CPU");
 	destProcCPU(procCPU);
 	return EXIT_SUCCESS;
 }
@@ -43,7 +42,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	puts("CPU procesar mensajes");
 	printf("%s\n", queCPUsoy(cpu));
 	   printf("la id del hilo es %lu \n", cpu->idCPU);
-	   log_info(logger,identificaCPU(queHiloSoy()));
+
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
 
@@ -84,7 +83,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		recibirMensajeVarios(header, buffer, extra, cpu);
 
 	} else if (tipoNotificacion == HANG_UP) {
-		log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] se desconecto un proceso");
 	}
 
@@ -96,7 +95,7 @@ char* decirHolaMundo() {
 }
 
 char* getNombre() {
-//	return "CPU"; //ver si conviene responder un nombre distinto por cada hilo de CPU
+
 	t_cpu* cpu;
 	pthread_t hiloactual = queHiloSoy();
 
