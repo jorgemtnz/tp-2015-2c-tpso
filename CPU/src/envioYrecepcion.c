@@ -2,10 +2,11 @@
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
 void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
-
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
@@ -17,6 +18,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ESCRIBIR_MEM): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar escribir memoria");
 		ejecuta_EscribirMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
@@ -27,6 +29,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (LEER_MEM): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar leer memoria ");
 		ejecuta_LeerMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
@@ -37,6 +40,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
 		//	t_PID* estructura = malloc(sizeof(t_PID));
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
@@ -48,6 +52,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ENTRADA_SALIDA): { //falta modificar
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar entrada salida ");
 
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
@@ -66,12 +71,13 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 //recibe las respuestas
 void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_cpu* cpu) {
-
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	int token;
 	token = header->tipoMensaje;
 	switch (token) {
 	case (CONTEXTO_MPROC): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		//inicia toda la cadena de instruccion desde la CPU hacia memoria
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
@@ -89,6 +95,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//recibe desde memoria y debe continuar con la ejecucion
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -124,6 +131,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//al dar error se debe devolver el proceso
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -152,6 +160,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar resultLeer ");
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		//cambio sizeof(t_contenido_pagina) * 10
@@ -193,6 +202,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//++++++++++++++cpu libre
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result escribir ");
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
 		// se asigna espacio contiguo para los datos del resultado
@@ -229,7 +239,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//se cuenta el fin de la instruccion finalizar
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
-
+		log_info(logger,identificaCPU(queHiloSoy()));
 		//++++++++++++++++++++++++++
 		log_info(logger, "se va a ejecutar result fin de proceso ");
 		t_PID* datosDesdeMem = (t_PID*) buffer;
@@ -258,6 +268,7 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 	}
 
 	case (STRING): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a recibir un string ");
 //esto esta extraido desde procesarMensaje() por lo que si se descomenta, daria error
 //			char* mensaje = malloc(header->tamanioMensaje);
@@ -273,6 +284,7 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		break;
 	}
 	case (TIEMPO_CPU): {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
