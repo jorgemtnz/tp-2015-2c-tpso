@@ -1,4 +1,9 @@
-iniciar 2;
+iniciar 3;
+escribir 0 "corto";
+escribir 1 "corto";
+escribir 2 "corto";
+entrada-salida 30;
 leer 0;
 leer 1;
+leer 2;
 finalizar;
