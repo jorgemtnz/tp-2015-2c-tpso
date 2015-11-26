@@ -83,7 +83,7 @@ void calcularPorcentaje(){
 		sleep(60); //duerme cada 60 segundos
 		void sacaPorcentaje(t_cpu* cpu){
 			// 60 instrucciones equivale al 100%
-			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7)//+cpu->retardo_acumulado+configuracion->retardo;
+			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);//+cpu->retardo_acumulado+configuracion->retardo;
 			//if(cpu->estado==DISPONIBLE)
 			cpu->cantInstEjecutadas =0;
 			printf(KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET);

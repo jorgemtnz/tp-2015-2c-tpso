@@ -112,7 +112,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
 				int flagEscritura = 0;
-				printf("\na");
+				printf("a\n");
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
 						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
