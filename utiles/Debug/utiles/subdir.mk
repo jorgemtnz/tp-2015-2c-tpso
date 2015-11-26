@@ -8,21 +8,24 @@ C_SRCS += \
 ../utiles/espacioDeDatos.c \
 ../utiles/files.c \
 ../utiles/mapeoAMemoria.c \
-../utiles/protocolo.c 
+../utiles/protocolo.c \
+../utiles/sockets.c 
 
 OBJS += \
 ./utiles/configExtras.o \
 ./utiles/espacioDeDatos.o \
 ./utiles/files.o \
 ./utiles/mapeoAMemoria.o \
-./utiles/protocolo.o 
+./utiles/protocolo.o \
+./utiles/sockets.o 
 
 C_DEPS += \
 ./utiles/configExtras.d \
 ./utiles/espacioDeDatos.d \
 ./utiles/files.d \
 ./utiles/mapeoAMemoria.d \
-./utiles/protocolo.d 
+./utiles/protocolo.d \
+./utiles/sockets.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
