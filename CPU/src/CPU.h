@@ -97,6 +97,7 @@ typedef struct {
     uint8_t estado;   //para si esta disponible o no la CPU
     int socketPlanificador;
     int socketMemoria;
+    //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
