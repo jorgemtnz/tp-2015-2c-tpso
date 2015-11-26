@@ -227,7 +227,8 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 		int* indice;
 		indice = malloc(sizeof(int));
 		tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
-		indice = list_get(listaIndices, PID);
+		*indice = list_get(listaIndices, PID);
+
 
 		sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 											  // si no se entiende por que, preguntarle a los matis
@@ -237,6 +238,8 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 				flagReemplazo = 1;
 			}
 		}
+
+
 
 		for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 			marcoYIndice = list_get(listaMarcoYIndices, a);
@@ -257,8 +260,6 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices
 		list_replace(listaIndices,PID,indice);
 
 
-
-
 		return marcoYFlag;
 }
 
@@ -274,7 +275,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYInd
 	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 	t_marco_con_indice* marcoYIndice;
 	marcoYIndice = iniciarMarcoYIndice();
-	indice = list_get(listaIndices, PID);
+	*indice = list_get(listaIndices, PID);
 
 	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
@@ -715,6 +716,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID) {
 		for (b = 0;b <tamanioListaMarcos &&  flag == 0; b++) {
 			campoMarco = list_get(listaMemoria, b);
 			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
+				marcoYIndice = iniciarMarcoYIndice();
 				marcoYIndice->marco = campoMarco;
 				marcoYIndice->indice = b;
 				list_add(listaMarcosYIndices, marcoYIndice);
@@ -1210,7 +1212,6 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(int idPro
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			marcoYFlag = sacaProcesoDeMemoriaSegunClockModificadoFalso(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
-			printf("\na\n");
 			marcoYFlag = sacarDeMemoriaSegunClockModificadoFalso(socketSwap, idProc, contenido, pag, flagEscritura);
 			lecturaMandarCpu->contenido = marcoYFlag->marco->contenido;
 			lecturaMandarCpu->PID = marcoYFlag->flag;
@@ -1246,17 +1247,18 @@ t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoA
 
 	listaMarcoYIndices = buscarLosMarcosDeProcesoEnMemoriaConSusIndices(PIDACargar);
 
-
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
 
 	marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices, PIDACargar);
 
 	if (marcoYFlag->flag == 0) {
+
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(listaMarcoYIndices,PIDACargar);
 	}
 
 	if (marcoYFlag->flag == 0) {
+		printf("\na\n");
 		marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(listaMarcoYIndices,PIDACargar);
 	}
 
@@ -1293,3 +1295,5 @@ t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(int socketSwap, int PI
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar,
 				flagEscritura, socketSwap);
 }
+
+

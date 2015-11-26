@@ -12,15 +12,7 @@
 #include "../src/Memoria.h"
 
 static int init_suite() {
-//	int a_rgc = 3;
-//	char* temp = string_new();
-//	string_append(&temp,
-//			"./Memoria;/home/utnso/tp-2015-2c-tpso/Memoria/config_memoria.cfg;test");
-//
-//	char** a_rgv = string_split(temp, ";");
-//	a_rgc = 3;
-//	leerArchivoDeConfiguracion(a_rgc, a_rgv);
-//	inicializacionDesdeCero();
+
 	return 0;
 }
 
@@ -226,31 +218,31 @@ static void testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba() {
 	t_contenido_pagina* campoEscribir;
 	campoEscribir = iniciarContenidoPagina();
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID1, 1, contenido1, flagEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(PID1, 1, contenido1, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID1);
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 1);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido1);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID2, 1, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(PID2, 1, contenido2, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID2);
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 1);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido2);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID3, 0, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(PID3, 0, contenido3, flagNoEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID3);
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 0);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido3);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 2, contenido4, flagNoEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(PID4, 2, contenido4, flagNoEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 2);
 	CU_ASSERT_STRING_EQUAL(campoEscribir->contenido, contenido4);
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(PID4, 3, contenido3Bis, flagEscritura, socketMentiroso, socketMentiroso);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(PID4, 3, contenido3Bis, flagEscritura, socketMentiroso, socketMentiroso);
 
 	CU_ASSERT_EQUAL(campoEscribir->PID, PID4);
 	CU_ASSERT_EQUAL(campoEscribir->numeroPagina, 3);
@@ -439,8 +431,6 @@ static void traer_falso_a_fondo_con_Clock() {
 	campoMemoria->bitUso = 0;
 	a++;
 
-	configuracion->cantidadMarcos= 5;
-	printf("\n%i\n",tamanioMemoria);
 	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(4, 4,"escritura4", 1, 54,45);
 
 	printf("\n%i\n",campoEscribir->PID);
@@ -454,8 +444,8 @@ static CU_TestInfo tests[] = {
 		{"Test carga archivo configuracion lee variables",test_variables_configuracion },
 		{"Test inicar proceso",test_iniciar_4_procesos_con_22_paginas_en_memoria},
 		{"Test escribir con TLB",test_probar_escribir_memoria_con_hardcodeo_de_TLB},
-		//{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
-		//{"Test traer con clock",traer_falso_a_fondo_con_Clock},
+		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
+		{"Test traer con clock",traer_falso_a_fondo_con_Clock},
 		{"Test probar leer",test_probar_leer_falso},
 		{"Test probar finalizar los procesos",test_probar_finalizar_un_proceso_con_TLB},
 		CU_TEST_INFO_NULL,
