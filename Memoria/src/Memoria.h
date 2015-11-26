@@ -180,8 +180,8 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
-t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(t_list* listaMarcoYIndices, int PID);
-t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(t_list* listaMarcoYIndices,int PID);
+t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso( int PID);
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID);
 //warning no declarado aca, entonces lo agrego
 void sacarAlPrimeroDeTLB() ;
 void eliminarDeTLB(int idMenor);
@@ -265,8 +265,6 @@ t_list* listaTablaDePag;
 t_list* listaIndices;
 
 // ----------- Semaforos ---------- //
-pthread_mutex_t mutexProcesadorMensajes;
-pthread_mutex_t mutexParaInicializado;
 pthread_mutex_t mutexListaMemoria;
 pthread_mutex_t mutexListaTLB;
 pthread_mutex_t mutexTablaPags;

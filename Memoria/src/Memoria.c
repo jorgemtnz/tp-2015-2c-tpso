@@ -112,6 +112,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
 				int flagEscritura = 0;
+				printf("\na");
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
 						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
@@ -180,7 +181,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	}
 
 	return 0;
-	pthread_mutex_unlock(&mutexProcesadorMensajes);
 }
 
 void asignarSeniales(){

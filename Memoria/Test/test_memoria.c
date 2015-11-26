@@ -402,8 +402,7 @@ static void test_probar_finalizar_un_proceso_con_TLB() {
 }
 
 static void traer_falso_a_fondo_con_Clock() {
-	int tamanioMemoria,a=0;
-	tamanioMemoria = list_size(listaMemoria);
+	int a=0;
 
 	t_marco * campoMemoria;
 	campoMemoria = iniciarMarco();
@@ -431,7 +430,7 @@ static void traer_falso_a_fondo_con_Clock() {
 	campoMemoria->bitUso = 0;
 	a++;
 
-	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(4, 4,"escritura4", 1, 54,45);
+	campoEscribir = respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(4, 4,"escritura44", 1, 54,45);
 
 	printf("\n%i\n",campoEscribir->PID);
 	printf("\n%s\n",campoEscribir->contenido);
