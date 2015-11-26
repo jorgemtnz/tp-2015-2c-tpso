@@ -8,7 +8,7 @@
 #include <commons/log.h>
 #include <commons/string.h>
 #include <commons/collections/dictionary.h>
-#include "../protocolo.h"
+#include "protocolo.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
@@ -18,6 +18,7 @@
 #include <netdb.h> 		//gethostbyname
 #include <netinet/in.h>
 #include <fcntl.h> //fcntl
+#include <pthread.h>
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -97,6 +98,11 @@ int conectarSocketPorPrimeraVez(int sockfd, char* ip_Destino, int puerto);
 
 int conectar(char* ip, char* puerto, int *sock);
 
+pthread_mutex_t mutexLogs;
+void my_log_some(bool info, const char* formato, va_list arguments);
+void my_log_info(const char *formato, ...);
+void my_log_error(const char *formato, ...);
+
 
 // Para cliente y/o servidor
 void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger);
@@ -116,4 +122,11 @@ int recibirSerializado(int fdCliente, t_header header, void* estructura, t_resul
 
 //para identificarse
 char* getNombre();
+
+//para debuggear
+void debug(const char *formato, ...);
+
+//variables globales
+t_log* logger;
+bool mustDebug;
 #endif /* SOCKETS_H_ */

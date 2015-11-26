@@ -20,7 +20,7 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 #include <utiles/configExtras.h>
 #include <utiles/files.h>
 #include <utiles/protocolo.h>
@@ -35,6 +35,19 @@ typedef struct {
 	char* algorimoPlanificacion;
 	char* quantum;
 } t_configuracion;
+
+typedef struct {
+	uint8_t cantidadCiclos;
+	bool finalizoEntradaSalida;
+	t_pcb* pcb;
+} t_estado_entrada_salida;
+
+typedef struct {
+	uint8_t cantidadCiclos;
+	t_pcb* pcb;
+} t_pcb_entrada_salida;
+
+
 //=======================================================================================
 
 
@@ -55,6 +68,7 @@ int putsConsola (const char *msg);
 int printConsola(const char *formato, ...);
 bool cpuDesconectada(void *cpu);
 char* obtenerNombreProc(char* ruta);
+void cerrarArchivoEspacioDeDatos(int fd, t_log* logger);
 //============================================================================
 
 
@@ -74,25 +88,40 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer);
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion);
+void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion);
 //++++++++++++++++++++++++++++++++++++comandos +++++++++++++++++++++++++++++++++++++++
 int correrPrograma(int socket, t_header* header, char* buffer);
 int correrPath(int socket, t_header* header, char* buffer);
 int finalizarPid(int socket, t_header* header, char* buffer);
 int ps(int socket, t_header* header, char* buffer);
 int cpu(int socket, t_header* header, char* buffer);
+//++++++++++++++++++++++++++++++++++++Comando finalizar pid +++++++++++++++++++++++++++++++
+bool existePID(int pid);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
+t_cpu_ref* crearCpuRef();
 void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
+t_list* getColaDeFinalizados();
+t_list* getColaDeEntradaSalida();
 t_list* getColaDeListos();
 t_list* getColaDeNuevos();
 void ejecutarPlanificadorLargoPlazo();
 t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
+void ejecucionAFinalizado(t_pcb* pcb);
+t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
+void quitarProcesoDeCpu(t_cpu_ref* cpu);
+void imprimirEstadoCpus();
+
+void ejecucionAColaDeListos(t_pcb* pcb);
+void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion);
+//++++++++++++++++++++++++++++++++++++entrada salida +++++++++++++++++++++++++++++++++++++++
+void *ejecutarEntradaSalida(void *param);
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
-void registrarNuevaCPU(int socket);
+void registrarNuevaCPU(int socket, char* nombre);
 bool cpuConSocket(void *cpu, int socket);
 void desregistrarCPUConectada(int socket);
 
@@ -113,22 +142,25 @@ t_list* generarMensajesPsLista(t_list* listaPcb, char* estado);
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 
 t_configuracion* configuracion;
-t_log* logger;
-t_dictionary* conexiones;
+//t_dictionary* conexiones;
 uint8_t* proximoPid;
 t_planificacion* planificacion;
+t_list* colaDeFinalizados;
 t_list* colaDeListos;
 t_list* colaDeNuevos;
-t_list* colaDeEjecucion;
 t_list* colaDeEntradaSalida;
 t_list* listaCPUs;
+
+t_estado_entrada_salida estadoEntradaSalida;
+pthread_mutex_t mutexEstadoEntradaSalida;
+pthread_mutex_t mutexHayEntradaSalidaParaEjecutar;
+
+int c;
 
 //===========================================================================================
 
 
 
-
-t_log* logger; //VG del logger
 
 //test
 char* decirHolaMundo();

@@ -27,7 +27,7 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <sys/wait.h>
-#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 #include <utiles/configExtras.h>
 #include <utiles/files.h>
 #include <utiles/espacioDeDatos.h>
@@ -75,6 +75,12 @@ typedef struct {
 	t_resultado_funcion resultado;
 } t_devolucion_escribir_o_leer;
 
+
+typedef struct {
+	int lecturas;
+	int escrituras;
+	uint8_t PID;
+}t_contador;
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
@@ -88,6 +94,7 @@ t_PID* crearEstructuraPid();
 t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar();
 t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer();
 t_contenido_pagina* crearContenidoPagina();
+t_contador * crearContador();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -121,11 +128,11 @@ int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 //===========================================================================================
 t_configuracion* configuracion;
-t_log* logger;
 char *espacioDatos;
 t_list* listaDeProcesosCargados;
 t_list* listaDeEspaciosLibres;
 t_dictionary* conexiones;
+t_list* contadorLecturasYEscrituras;
 
 //test
 char* decirHolaMundo();

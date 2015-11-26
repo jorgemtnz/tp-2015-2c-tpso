@@ -131,7 +131,21 @@ t_contenido_pagina* crearRespuestaLeer(){
 	return contenido;
 
 }
+t_contador * crearContador(){
 
+	t_contador* contenido = malloc(sizeof(t_contador));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para Swap>..>contenido");
+		log_error(logger, "[ERROR] No se reservo memoria para Swap>..>contenido");
+		exit(-1);
+	}
+	contenido->escrituras = 0;
+	contenido->lecturas = 0;
+	contenido->PID = 0;
+
+	return contenido;
+
+}
 t_PID* crearRespuestaFinalizar(){
 
 	t_PID* contenido = malloc(sizeof(t_PID));

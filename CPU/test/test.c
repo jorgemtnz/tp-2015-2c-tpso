@@ -1,18 +1,19 @@
 #include "CUnit/Basic.h"
 #include "cunit_def.h"
-#include <utiles/sockets/sockets.h>
+//#include <utiles/sockets/sockets.h>
+#include <utiles/sockets.h>
 
 bool hayQueEjecutarTests(int argc, char *argv[]) {
 
 	int i;
 	for (i = 0; i < argc; ++i) {
 		if (string_equals(argv[i], "test")) {
-			printf("Hay que ejecutar tests\n");
+			//printf("Hay que ejecutar tests\n");
 			return true;
 		}
 	}
 
-	printf("No hay que ejecutar tests\n");
+	//printf("No hay que ejecutar tests\n");
 	return false;
 }
 

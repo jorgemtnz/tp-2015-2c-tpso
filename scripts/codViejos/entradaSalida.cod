@@ -1,0 +1,5 @@
+iniciar 2;
+escribir 0 "Hola";
+leer 0;
+entrada-salida 2;
+finalizar;

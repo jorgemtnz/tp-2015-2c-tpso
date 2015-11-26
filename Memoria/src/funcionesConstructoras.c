@@ -17,15 +17,7 @@ t_TablaDePaginas* iniciarTablaDePaginas(){
 	return tablaDePag;
 }
 
-t_escrituraProc* iniciarEscrituraProc() {
-	t_escrituraProc* escrituraProc = malloc(sizeof(t_escrituraProc));
-	if (escrituraProc == NULL) {
-		perror("[ERROR] No se reservo memoria para iniciarEscrituraProc");
-		log_error(logger, "[ERROR] No se reservo memoria para iniciarEscrituraProc");
-		exit(-1);
-	}
-	return escrituraProc;
-}
+
 
 t_TLB* iniciarTLB() {
 	t_TLB* TLB = malloc(sizeof(t_TLB));
@@ -47,8 +39,28 @@ t_marco * iniciarMarco() {
 	return marco;
 }
 
-t_config* iniciarArchivoConfig() {
-	t_config* archConf = malloc(sizeof(t_config));
+t_marco_con_flag * iniciarMarcoYFlag() {
+	t_marco_con_flag* marcoConBit = malloc(sizeof(t_marco_con_flag));
+	if (marcoConBit == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		exit(-1);
+	}
+	return marcoConBit;
+}
+
+t_marco_con_indice* iniciarMarcoYIndice() {
+	t_marco_con_indice* marcoConIndice = malloc(sizeof(t_marco_con_indice));
+	if (marcoConIndice == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYFlag");
+		exit(-1);
+	}
+	return marcoConIndice;
+}
+
+t_configuracion* iniciarArchivoConfig() {
+	t_configuracion* archConf = malloc(sizeof(t_config));
 	if (archConf == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarArchivoConfig");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarArchivoConfig");
@@ -67,6 +79,15 @@ t_lectura* iniciarLectura() {
 	return lectura;
 }
 
+t_marco_y_bit* iniciarMarcoYBit(){
+	t_marco_y_bit* marcoYBit = malloc(sizeof(t_marco_y_bit));
+	if (marcoYBit == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYBit");
+		exit(-1);
+	}
+	return marcoYBit;
+}
 
 
 t_contenido_pagina* iniciarContenidoPagina(){
@@ -76,6 +97,7 @@ t_contenido_pagina* iniciarContenidoPagina(){
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarRtaLecturaCpu");
 		exit(-1);
 	}
+	contenido->contenido = string_new();
 	return contenido;
 
 }
@@ -90,6 +112,17 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	contenido->cantidadPaginas = 0;
 
 
+	return contenido;
+}
+
+
+t_escribir_falso* crearEscribirFalso(){
+	t_escribir_falso* contenido = malloc(sizeof(t_escribir_falso));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para crearEscribirFalso");
+		log_error(logger, "[ERROR] No se reservo memoria para crearEscribirFalso");
+		exit(-1);
+	}
 	return contenido;
 }
 
@@ -113,5 +146,19 @@ t_leerDeProceso* crearEstructuraLeer(){
 		contenido->PID = 0;
 		contenido->numeroPaginaFin = 0;
 		contenido->numeroPaginaInicio = 0;
+		return contenido;
+}
+
+t_leerDeProcesoPorEscribir* crearEstructuraLeerProcesoPorEscribir(){
+	t_leerDeProcesoPorEscribir* contenido = malloc(sizeof(t_leerDeProcesoPorEscribir));
+		if (contenido == NULL) {
+			perror("[ERROR] No se reservo memoria para crearEstructuraLeerProcesoPorEscribir");
+			log_error(logger, "[ERROR] No se reservo memoria para crearEstructuraLeerProcesoPorEscribir");
+			exit(-1);
+		}
+		contenido->PID = 0;
+		contenido->numeroPaginaFin = 0;
+		contenido->numeroPaginaInicio = 0;
+		contenido->textoAEscribir = string_new();
 		return contenido;
 }

@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <commons/collections/list.h>
-//#include "sockets/sockets.h"
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++  DEFINE   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #define TAMANIO_TEXTO 512
@@ -25,6 +25,8 @@ typedef enum {
 	HEADER = 1, STRING,  //mensaje 1er checkpoint
 
 	CONTEXTO_MPROC, //solicitud del planificador para que se levante el proceso desde el path dado.
+	HANDSHAKE_CPU,
+	HANDSHAKE_ENTRADA_SALIDA,
 	RESUL_EJECUCION_OK,
 //	RESUL_EJECUCION_ERROR,
 	RESUL_INSTR_EJEC,
@@ -47,6 +49,7 @@ typedef enum {
 	//++++++++++++++++cpu+++++++++++++++++++
 	ENTRADA_SALIDA,  //CPU le devuelve el proceso a planificador
 	TIEMPO_CPU,     //solicitud del planificador al cpu
+	TIEMPO_CPU_RESUL,
 	RESULT_TIEMPO_CPU,
 	RESUL_ENT_SAL,
 
@@ -71,7 +74,7 @@ typedef enum {
 
 //+++++++++swap++++++++++++++++++
 	 RESUL_SOBREESCRIBIR_OK,
-
+	 NOTIFICACION_HILO_ENTRADA_SALIDA
 
 } t_tipo_mensaje;
 
@@ -91,6 +94,8 @@ typedef struct PCB {
 	bool tieneDesalojo;
 	uint16_t tamanioRafaga;
 	uint16_t proximaInstruccion;
+	uint16_t instruccionFinal;
+	bool finalizar;
 } t_pcb;
 
 typedef struct Planificacion {
@@ -133,20 +138,27 @@ typedef struct {
 
 typedef struct {
 	uint8_t PID;
-	char* expresion;
-} t_entrada_salida;
+	uint8_t numeroPaginaInicio;
+	uint8_t numeroPaginaFin;
+	char* textoAEscribir;
+} t_leerDeProcesoPorEscribir;
 
 typedef struct {
 	t_pcb* pcb; //aca dentro ya esta el PID del proceso
-	t_list* resultadosInstrucciones;
+	char* resultadosInstrucciones;
 	bool finalizoOk;
+	uint8_t cant_entrada_salida;// vale 0 si no hay que hacer entrada salida
 } t_respuesta_ejecucion;
 
 typedef struct {
-	t_tipo_mensaje tipoMensaje;
-	char* comandoInstruccion;
-	char* expresion;
-} t_resultado_instruccion;
+	uint8_t res_porcentaje;
+	pthread_t idCpu;
+}t_respuesta_porcentaje;
+
+typedef struct {
+	t_list* respuestasPorcentaje;
+	uint8_t cantidadDeElementos;
+}t_porcentajeCPUs;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
@@ -158,6 +170,10 @@ Paquete* deserializar(void* buffer, int tamanioMensaje);
 void* serializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_CONTEXTO_MPROC(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_HANDSHAKE_CPU(int fdCliente, t_tipo_mensaje tipoMensaje);
+void* serializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_HANDSHAKE_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje);
 //++++++ SE USA  dentro de serializar_CONTEXTO_MPROC  deserializar_CONTEXTO_MPROC
 void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_pcb* estructura);
@@ -174,11 +190,18 @@ int8_t deserializar_int8_t(int fdCliente);
 //++++++SE USA como nivel inferior para serializar un bool
 void serializar_bool(int fdCliente, bool estructura);
 bool deserializar_bool(int fdCliente);
+void serializar_pthread(int fdCliente, pthread_t pthread);
+pthread_t deserializar_pthread(int fdCliente);
+
 // +++++++++interaccion CPU - Memoria
 void* serializar_INICIAR_PROCESO_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_INICIAR_PROCESO_MEM(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+void 	serializar_lista_porcentajes(int fdCliente, t_list* estructura);
+t_list* deserializar_lista_porcentajes(int fdCliente,int8_t cantidad);
+void serializar_TIEMPO_CPU_RESUL(int fdCliente, t_tipo_mensaje tipoMensaje, t_porcentajeCPUs*  estructura);
+void* deserializar_TIEMPO_CPU_RESUL(int fdCliente, t_tipo_mensaje tipoMensaje		);
 //--------------------------------------------++++++++++++++ Especificar donde se utiliza
 void* serializar_t_iniciar_swap(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_iniciar_swap* estructura);
@@ -225,21 +248,28 @@ void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
-void serializar_t_entrada_salida(int fdCliente, t_tipo_mensaje tipoMensaje,
-		t_entrada_salida* estructura);
-t_entrada_salida* deserializar_t_entrada_salida(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
-
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
-t_contenido_pagina* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
+t_PID* deserializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
 void* serializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, t_PID* estructura);
 t_PID* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+
+t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) ;
+void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura);
+
+
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
+void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura);
+
+void* deserializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje		);
+
+void serializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID* estructura);
+
+void* deserializar_NOTIFICACION_HILO_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 void* serializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
@@ -296,8 +326,7 @@ t_respuesta_ejecucion* deserializar_t_respuesta_ejecucion(int fdCliente,
 //+++++++++se usa en CPU como parte de los resultados a mas bajo nivel
 void serializar_t_resultado_instruccion(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
-t_resultado_instruccion* deserializar_t_resultado_instruccion(int fdCliente,
-		t_tipo_mensaje tipoMensaje);
+
 //+++++++++++++++++++++++++++Fin de resultados+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++interaccion Memoria -  Swap
 void* serializar_FIN_PROCESO_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
@@ -313,9 +342,9 @@ void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
 void* deserializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
-void* serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,
+void serializar_ENTRADA_SALIDA(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
-t_entrada_salida* deserializar_ENTRADA_SALIDA(int fdCliente,
+void* deserializar_ENTRADA_SALIDA(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
 void* serializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipoMensaje,

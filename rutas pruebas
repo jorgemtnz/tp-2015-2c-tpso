@@ -1,0 +1,21 @@
+/home/utnso/tp-2015-2c-tpso/CPU/admin_memoria.conf
+
+/home/utnso/tp-2015-2c-tpso/CPU/HyperIO.cod
+
+/home/utnso/tp-2015-2c-tpso/CPU/IO.cod
+
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/entradaSalida.cod
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/benchmark.cod
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/MuyCorto.cod
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/MuyLargo1.cod
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/TLB.cod
+
+correr /home/utnso/tp-2015-2c-tpso/CPU/escribeSwap.cod
+
+
+
