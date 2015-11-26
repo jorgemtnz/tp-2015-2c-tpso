@@ -12,15 +12,15 @@
 #include "../src/Memoria.h"
 
 static int init_suite() {
-	int a_rgc = 3;
-	char* temp = string_new();
-	string_append(&temp,
-			"./Memoria;/home/utnso/tp-2015-2c-tpso/Memoria/config_memoria.cfg;test");
-
-	char** a_rgv = string_split(temp, ";");
-	a_rgc = 3;
-	leerArchivoDeConfiguracion(a_rgc, a_rgv);
-	inicializacionDesdeCero();
+//	int a_rgc = 3;
+//	char* temp = string_new();
+//	string_append(&temp,
+//			"./Memoria;/home/utnso/tp-2015-2c-tpso/Memoria/config_memoria.cfg;test");
+//
+//	char** a_rgv = string_split(temp, ";");
+//	a_rgc = 3;
+//	leerArchivoDeConfiguracion(a_rgc, a_rgv);
+//	inicializacionDesdeCero();
 	return 0;
 }
 
@@ -454,8 +454,8 @@ static CU_TestInfo tests[] = {
 		{"Test carga archivo configuracion lee variables",test_variables_configuracion },
 		{"Test inicar proceso",test_iniciar_4_procesos_con_22_paginas_en_memoria},
 		{"Test escribir con TLB",test_probar_escribir_memoria_con_hardcodeo_de_TLB},
-		{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
-		{"Test traer con clock",traer_falso_a_fondo_con_Clock},
+		//{"Test probar traer de swap una pagina", testRespuestaTraerDeSwapUnaPaginaDeUnProcesoPrueba},
+		//{"Test traer con clock",traer_falso_a_fondo_con_Clock},
 		{"Test probar leer",test_probar_leer_falso},
 		{"Test probar finalizar los procesos",test_probar_finalizar_un_proceso_con_TLB},
 		CU_TEST_INFO_NULL,
