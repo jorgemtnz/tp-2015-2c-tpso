@@ -4,13 +4,14 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	t_config* archivoConfig = NULL;
 	int result = 0;
 	char* logMsg = NULL;
-
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
 	if (argc < 2) {
 		logMsg =
 				string_from_format(
 						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./CPU /home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg\n");
 		putsConsola(logMsg);
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, logMsg);
 		exit(-1);
 	}
@@ -20,6 +21,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
+	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
 	} else {
@@ -36,6 +38,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidad_hilos = config_get_int_value(archivoConfig,
 				"CANTIDAD_HILOS");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO");
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger,
 				"[INFO]: Archivo de configuracion leido correctamente");
 	}
@@ -43,6 +46,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 }
 //es la funcion madre para cuando llega el Contexto de un proceso. Se inicia  el circuito de mCod
 int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu) {
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar preparaCPU");
 
 
@@ -52,7 +56,7 @@ int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu) {
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 
 	t_instruccion* instruccion = creaInstruccion();
-
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar interpretaInstruccion ");
 
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
@@ -67,6 +71,7 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 // ejecuta las instrucciones del mCod
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	t_mCod* mCodCPU = crearmCod();
 //++++++++++++++++++++++++++++++++
@@ -102,7 +107,7 @@ void procesaCodigo(t_cpu* cpu) {
 //	printf("%i\n", mCodCPU->cantidadInstrucciones);
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
 //aca estoy haciendo la ejecucion de una de las instrucciones
-	log_info(logger, queCPUsoy(cpu));
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	i = 1;
 	ejecuta_Instruccion(

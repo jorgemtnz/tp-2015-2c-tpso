@@ -12,14 +12,14 @@ int main(int argc, char *argv[]) {
 
 	levantarHilosCPU();
 
-	log_info(logger, "se destruye proceso CPU");
+//	log_info(logger, "se destruye proceso CPU");
 	destProcCPU(procCPU);
 	return EXIT_SUCCESS;
 }
 
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a procesar un mensaje");
 	t_cpu* cpu;
 	int tamanio = 0;
@@ -47,6 +47,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 
 	if (tipoNotificacion == NEW_CONNECTION) {
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se realizo nueva conección");
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
 		//comando auxiliar para reconectar al planificador manualmente
@@ -57,6 +58,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					string_itoa(configuracion->vg_puertoPlanificador),
 					&socketPlanificador);
 			if (resultConexion_planif == -1)
+				log_info(logger,identificaCPU(queHiloSoy()));
 				log_error(logger,
 						"[ERROR]no se reconecto el CPU al Planificador");
 			//dictionary_put(conexiones, "Planificador",
@@ -70,6 +72,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					string_itoa(configuracion->vg_puertoMemoria),
 					&socketMemoria);
 			if (resultConexion_Memoria == -1)
+				log_info(logger,identificaCPU(queHiloSoy()));
 				log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
 			//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 			cpu->socketMemoria = socketMemoria;
@@ -80,6 +83,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		recibirMensajeVarios(header, buffer, extra, cpu);
 
 	} else if (tipoNotificacion == HANG_UP) {
+	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] se desconecto un proceso");
 	}
 
@@ -91,7 +95,7 @@ char* decirHolaMundo() {
 }
 
 char* getNombre() {
-//	return "CPU"; //ver si conviene responder un nombre distinto por cada hilo de CPU
+
 	t_cpu* cpu;
 	pthread_t hiloactual = queHiloSoy();
 

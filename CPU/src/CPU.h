@@ -46,6 +46,16 @@
 #define INST_FINALIZAR 5
 #define USO 1
 #define NO_USO 0
+
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+#define RESET "\033[0m"
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 
@@ -125,7 +135,6 @@ void destRespEjec(t_respuesta_ejecucion* respEjec);
 int reconoceTokenInstruccion(char* string);
 char** separaInstruccion(char* instruccionCompleta);
 void  ejecutar(int token, char** separada_instruccion, t_cpu*  cpu);
-int descargaProcesoCPU(t_mCod* mCod);
 char* pedirRutaArchivo();
 int devuelveCantidadElementosArreglo(char** arreglo);
 
@@ -136,9 +145,9 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
 int putsConsola (const char *msg) ;
-t_cpu* ejecutarResul_Fin(t_cpu* cpu);
 char* queCPUsoy(t_cpu* cpu);
 pthread_t queHiloSoy();
+char* identificaCPU( pthread_t idHilo);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 

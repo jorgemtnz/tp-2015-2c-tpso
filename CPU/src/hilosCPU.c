@@ -2,6 +2,7 @@
 #include<math.h>
 
 void levantarHilosCPU() {
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a levantar un HILO ");
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
 	pthread_t tidHiloporcentaje;
@@ -26,6 +27,7 @@ void levantarHilosCPU() {
 }
 
 int hiloCPU() {
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "comienza ejecucion de un HILO ");
 
 	t_cpu* cpu = crearCPU();
@@ -44,6 +46,7 @@ int hiloCPU() {
 				string_itoa(configuracion->vg_puertoPlanificador),
 				&socketPlanificador);
 		if (resultConexion_planif == -1)
+			log_info(logger,identificaCPU(queHiloSoy()));
 			log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
 
 		//dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
@@ -53,6 +56,7 @@ int hiloCPU() {
 		resultConexion_mem = conectar(configuracion->vg_ipMemoria,
 				string_itoa(configuracion->vg_puertoMemoria), &socketMemoria);
 		if (resultConexion_mem == -1)
+			log_info(logger,identificaCPU(queHiloSoy()));
 			log_error(logger, "[ERROR]no se conecto el CPU a la memoria");
 
 		//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
@@ -65,7 +69,8 @@ int hiloCPU() {
 }
 
 int hiloPorcentaje() {
-	printf("hilo calculo de porcentaje iniciado \n");
+	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, "se ejecuta el calculo del porcentaje de las cpus");
 	//este es el hilo 0
 calcularPorcentaje();
 	return 0;
@@ -80,11 +85,11 @@ void calcularPorcentaje(){
 			// 60 instrucciones equivale al 100%
 			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);
 			cpu->cantInstEjecutadas =0;
-			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-			printf("%s,\n",(queCPUsoy(cpu)));
+			printf(KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET);
+			printf("%s,\n",queCPUsoy(cpu));
 			printf("Para el minuto %d, \n", i);
 			printf("el porcentaje de uso es de  %d, porciento. \n", cpu->porcentajeUso);
-			printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+			printf(KBLU "++++++++++++++++++++++"RESET "+++++++++"KBLU "++++++++++++++++++++++++++\n"RESET);
 		}
 
 		list_iterate(procCPU->listaCPU,(void*) sacaPorcentaje)	;

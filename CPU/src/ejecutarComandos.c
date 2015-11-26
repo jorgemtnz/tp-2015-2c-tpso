@@ -38,6 +38,7 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->estadoEjecucion = USO;
+	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se ejecuta fin de proceso desde CPU ");
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion = 0;
