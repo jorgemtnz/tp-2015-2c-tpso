@@ -650,12 +650,8 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 
 }
 
-int my_log_some(bool info, const char *formato, ...) {
+void my_log_some(bool info, const char* formato, va_list arguments) {
 //	puts("printConsola\n");
-	va_list arguments;
-	va_start(arguments, formato);
-	int res = vprintf(formato, arguments);
-	va_end(arguments);
 
 	char* nuevo = string_from_vformat(formato, arguments);
 	if (info) {
@@ -663,23 +659,28 @@ int my_log_some(bool info, const char *formato, ...) {
 	} else {
 		log_error(logger, nuevo);
 	}
-	return res;
 }
 
-int my_log_info(const char *formato, ...) {
-	int myLogSome;
+void my_log_info(const char *formato, ...) {
+	va_list arguments;
+	va_start(arguments, formato);
+	vprintf(formato, arguments);
+	va_end(arguments);
+
 	pthread_mutex_lock(&mutexLogs);
-	myLogSome = my_log_some(true, formato);
+	my_log_some(true, formato, arguments);
 	pthread_mutex_unlock(&mutexLogs);
-	return myLogSome;
 }
 
-int my_log_error(const char *formato, ...) {
-	int myLogSome;
+void my_log_error(const char *formato, ...) {
+	va_list arguments;
+	va_start(arguments, formato);
+	vprintf(formato, arguments);
+	va_end(arguments);
+
 	pthread_mutex_lock(&mutexLogs);
-	myLogSome = my_log_some(false, formato);
+	my_log_some(false, formato, arguments);
 	pthread_mutex_unlock(&mutexLogs);
-	return myLogSome;
 }
 
 int conectar(char* ip, char* puerto, int *sock) {
@@ -709,7 +710,7 @@ int conectar(char* ip, char* puerto, int *sock) {
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 //	puts("default procesar mensajes");
 	if(header != NULL) {
-		my_log_info(logger, "BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
+		my_log_info("BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
 	}
 	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);

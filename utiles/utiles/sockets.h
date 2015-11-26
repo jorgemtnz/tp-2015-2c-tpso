@@ -18,6 +18,7 @@
 #include <netdb.h> 		//gethostbyname
 #include <netinet/in.h>
 #include <fcntl.h> //fcntl
+#include <pthread.h>
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -98,9 +99,9 @@ int conectarSocketPorPrimeraVez(int sockfd, char* ip_Destino, int puerto);
 int conectar(char* ip, char* puerto, int *sock);
 
 pthread_mutex_t mutexLogs;
-int my_log_some(bool info, const char *formato, ...);
-int my_log_info(const char *formato, ...);
-int my_log_error(const char *formato, ...);
+void my_log_some(bool info, const char* formato, va_list arguments);
+void my_log_info(const char *formato, ...);
+void my_log_error(const char *formato, ...);
 
 
 // Para cliente y/o servidor
