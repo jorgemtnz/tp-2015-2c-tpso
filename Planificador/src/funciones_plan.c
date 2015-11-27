@@ -257,6 +257,7 @@ bool existePID(uint8_t pid) {
 	char* ruta = string_new();
 
 	t_pcb* pcb = crearPcb(ruta);
+	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
 
 	for (a = 0; a < list_size(listaCPUs); a++) {
 
@@ -269,7 +270,6 @@ bool existePID(uint8_t pid) {
 		}
 
 		t_pcb* pcbEnEntradaSalida = NULL;
-		printf("ddd \n");
 		pthread_mutex_lock(&mutexEstadoEntradaSalida);
 
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
@@ -285,9 +285,9 @@ bool existePID(uint8_t pid) {
 
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
 
-		pcb = list_get(colaDeEntradaSalida, a);
+		pcbES = list_get(colaDeEntradaSalida, a);
 
-		if (pcb->pid == pid) {
+		if (pcbES->pcb->pid == pid) {
 			return true;
 		}
 	}

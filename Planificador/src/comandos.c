@@ -151,14 +151,16 @@ int ps(int socket, t_header* header, char* buffer) {
 
 	b = 0;
 	cont = 0;
+	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
-		pcb = list_get(colaDeEntradaSalida, a);
-		char** splitRuta = string_split(pcb->rutaArchivoMcod, "/");
+		pcbES = list_get(colaDeEntradaSalida, a);
+
+		char** splitRuta = string_split(pcbES->pcb->rutaArchivoMcod, "/");
 		while (splitRuta[b] != NULL) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Bloqueado\n", pcb->pid, splitRuta[cont - 1]);
+		printf("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
 	}
 
 	return 0;
