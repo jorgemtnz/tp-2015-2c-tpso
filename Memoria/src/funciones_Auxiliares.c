@@ -738,14 +738,13 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	id = campoMarco->idMarco;
 	contenido = campoMarco->contenido ;
 
+
 	pthread_mutex_unlock(&mutexTablaPags);
 	pthread_mutex_unlock(&mutexListaTLB);
 	eliminarDeMemoria(id);
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar, flagEscritura);
 
 	if (bitTablaDePag == 1 || bitTLB == 1) {
-
-
 		if (flagEscritura == 0) { // por leer
 			usleep(configuracion->retardoMemoria * 1000);
 			enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido, socketSwap);
@@ -759,6 +758,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 		}
 
 	}
+
 }
 char* traerContenidoDeMarco(int idMarco) {
 	char* contenido;
