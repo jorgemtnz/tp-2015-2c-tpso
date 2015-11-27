@@ -69,7 +69,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->estadoEjecucion = USO;
 	estructura->PID = cpu->pcbPlanificador->pid;
-	cpu->pcbPlanificador->proximaInstruccion = 0;
+	//cpu->pcbPlanificador->proximaInstruccion = 0;
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
