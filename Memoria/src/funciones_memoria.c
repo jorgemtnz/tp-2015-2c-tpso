@@ -10,7 +10,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 				string_from_format(
 						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./Memoria /home/utnso/tp-2015-2c-tpso/Memoria/config_memoria.cfg\n");
 		puts(logMsg);
-		log_error(logger, logMsg);
+		my_log_error(logMsg);
 		exit(-1);
 	}
 
@@ -22,7 +22,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 						"Archivo de configuracion no encontrado. Parametro especificado: %s\n",
 						nombreArchivoConfig);
 		puts(logMsg);
-		log_error(logger, logMsg);
+		my_log_error(logMsg);
 		exit(-1);
 	} else {
 		t_config* archivoConfig;
@@ -53,9 +53,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 						"RETARDO_MEMORIA");
 		configuracion->algoritmo_reemplazo =strdup( config_get_string_value(
 				archivoConfig, "ALGORITMO_REEMPLAZO"));
-
-		log_info(logger,
-				"[INFO]: Archivo de configuracion leido correctamente");
+		my_log_info("[INFO]: Archivo de configuracion leido correctamente");
 
 		logMsg = string_from_format(
 				"Archivo de configuracion leido correctamente\n");

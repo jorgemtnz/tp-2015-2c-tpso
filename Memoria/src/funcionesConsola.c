@@ -126,29 +126,30 @@ void limpiarMemoria(){
 	pthread_mutex_unlock(&mutexListaTLB);
 }
 void volcarMemoria(){
+	puts("Inicia volcado de memoria");
+	my_log_info("Volcado de memoria iniciado");
 	int pid,a;
 	pid = fork();
 	if (pid<0) {
 		puts(string_itoa(errno));
-		log_error(logger,"Fallo la creación del proceso hijo");
+		my_log_error("Fallo la creación del proceso hijo");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0) {
-		puts("Soy el proceso hijo");
 		t_marco* campoMarco;
 		char* texto = string_new();
 		pthread_mutex_lock(&mutexListaMemoria);
 		for (a=0;a<list_size(listaMemoria);a++){
 			campoMarco= list_get(listaMemoria,a);
 			string_append_with_format(&texto,"El marco %s ubicado en la posición %s contiene: %s /n",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
-			log_info(logger,texto);
+			my_log_info(texto);
 		}
 		pthread_mutex_unlock(&mutexListaMemoria);
 	}
 	else {
-		puts("Soy el proceso padre");
 		wait(NULL);
-		log_info(logger,"El proceso hijo termino correctamente");
+		puts("Volcado de memoria finalizado");
+		my_log_info("Volcado de memoria finalizado");
 		exit(EXIT_SUCCESS);
 	}
 }

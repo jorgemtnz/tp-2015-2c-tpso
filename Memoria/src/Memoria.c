@@ -51,7 +51,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				iniciar(estructuraIniciar->PID,
 						estructuraIniciar->cantidadPaginas, getSocketCPU(estructuraIniciar->PID));
 				char* textoLogger = string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas);
-				log_info(logger,textoLogger);
+				my_log_info(textoLogger);
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
@@ -95,7 +95,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				log_info(logger, "leer pag %d del proceso %d\n",
+				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
@@ -138,7 +138,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				log_info(logger, "leer pag %d del proceso %d\n",
+				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();
@@ -157,8 +157,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 				 que es lo que se manda en el caso que no haya que sacar alguno */
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				log_info(logger,
-						"resultado sobreescribir ok de pag %d del proceso %d\n",
+				my_log_info("resultado sobreescribir ok de pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* lecturaMandarCpu;
 				lecturaMandarCpu = iniciarContenidoPagina();
@@ -182,13 +181,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 void asignarSeniales(){
 	if (signal(SIGUSR1,atencionSIGUSR1)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGUSR1");
+		my_log_error("No pudo cambiarse la señal SIGUSR1");
 	}
 	if(signal(SIGUSR2,atencionSIGUSR2)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGUSR2");
+		my_log_error("No pudo cambiarse la señal SIGUSR2");
 	}
 	if(signal(SIGPOLL,volcarMemoria)==SIG_ERR){
-		log_error(logger, "No pudo cambiarse la señal SIGPOLL");
+		my_log_error("No pudo cambiarse la señal SIGPOLL");
 	}
 
 }
