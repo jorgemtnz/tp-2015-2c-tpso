@@ -230,3 +230,60 @@ void imprimirEstadoCpus() {
 		printConsola("Cpu: %s, pid: %d\n", cpu->nombre, cpu->pcb != NULL?cpu->pcb->pid:-1);
 	}
 }
+
+void imprimirColaPcbs(t_list* colaPcb) {
+	int cantElem = list_size(colaPcb);
+	int i = 0;
+	putsConsola("\n");
+	for (i = 0; i < cantElem; ++i) {
+		t_cpu_ref* cpu = list_get(colaPcb, i);
+		printConsola("Posicion %d, pid: %s\n", i, cpu->pcb != NULL ? atoi(cpu->pcb->pid) : "VACIO");
+	}
+	if(cantElem == 0) {
+		printConsola("Lista vacia\n");
+	}
+	putsConsola("\n");
+}
+
+void imprimirColaDeFinalizados() {
+	t_list* colaPcb = getColaDeFinalizados();
+	printConsola("Estado Cola de finalizados\n");
+	imprimirColaPcbs(colaPcb);
+}
+
+void imprimirProcesoEnEntradaSalida() {
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	t_pcb* pcb = estadoEntradaSalida.pcb;
+	if(pcb != NULL) {
+		printConsola("Proceso pid: %d ejecutando entrada salida\n", pcb->pid);
+	} else {
+		printConsola("No se esta ejecutando entrada salida\n");
+	}
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+}
+
+void imprimirColaDeEntradaSalida() {
+	t_list* colaPcb = getColaDeEntradaSalida();
+	printConsola("Estado Cola de Entrada Salida\n");
+	imprimirColaPcbs(colaPcb);
+}
+
+void imprimirColaDeListos() {
+	t_list* colaPcb = getColaDeListos();
+	printConsola("Estado Cola de Listos\n");
+	imprimirColaPcbs(colaPcb);
+}
+void imprimirColaDeNuevos() {
+	t_list* colaPcb = getColaDeNuevos();
+	printConsola("Estado Cola de Nuevos\n");
+	imprimirColaPcbs(colaPcb);
+}
+
+void imprimirTodo() {
+	imprimirColaDeNuevos();
+	imprimirColaDeListos();
+	imprimirEstadoCpus();
+	imprimirColaDeEntradaSalida();
+	imprimirProcesoEnEntradaSalida();
+	imprimirColaDeFinalizados();
+}
