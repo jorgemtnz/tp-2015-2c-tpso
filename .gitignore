@@ -3,6 +3,7 @@
 *.ko
 *.obj
 *.elf
+*.d
 
 # Precompiled Headers
 *.gch
@@ -32,7 +33,10 @@
 *.hex
 metadata/
 RemoteSystemsTempFiles/
-Debug/
+
+!Debug
+!Debug/makefile
+!Debug/*.mk
 settings/
 .settings/
 *.settings/
@@ -46,3 +50,13 @@ prueba.txt
 *.orig
 *.log
 *.settings
+
+Planificador/Debug/Planificador
+CPU/Debug/CPU
+Memoria/Debug/Memoria
+Swap/Debug/Swap
+
+!Planificador/Debug/makefile2
+!CPU/Debug/makefile2
+!Memoria/Debug/makefile2
+!Swap/Debug/makefile2
