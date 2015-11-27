@@ -1,0 +1,5 @@
+#!/bin/bash
+root=$(pwd)
+COMMONS=$root/commons-library/Debug/
+UTILES=$root/utiles/Debug/
+export LD_LIBRARY_PATH=$COMMONS:$UTILES
