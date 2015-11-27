@@ -40,17 +40,19 @@ t_marco * iniciarMarco() {
 }
 
 t_marco_con_flag * iniciarMarcoYFlag() {
-	t_marco_con_flag* marcoConBit = malloc(sizeof(t_marco_con_flag));
-	if (marcoConBit == NULL) {
+	t_marco_con_flag* marcoYFlag = malloc(sizeof(t_marco_con_flag));
+	marcoYFlag->marco = iniciarMarco();
+	if (marcoYFlag == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarMarcoYFlag");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYFlag");
 		exit(-1);
 	}
-	return marcoConBit;
+	return marcoYFlag;
 }
 
 t_marco_con_indice* iniciarMarcoYIndice() {
 	t_marco_con_indice* marcoConIndice = malloc(sizeof(t_marco_con_indice));
+	marcoConIndice->marco = iniciarMarco();
 	if (marcoConIndice == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarMarcoYFlag");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarMarcoYFlag");
