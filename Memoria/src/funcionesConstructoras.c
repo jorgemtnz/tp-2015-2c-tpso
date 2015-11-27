@@ -62,7 +62,7 @@ t_marco_con_indice* iniciarMarcoYIndice() {
 }
 
 t_configuracion* iniciarArchivoConfig() {
-	t_configuracion* archConf = malloc(sizeof(t_config));
+	t_configuracion* archConf = (t_configuracion*)malloc(sizeof(t_configuracion));
 	if (archConf == NULL) {
 		perror("[ERROR] No se reservo memoria para iniciarArchivoConfig");
 		log_error(logger, "[ERROR] No se reservo memoria para iniciarArchivoConfig");

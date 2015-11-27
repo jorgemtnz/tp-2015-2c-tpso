@@ -36,8 +36,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->ipSwap = strdup(
 				config_get_string_value(archivoConfig, "IP_SWAP"));
 
-		configuracion->nombreMemoria = strdup(
-				config_get_string_value(archivoConfig, "NOMBRE_MEMORIA"));
+		char* nombreMemoria = config_get_string_value(archivoConfig, "NOMBRE_MEMORIA");
+		configuracion->nombreMemoria = strdup(nombreMemoria != NULL? nombreMemoria: "NOMBRE_MEMORIA");
 
 		configuracion->maximosMarcosPorProceso = config_get_int_value(
 				archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
