@@ -63,7 +63,7 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar interpretaInstruccion ");
-		log_info(logger, string_from_format("token:  %s \n", token));
+		log_info(logger, string_from_format("token:  %i \n", token));
 		log_info(logger,string_from_format("\n================ Ejecutando %s\n", instruccion->instruccion_separada[0]));
 		pthread_mutex_unlock(&mutexCPULogs);
 //	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);

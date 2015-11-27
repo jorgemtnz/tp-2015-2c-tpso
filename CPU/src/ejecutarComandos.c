@@ -11,10 +11,10 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i \n", estructura->PID));
+			string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger,
 			string_from_format(
-					"instruccion ejecutada: iniciar. Cantidad de paginas, %i \n",
+					"instruccion ejecutada: iniciar. Cantidad de paginas, %i\n",
 					estructura->cantidadPaginas));
 	pthread_mutex_unlock(&mutexCPULogs);
 
@@ -34,10 +34,10 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i \n", estructura->PID));
+			string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger,
 			string_from_format(
-					"instruccion ejecutada: escribir. numero de pagina, %i \n",
+					"instruccion ejecutada: escribir. numero de pagina, %i",
 					estructura->numeroPagina));
 	log_info(logger,
 			string_from_format("contenido %s \n", estructura->contenido));
@@ -56,7 +56,7 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i \n", estructura->PID));
+			string_from_format("Id del proceso %i ", estructura->PID));
 	log_info(logger,
 			string_from_format(
 					"instruccion ejecutada: leer . numero de pagina, %i \n",
@@ -74,7 +74,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i \n", estructura->PID));
+			string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger, "instruccion ejecutada: fin proceso memoria  \n");
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
@@ -104,7 +104,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i \n",
+			string_from_format("Id del proceso %i",
 					cpu->pcbPlanificador->pid));
 	log_info(logger,
 			string_from_format("instruccion ejecutada: entrada -salida por un valor de %i \n",
@@ -124,7 +124,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 			cpu->mCodCPU->respEjec);
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,"rafaga de proceso terminada \n");
+	log_info(logger,"rafaga de proceso terminada");
 	log_info(logger,
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));

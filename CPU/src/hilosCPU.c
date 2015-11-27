@@ -45,7 +45,7 @@ int hiloCPU() {
 			string_from_format("Creando CPU la id del hilo es %lu \n",
 					cpu->idCPU));
 	pthread_mutex_unlock(&mutexCPULogs);
-//	printf("Me estoy levantando soy la cpu , %s \n", cpu->nombre);
+//	printf("Me estoy levantando soy la cpu , %s", cpu->nombre);
 //	printf("Creando CPU la id del hilo es %lu \n", cpu->idCPU);
 	//conexiones = dictionary_create();
 

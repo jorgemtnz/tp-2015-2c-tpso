@@ -9,10 +9,6 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
-		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -23,10 +19,6 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ESCRIBIR_MEM): {
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar escribir memoria");
-		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_EscribirMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -36,10 +28,6 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (LEER_MEM): {
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar leer memoria ");
-		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_LeerMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -49,10 +37,6 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar fin proceso memoria ");
-		pthread_mutex_unlock(&mutexCPULogs);
 		//	t_PID* estructura = malloc(sizeof(t_PID));
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -63,10 +47,6 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ENTRADA_SALIDA): {
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar entrada salida ");
-		pthread_mutex_unlock(&mutexCPULogs);
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 		ejecuta_EntradaSalida(separada_instruccion, cpu);
@@ -97,16 +77,16 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
 		log_info(logger,
-				string_from_format("ruta archivo %s\n",
+				string_from_format("ruta archivo %s",
 						pcbPlanificador->rutaArchivoMcod));
 		log_info(logger,
-				string_from_format("tamanio rafaga %i \n",
+				string_from_format("tamanio rafaga %i",
 						pcbPlanificador->tamanioRafaga));
 		log_info(logger,
-				string_from_format("proxima instruccion %i\n",
+				string_from_format("proxima instruccion %i",
 						pcbPlanificador->proximaInstruccion));
 		log_info(logger,
-				string_from_format("instruccion final %i \n ",
+				string_from_format("instruccion final %i",
 						pcbPlanificador->instruccionFinal));
 		log_info(logger,
 				string_from_format("Id del proceso %i \n",
@@ -141,7 +121,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						datosDesdeMem->PID));
 		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "se ejecutar resultado iniciar proceso ok");
+		log_info(logger, "se ejecuta resultado iniciar proceso ok");
 		log_info(logger,
 				string_from_format("Id del proceso %i \n", datosDesdeMem->PID));
 		pthread_mutex_unlock(&mutexCPULogs);
@@ -222,9 +202,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se ejecuta resultado leer ok ");
 		log_info(logger,
-				string_from_format("Id del proceso %i \n", datosDesdeMem->PID));
+				string_from_format("Id del proceso %i ", datosDesdeMem->PID));
 		log_info(logger,
-				string_from_format("numero de pagina leida %i \n",
+				string_from_format("numero de pagina leida %i",
 						datosDesdeMem->numeroPagina));
 		log_info(logger,
 				string_from_format("contenido leido %s \n",
@@ -276,10 +256,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se ejecuta resultado escribir proceso");
 		log_info(logger,
-				string_from_format("Id del proceso %i \n",
+				string_from_format("Id del proceso %i",
 						datosdesdeMEmoria->PID));
 		log_info(logger,
-				string_from_format("numero de pagina escrita %i \n",
+				string_from_format("numero de pagina escrita %i",
 						datosdesdeMEmoria->numeroPagina));
 		log_info(logger,
 				string_from_format("contenido escrito %s \n",
@@ -331,7 +311,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se ejecuta resultado fin de proceso");
 		log_info(logger,
-				string_from_format("Id del proceso %i \n", datosDesdeMem->PID));
+				string_from_format("Id del proceso %i", datosDesdeMem->PID));
 		log_info(logger,
 				string_from_format("resultado instrucciones: %s \n",
 						cpu->mCodCPU->respEjec->resultadosInstrucciones));
@@ -383,11 +363,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			contenido = list_get(porcentajeCPUs->respuestasPorcentaje, a);
 			log_info(logger,
 					string_from_format(
-							"ESTOY ENVIANDO A PLANIF CPU:  PORCENTAJE:%i \n",
+							"ESTOY ENVIANDO A PLANIF CPU:  PORCENTAJE:%i",
 							contenido->res_porcentaje));
 //			printf("ESTOY ENVIANDO A PLANIF CPU:  PORCENTAJE: %i\n",
 //					contenido->res_porcentaje);
 		}
+		log_info(logger, "fin envio porcentajes\n");
 		pthread_mutex_unlock(&mutexCPULogs);
 		enviarStruct(socketPlanificador, TIEMPO_CPU_RESUL, porcentajeCPUs);
 		break;
