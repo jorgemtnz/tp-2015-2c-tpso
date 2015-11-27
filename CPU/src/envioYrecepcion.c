@@ -2,12 +2,17 @@
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
 void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
+	pthread_mutex_unlock(&mutexCPULogs);
+
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar iniciar proceso memoria ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -18,8 +23,10 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ESCRIBIR_MEM): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar escribir memoria");
+		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_EscribirMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -29,8 +36,10 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (LEER_MEM): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar leer memoria ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		ejecuta_LeerMemoria(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -40,8 +49,10 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar fin proceso memoria ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		//	t_PID* estructura = malloc(sizeof(t_PID));
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -51,10 +62,11 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		cpu->estructuraSolicitud = NULL;
 		break;
 	}
-	case (ENTRADA_SALIDA): { //falta modificar
+	case (ENTRADA_SALIDA): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar entrada salida ");
-
+		pthread_mutex_unlock(&mutexCPULogs);
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 		ejecuta_EntradaSalida(separada_instruccion, cpu);
@@ -63,7 +75,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
-		//cpu->cantInstEjecutadas=0;
+		cpu->cantInstEjecutadas=0;
 		break;
 	}
 	}
@@ -72,16 +84,26 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 //recibe las respuestas
 void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_cpu* cpu) {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
+	pthread_mutex_unlock(&mutexCPULogs);
 	int token;
 	token = header->tipoMensaje;
 	switch (token) {
 	case (CONTEXTO_MPROC): {
+		t_pcb* pcbPlanificador = (t_pcb*) buffer;
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
+		log_info(logger, string_from_format("ruta archivo %s\n",pcbPlanificador->rutaArchivoMcod));
+		log_info(logger, string_from_format("tamanio rafaga %i \n",pcbPlanificador->tamanioRafaga));
+		log_info(logger, string_from_format("proxima instruccion %i\n", pcbPlanificador->proximaInstruccion));
+		log_info(logger, string_from_format("instruccion final %i \n ",pcbPlanificador->instruccionFinal));
+		log_info(logger,string_from_format("Id del proceso %i \n",pcbPlanificador->pid));
+		pthread_mutex_unlock(&mutexCPULogs);
 		//inicia toda la cadena de instruccion desde la CPU hacia memoria
-		t_pcb* pcbPlanificador = (t_pcb*) buffer;
+
 		printf("Ruta recibida del planificador: %s\n",
 				pcbPlanificador->rutaArchivoMcod);
 		cpu->estado = NO_DISPONIBLE;
@@ -96,8 +118,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//recibe desde memoria y debe continuar con la ejecucion
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result iniciar proceso ok");
+		pthread_mutex_unlock(&mutexCPULogs);
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -119,8 +143,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-		//cpu->estado = DISPONIBLE;
-		//cpu->cantInstEjecutadas=0;
+		cpu->estado = DISPONIBLE;
+		cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -134,8 +158,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//al dar error se debe devolver el proceso
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result iniciar proceso no ok");
+		pthread_mutex_unlock(&mutexCPULogs);
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -155,8 +181,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
-	 	//cpu->estado = DISPONIBLE;
-		//cpu->cantInstEjecutadas=0;
+	 	cpu->estado = DISPONIBLE;
+		cpu->cantInstEjecutadas=0;
 		break;
 	}
 
@@ -165,8 +191,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar resultLeer ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		//cambio sizeof(t_contenido_pagina) * 10
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -192,8 +220,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				//cpu->estado = DISPONIBLE;
-		//cpu->cantInstEjecutadas=0;
+				cpu->estado = DISPONIBLE;
+		cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 
@@ -209,8 +237,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
 		//++++++++++++++cpu libre
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a ejecutar result escribir ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -233,8 +263,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				//cpu->estado = DISPONIBLE;
-		//cpu->cantInstEjecutadas=0;
+				cpu->estado = DISPONIBLE;
+		cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -248,9 +278,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//se cuenta el fin de la instruccion finalizar
 		cpu->cantInstEjecutadas += 1;
 		cpu->estadoEjecucion = NO_USO;
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
-		//++++++++++++++++++++++++++
 		log_info(logger, "se va a ejecutar result fin de proceso ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -271,15 +302,17 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
-			//cpu->cantInstEjecutadas=0;
+			cpu->cantInstEjecutadas=0;
 		free(cpu->mCodCPU->respEjec);
 	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
 		break;
 	}
 
 	case (STRING): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a recibir un string ");
+		pthread_mutex_unlock(&mutexCPULogs);
 //esto esta extraido desde procesarMensaje() por lo que si se descomenta, daria error
 //			char* mensaje = malloc(header->tamanioMensaje);
 //			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
@@ -294,9 +327,11 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		break;
 	}
 	case (TIEMPO_CPU): {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger,
 				"llega mensaje del planificador pidiendo el porcentaje del tiempo al CPU ");
+		pthread_mutex_unlock(&mutexCPULogs);
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 

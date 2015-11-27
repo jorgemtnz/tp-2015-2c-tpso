@@ -7,11 +7,14 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 	t_respuesta_ejecucion* respEjec = malloc(sizeof(t_respuesta_ejecucion));
 	if (respEjec == NULL) {
 		perror("[ERROR] No se reservo memoria respuesta ejecucion CPU");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria respuesta ejecucion CPU");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
+
 	respEjec->resultadosInstrucciones = string_new();
 	respEjec->finalizoOk = false;
 	return respEjec;
@@ -21,9 +24,11 @@ t_instruccion* creaInstruccion() {
 	t_instruccion* instruccion = malloc(sizeof(t_instruccion));
 	if (instruccion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>instruccion");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>instruccion");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
 	return instruccion;
@@ -33,8 +38,10 @@ t_mCod* crearmCod() {
 	t_mCod* mCod = malloc(sizeof(t_mCod));
 	if (mCod == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>mCod");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
 	mCod->cantidadInstrucciones = 0;
@@ -46,9 +53,11 @@ t_configuracion* crearConfiguracion() {
 	t_configuracion* configuracion = malloc(sizeof(t_configuracion));
 	if (configuracion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>configuracion");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>configuracion");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
 	configuracion->cantidad_hilos = 0;
@@ -65,8 +74,10 @@ t_cpu* crearCPU() {
 	t_cpu* cPUHilo = malloc(sizeof(t_cpu));
 	if (cPUHilo == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	} //si esta vacia la lista
 	int token = procCPU->contadorIdCPU;
@@ -116,8 +127,10 @@ t_ProcCPU* crearProcCPU() {
 	t_ProcCPU* procCPU = malloc(sizeof(t_ProcCPU));
 	if (procCPU == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>procCPU");
-//		log_info(logger,identificaCPU(queHiloSoy()));
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>procCPU");
+		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
 	procCPU->contadorIdCPU = 0;

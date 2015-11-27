@@ -2,8 +2,11 @@
 #include<math.h>
 
 void levantarHilosCPU() {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a levantar un HILO ");
+	pthread_mutex_lock(&mutexCPULogs);
+
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
 	pthread_t tidHiloporcentaje;
 	pthread_attr_t atributosPorcentaje;
@@ -27,9 +30,10 @@ void levantarHilosCPU() {
 }
 
 int hiloCPU() {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "comienza ejecucion de un HILO ");
-
+	pthread_mutex_lock(&mutexCPULogs);
 	t_cpu* cpu = crearCPU();
 
 		list_add(procCPU->listaCPU, cpu);
@@ -69,8 +73,10 @@ int hiloCPU() {
 }
 
 int hiloPorcentaje() {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se ejecuta el calculo del porcentaje de las cpus");
+	pthread_mutex_unlock(&mutexCPULogs);
 	//este es el hilo 0
 calcularPorcentaje();
 	return 0;
@@ -84,8 +90,10 @@ void calcularPorcentaje(){
 		void sacaPorcentaje(t_cpu* cpu){
 			// 60 instrucciones equivale al 100%
 			cpu->porcentajeUso =(int) (cpu->cantInstEjecutadas* 1.7);//+cpu->retardo_acumulado+configuracion->retardo;
-			//if(cpu->estado==DISPONIBLE)
+			if(cpu->estado==DISPONIBLE){
 			cpu->cantInstEjecutadas =0;
+
+			}
 			printf(KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET);
 			printf("%s,\n",queCPUsoy(cpu));
 			printf("Para el minuto %d, \n", i);

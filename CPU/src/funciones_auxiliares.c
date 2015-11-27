@@ -72,8 +72,10 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 }
 
 int putsConsola (const char *msg) {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, msg);
+	pthread_mutex_unlock(&mutexCPULogs);
 	return puts(msg);
 }
 

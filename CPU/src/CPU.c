@@ -12,15 +12,16 @@ int main(int argc, char *argv[]) {
 
 	levantarHilosCPU();
 
-//	log_info(logger, "se destruye proceso CPU");
 	destProcCPU(procCPU);
 	return EXIT_SUCCESS;
 }
 
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a procesar un mensaje");
+	pthread_mutex_unlock(&mutexCPULogs);
 	t_cpu* cpu;
 	int tamanio = 0;
 	tamanio = list_size(procCPU->listaCPU);
@@ -47,8 +48,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 
 	if (tipoNotificacion == NEW_CONNECTION) {
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger, "se realizo nueva conección");
+		pthread_mutex_unlock(&mutexCPULogs);
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
 		//comando auxiliar para reconectar al planificador manualmente
 		//escribir cp en la terminal y enter (cp= conectar planificador)
@@ -58,9 +61,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					string_itoa(configuracion->vg_puertoPlanificador),
 					&socketPlanificador);
 			if (resultConexion_planif == -1)
+				pthread_mutex_lock(&mutexCPULogs);
 				log_info(logger,identificaCPU(queHiloSoy()));
 				log_error(logger,
 						"[ERROR]no se reconecto el CPU al Planificador");
+				pthread_mutex_unlock(&mutexCPULogs);
 			//dictionary_put(conexiones, "Planificador",
 			//		string_itoa(socketPlanificador));
 			cpu->socketPlanificador = socketPlanificador;
@@ -72,8 +77,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					string_itoa(configuracion->vg_puertoMemoria),
 					&socketMemoria);
 			if (resultConexion_Memoria == -1)
+				pthread_mutex_lock(&mutexCPULogs);
 				log_info(logger,identificaCPU(queHiloSoy()));
 				log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
+				pthread_mutex_unlock(&mutexCPULogs);
 			//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 			cpu->socketMemoria = socketMemoria;
 		}
@@ -83,8 +90,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		recibirMensajeVarios(header, buffer, extra, cpu);
 
 	} else if (tipoNotificacion == HANG_UP) {
+		pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] se desconecto un proceso");
+		pthread_mutex_unlock(&mutexCPULogs);
 	}
 
 	return 0;

@@ -4,8 +4,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	t_config* archivoConfig = NULL;
 	int result = 0;
 	char* logMsg = NULL;
-	log_info(logger,identificaCPU(queHiloSoy()));
+
+//	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar leerArchivoDeConfiguracion ");
+
 	if (argc < 2) {
 		logMsg =
 				string_from_format(
@@ -21,7 +23,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
-	log_info(logger,identificaCPU(queHiloSoy()));
+//	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
 		exit(-1);
 	} else {
@@ -38,27 +40,21 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidad_hilos = config_get_int_value(archivoConfig,
 				"CANTIDAD_HILOS");
 		configuracion->retardo = config_get_int_value(archivoConfig, "RETARDO");
-		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_info(logger,identificaCPU(queHiloSoy()));
 		log_info(logger,
 				"[INFO]: Archivo de configuracion leido correctamente");
 	}
 	config_destroy(archivoConfig);
 }
-//es la funcion madre para cuando llega el Contexto de un proceso. Se inicia  el circuito de mCod
-int preparaCPU(t_pcb* pcbPlanificador, t_cpu* cpu) {
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, "se va a ejecutar preparaCPU");
 
-
-	return EXIT_SUCCESS;
-}
 // se debe agregar funcion que intreprente instruccion ya mapeada
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 
 	t_instruccion* instruccion = creaInstruccion();
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar interpretaInstruccion ");
-
+	pthread_mutex_unlock(&mutexCPULogs);
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 
 	int token = 0;
@@ -71,8 +67,10 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 // ejecuta las instrucciones del mCod
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
+	pthread_mutex_unlock(&mutexCPULogs);
 	t_mCod* mCodCPU = crearmCod();
 //++++++++++++++++++++++++++++++++
 	int fd = open(cpu->pcbPlanificador->rutaArchivoMcod, O_RDONLY);
@@ -104,12 +102,13 @@ void procesaCodigo(t_cpu* cpu) {
 	//se resta uno, porque se conto el cero anteriormente
 	cpu->pcbPlanificador->instruccionFinal= mCodCPU->cantidadInstrucciones-1;
 
-//	printf("%i\n", mCodCPU->cantidadInstrucciones);
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
 //aca estoy haciendo la ejecucion de una de las instrucciones
+	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
-	i = 1;
+	pthread_mutex_unlock(&mutexCPULogs);
+
 	ejecuta_Instruccion(
 			cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 			cpu);
