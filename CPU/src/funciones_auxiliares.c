@@ -88,7 +88,7 @@ pthread_t queHiloSoy(){
 
 char* identificaCPU( pthread_t idHilo){
 	char* resultado = string_new();
-	resultado = string_from_format("soy la CPU de PID  %lu \n",idHilo );
+	resultado = string_from_format("soy la CPU de PID  %lu ",idHilo );
 //	puts(resultado);
 	return resultado;
 }

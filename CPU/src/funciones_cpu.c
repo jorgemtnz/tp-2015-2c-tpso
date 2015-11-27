@@ -13,10 +13,10 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 				string_from_format(
 						"Debe especificar la ruta al archivo de configuracion, al invocar al programa, por ejemplo: ./CPU /home/utnso/tp-2015-2c-tpso/CPU/config_cpu.cfg\n");
 		putsConsola(logMsg);
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
-		log_error(logger, logMsg);
-		pthread_mutex_unlock(&mutexCPULogs);
+//		pthread_mutex_lock(&mutexCPULogs);
+//		log_info(logger,identificaCPU(queHiloSoy()));
+//		log_error(logger, logMsg);
+//		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);

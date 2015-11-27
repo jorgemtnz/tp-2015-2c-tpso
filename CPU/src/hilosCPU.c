@@ -5,7 +5,7 @@ void levantarHilosCPU() {
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a levantar un HILO ");
-	pthread_mutex_lock(&mutexCPULogs);
+	pthread_mutex_unlock(&mutexCPULogs);
 
 	pthread_t tidHiloCPU[configuracion->cantidad_hilos];
 	pthread_t tidHiloporcentaje;
@@ -36,11 +36,15 @@ int hiloCPU() {
 
 	list_add(procCPU->listaCPU, cpu);
 	pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
-		log_info(logger, "comienza ejecucion de un HILO ");
-		log_info(logger, string_from_format("Me estoy levantando soy la cpu , %s \n", cpu->nombre));
-		log_info(logger, string_from_format("Creando CPU la id del hilo es %lu \n", cpu->idCPU));
-		pthread_mutex_lock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger, "comienza ejecucion de un HILO ");
+	log_info(logger,
+			string_from_format("Me estoy levantando soy la cpu , %s \n",
+					cpu->nombre));
+	log_info(logger,
+			string_from_format("Creando CPU la id del hilo es %lu \n",
+					cpu->idCPU));
+	pthread_mutex_unlock(&mutexCPULogs);
 //	printf("Me estoy levantando soy la cpu , %s \n", cpu->nombre);
 //	printf("Creando CPU la id del hilo es %lu \n", cpu->idCPU);
 	//conexiones = dictionary_create();
@@ -94,12 +98,18 @@ void calcularPorcentaje() {
 			if (cpu->estado == DISPONIBLE) {
 				cpu->cantInstEjecutadas = 0;
 			}
-			puts(string_from_format(KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET));
+			puts(
+					string_from_format(
+							KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET));
 			puts(string_from_format("%s,\n", queCPUsoy(cpu)));
 			puts(string_from_format("Para el minuto %d, \n", i));
-			puts(string_from_format("el porcentaje de uso es de  %d, porciento. \n",
-					cpu->porcentajeUso));
-			puts(string_from_format(KBLU "++++++++++++++++++++++"RESET "+++++++++"KBLU "++++++++++++++++++++++++++\n"RESET));
+			puts(
+					string_from_format(
+							"el porcentaje de uso es de  %d, porciento. \n",
+							cpu->porcentajeUso));
+			puts(
+					string_from_format(
+							KBLU "++++++++++++++++++++++"RESET "+++++++++"KBLU "++++++++++++++++++++++++++\n"RESET));
 
 			pthread_mutex_lock(&mutexCPULogs);
 			log_info(logger, identificaCPU(queHiloSoy()));
