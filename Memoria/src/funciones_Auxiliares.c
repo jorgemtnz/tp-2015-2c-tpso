@@ -325,7 +325,6 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(PIDACargar);
 	}
 
-
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -514,7 +513,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	 que es lo que se manda en el caso que no haya que sacar alguno */
 
 	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina, idProc;
-	int bitTLB = 0, bitTablaDePag = 0;
+	int bitTLB = 0, bitTablaDePag = 0,id;
 	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
 	pthread_mutex_lock(&mutexTablaPags);
@@ -523,6 +522,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
+	char* contenido = malloc(sizeof(char));
 
 	if (configuracion->tlbHabilitada == 1) {
 		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
@@ -539,13 +539,14 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 			}
 		}
 
-	} else {
+	}
 
-		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0; a++) {
+		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0 && flagTLB == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			if (campoTablaDePag->idMarco == campoMarco->idMarco) {
 				flagTablaDePag = 1;
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
+				campoTablaDePag->bitPresencia = 0;
 				if (bitTablaDePag == 1) {
 					campoTablaDePag->bitPagModificada = 0;
 					list_replace(listaTablaDePag,a,campoTablaDePag);
@@ -554,13 +555,14 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				}
 			}
 		}
-	}
+		id = campoMarco->idMarco;
+		contenido = campoMarco->contenido ;
+
 	pthread_mutex_unlock(&mutexTablaPags);
 	pthread_mutex_unlock(&mutexListaTLB);
-	eliminarDeMemoria(campoMarco->idMarco);
-	eliminarDeTablaDePaginas(campoMarco->idMarco);
+	eliminarDeMemoria(id);
 	if (configuracion->tlbHabilitada == 1) {
-		eliminarDeTLB(campoMarco->idMarco);
+		eliminarDeTLB(id);
 	}
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar, flagEscritura);
 	printf("\n%i %i\n",bitTablaDePag,bitTLB);
@@ -569,12 +571,12 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 
 		if (flagEscritura == 0) { // por leer
 			usleep(configuracion->retardoMemoria * 1000);
-			enviarASwapContenidoPaginaDesactualizada(idProc, pagina, campoMarco->contenido, socketSwap);
+			enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido, socketSwap);
 		} else { // por escribir
 			t_contenido_pagina * escrituraSwap;
 			escrituraSwap = iniciarContenidoPagina();
 			escrituraSwap->PID = idProc;
-			escrituraSwap->contenido = campoMarco->contenido;
+			escrituraSwap->contenido = contenido;
 			escrituraSwap->numeroPagina = pagina;
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
 		}
