@@ -125,6 +125,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 		campoAux->bitModificada = 1;
 	} else {
 		campoAux->bitUso = 1;
+		campoAux->bitModificada = 0;
 	}
 	pthread_mutex_lock(&mutexListaMemoria);
 	list_add(listaMemoria, campoAux);
@@ -226,9 +227,9 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(int PID) {
 	*indice = list_get(listaIndices, PID);
 	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 									  // si no se entiende por que, preguntarle a los matis
+
 	for (a = *indice; a < tamanioMarcosDelProceso && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
-		printf("\n %i %i \n",marcoYIndice->marco->bitModificada,marcoYIndice->marco->bitUso);
 		if (marcoYIndice->marco->bitModificada == 0 && marcoYIndice->marco->bitUso == 0) {
 			flagReemplazo = 1;
 			*indice = a + 1;
@@ -251,8 +252,6 @@ t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(int PID) {
 	if (*indice == tamanioMarcosDelProceso) {
 		*indice = 0;
 	}
-
-	printf("\n%i\n",PID);
 	list_replace(listaIndices, PID, indice);
 
 	return marcoYFlag;
@@ -270,7 +269,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 	tamanioMarcosDelProceso = list_size(listaMarcoYIndices);
 	t_marco_con_indice* marcoYIndice;
 	marcoYIndice = iniciarMarcoYIndice();
-	*indice = list_get(listaIndices, PID);
+	indice = list_get(listaIndices, PID);
 
 	sleep(configuracion->retardoMemoria); // este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
@@ -284,7 +283,6 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 			list_replace(listaMemoria, marcoYIndice->indice, marcoYIndice->marco);
 		}
 	}
-
 	for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 		marcoYIndice = list_get(listaMarcoYIndices, a);
 		if (marcoYIndice->marco->bitModificada == 1 && marcoYIndice->marco->bitUso == 0) {
@@ -316,11 +314,9 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 	marcoYFlag = iniciarMarcoYFlag();
 
 	marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(PIDACargar);
-
 	if (marcoYFlag->flag == 0) {
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(PIDACargar);
 	}
-
 	if (marcoYFlag->flag == 0) {
 		marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(PIDACargar);
 	}
@@ -328,6 +324,7 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 	if (marcoYFlag->flag == 0) {
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(PIDACargar);
 	}
+
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -573,7 +570,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 		eliminarDeTLB(campoMarco->idMarco);
 	}
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar, flagEscritura);
-	printf("\n%i // %i\n",bitTablaDePag,bitTLB);
+
 	if (bitTablaDePag == 1 || bitTLB == 1) {
 
 
@@ -653,7 +650,6 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 	listaMarcoYBit = buscarLosMarcoYBitDeProceso(PID);
 
 	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
-	//pthread_mutex_lock(&mutexListaMemoria);
 
 	tamanioListaMarcos = list_size(listaMemoria);
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
@@ -669,7 +665,6 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(int PID) {
 		}
 
 	}
-	pthread_mutex_unlock(&mutexListaMemoria);
 	return listaMarcos;
 }
 
@@ -824,7 +819,6 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 	} else { // aca significa que es el de clock
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-
 			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
