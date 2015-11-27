@@ -264,6 +264,7 @@ void sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, int PIDACargar, int p
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -291,6 +292,8 @@ void sacarDeMemoriaSegunFifo(int socketSwap, int PIDACargar, char* contenidoACar
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -487,6 +490,8 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar, char* conteni
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -594,7 +599,7 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar, char* co
 		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
 	}
 
-
+	printf("\n\n %i \n\n",marcoYFlag->marco->idMarco);
 
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 }
@@ -603,6 +608,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	/* solo se usa en las funciones de sacar a un marco de memoria entonces
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
+
 
 	int tamanioTLB, tamanioTablaDePag, a, flagTLB = 0, flagTablaDePag=0, pagina, idProc;
 	int bitTLB = 0, bitTablaDePag = 0,id;
@@ -913,16 +919,16 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
 		}
 
-	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoCLOCK) == 0) { // aca significa que es el de clock
+	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoCLOCK) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
 		}
-	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) { // aca significa que es el de clock
+	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
 
-		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) {
 			sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunFifo(socketSwap, idProc, contenido, pag, flagEscritura);
@@ -1013,68 +1019,6 @@ void iniciarConfiguracionTLBHabilitada() {
 	configuracion->tlbHabilitada = 1;
 }
 
-void hardcodearTablaDePaginas(int pag1, int pag2, int pag3, int pag4, int pag5) {
-	t_TablaDePaginas * campoTablaDePag;
-	campoTablaDePag = iniciarTablaDePaginas();
-	t_marco * campoMemoria;
-
-	pthread_mutex_lock(&mutexTablaPags);
-	campoTablaDePag = iniciarTablaDePaginas();
-	campoTablaDePag = list_get(listaTablaDePag, pag1);
-	campoTablaDePag->idMarco = 455;
-	list_replace(listaTablaDePag, 1, campoTablaDePag);
-
-	campoTablaDePag = iniciarTablaDePaginas();
-	campoTablaDePag = list_get(listaTablaDePag, pag2);
-	campoTablaDePag->idMarco = 456;
-	list_replace(listaTablaDePag, 5, campoTablaDePag);
-
-	campoTablaDePag = iniciarTablaDePaginas();
-	campoTablaDePag = list_get(listaTablaDePag, pag3);
-	campoTablaDePag->idMarco = 457;
-	list_replace(listaTablaDePag, 9, campoTablaDePag);
-
-	campoTablaDePag = iniciarTablaDePaginas();
-	campoTablaDePag = list_get(listaTablaDePag, pag4);
-	campoTablaDePag->idMarco = 458;
-	list_replace(listaTablaDePag, 14, campoTablaDePag);
-
-	campoTablaDePag = iniciarTablaDePaginas();
-	campoTablaDePag = list_get(listaTablaDePag, pag5);
-	campoTablaDePag->idMarco = 459;
-	list_replace(listaTablaDePag, 18, campoTablaDePag);
-	pthread_mutex_unlock(&mutexTablaPags);
-
-	campoMemoria = iniciarMarco();
-	//warning asignacion incorrecta, se debe corregir, uso strdup para alojar con malloc, luego se debe hacer el free.
-	pthread_mutex_lock(&mutexListaMemoria);
-	campoMemoria->contenido = strdup("PID 1");
-	campoMemoria->idMarco = 455;
-	list_add(listaMemoria, campoMemoria);
-
-	campoMemoria = iniciarMarco();
-	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = strdup("PID 2");
-	campoMemoria->idMarco = 456;
-	list_add(listaMemoria, campoMemoria);
-
-	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = strdup("PID 3");
-	campoMemoria->idMarco = 457;
-	list_add(listaMemoria, campoMemoria);
-
-	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = strdup("PID 3");
-	campoMemoria->idMarco = 458;
-	list_add(listaMemoria, campoMemoria);
-
-	campoMemoria = iniciarMarco();
-	campoMemoria->contenido = strdup("PID 4");
-	campoMemoria->idMarco = 459;
-	list_add(listaMemoria, campoMemoria);
-	pthread_mutex_unlock(&mutexListaMemoria);
-
-}
 
 void hardcodearValoresEnTLB(int PID, int id, int pag) {
 	t_TLB* campoTLB;

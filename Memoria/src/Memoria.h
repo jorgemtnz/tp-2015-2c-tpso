@@ -237,7 +237,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 void inicializacionDesdeCero();
 void iniciarConfiguracionTLBNoHabilitada();
-void hardcodearTablaDePaginas(int pag1,int pag2,int pag3,int pag4,int pag5);
 void iniciarConfiguracionTLBHabilitada();
 void hardcodearValoresEnTLB(int PID,int id, int pag);
 
