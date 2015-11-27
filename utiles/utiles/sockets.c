@@ -866,6 +866,7 @@ void debug(const char *formato, ...) {
 
 		char* nuevo = string_from_vformat(formato, arguments);
 		log_debug(logger, nuevo);
+		puts(nuevo);
 	}
 }
 
