@@ -95,8 +95,8 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
 	string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
-			string_from_format("mProc %d %s %d", cpu->pcbPlanificador->pid,
-					"en entrada-salida de tiempo",
+			string_from_format("mProc %d %s %d ", cpu->pcbPlanificador->pid,
+					"en entrada-salida de tiempo \n ",
 					atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
 	cpu->cantInstEjecutadas += 1;
@@ -106,7 +106,9 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	log_info(logger,
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
-	log_info(logger, "instruccion ejecutada: entrada -salida  \n");
+	log_info(logger,
+			string_from_format("instruccion ejecutada: entrada -salida por un valor de %i \n",
+					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
 }
@@ -120,5 +122,12 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
+	pthread_mutex_lock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger,"rafaga de proceso terminada \n");
+	log_info(logger,
+			string_from_format("Id del proceso %i \n",
+					cpu->pcbPlanificador->pid));
+	pthread_mutex_unlock(&mutexCPULogs);
 ///	free(cpu->mCodCPU->respEjec);
 }

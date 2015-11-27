@@ -51,17 +51,20 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 
 	t_instruccion* instruccion = creaInstruccion();
-	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, "se va a ejecutar interpretaInstruccion ");
-	pthread_mutex_unlock(&mutexCPULogs);
+
 	instruccion->instruccion_separada = separaInstruccion(instruccion_origen);
 
 	int token = 0;
 	token = reconoceTokenInstruccion(instruccion->instruccion_separada[0]);
 
 	//le estoy mandando solo la instruccion sin el token
-	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);
+	pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, "se va a ejecutar interpretaInstruccion ");
+		log_info(logger, string_from_format("token:  %s \n", token));
+		log_info(logger,string_from_format("\n================ Ejecutando %s\n", instruccion->instruccion_separada[0]));
+		pthread_mutex_unlock(&mutexCPULogs);
+//	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);
 	ejecutar(token, instruccion->instruccion_separada, cpu);
 }
 // ejecuta las instrucciones del mCod

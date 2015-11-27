@@ -34,15 +34,16 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 		cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
 	} else {
-		printf("no hay cpu conectadas \n");
+		    pthread_mutex_lock(&mutexCPULogs);
+			log_info(logger,identificaCPU(queHiloSoy()));
+			log_error(logger,"no hay cpu conectadas" );
+			log_info(logger, "se va a procesar un mensaje");
+			pthread_mutex_unlock(&mutexCPULogs);
+		    puts("no hay cpu conectadas \n");
 	}
 
 	int resultConexion_planif = 0;
 	int resultConexion_Memoria = 0;
-
-	puts("CPU procesar mensajes");
-	printf("%s\n", queCPUsoy(cpu));
-	   printf("la id del hilo es %lu \n", cpu->idCPU);
 
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
