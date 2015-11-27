@@ -2,7 +2,7 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
-	cpu->estadoEjecucion = USO;
+	cpu->terminaInstruccion = NO_TERMINO;
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
@@ -23,7 +23,7 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 //mandar comando a  memoria con los datos y la pagina donde debe ser escrita
 void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
-	cpu->estadoEjecucion = USO;
+	cpu->terminaInstruccion = NO_TERMINO;
 	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->contenido = string_new();
@@ -47,7 +47,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
-	cpu->estadoEjecucion = USO;
+	cpu->terminaInstruccion = NO_TERMINO;
 	estructura->contenido = string_new();
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->PID = cpu->pcbPlanificador->pid;
@@ -67,9 +67,9 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	t_PID* estructura = malloc(sizeof(t_PID));
-	cpu->estadoEjecucion = USO;
+	cpu->terminaInstruccion = NO_TERMINO;
 	estructura->PID = cpu->pcbPlanificador->pid;
-	cpu->pcbPlanificador->proximaInstruccion = 0;
+	//cpu->pcbPlanificador->proximaInstruccion = 0;
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -82,7 +82,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 
-	cpu->estadoEjecucion = USO;
+	cpu->terminaInstruccion = NO_TERMINO;
 	//+++++++++++++++
 	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 			cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -100,7 +100,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 					atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
 	cpu->cantInstEjecutadas += 1;
-	cpu->estadoEjecucion = NO_USO;
+	cpu->terminaInstruccion = SI_TERMINO;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
