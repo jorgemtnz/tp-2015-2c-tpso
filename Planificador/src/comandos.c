@@ -54,8 +54,8 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		return -1;
 	}
 
-	int pid = atoi(split[1]);
-
+	uint8_t pid = atoi(split[1]);
+printf("AAA\n");
 	if (!existePID(pid)) {
 		printConsola("El PID especificado es invalido: %i\n", pid);
 		return -1;

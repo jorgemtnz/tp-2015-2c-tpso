@@ -96,7 +96,7 @@ int finalizarPid(int socket, t_header* header, char* buffer);
 int ps(int socket, t_header* header, char* buffer);
 int cpu(int socket, t_header* header, char* buffer);
 //++++++++++++++++++++++++++++++++++++Comando finalizar pid +++++++++++++++++++++++++++++++
-bool existePID(int pid);
+bool existePID(uint8_t pid);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
