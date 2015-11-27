@@ -264,6 +264,7 @@ void sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, int PIDACargar, int p
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -291,6 +292,8 @@ void sacarDeMemoriaSegunFifo(int socketSwap, int PIDACargar, char* contenidoACar
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -487,6 +490,8 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar, char* conteni
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
+
+
 	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
@@ -594,7 +599,7 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar, char* co
 		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
 	}
 
-
+	printf("\n\n %i \n\n",marcoYFlag->marco->idMarco);
 
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 }
