@@ -141,7 +141,7 @@ void volcarMemoria(){
 		pthread_mutex_lock(&mutexListaMemoria);
 		for (a=0;a<list_size(listaMemoria);a++){
 			campoMarco= list_get(listaMemoria,a);
-			string_append_with_format(&texto,"El marco %s ubicado en la posición %s contiene: %s /n",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
+			string_from_format(texto,"El marco %s ubicado en la posición %s contiene: %s",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
 			my_log_info(texto);
 		}
 		pthread_mutex_unlock(&mutexListaMemoria);
