@@ -138,6 +138,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 		lecturaMandarCpu->contenido = contenido;
 		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
 	}
+
 }
 
 void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
