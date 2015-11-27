@@ -41,9 +41,6 @@ int hiloCPU() {
 	log_info(logger,
 			string_from_format("Me estoy levantando soy la cpu , %s \n",
 					cpu->nombre));
-	log_info(logger,
-			string_from_format("Creando CPU la id del hilo es %lu \n",
-					cpu->idCPU));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	printf("Me estoy levantando soy la cpu , %s", cpu->nombre);
 //	printf("Creando CPU la id del hilo es %lu \n", cpu->idCPU);
@@ -58,9 +55,10 @@ int hiloCPU() {
 			string_itoa(configuracion->vg_puertoPlanificador),
 			&socketPlanificador);
 	if (resultConexion_planif == -1)
+		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
 	log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
-
+	pthread_mutex_unlock(&mutexCPULogs);
 	//dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
 	cpu->socketPlanificador = socketPlanificador;
 	enviarStruct(socketPlanificador, HANDSHAKE_CPU, getNombre());
