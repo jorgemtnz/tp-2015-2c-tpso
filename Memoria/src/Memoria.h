@@ -58,6 +58,7 @@ typedef struct { // estructura que se carga en la lista de memoria principal
 	int posicion;
 	int bitModificada;
 	int bitUso;
+	int posicionCargadoAMemoria;
 } t_marco;
 
 typedef struct {
@@ -256,7 +257,7 @@ void registrarPidCpu(int socket, int pid);
 t_configuracion* configuracion;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-int variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM; // contador de paginas de la tabla de paginas
+int variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM,variableParaFifo; // contador de paginas de la tabla de paginas
 
 // ----------- Listas ------------ //
 t_list* listaMemoria;
