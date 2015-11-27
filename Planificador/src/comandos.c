@@ -61,6 +61,11 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		return -1;
 	}
 
+	t_pcb* pcbEnEntradaSalida = NULL;
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+
 	int a;
 	t_cpu_ref * cpu = crearCpuRef();
 	char* ruta = string_new();

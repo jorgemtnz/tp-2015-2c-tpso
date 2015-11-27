@@ -281,9 +281,14 @@ bool existePID(uint8_t pid) {
 	for (a = 0; a < list_size(colaDeListos); a++) {
 		pcb = list_get(colaDeListos, a);
 
-		if (pcb->pid == pid){
+		if (pcb->pid == pid) {
 			return true;
-		}}
+		}
+	}
+	t_pcb* pcbEnEntradaSalida = NULL;
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
 	return false;
 
 }
