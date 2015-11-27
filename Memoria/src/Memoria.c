@@ -34,13 +34,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			logger);
 	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
-	//Variable no usada
-	//t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
 	if (tipoNotificacion == NEW_CONNECTION) {
-		//dictionary_put(conexiones, "CPU", string_itoa(socket));
-		//socketCPU = atoi((char*) dictionary_get(conexiones, "CPU"));
 		list_add(listaSocketsCPU, string_itoa(socket));
 	} else {
 		if (tipoNotificacion == MESSAGE) {
@@ -180,7 +176,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	}
 
 	return 0;
-	pthread_mutex_unlock(&mutexProcesadorMensajes);
 }
 
 void asignarSeniales(){

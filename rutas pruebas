@@ -1,21 +1,142 @@
-/home/utnso/tp-2015-2c-tpso/CPU/admin_memoria.conf
+prueba1
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P1_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P1_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P1_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P1_cpu.conf
 
-/home/utnso/tp-2015-2c-tpso/CPU/HyperIO.cod
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 
-/home/utnso/tp-2015-2c-tpso/CPU/IO.cod
+++++++++++++++++++++++++++++++++++++++
+prueba2 a
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P2a_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P2a_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P2a_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P2a_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+++++++++++++++++++++++++++++++++++++++++
+prueba2 b
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P2b_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P2b_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P2b_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P2b_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
++++++++++++++++++++++++++++++++++++++++++
+prueba2 c
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P2c_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P2c_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P2c_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P2c_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
+/home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+/home/utnso/tp-2015-2c-tpso/scripts/corto.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
++++++++++++++++++++++++++++++++++++++++++++++++
+prueba3 a
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P3a_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P3a_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P3a_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P3a_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+++++++++++++++++++++++++++++++++++++++++++++++++++
+prueba3 b
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P3b_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P3b_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P3b_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P3b_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
++++++++++++++++++++++++++++++++++++++++++++++
+prueba3 c
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P3c_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P3c_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P3c_memoria.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P3c_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+/home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+
+++++++++++++++++++++++++++++++++++++++++++++++
+prueba4 a
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P4a_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P4a_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P4a_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4a_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+++++++++++++++++++++++++++++++++++++++++++++++
+
+prueba4 b
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P4b_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P4b_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P4b_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4b_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+++++++++++++++++++++++++++++++++++++++++++++++
+prueba4 c
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P4c_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P4c_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P4c_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4c_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+++++++++++++++++++++++++++++++++++++++++++++++
+prueba4 d
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P4d_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P4d_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P4d_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4d_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+++++++++++++++++++++++++++++++++++++++++++++++
+
+prueba5 
+
+./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P5_planificador.conf
+./Swap/Debug/Swap  /home/utnso/tp-2015-2c-tpso/Swap/P5_swap.conf
+./Memoria/Debug/Memoria  /home/utnso/tp-2015-2c-tpso/Memoria/P5_mem.conf
+./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P5_cpu.conf
+
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
+/home/utnso/tp-2015-2c-tpso/scripts/io.cod
 
 
-correr /home/utnso/tp-2015-2c-tpso/CPU/entradaSalida.cod
-
-correr /home/utnso/tp-2015-2c-tpso/CPU/benchmark.cod
-
-correr /home/utnso/tp-2015-2c-tpso/CPU/MuyCorto.cod
-
-correr /home/utnso/tp-2015-2c-tpso/CPU/MuyLargo1.cod
-
-correr /home/utnso/tp-2015-2c-tpso/CPU/TLB.cod
-
-correr /home/utnso/tp-2015-2c-tpso/CPU/escribeSwap.cod
 
 
 

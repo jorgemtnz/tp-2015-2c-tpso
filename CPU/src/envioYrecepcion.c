@@ -63,6 +63,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
+		//cpu->cantInstEjecutadas=0;
 		break;
 	}
 	}
@@ -118,6 +119,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
+		//cpu->estado = DISPONIBLE;
+		//cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -152,6 +155,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
+	 	//cpu->estado = DISPONIBLE;
+		//cpu->cantInstEjecutadas=0;
 		break;
 	}
 
@@ -187,6 +192,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
+				//cpu->estado = DISPONIBLE;
+		//cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 
@@ -226,6 +233,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
+				//cpu->estado = DISPONIBLE;
+		//cpu->cantInstEjecutadas=0;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -262,6 +271,7 @@ printf("%s\n",cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = DISPONIBLE;
+			//cpu->cantInstEjecutadas=0;
 		free(cpu->mCodCPU->respEjec);
 	 	cpu->mCodCPU->respEjec=creaRespuestaEjecucion();
 		break;

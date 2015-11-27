@@ -78,7 +78,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 		tablaDePag = iniciarTablaDePaginas();
 		tablaDePag->idProc = idProc;
 		tablaDePag->paginaDelProceso = contador;
-		tablaDePag->idMarco = variableIdMarco; // porque no esta en algun marco en mem pcpal
+		tablaDePag->idMarco = variableIdMarco;
 		tablaDePag->bitPagModificada = 0;
 		tablaDePag->bitPresencia = 0;
 		pthread_mutex_lock(&mutexTablaPags);
@@ -90,7 +90,9 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 	estructuraEnvio->PID = idProc;
 
-	list_add_in_index(listaIndices,idProc,0);
+	int* cero = malloc(sizeof(int));
+	*cero = 0;
+	list_add_in_index(listaIndices,idProc,cero);
 
 	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 

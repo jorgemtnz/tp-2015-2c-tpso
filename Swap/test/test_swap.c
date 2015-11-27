@@ -54,7 +54,8 @@ static void test_escribir_en_proceso() {
 	procesoAEscribir->numeroPagina = 5;
 	t_devolucion_escribir_o_leer* resultadoEscribir;
 	resultadoEscribir = crearDevolucionEscribirOLeer();
-	resultadoEscribir = escribir(listaDeProcesosCargados, procesoAEscribir);
+	int bit = 1;
+	resultadoEscribir = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
 	CU_ASSERT_STRING_EQUAL(resultadoEscribir->contenido, "PROBANDO ESCRITURA EN EL PROCESO");
 	CU_ASSERT_EQUAL(resultadoEscribir->PID, 3);
 	CU_ASSERT_EQUAL(resultadoEscribir->numeroPagina, 5);
@@ -78,7 +79,8 @@ static void test_leer_de_proceso() {
 	procesoAEscribir->numeroPagina = 5;
 	t_devolucion_escribir_o_leer* resultadoLeer;
 	resultadoLeer = crearDevolucionEscribirOLeer();
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	int bit = 1;
+	escribir(listaDeProcesosCargados, procesoAEscribir,bit);
 	t_leerDeProceso *procesoRecibido;
 	procesoRecibido = crearLeerDeProceso();
 	procesoRecibido->PID = 3;
@@ -406,7 +408,8 @@ static void test_borrarContenidoPagina() {
 	procesoAEscribir->contenido = "HOLA PROBANDO ESCRITURA DE UNA PAGINA ";
 	procesoAEscribir->numeroPagina = 3;
 	procesoAEscribir->PID = 2;
-	escribir(listaDeProcesosCargados, procesoAEscribir);
+	int bit = 1;
+	escribir(listaDeProcesosCargados, procesoAEscribir,bit);
 	resultado = borrarContenidoPagina(procesoAEscribir);
 	CU_ASSERT_EQUAL(resultado->PID, 2);
 	CU_ASSERT_STRING_EQUAL(resultado->contenido, "\0");

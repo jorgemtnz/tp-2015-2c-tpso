@@ -182,7 +182,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	return estructura;
 }
 
-t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir) {
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir,int bit) {
 
 	usleep(configuracion->retardo_swap * 1000);
 	l_procesosCargados* unProceso;
@@ -202,16 +202,20 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 
 	//LOGUEO
 	int byteInicial, tamanioEnBytes;
+	char* contenidoLogger = string_new();
+	if(bit == 1){
+
 	if ((ubicacion + procesoAEscribir->numeroPagina) == 0) {
 		byteInicial = 0;
 	} else {
 		byteInicial = (ubicacion + procesoAEscribir->numeroPagina) * configuracion->tamanioPagina;
 	}
 	tamanioEnBytes = configuracion->tamanioPagina; //SIEMPRE SE ESCRIBE DE A UNA PAGINA
-	char* contenidoLogger = string_new();
+
 	contenidoLogger = string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
 			procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
 	log_info(logger, contenidoLogger);
+	}
 
 	if (string_length(procesoAEscribir->contenido) == 0) {
 		nuevaPagina = (configuracion->tamanioPagina) * (ubicacion + procesoAEscribir->numeroPagina);
@@ -232,11 +236,11 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	respuestaDeEscribir->numeroPagina = procesoAEscribir->numeroPagina;
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
 	respuestaDeEscribir->resultado = OK;
-
+if(bit == 1){
 	contenidoLogger = string_from_format(
 			"Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s", procesoAEscribir->PID,
 			byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
-	log_info(logger, contenidoLogger);
+	log_info(logger, contenidoLogger);}
 	return respuestaDeEscribir;
 	//free(unProceso);
 	//free(respuestaDeEscribir);
@@ -271,7 +275,12 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	} else {
 		byteInicial = (procesoAleer->ubicacion + procesoRecibido->numeroPaginaInicio) * configuracion->tamanioPagina;
 	}
+	if((procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio) == 0){
+		tamanioEnBytes = configuracion->tamanioPagina;
+	}else{
 	tamanioEnBytes = (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio) * configuracion->tamanioPagina;
+
+	}
 	char* contenidoLogger = string_new();
 	contenidoLogger = string_from_format("Lectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i", procesoRecibido->PID,
 			byteInicial, tamanioEnBytes);
@@ -346,14 +355,14 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 			//BORRAR DEL ESPACIO DE DATOS
 			char* espacioVacio = string_new();
 			espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
-
+			int bit = 0;
 			for (b = 0; b < unProceso->cantPagsUso; b++) {
 				procesoAEscribir->PID = unProceso->PID;
 				procesoAEscribir->contenido = espacioVacio;
 				procesoAEscribir->numeroPagina = b;
 
-				log_info(logger, "ESCRITURA DE PAGINA EN BLANCO PARA BORRAR EL CONTENIDO");
-				escribir(listaDeProcesosCargados, procesoAEscribir);
+
+				escribir(listaDeProcesosCargados, procesoAEscribir, bit);
 
 			}
 
@@ -510,6 +519,7 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 t_devolucion_escribir_o_leer* borrarContenidoPagina(t_contenido_pagina* procesoAEscribir) {
 	//BORRO EL CONTENIDO VIEJO DE LA PAGINA
 	char* espacioVacio = string_new();
+	int bit;
 	espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
 	t_contenido_pagina* paginaEnBlanco;
 	paginaEnBlanco = crearContenidoPagina();
@@ -518,7 +528,7 @@ t_devolucion_escribir_o_leer* borrarContenidoPagina(t_contenido_pagina* procesoA
 	paginaEnBlanco->PID = procesoAEscribir->PID;
 	paginaEnBlanco->contenido = espacioVacio;
 	paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
-	log_info(logger, "ESCRITURA DE PAGINA EN BLANCO PARA BORRAR EL CONTENIDO Y ESCRIBIR LUEGO EL NUEVO");
-	resultado = escribir(listaDeProcesosCargados, paginaEnBlanco);
+	bit = 0;
+	resultado = escribir(listaDeProcesosCargados, paginaEnBlanco,bit);
 	return resultado;
 }
