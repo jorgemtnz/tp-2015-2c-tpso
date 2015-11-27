@@ -37,8 +37,8 @@
 
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
-#define SI_TERMINA_RAFAGA 1
-#define NO_TERMINA_RAFAGA 0
+#define SI_TERMINO_RAFAGA 1
+#define NO_TERMINO_RAFAGA 0
 #define CANT_RUTA 256
 #define INST_INICIAR 1
 #define INST_ESCRIBIR 2
@@ -102,7 +102,7 @@ typedef struct {
     int socketMemoria;
 //    time_t inicioInstruccion;//incluye el retardo en segundos
 //    time_t finInstruccion;
-    uint8_t retardoTotal;
+//    uint8_t retardoTotal;
 //    uint8_t terminaInstruccion;
     //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
 } t_cpu;

@@ -118,10 +118,10 @@ t_cpu* crearCPU() {
 	cPUHilo->mCodCPU = crearmCod();
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
-	cPUHilo->estado = SI_TERMINA_RAFAGA;
+	cPUHilo->estado = SI_TERMINO_RAFAGA;
 //	time(&cPUHilo->inicioInstruccion);
 //	time(&cPUHilo->finInstruccion);
-	cPUHilo->retardoTotal =0;
+//	cPUHilo->retardoTotal =0;
 //	cPUHilo->terminaInstruccion = SI_TERMINO;
 //	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
 //	cPUHilo->finInstruccion=malloc (sizeof(time_t));

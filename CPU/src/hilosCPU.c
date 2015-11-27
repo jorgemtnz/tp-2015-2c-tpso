@@ -93,23 +93,23 @@ void calcularPorcentaje() {
 		void sacaPorcentaje(t_cpu* cpu) {
 			// 60 instrucciones equivale al 100%
 			time_t now;
-			time(&now);//no se esta ejecutando actualmente la cpu
-			if (cpu->estado ==NO_TERMINA_RAFAGA
-					&&cpu->terminaInstruccion == NO_TERMINO ) {
+			time(&now); //no se esta ejecutando actualmente la cpu
+			if (cpu->estado == NO_TERMINO_RAFAGA
+					&& cpu->terminaInstruccion == NO_TERMINO) {
 //esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo
-				cpu->cantInstEjecutadas +=1;// tengo en cuenta que esta ejecutando una instruccion en este intervalo
+				cpu->cantInstEjecutadas += 1; // tengo en cuenta que esta ejecutando una instruccion en este intervalo
 
 //				cpu->retardoTotal = (uint8_t) dameDiferencia(
 //						cpu->inicioInstruccion, cpu->finInstruccion);
 				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
-						/instEquivalenteCienPorciento(configuracion->retardo) );
+						/ instEquivalenteCienPorciento(configuracion->retardo));
 
-				resetValPorcentaje(cpu);//lo reseteo porque luego cuando termine la instruccion se contara
-			} else {//ya termino la rafaga
+				resetValPorcentaje(cpu); //lo reseteo porque luego cuando termine la instruccion se contara
+			} else { //ya termino la rafaga
 				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
-										/instEquivalenteCienPorciento(configuracion->retardo) );
+						/ instEquivalenteCienPorciento(configuracion->retardo));
 
-								resetValPorcentaje(cpu);
+				resetValPorcentaje(cpu);
 			}
 
 			//muestra y loguea resultado

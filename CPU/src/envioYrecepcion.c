@@ -54,7 +54,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
-		cpu->estado = SI_TERMINA_RAFAGA;
+		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
 	}
@@ -95,7 +95,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 //		printf("Ruta recibida del planificador: %s\n",
 //				pcbPlanificador->rutaArchivoMcod);
-		cpu->estado = NO_TERMINA_RAFAGA;
+		cpu->estado = NO_TERMINO_RAFAGA;
 		cpu->pcbPlanificador = pcbPlanificador;
 		procesaCodigo(cpu);
 
@@ -134,7 +134,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = SI_TERMINA_RAFAGA;
+				cpu->estado = SI_TERMINO_RAFAGA;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -174,7 +174,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
-		cpu->estado = SI_TERMINA_RAFAGA;
+		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
 
@@ -219,7 +219,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = SI_TERMINA_RAFAGA;
+				cpu->estado = SI_TERMINO_RAFAGA;
 			}
 		} else { // es planificacion FIFO
 
@@ -272,7 +272,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = SI_TERMINA_RAFAGA;
+				cpu->estado = SI_TERMINO_RAFAGA;
 
 			}
 		} else { // es planificacion FIFO
@@ -315,7 +315,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //		printf("%s\n", cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
-		cpu->estado = SI_TERMINA_RAFAGA;
+		cpu->estado = SI_TERMINO_RAFAGA;
 		free(cpu->mCodCPU->respEjec);
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		break;
