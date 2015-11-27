@@ -17,10 +17,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
-		logMsg =
-				string_from_format(
-						"Archivo de configuracion no encontrado. Parametro especificado: %s\n",
-						nombreArchivoConfig);
+		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
 		puts(logMsg);
 		my_log_error(logMsg);
 		exit(-1);
@@ -29,34 +26,23 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		archivoConfig = config_create(nombreArchivoConfig);
 		//warning asignacion diferentes tipos
 		configuracion = iniciarArchivoConfig();
-		configuracion->puertoEscucha = config_get_int_value(archivoConfig,
-				"PUERTO_ESCUCHA");
-		configuracion->puertoSwap = config_get_int_value(archivoConfig,
-				"PUERTO_SWAP");
-		configuracion->ipSwap = strdup(
-				config_get_string_value(archivoConfig, "IP_SWAP"));
+		configuracion->puertoEscucha = config_get_int_value(archivoConfig, "PUERTO_ESCUCHA");
+		configuracion->puertoSwap = config_get_int_value(archivoConfig, "PUERTO_SWAP");
+		configuracion->ipSwap = strdup(config_get_string_value(archivoConfig, "IP_SWAP"));
 
 		char* nombreMemoria = config_get_string_value(archivoConfig, "NOMBRE_MEMORIA");
-		configuracion->nombreMemoria = strdup(nombreMemoria != NULL? nombreMemoria: "NOMBRE_MEMORIA");
+		configuracion->nombreMemoria = strdup(nombreMemoria != NULL ? nombreMemoria : "NOMBRE_MEMORIA");
 
-		configuracion->maximosMarcosPorProceso = config_get_int_value(
-				archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
-		configuracion->cantidadMarcos = config_get_int_value(archivoConfig,
-				"CANTIDAD_MARCOS");
-		configuracion->tamanioMarcos = config_get_int_value(archivoConfig,
-				"TAMANIO_MARCO");
-		configuracion->entradasTlb = config_get_int_value(archivoConfig,
-				"ENTRADAS_TLB");
-		configuracion->tlbHabilitada = config_get_int_value(archivoConfig,
-				"TLB_HABILITADA");
-		configuracion->retardoMemoria = config_get_int_value(archivoConfig,
-						"RETARDO_MEMORIA");
-		configuracion->algoritmo_reemplazo =strdup( config_get_string_value(
-				archivoConfig, "ALGORITMO_REEMPLAZO"));
+		configuracion->maximosMarcosPorProceso = config_get_int_value(archivoConfig, "MAXIMO_MARCOS_POR_PROCESO");
+		configuracion->cantidadMarcos = config_get_int_value(archivoConfig, "CANTIDAD_MARCOS");
+		configuracion->tamanioMarcos = config_get_int_value(archivoConfig, "TAMANIO_MARCO");
+		configuracion->entradasTlb = config_get_int_value(archivoConfig, "ENTRADAS_TLB");
+		configuracion->tlbHabilitada = config_get_int_value(archivoConfig, "TLB_HABILITADA");
+		configuracion->retardoMemoria = config_get_int_value(archivoConfig, "RETARDO_MEMORIA");
+		configuracion->algoritmo_reemplazo = strdup(config_get_string_value(archivoConfig, "ALGORITMO_REEMPLAZO"));
 		my_log_info("[INFO]: Archivo de configuracion leido correctamente");
 
-		logMsg = string_from_format(
-				"Archivo de configuracion leido correctamente\n");
+		logMsg = string_from_format("Archivo de configuracion leido correctamente\n");
 		puts(logMsg);
 
 		//config_destroy(archivoConfig);
@@ -70,7 +56,6 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 	t_TablaDePaginas* tablaDePag;
 	t_PID * estructuraEnvio;
 	estructuraEnvio = crearPID();
-
 
 	for (contador = 0; contador < cantPag; contador++) {
 		tablaDePag = iniciarTablaDePaginas();
@@ -90,15 +75,13 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 	int* cero = malloc(sizeof(int));
 	*cero = 0;
-	list_add_in_index(listaIndices,idProc,cero);
+	list_add_in_index(listaIndices, idProc, cero);
 
 	enviarRtaIniciarOkCPU(estructuraEnvio, socketCPU);
 
 }
 
-
-void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
-		int socketCPU) {
+void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
@@ -109,16 +92,21 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap,
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
-	string_append(&escritura->contenido ,textoAEscribir);
+	string_append(&escritura->contenido, textoAEscribir);
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
-		usleep(configuracion->retardoMemoria*1000);
-		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag,textoAEscribir, socketSwap);
+		usleep(configuracion->retardoMemoria * 1000);
+		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, textoAEscribir, socketSwap);
 
 	} else {	// entonces tengo el id del marco
-		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco,
-				textoAEscribir);
+		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco, textoAEscribir);
+
+		//LOG
+		char* textoLogger = string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+				" página: %i y N° de marco: %i", idProc, nroPag, marcoYBit->idMarco);
+		my_log_info(textoLogger);
+
 		enviarRtaEscribirACPU(escritura, socketCPU);
 	}
 
@@ -139,14 +127,16 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
-		usleep(configuracion->retardoMemoria*1000);
+		usleep(configuracion->retardoMemoria * 1000);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 
 	} else { // aca significa que trajo el id porque esta en memoria
 		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
+		char* textoLogger = string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+				" página: %i y N° de marco: %i", idProc, pag, marcoYBit->idMarco);
+		my_log_info(textoLogger);
 		lecturaMandarCpu->contenido = contenido;
-		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
-				socketCPU);
+		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
 	}
 }
 
@@ -172,7 +162,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 		}
 	}
 
-	usleep(configuracion->retardoMemoria*1000);
+	usleep(configuracion->retardoMemoria * 1000);
 	enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 
 }
