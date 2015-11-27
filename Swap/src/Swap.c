@@ -87,12 +87,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar = crearContenidoPagina();
 			t_contador* contador = crearContador();
-			int a;
+			int a,bit;
 			//warning no se usa variable, entonces comento
 //			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
 
 			borrarContenidoPagina(procesoAEscribir);
-			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			bit = 1;
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
@@ -231,12 +232,13 @@ if(estructuraFinalizar->PID == contador->PID){
 			paginaAEnviar = crearContenidoPagina();
 			resultado = crearDevolucionEscribirOLeer();
 			int a;
+			int bit = 1;
 
 			borrarContenidoPagina(procesoAEscribir);
 
 			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
 
-			resultado = escribir(listaDeProcesosCargados, procesoAEscribir);
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
 			paginaAEnviar->PID = resultado->PID;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
