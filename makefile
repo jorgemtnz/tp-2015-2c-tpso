@@ -9,6 +9,12 @@ dependentsClean:
 
 all: dependents
 	$(MAKE) -C Planificador all
-
+	$(MAKE) -C CPU all
+	$(MAKE) -C Memoria all
+	$(MAKE) -C Swap all
 clean: dependentsClean
 	$(MAKE) -C Planificador clean
+	$(MAKE) -C CPU clean
+	$(MAKE) -C Memoria clean
+	$(MAKE) -C Swap clean
+
