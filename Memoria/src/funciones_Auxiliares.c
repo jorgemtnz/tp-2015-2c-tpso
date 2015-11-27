@@ -121,6 +121,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 			campoTablaDePagReemplazar->bitPresencia = 1;
 			if(flagEscritura == 1){
 				campoTablaDePagReemplazar->bitPagModificada = 1;
+
 			}
 			list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
 			flag = 1;
@@ -144,6 +145,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 		campoAux->bitUso = 1;
 		campoAux->bitModificada = 0;
 	}
+
 	pthread_mutex_lock(&mutexListaMemoria);
 	list_add(listaMemoria, campoAux);
 	pthread_mutex_unlock(&mutexListaMemoria);
@@ -527,6 +529,19 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar, char* co
 		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
 	}
 
+	if (marcoYFlag->flag == 1) {
+			int a, tamanio;
+			t_TablaDePaginas* campoTablaDePag;
+			campoTablaDePag = iniciarTablaDePaginas();
+			tamanio = list_size(listaTablaDePag);
+			for (a = 0; a < tamanio; a++) {
+				campoTablaDePag = list_get(listaTablaDePag, a);
+				if (marcoYFlag->marco->idMarco == campoTablaDePag->idMarco) {
+					printf("\nel bit de modificada es %i\n", campoTablaDePag->bitPagModificada);
+				}
+			}
+	}
+
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 }
 
@@ -535,7 +550,7 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
 
-	int tamanioTLB, tamanioTablaDePag, a, flagTLB, flagTablaDePag, pagina, idProc;
+	int tamanioTLB, tamanioTablaDePag, a, flagTLB = 0, flagTablaDePag=0, pagina, idProc;
 	int bitTLB = 0, bitTablaDePag = 0,id;
 	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
@@ -567,10 +582,12 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 		}
 
 	}
+	printf("\n %i %i %i \n",tamanioTablaDePag, flagTablaDePag, flagTLB);
 
 		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0 && flagTLB == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			if (campoTablaDePag->idMarco == campoMarco->idMarco) {
+
 				flagTablaDePag = 1;
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
 				campoTablaDePag->bitPresencia = 0;
