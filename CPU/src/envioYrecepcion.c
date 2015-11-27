@@ -351,17 +351,6 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se va a recibir un string ");
 		pthread_mutex_unlock(&mutexCPULogs);
-//esto esta extraido desde procesarMensaje() por lo que si se descomenta, daria error
-//			char* mensaje = malloc(header->tamanioMensaje);
-//			recibirPorSocket(socket, mensaje, header->tamanioMensaje);
-//			printf("Recibi el mensaje: %s\n", mensaje);
-//		}
-		/*		if(string_starts_with(buffer, "correr programa")) {
-		 char* socketCPU = (char*)dictionary_get(conexiones, "Memoria");
-		 puts("Enviando \"correr programa\" a la Memoria");
-		 enviar(atoi(socketCPU), "correr programa", strlen("correr programa"));
-		 // de aca para abajo serian las conexiones
-		 }*/
 		break;
 	}
 	case (TIEMPO_CPU): {

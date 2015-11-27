@@ -72,10 +72,6 @@ int devuelveCantidadElementosArreglo(char** arreglo) {
 }
 
 int putsConsola (const char *msg) {
-	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
-	log_info(logger, msg);
-	pthread_mutex_unlock(&mutexCPULogs);
 	return puts(msg);
 }
 
@@ -93,7 +89,7 @@ pthread_t queHiloSoy(){
 char* identificaCPU( pthread_t idHilo){
 	char* resultado = string_new();
 	resultado = string_from_format("soy la CPU de PID  %lu \n",idHilo );
-	puts(resultado);
+//	puts(resultado);
 	return resultado;
 }
 
