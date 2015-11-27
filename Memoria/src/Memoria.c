@@ -50,6 +50,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 						datosDesdeSwap->cantidadPaginas;
 				iniciar(estructuraIniciar->PID,
 						estructuraIniciar->cantidadPaginas, getSocketCPU(estructuraIniciar->PID));
+				char* textoLogger = string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas);
+				log_info(logger,textoLogger);
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
