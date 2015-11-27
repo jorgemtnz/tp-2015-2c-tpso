@@ -615,7 +615,6 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 	t_TLB* campoTLB;
-	t_TLB* campoTLBReemplazar;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas* campoTablaDePag;
 	t_TablaDePaginas* campoTablaDePagReemplazar;
@@ -629,12 +628,9 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				flagTLB = 1;
 				bitTLB = campoTLB->bitPagModificada;
 				if (bitTLB == 1) {
-					campoTLBReemplazar = iniciarTLB();
-					campoTLBReemplazar = campoTLB;
-					campoTLBReemplazar->bitPagModificada = 0;
-					list_replace(listaTLB,a,campoTLBReemplazar);
 					pagina = campoTLB->paginaDelProceso;
 					idProc = campoTLB->idProc;
+					list_remove(listaTLB,a);
 				}
 			}
 		}
@@ -664,9 +660,6 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	pthread_mutex_unlock(&mutexTablaPags);
 	pthread_mutex_unlock(&mutexListaTLB);
 	eliminarDeMemoria(id);
-	if (configuracion->tlbHabilitada == 1) {
-		eliminarDeTLB(id);
-	}
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar, flagEscritura);
 
 	if (bitTablaDePag == 1 || bitTLB == 1) {
