@@ -264,7 +264,7 @@ bool existePID(uint8_t pid) {
 
 		if (cpu->pcb != NULL) {
 			if (cpu->pcb->pid == pid) {
-				printf("asasa \n");
+
 				return true;
 			}
 		}
@@ -278,6 +278,12 @@ bool existePID(uint8_t pid) {
 			return true;
 		}
 	}
+	for (a = 0; a < list_size(colaDeListos); a++) {
+		pcb = list_get(colaDeListos, a);
+
+		if (pcb->pid == pid){
+			return true;
+		}}
 	return false;
 
 }
