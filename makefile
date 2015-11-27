@@ -1,10 +1,10 @@
 dependents:
 	-cd ./commons-library/Debug && $(MAKE) all
-	-cd ./utiles/Debug && $(MAKE) all
+	-cd ./utiles/Debug && $(MAKE) -f makefile2 all
 
 dependentsClean:
 	-cd ./commons-library/Debug && $(MAKE) clean
-	-cd ./utiles/Debug && $(MAKE) clean
+	-cd ./utiles/Debug && $(MAKE) -f makefile2 clean
 
 
 all: dependents
