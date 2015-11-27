@@ -155,12 +155,7 @@ t_estado_entrada_salida estadoEntradaSalida;
 pthread_mutex_t mutexEstadoEntradaSalida;
 pthread_mutex_t mutexHayEntradaSalidaParaEjecutar;
 
-int c;
-
 //===========================================================================================
-
-
-
 
 //test
 char* decirHolaMundo();

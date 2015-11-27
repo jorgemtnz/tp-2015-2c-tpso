@@ -9,7 +9,6 @@ int main(int argc, char *argv[]) {
 	putsConsola("Iniciando programa");
 	listaCPUs = list_create();
 
-	c = 0;
 	leerArchivoDeConfiguracion(argc, argv);
 	if (hayQueEjecutarTests(argc, argv)) {
 		return ejecutarTests();
