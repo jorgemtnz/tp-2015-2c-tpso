@@ -49,3 +49,8 @@ prueba.txt
 *.orig
 *.log
 *.settings
+
+Planificador/Debug/Planificador
+CPU/Debug/CPU
+Memoria/Debug/Memoria
+Swap/Debug/Swap
