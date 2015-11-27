@@ -113,12 +113,18 @@ t_cpu* crearCPU() {
 
 	}
 	cPUHilo->porcentajeUso = 0;
-	cPUHilo->estadoEjecucion = NO_USO;
+	cPUHilo->terminaInstruccion = SI_TERMINO;
 	cPUHilo->cantInstEjecutadas = 0;
 	cPUHilo->mCodCPU = crearmCod();
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
-	cPUHilo->estado = DISPONIBLE;
+	cPUHilo->estado = SI_TERMINO_RAFAGA;
+//	time(&cPUHilo->inicioInstruccion);
+//	time(&cPUHilo->finInstruccion);
+//	cPUHilo->retardoTotal =0;
+//	cPUHilo->terminaInstruccion = SI_TERMINO;
+//	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
+//	cPUHilo->finInstruccion=malloc (sizeof(time_t));
 	return cPUHilo;
 }
 

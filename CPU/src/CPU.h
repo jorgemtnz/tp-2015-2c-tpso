@@ -33,19 +33,22 @@
 #include<utiles/mapeoAMemoria.h>
 #include<utiles/protocolo.h>
 #include<utiles/files.h>
+#include<time.h>
 
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
-#define DISPONIBLE 1
-#define NO_DISPONIBLE 0
+#define SI_TERMINO_RAFAGA 1
+#define NO_TERMINO_RAFAGA 0
 #define CANT_RUTA 256
 #define INST_INICIAR 1
 #define INST_ESCRIBIR 2
 #define INST_LEER 3
 #define INST_ENTRADA_SALIDA 4
 #define INST_FINALIZAR 5
-#define USO 1
-#define NO_USO 0
+#define NO_TERMINO 1
+#define SI_TERMINO 0
+//#define NO_TERMINO 1
+//#define SI_TERMINO 0
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -88,15 +91,19 @@ typedef struct {
 	pthread_t idCPU;
 	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
-	uint8_t cantInstEjecutadas; //se activa cuando cambie  de uso a no uso
-	uint8_t estadoEjecucion;     //marca el define USO 1 NO_USO 0  para calcular el porcentaje
+	uint8_t cantInstEjecutadas; //cuenta las instrucciones ejecutadas
+	uint8_t terminaInstruccion;     //marca el define USO 1 NO_USO 0  en el proceso
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
     char* nombre;
     void* respuestaInstruccion;  //para la estructura de respuesta de la instruccion ejecutada
     void* estructuraSolicitud;  //para la estructura que se envia a memoria
-    uint8_t estado;   //para si esta disponible o no la CPU
+    uint8_t estado;   //para si esta disponible o no la CPU teniendo en cuenta el regreso desde memoria
     int socketPlanificador;
     int socketMemoria;
+//    time_t inicioInstruccion;//incluye el retardo en segundos
+//    time_t finInstruccion;
+//    uint8_t retardoTotal;
+//    uint8_t terminaInstruccion;
     //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
 } t_cpu;
 
@@ -149,6 +156,12 @@ int putsConsola (const char *msg) ;
 char* queCPUsoy(t_cpu* cpu);
 pthread_t queHiloSoy();
 char* identificaCPU( pthread_t idHilo);
+uint8_t instEquivalenteCienPorciento(uint8_t retardoTotal);
+bool primeraMayorque(time_t unaFecha, time_t otraFecha);
+double dameDiferencia(time_t unaFecha, time_t otraFecha);
+bool fechasIguales(time_t unaFecha, time_t otraFecha);
+void resetValPorcentaje(t_cpu* cpu);
+
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 

@@ -257,7 +257,7 @@ t_configuracion* configuracion;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
 int variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM,variableParaFifo; // contador de paginas de la tabla de paginas
-
+int aux;
 // ----------- Listas ------------ //
 t_list* listaMemoria;
 t_list* listaTLB;
