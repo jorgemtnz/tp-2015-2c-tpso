@@ -257,6 +257,7 @@ bool existePID(uint8_t pid) {
 	char* ruta = string_new();
 
 	t_pcb* pcb = crearPcb(ruta);
+	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
 
 	for (a = 0; a < list_size(listaCPUs); a++) {
 
@@ -264,26 +265,40 @@ bool existePID(uint8_t pid) {
 
 		if (cpu->pcb != NULL) {
 			if (cpu->pcb->pid == pid) {
-
 				return true;
 			}
 		}
+
+		t_pcb* pcbEnEntradaSalida = NULL;
+		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+
+		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+
+		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+
+		if (pcbEnEntradaSalida->pid == pid) {
+
+			return true;
+		}
+
 	}
 
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
 
-		pcb = list_get(colaDeEntradaSalida, a);
+		pcbES = list_get(colaDeEntradaSalida, a);
 
-		if (pcb->pid == pid) {
+		if (pcbES->pcb->pid == pid) {
 			return true;
 		}
 	}
 	for (a = 0; a < list_size(colaDeListos); a++) {
 		pcb = list_get(colaDeListos, a);
 
-		if (pcb->pid == pid){
+		if (pcb->pid == pid) {
 			return true;
-		}}
+		}
+	}
+
 	return false;
 
 }

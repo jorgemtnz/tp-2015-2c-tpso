@@ -61,17 +61,25 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		return -1;
 	}
 
+	t_pcb* pcbEnEntradaSalida = NULL;
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+
+	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+
 	int a;
 	t_cpu_ref * cpu = crearCpuRef();
 	char* ruta = string_new();
 	t_pcb* pcb = crearPcb(ruta);
 	for (a = 0; a < list_size(listaCPUs); a++) {
 		cpu = list_get(listaCPUs, a);
-		if (cpu->pcb->pid == pid) {
-			list_remove(listaCPUs, a);
-			cpu->pcb->finalizar = true;
-			list_add_in_index(listaCPUs, a, cpu);
-			a = list_size(listaCPUs) + 1;
+		if (cpu->pcb != NULL) {
+			if (cpu->pcb->pid == pid) {
+				list_remove(listaCPUs, a);
+				cpu->pcb->finalizar = true;
+				list_add_in_index(listaCPUs, a, cpu);
+				a = list_size(listaCPUs) + 1;
+			}
 		}
 	}
 
@@ -143,14 +151,16 @@ int ps(int socket, t_header* header, char* buffer) {
 
 	b = 0;
 	cont = 0;
+	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
 	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
-		pcb = list_get(colaDeEntradaSalida, a);
-		char** splitRuta = string_split(pcb->rutaArchivoMcod, "/");
+		pcbES = list_get(colaDeEntradaSalida, a);
+
+		char** splitRuta = string_split(pcbES->pcb->rutaArchivoMcod, "/");
 		while (splitRuta[b] != NULL) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Bloqueado\n", pcb->pid, splitRuta[cont - 1]);
+		printf("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
 	}
 
 	return 0;
