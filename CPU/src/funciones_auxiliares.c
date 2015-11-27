@@ -93,4 +93,34 @@ char* identificaCPU( pthread_t idHilo){
 	return resultado;
 }
 
+uint8_t instEquivalenteCienPorciento(uint8_t retardoTotal){
+	int cienPorcien =0;
+	cienPorcien= (uint8_t) 60/retardoTotal;
+	return cienPorcien;
+}
 
+
+bool primeraMayorque(time_t unaFecha, time_t otraFecha){
+	double seconds = difftime(unaFecha, otraFecha);
+	if(seconds > 0)
+		//unaFEcha > otraFecha
+		return true;
+	return false;
+}
+
+bool fechasIguales(time_t unaFecha, time_t otraFecha){
+	double seconds = difftime(unaFecha, otraFecha);
+	if(seconds == 0)
+		//unaFEcha > otraFecha
+		return true;
+	return false;
+}
+
+double dameDiferencia(time_t unaFecha, time_t otraFecha){
+	return difftime(unaFecha, otraFecha);
+}
+
+void resetValPorcentaje(t_cpu* cpu){
+	cpu->cantInstEjecutadas=0;
+//cpu->finInstruccion = time(&cpu->inicioInstruccion);//ambas con la misma fecha
+}

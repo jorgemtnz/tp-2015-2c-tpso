@@ -56,7 +56,7 @@ int hiloCPU() {
 			&socketPlanificador);
 	if (resultConexion_planif == -1)
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_error(logger, "[ERROR]no se conecto el CPU al Planificador");
 	pthread_mutex_unlock(&mutexCPULogs);
 	//dictionary_put(conexiones, "Planificador", string_itoa(socketPlanificador));
@@ -92,10 +92,27 @@ void calcularPorcentaje() {
 		sleep(60); //duerme cada 60 segundos
 		void sacaPorcentaje(t_cpu* cpu) {
 			// 60 instrucciones equivale al 100%
-			cpu->porcentajeUso = (int) (cpu->cantInstEjecutadas * 1.7); //+cpu->retardo_acumulado+configuracion->retardo;
-			if (cpu->estado == DISPONIBLE) {
-				cpu->cantInstEjecutadas = 0;
+			time_t now;
+			time(&now);//no se esta ejecutando actualmente la cpu
+			if (cpu->estado ==NO_TERMINA_RAFAGA
+					&&cpu->terminaInstruccion == NO_TERMINO ) {
+//esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo
+				cpu->cantInstEjecutadas +=1;// tengo en cuenta que esta ejecutando una instruccion en este intervalo
+
+//				cpu->retardoTotal = (uint8_t) dameDiferencia(
+//						cpu->inicioInstruccion, cpu->finInstruccion);
+				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
+						/instEquivalenteCienPorciento(configuracion->retardo) );
+
+				resetValPorcentaje(cpu);//lo reseteo porque luego cuando termine la instruccion se contara
+			} else {//ya termino la rafaga
+				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
+										/instEquivalenteCienPorciento(configuracion->retardo) );
+
+								resetValPorcentaje(cpu);
 			}
+
+			//muestra y loguea resultado
 			puts(
 					string_from_format(
 							KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET));

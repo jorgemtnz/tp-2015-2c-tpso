@@ -54,8 +54,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
-		cpu->estado = DISPONIBLE;
-		cpu->cantInstEjecutadas = 0;
+		cpu->estado = SI_TERMINA_RAFAGA;
 		break;
 	}
 	}
@@ -96,7 +95,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 //		printf("Ruta recibida del planificador: %s\n",
 //				pcbPlanificador->rutaArchivoMcod);
-		cpu->estado = NO_DISPONIBLE;
+		cpu->estado = NO_TERMINA_RAFAGA;
 		cpu->pcbPlanificador = pcbPlanificador;
 		procesaCodigo(cpu);
 
@@ -106,7 +105,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_INICIAR_PROC_OK_CPU): {
 		//se cuenta aca como terminado de ejecutar la instruccion iniciar
 		cpu->cantInstEjecutadas += 1;
-		cpu->estadoEjecucion = NO_USO;
+		cpu->terminaInstruccion = SI_TERMINO;
 		//recibe desde memoria y debe continuar con la ejecucion
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
@@ -135,8 +134,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = DISPONIBLE;
-				cpu->cantInstEjecutadas = 0;
+				cpu->estado = SI_TERMINA_RAFAGA;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -148,7 +146,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
 		//se cuenta aca como terminado de ejecutar la instruccion iniciar
 		cpu->cantInstEjecutadas += 1;
-		cpu->estadoEjecucion = NO_USO;
+		cpu->terminaInstruccion = SI_TERMINO;
 		//al dar error se debe devolver el proceso
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
@@ -176,15 +174,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
-		cpu->estado = DISPONIBLE;
-		cpu->cantInstEjecutadas = 0;
+		cpu->estado = SI_TERMINA_RAFAGA;
 		break;
 	}
 
 	case (RESUL_LEER_OK_CPU): {
 		//fin de la instruccion leer
 		cpu->cantInstEjecutadas += 1;
-		cpu->estadoEjecucion = NO_USO;
+		cpu->terminaInstruccion = SI_TERMINO;
 		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		//cambio sizeof(t_contenido_pagina) * 10
@@ -222,8 +219,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = DISPONIBLE;
-				cpu->cantInstEjecutadas = 0;
+				cpu->estado = SI_TERMINA_RAFAGA;
 			}
 		} else { // es planificacion FIFO
 
@@ -237,7 +233,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_ESCRIBIR): {
 		//es el fin de la ejecucion de escribir
 		cpu->cantInstEjecutadas += 1;
-		cpu->estadoEjecucion = NO_USO;
+		cpu->terminaInstruccion = SI_TERMINO;
 		//++++++++++++++cpu libre
 
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
@@ -276,8 +272,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
 				resultadoAlPlanificador(cpu);
-				cpu->estado = DISPONIBLE;
-				cpu->cantInstEjecutadas = 0;
+				cpu->estado = SI_TERMINA_RAFAGA;
+
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -290,7 +286,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (RESUL_FIN): {
 		//se cuenta el fin de la instruccion finalizar
 		cpu->cantInstEjecutadas += 1;
-		cpu->estadoEjecucion = NO_USO;
+		cpu->terminaInstruccion = SI_TERMINO;
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -319,8 +315,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //		printf("%s\n", cpu->mCodCPU->respEjec->resultadosInstrucciones);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
-		cpu->estado = DISPONIBLE;
-		cpu->cantInstEjecutadas = 0;
+		cpu->estado = SI_TERMINA_RAFAGA;
 		free(cpu->mCodCPU->respEjec);
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		break;
