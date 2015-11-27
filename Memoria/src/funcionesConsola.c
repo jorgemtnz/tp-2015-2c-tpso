@@ -80,10 +80,16 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 		}
 	}
 	if(string_equals(buffer, "TLB_FLUSH")) {
+		my_log_info("Recibo señal SIGUSR1");
+		puts("");
 		kill(pid,SIGUSR1);
 	} else if(string_equals(buffer, "MEM_FLUSH")) {
+		my_log_info("Recibo señal SIGUSR2");
+		puts("");
 		kill(pid,SIGUSR2);
 	} else if(string_equals(buffer, "MEM_DUMP")) {
+		my_log_info("Recibo señal SIGPOLL");
+		puts("");
 		kill(pid,SIGPOLL);
 	} else {
 		puts("Comando no reconocido");
@@ -160,14 +166,20 @@ void volcarMemoria(){
 
 void atencionSIGUSR1(){
 	pthread_t hilo1;
-	puts("Limpiar TLB");
+	my_log_info("Limpieza de TLB iniciada");
+	puts("");
 	pthread_create(&hilo1,NULL,(void*) limpiarTLB,NULL);
 	pthread_join(hilo1,NULL);
+	my_log_info("Limpieza de TLB finalizada");
+	puts("");
 }
 
 void atencionSIGUSR2(){
 	pthread_t hilo2;
-	puts("Limpiar Memoria");
+	my_log_info("Limpieza de Memoria iniciada");
+	puts("");
 	pthread_create(&hilo2,NULL,(void*) limpiarMemoria,NULL);
 	pthread_join(hilo2,NULL);
+	my_log_info("Limpieza de Memoria finalizada");
+	puts("");
 }
