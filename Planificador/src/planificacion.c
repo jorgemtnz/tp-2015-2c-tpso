@@ -196,7 +196,7 @@ void ejecucionAFinalizado(t_pcb* pcb) {
 void ejecucionAColaDeListos(t_pcb* pcb) {
 	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
 	if(cpu == NULL) {
-		printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", pcb->pid);
+		printConsola("Se enviar a cola de listos el proceso %d y no se estaba ejecutando\n", pcb->pid);
 		imprimirEstadoCpus();
 		abort();
 	}
