@@ -95,20 +95,21 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				sleep(configuracion->retardoMemoria);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 
-				mostrarTablaDePag();
+
 
 				t_TablaDePaginas* campoTablaDePag;
 
 				campoTablaDePag = iniciarTablaDePaginas();
+
+
 				char* textoALoggear = string_new();
-
-
 				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
 				int a;
 
 				for (a = 0; a < list_size(listaTablaDePag); a++) {
 
 					campoTablaDePag = list_get(listaTablaDePag, a);
+
 
 					string_append(&textoALoggear, string_from_format("Marco: %i, Pagina: %i ;", campoTablaDePag->idMarco, campoTablaDePag->paginaDelProceso));
 
@@ -117,7 +118,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 				my_log_info(textoALoggear);
 
-				printf("\nTAMANIOOO %i\n",list_size(listaTablaDePag));
+
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
 			}
