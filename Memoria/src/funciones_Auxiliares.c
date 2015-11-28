@@ -1,5 +1,14 @@
 #include "Memoria.h"
 
+void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag){
+	t_TablaDePaginas * campoTablaDePagReemplazar;
+	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePagReemplazar=campoTablaDePag;
+		printf("\n indice %i \n",index);
+	list_replace(listaTablaDePag, index, campoTablaDePagReemplazar);
+}
+
+
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//warning no usa variable, se debe cual es el uso de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
@@ -80,7 +89,6 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMarco;
 	t_marco * campoMarcoReemplazar;
-	t_TablaDePaginas * campoTablaDePagReemplazar;
 	t_TLB* campoTLBReemplazar;
 	campoMarco = iniciarMarco();
 	pthread_mutex_lock(&mutexListaTLB);
@@ -106,10 +114,8 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar = campoTablaDePag;
-			campoTablaDePagReemplazar->bitPagModificada = 1;
-			list_replace(listaTablaDePag, a, campoTablaDePagReemplazar);
+			campoTablaDePag->bitPagModificada = 1;
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flagTablaDePag = 1;
 		}
 	}
@@ -136,7 +142,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
 	t_TablaDePaginas * campoTablaDePag;
-	t_TablaDePaginas * campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 	int tamanioTablaDePag, a, flag = 0;
 	pthread_mutex_lock(&mutexTablaPags);
@@ -147,14 +152,12 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag) {
 			campoAux->idMarco = campoTablaDePag->idMarco;
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar= campoTablaDePag;
-			campoTablaDePagReemplazar->bitPresencia = 1;
+			campoTablaDePag->bitPresencia = 1;
 			if(flagEscritura == 1){
-				campoTablaDePagReemplazar->bitPagModificada = 1;
+				campoTablaDePag->bitPagModificada = 1;
 
 			}
-			list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flag = 1;
 		}
 	}
@@ -707,7 +710,6 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas* campoTablaDePag;
-	t_TablaDePaginas* campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 	char* contenido = malloc(sizeof(char));
 
@@ -735,10 +737,8 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
 				campoTablaDePag->bitPresencia = 0;
 				if (bitTablaDePag == 1) {
-					campoTablaDePagReemplazar = iniciarTablaDePaginas();
-					campoTablaDePagReemplazar = campoTablaDePag;
-					campoTablaDePagReemplazar->bitPagModificada = 0;
-					list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+					campoTablaDePag->bitPagModificada = 0;
+					reemplazar_tablaDePag(a,campoTablaDePag);
 					pagina = campoTablaDePag->paginaDelProceso;
 					idProc = campoTablaDePag->idProc;
 				}
@@ -910,17 +910,14 @@ void eliminarDeTablaDePaginas(int id) {
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
-	t_TablaDePaginas* campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 
 	usleep(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == id) {
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar = campoTablaDePag;
-			campoTablaDePagReemplazar->bitPresencia = 0;
-			list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+			campoTablaDePag->bitPresencia = 0;
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flag = 1;
 		}
 	}
