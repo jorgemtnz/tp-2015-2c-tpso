@@ -108,12 +108,15 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	}
 
 	case (RESUL_INICIAR_PROC_OK_CPU): {
+
 		//se cuenta aca como terminado de ejecutar la instruccion iniciar
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		//recibe desde memoria y debe continuar con la ejecucion
 //primera vez que se esta usando la respuesta , fue creada creaRespuestaEjecucion()
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		if(datosDesdeMem->PID != cpu->pcbPlanificador->pid)
+					break;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -156,6 +159,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//al dar error se debe devolver el proceso
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		if(datosDesdeMem->PID != cpu->pcbPlanificador->pid)
+			break;
+
 		//la respuesta ya fue creada antes y ya se hizo resultadosInstrucciones = string_new()
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -177,7 +183,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada de regreso
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-
+		cpu->pcbPlanificador=NULL;
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
 				cpu->mCodCPU->respEjec);
 //		destmCod(cpu->mCodCPU); //liero espacio porque luego reservo cuando me llega otro proceso
@@ -192,6 +198,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->terminaInstruccion = SI_TERMINO;
 		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
+		if(datosDesdeMem->PID != cpu->pcbPlanificador->pid)
+					break;
 		//cambio sizeof(t_contenido_pagina) * 10
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -245,6 +253,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//++++++++++++++cpu libre
 
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
+		if(datosdesdeMEmoria->PID != cpu->pcbPlanificador->pid)
+					break;
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -296,6 +306,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		if(datosDesdeMem->PID != cpu->pcbPlanificador->pid)
+					break;
 		if (cpu->mCodCPU->respEjec == NULL) {
 			cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
 		}
