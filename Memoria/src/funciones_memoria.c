@@ -22,7 +22,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		my_log_error(logMsg);
 		exit(-1);
 	} else {
-		t_config* archivoConfig;
+		t_config* archivoConfig=NULL;
 		archivoConfig = config_create(nombreArchivoConfig);
 		//warning asignacion diferentes tipos
 		configuracion = iniciarArchivoConfig();
