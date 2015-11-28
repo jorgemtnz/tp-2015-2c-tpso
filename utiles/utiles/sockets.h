@@ -80,6 +80,9 @@ int recibirDatos(int unSocket, Header header, void** buffer);
 int recibirStructSegunHeader(int fdCliente, t_header* header, void* buffer, t_resultado_serializacion* resultadoSerializacion);
 int mandarMensaje(int unSocket, int8_t tipo, int tamanio, void *buffer);
 
+void serializar_RESUL_EJECUCION_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura);
+void* deserializar_RESUL_EJECUCION_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje);
+
 char* serializarEstructura(t_tipo_mensaje tipoMensaje, void* bufferMensaje);
 int deserializarMensajeABuffer(t_tipo_mensaje tipoMensaje, char* bufferMsgSerializado, int tamanioMensaje, void* buffer);
 bool string_equals(char* string1, char* string2);

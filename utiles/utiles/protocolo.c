@@ -362,6 +362,13 @@ void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje)
 	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
 }
 
+void serializar_RESUL_EJECUCION_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
+	serializar_t_respuesta_ejecucion(fdCliente, tipoMensaje, estructura);
+
+}
+void* deserializar_RESUL_EJECUCION_ERROR(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	return deserializar_t_respuesta_ejecucion(fdCliente, tipoMensaje);
+}
 
 void* serializar_t_respuesta_ejecucion(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura) {

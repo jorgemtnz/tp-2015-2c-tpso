@@ -54,6 +54,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
 				cpu->mCodCPU->respEjec);
 		free(cpu->mCodCPU->respEjec);
+		cpu->mCodCPU->respEjec=NULL;
 		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
@@ -167,13 +168,21 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		pthread_mutex_unlock(&mutexCPULogs);
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
-		cpu->mCodCPU->respEjec->finalizoOk = false;
+
+		if (cpu->pcbPlanificador->instruccionFinal
+					== cpu->pcbPlanificador->proximaInstruccion) {
+				cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
+			} else {
+				cpu->mCodCPU->respEjec->finalizoOk = false;
+			}
+
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 		//ESTO HAY QUE CAMBIARLO EN EL PLANIFICADOR PARA QUE ANDE (OJO)
-		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
-				cpu->mCodCPU->respEjec);
+		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
+				cpu->mCodCPU->respEjec	);
 		free(cpu->mCodCPU->respEjec);
-		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
+		cpu->mCodCPU->respEjec=NULL;
+//		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
@@ -297,7 +306,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 		//		++++++++++++++++++++++funcion finalizar
-		cpu->mCodCPU->respEjec->finalizoOk = true;
+
+		if (cpu->pcbPlanificador->instruccionFinal
+					== cpu->pcbPlanificador->proximaInstruccion) {
+				cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
+			} else {
+				cpu->mCodCPU->respEjec->finalizoOk = false;
+			}
+
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 		cpu->mCodCPU->respEjec->cant_entrada_salida = 0;
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -317,6 +333,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = SI_TERMINO_RAFAGA;
 		free(cpu->mCodCPU->respEjec);
+		cpu->mCodCPU->respEjec=NULL;
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		break;
 	}
