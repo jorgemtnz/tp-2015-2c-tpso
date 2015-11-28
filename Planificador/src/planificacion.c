@@ -237,7 +237,7 @@ void imprimirColaPcbs(t_list* colaPcb) {
 	putsConsola("\n");
 	for (i = 0; i < cantElem; ++i) {
 		t_cpu_ref* cpu = list_get(colaPcb, i);
-		printConsola("Posicion %d, pid: %s\n", i, cpu->pcb != NULL ? atoi(cpu->pcb->pid) : "VACIO");
+		printConsola("Posicion %d, pid: %s\n", i, (cpu->pcb != NULL ? atoi(cpu->pcb->pid) : "VACIO"));
 	}
 	if(cantElem == 0) {
 		printConsola("Lista vacia\n");
