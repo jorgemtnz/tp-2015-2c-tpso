@@ -61,12 +61,6 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		return -1;
 	}
 
-	t_pcb* pcbEnEntradaSalida;
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
-
-	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
-
 	int a;
 	t_cpu_ref * cpu = crearCpuRef();
 	char* ruta = string_new();
@@ -81,6 +75,31 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 				a = list_size(listaCPUs) + 1;
 			}
 		}
+
+		t_pcb* pcbEnEntradaSalida = NULL;
+
+		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+
+		if (pcbEnEntradaSalida != NULL) {
+
+					if (pcbEnEntradaSalida->pid == pid) {
+
+						list_remove(listaCPUs, a);
+
+						pcbEnEntradaSalida->finalizar = true;
+
+						cpu->pcb = pcbEnEntradaSalida;
+						list_add_in_index(listaCPUs, a, cpu);
+
+						a = list_size(listaCPUs) + 1;
+					}
+				}
+
+		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+
+
+
 	}
 
 	for (a = 0; a < list_size(colaDeListos); a++) {
