@@ -39,7 +39,7 @@ t_mCod* crearmCod() {
 	if (mCod == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>mCod");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
@@ -54,7 +54,7 @@ t_configuracion* crearConfiguracion() {
 	if (configuracion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>configuracion");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>configuracion");
 		pthread_mutex_unlock(&mutexCPULogs);
@@ -75,7 +75,7 @@ t_cpu* crearCPU() {
 	if (cPUHilo == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
@@ -106,95 +106,103 @@ t_cpu* crearCPU() {
 		procCPU->contadorIdCPU += 1;
 		break;
 	}
-	default:
-		cPUHilo->idCPU = queHiloSoy();
-		cPUHilo->nombre = strdup("CPU mayor a 4");
-		procCPU->contadorIdCPU += 1;
 
+	case 4: {
+		cPUHilo->idCPU = queHiloSoy();
+		cPUHilo->nombre = strdup("CPU quinta");
+		procCPU->contadorIdCPU += 1;
+		break;
 	}
-	cPUHilo->porcentajeUso = 0;
-	cPUHilo->terminaInstruccion = SI_TERMINO;
-	cPUHilo->cantInstEjecutadas = 0;
-	cPUHilo->mCodCPU = crearmCod();
-	cPUHilo->respuestaInstruccion = NULL;
-	cPUHilo->estructuraSolicitud = NULL;
-	cPUHilo->estado = SI_TERMINO_RAFAGA;
+	}
+	default:
+	cPUHilo->idCPU = queHiloSoy();
+	cPUHilo->nombre = strdup("CPU mayor a 5");
+	procCPU->contadorIdCPU += 1;
+
+}
+cPUHilo->porcentajeUso = 0;
+cPUHilo->terminaInstruccion = SI_TERMINO;
+cPUHilo->cantInstEjecutadas = 0;
+cPUHilo->mCodCPU = crearmCod();
+cPUHilo->respuestaInstruccion = NULL;
+cPUHilo->estructuraSolicitud = NULL;
+cPUHilo->estado = SI_TERMINO_RAFAGA;
 //	time(&cPUHilo->inicioInstruccion);
 //	time(&cPUHilo->finInstruccion);
 //	cPUHilo->retardoTotal =0;
 //	cPUHilo->terminaInstruccion = SI_TERMINO;
 //	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
 //	cPUHilo->finInstruccion=malloc (sizeof(time_t));
-	return cPUHilo;
+return cPUHilo;
 }
 
 t_ProcCPU* crearProcCPU() {
 
-	t_ProcCPU* procCPU = malloc(sizeof(t_ProcCPU));
-	if (procCPU == NULL) {
-		perror("[ERROR] No se reservo memoria para CPU>..>procCPU");
-		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
-		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>procCPU");
-		pthread_mutex_unlock(&mutexCPULogs);
-		exit(-1);
-	}
-	procCPU->contadorIdCPU = 0;
-	procCPU->listaCPU = list_create();
+t_ProcCPU* procCPU = malloc(sizeof(t_ProcCPU));
+if (procCPU == NULL) {
+	perror("[ERROR] No se reservo memoria para CPU>..>procCPU");
+	pthread_mutex_lock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_error(logger, "[ERROR] No se reservo memoria para CPU>..>procCPU");
+	pthread_mutex_unlock(&mutexCPULogs);
+	exit(-1);
+}
+procCPU->contadorIdCPU = 0;
+procCPU->listaCPU = list_create();
 
-	return procCPU;
+return procCPU;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
-	destRespEjec(unmCod->respEjec);
-	destVectorInstruccion(unmCod->bufferInstrucciones);
+destRespEjec(unmCod->respEjec);
+destVectorInstruccion(unmCod->bufferInstrucciones);
 
-	free(unmCod);
+free(unmCod);
 }
 
 void destConfig(t_configuracion* unaConfig) {
-	free(unaConfig);
+free(unaConfig);
 }
 
 void destHiloCPU(t_cpu* unHiloCPU) {
-	free(unHiloCPU->nombre);
-	free(unHiloCPU->estructuraSolicitud);
-	free(unHiloCPU->respuestaInstruccion);
+free(unHiloCPU->nombre);
+free(unHiloCPU->estructuraSolicitud);
+free(unHiloCPU->respuestaInstruccion);
 //	free(unHiloCPU->pcbPlanificador);
-	destmCod(unHiloCPU->mCodCPU);
-	free(unHiloCPU);
+destmCod(unHiloCPU->mCodCPU);
+free(unHiloCPU);
 }
 
 void destProcCPU(t_ProcCPU* unCPU) {
 
-	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
-	free(unCPU);
+list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
+free(unCPU);
 }
 
 void destInstruccion(t_instruccion* unaInstruccion) {
-	free(unaInstruccion);
+free(unaInstruccion);
 }
 
 void destVectorInstruccion(char** vectorInstruccion) {
-	int i = 0;
-	while (vectorInstruccion[i] != NULL) {
-		free(vectorInstruccion[i]);
-		i++;
-	}
-	free(vectorInstruccion);
+int i = 0;
+while (vectorInstruccion[i] != NULL) {
+	free(vectorInstruccion[i]);
+	i++;
+}
+free(vectorInstruccion);
 }
 
 void destIniciarSwap(t_iniciar_swap* estructura) {
-	free(estructura);
+free(estructura);
 }
 
 void destEscrMem(t_contenido_pagina* estruc) {
-	free(estruc);
+free(estruc);
 }
 
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
-	free(respEjec->resultadosInstrucciones);
-	free(respEjec);
+free(respEjec->resultadosInstrucciones);
+free(respEjec);
 }
