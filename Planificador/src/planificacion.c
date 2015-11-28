@@ -14,6 +14,13 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 	pcb->tamanioRafaga = planificacion->tamanioRafaga;
 	pcb->proximaInstruccion = 0;
 	pcb->finalizar = false;
+
+	time_t t;
+	time(&t);
+	ctime(&t);
+	pcb->tiempoInicial = t;
+	pcb->tiempoEjecucion = 0;
+
 //	printConsola("Se creo el proceso PID: %d\n", pcb->pid);
 	return pcb;
 }
@@ -179,6 +186,10 @@ t_cpu_ref* obtenerCPUDisponible() {
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu) {
 	cpu->ejecutando = true;
 	cpu->pcb = pcb;
+	time_t t;
+	time(&t);
+	ctime(&t);
+	pcb->tiempoInicioUltimaEjecucion = t;
 	enviarStruct(cpu->socket, CONTEXTO_MPROC, pcb);
 }
 
@@ -191,8 +202,36 @@ void ejecucionAFinalizado(t_pcb* pcb) {
 		abort();
 	}
 
+	time_t t;
+	time(&t);
+	ctime(&t);
+	pcb->tiempoFinal = t;
+
+	imprimirFinalizado(pcb);
+
 	quitarProcesoDeCpu(cpu);
 	list_add(getColaDeFinalizados(), pcb);
+}
+
+void imprimirFinalizado(t_pcb* pcb) {
+	printConsola("Tiempo de respuesta del proceso: %d ms\n", calcularTiempoRespuesta(pcb));
+	printConsola("Tiempo de ejecucion: %d ms\n", calcularTiempoEjecucion(pcb));
+	printConsola("Tiempo de espera: %d ms\n", calcularTiempoEspera(pcb));
+}
+
+int calcularTiempoRespuesta(t_pcb* pcb) {
+	double elapsed = difftime(pcb->tiempoFinal, pcb->tiempoInicial) * 1000;
+	return (int) elapsed;
+}
+
+int calcularTiempoEjecucion(t_pcb* pcb) {
+	return pcb->tiempoEjecucion;
+}
+
+int calcularTiempoEspera(t_pcb* pcb) {
+	int tiempoRespuesta = calcularTiempoRespuesta(pcb);
+	int tiempoEjecucion = calcularTiempoEjecucion(pcb);
+	return (tiempoRespuesta - tiempoEjecucion) - pcb->tiempoEntradaSalida;
 }
 
 void ejecucionAColaDeListos(t_pcb* pcb) {
@@ -247,6 +286,10 @@ void *ejecutarEntradaSalida(void *param) {
 		lockEstadoEntradaSalida();
 		cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
 		pcb = estadoEntradaSalida.pcb;
+		time_t t;
+		time(&t);
+		ctime(&t);
+		pcb->tiempoInicioUltimaEntradaSalida = t;
 		printConsola("Proceso pid: %d empieza su E/S\n", pcb->pid);
 		unlockEstadoEntradaSalida();
 		while(cantidadCiclos > 0) {
@@ -263,6 +306,12 @@ void *ejecutarEntradaSalida(void *param) {
 
 		lockEstadoEntradaSalida();
 		estadoEntradaSalida.finalizoEntradaSalida = true;
+
+		time_t fin;
+		time(&fin);
+		ctime(&fin);
+		double duracion = difftime(fin, pcb->tiempoInicioUltimaEntradaSalida) * 1000;
+		pcb->tiempoEntradaSalida = pcb->tiempoEntradaSalida + (int)duracion;
 		unlockEstadoEntradaSalida();
 
 		printConsola("Proceso pid: %d finaliza su E/S\n", pcb->pid);

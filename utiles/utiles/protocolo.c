@@ -492,6 +492,13 @@ void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estruct
 	serializar_int16_t(fdCliente, estructura->tamanioRafaga);
 	serializar_int16_t(fdCliente, estructura->proximaInstruccion);
 	serializar_int16_t(fdCliente, estructura->instruccionFinal);
+	serializar_bool(fdCliente, estructura->finalizar);
+	serializar_time_t(fdCliente, estructura->tiempoInicial);
+	serializar_time_t(fdCliente, estructura->tiempoInicioUltimaEjecucion);
+	serializar_time_t(fdCliente, estructura->tiempoInicioUltimaEntradaSalida);
+	serializar_time_t(fdCliente, estructura->tiempoFinal);
+	serializar_int(fdCliente, estructura->tiempoEjecucion);
+	serializar_int(fdCliente, estructura->tiempoEntradaSalida);
 
 	return 0;
 }
@@ -503,6 +510,15 @@ t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	estructura->tamanioRafaga = deserializar_int16_t(fdCliente);
 	estructura->proximaInstruccion = deserializar_int16_t(fdCliente);
 	estructura->instruccionFinal = deserializar_int16_t(fdCliente);
+
+	estructura->finalizar = deserializar_bool(fdCliente);
+	estructura->tiempoInicial = deserializar_time_t(fdCliente);
+	estructura->tiempoInicioUltimaEjecucion = deserializar_time_t(fdCliente);
+	estructura->tiempoInicioUltimaEntradaSalida = deserializar_time_t(fdCliente);
+	estructura->tiempoFinal = deserializar_time_t(fdCliente);
+	estructura->tiempoEjecucion = deserializar_int(fdCliente);
+	estructura->tiempoEntradaSalida = deserializar_int(fdCliente);
+
 
 	return estructura;
 }
@@ -586,6 +602,24 @@ void serializar_int8_t(int fdCliente, int8_t estructura) {
 int8_t deserializar_int8_t(int fdCliente) {
 	int8_t* res = malloc(sizeof(int8_t));
 	recibirPorSocket(fdCliente, res, sizeof(int8_t));
+	return *res;
+}
+
+void serializar_int(int fdCliente, int estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(int));
+}
+int8_t deserializar_int(int fdCliente) {
+	int* res = malloc(sizeof(int));
+	recibirPorSocket(fdCliente, res, sizeof(int));
+	return *res;
+}
+
+void serializar_time_t(int fdCliente, time_t estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(time_t));
+}
+time_t deserializar_time_t(int fdCliente) {
+	time_t* res = malloc(sizeof(time_t));
+	recibirPorSocket(fdCliente, res, sizeof(time_t));
 	return *res;
 }
 t_list* deserializar_lista_porcentajes(int fdCliente,int8_t cantidad){
