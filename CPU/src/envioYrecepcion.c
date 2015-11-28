@@ -77,6 +77,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (CONTEXTO_MPROC): {//cuando llega aca es porque es la primera vez sea FIFO o RR
 //		cpu->pcbPlanificador->proximaInstruccion = 0 que viene del planificador
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
+		printf("se imprime pcb-> PID recibido %i \n", pcbPlanificador->pid);
 		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");

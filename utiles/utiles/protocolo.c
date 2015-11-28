@@ -493,6 +493,11 @@ void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estruct
 	serializar_int16_t(fdCliente, estructura->proximaInstruccion);
 	serializar_int16_t(fdCliente, estructura->instruccionFinal);
 
+	if(mustDebug) {
+		t_pcb* pcb = (t_pcb*) estructura;
+		debug("%s: Envio el pid %d\n", getNombreTipoMensaje(tipoMensaje), pcb->pid);
+	}
+
 	return 0;
 }
 t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
