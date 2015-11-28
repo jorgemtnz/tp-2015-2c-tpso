@@ -497,8 +497,8 @@ void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estruct
 	serializar_time_t(fdCliente, estructura->tiempoInicioUltimaEjecucion);
 	serializar_time_t(fdCliente, estructura->tiempoInicioUltimaEntradaSalida);
 	serializar_time_t(fdCliente, estructura->tiempoFinal);
-	serializar_int8_t(fdCliente, estructura->tiempoEjecucion);
-	serializar_int8_t(fdCliente, estructura->tiempoEntradaSalida);
+	serializar_int(fdCliente, estructura->tiempoEjecucion);
+	serializar_int(fdCliente, estructura->tiempoEntradaSalida);
 
 	return 0;
 }
@@ -516,8 +516,8 @@ t_pcb* deserializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	estructura->tiempoInicioUltimaEjecucion = deserializar_time_t(fdCliente);
 	estructura->tiempoInicioUltimaEntradaSalida = deserializar_time_t(fdCliente);
 	estructura->tiempoFinal = deserializar_time_t(fdCliente);
-	estructura->tiempoEjecucion = deserializar_int8_t(fdCliente);
-	estructura->tiempoEntradaSalida = deserializar_int8_t(fdCliente);
+	estructura->tiempoEjecucion = deserializar_int(fdCliente);
+	estructura->tiempoEntradaSalida = deserializar_int(fdCliente);
 
 
 	return estructura;
@@ -602,6 +602,15 @@ void serializar_int8_t(int fdCliente, int8_t estructura) {
 int8_t deserializar_int8_t(int fdCliente) {
 	int8_t* res = malloc(sizeof(int8_t));
 	recibirPorSocket(fdCliente, res, sizeof(int8_t));
+	return *res;
+}
+
+void serializar_int(int fdCliente, int estructura) {
+	enviarSimple(fdCliente, &estructura, sizeof(int));
+}
+int8_t deserializar_int(int fdCliente) {
+	int* res = malloc(sizeof(int));
+	recibirPorSocket(fdCliente, res, sizeof(int));
 	return *res;
 }
 

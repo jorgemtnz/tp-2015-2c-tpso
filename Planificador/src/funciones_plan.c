@@ -216,7 +216,7 @@ void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecu
 	time(&fin);
 	ctime(&fin);
 	double duracion = difftime(fin, pcb->tiempoInicioUltimaEjecucion) * 1000;
-	pcb->tiempoEjecucion = pcb->tiempoEjecucion + (unsigned int)duracion;
+	pcb->tiempoEjecucion = pcb->tiempoEjecucion + (int)duracion;
 
 	if (respuestaEjecucion->finalizoOk) {
 		ejecucionAFinalizado(respuestaEjecucion->pcb);

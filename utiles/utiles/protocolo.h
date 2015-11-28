@@ -100,8 +100,8 @@ typedef struct PCB {
 	time_t tiempoInicioUltimaEjecucion;
 	time_t tiempoInicioUltimaEntradaSalida;
 	time_t tiempoFinal;
-	u_int8_t tiempoEjecucion;
-	u_int8_t tiempoEntradaSalida;
+	int tiempoEjecucion;
+	int tiempoEntradaSalida;
 } t_pcb;
 
 typedef struct Planificacion {
@@ -193,6 +193,8 @@ int16_t deserializar_int16_t(int fdCliente);
 //++++++SE USA como nivel inferior para serializar un int8
 void serializar_int8_t(int fdCliente, int8_t estructura);
 int8_t deserializar_int8_t(int fdCliente);
+void serializar_int(int fdCliente, int estructura);
+int8_t deserializar_int(int fdCliente);
 void serializar_time_t(int fdCliente, time_t estructura);
 time_t deserializar_time_t(int fdCliente);
 //++++++SE USA como nivel inferior para serializar un bool
