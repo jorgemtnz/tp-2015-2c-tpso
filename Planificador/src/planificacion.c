@@ -60,14 +60,15 @@ t_list* getColaDeNuevos() {
 }
 
 void ejecutarPlanificadorLargoPlazo() {
-	putsConsola("Inicio planificador");
-	imprimirEstadoCpus();
+	putsConsola("=========== Inicio planificador ===========\n");
+	imprimirTodo();
+	putsConsola("\n");
 	//TODO
 	//POR AHORA ENVIAMOS DIRECTAMENTE
 	if(list_all_satisfy(listaCPUs, cpuDesconectada)) {
 		putsConsola("No hay ningun CPU conectado\n");
 	} else {
-		putsConsola("Ejecutamos planificacion\n");
+		//putsConsola("Ejecutamos planificacion\n");
 	}
 
 	//entrada salida
@@ -103,7 +104,7 @@ void ejecutarPlanificadorLargoPlazo() {
 	unlockEstadoEntradaSalida();
 
 	if(!ejecutando) {
-		printConsola("E/S Disponible\n");
+		//printConsola("E/S Disponible\n");
 		bool hayEntradaSalidaEsperando = !list_is_empty(getColaDeEntradaSalida());
 		if (hayEntradaSalidaEsperando) {
 			t_pcb_entrada_salida* pcbEntradaSalida = (t_pcb_entrada_salida*)list_get(getColaDeEntradaSalida(), 0);
@@ -121,7 +122,7 @@ void ejecutarPlanificadorLargoPlazo() {
 				unlockHayEntradaSalidaParaEjecutar();
 			}
 		} else {
-			printConsola("No hay procesos esperando E/S\n");
+			//printConsola("No hay procesos esperando E/S\n");
 		}
 	}
 
@@ -135,9 +136,9 @@ void ejecutarPlanificadorLargoPlazo() {
 		if(cpu != NULL) {
 			list_remove(getColaDeNuevos(), 0);
 			correrProcesoEnCpu(pcb, cpu);
-			printConsola("Se envia a ejecutar el proceso %d en la cpu %d por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
+			printConsola("Se envia a ejecutar el proceso %d en la cpu \"%s\" por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
 		} else {
-			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+//			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 		}
 	}
 
@@ -149,14 +150,15 @@ void ejecutarPlanificadorLargoPlazo() {
 		if(cpu != NULL) {
 			list_remove(getColaDeListos(), 0);
 			correrProcesoEnCpu(pcb, cpu);
-			printConsola("Se envia a ejecutar el proceso %d en la cpu %d por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
+			printConsola("Se envia a ejecutar el proceso %d en la cpu \"%s\" por el socket %d\n", pcb->pid, cpu->nombre, cpu->socket);
 		} else {
-			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
+//			printConsola("No hay CPU disponible para ejecutar el proceso %d\n", pcb->pid);
 		}
 	}
 
-	putsConsola("Fin planificador");
-	imprimirEstadoCpus();
+	putsConsola("\n");
+	imprimirTodo();
+	putsConsola("=========== Fin planificador ===========\n");
 }
 
 bool cpuDesconectada(void *cpu) {
@@ -185,21 +187,19 @@ void ejecucionAFinalizado(t_pcb* pcb) {
 	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
 	if(cpu == NULL) {
 		printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", pcb->pid);
-		imprimirEstadoCpus();
+		imprimirTodo();
 		abort();
 	}
 
 	quitarProcesoDeCpu(cpu);
 	list_add(getColaDeFinalizados(), pcb);
-
-	imprimirTodo();
 }
 
 void ejecucionAColaDeListos(t_pcb* pcb) {
 	t_cpu_ref* cpu = obtenerCPUEjecutandoPcb(pcb);
 	if(cpu == NULL) {
 		printConsola("Se enviar a cola de listos el proceso %d y no se estaba ejecutando\n", pcb->pid);
-		imprimirEstadoCpus();
+		imprimirTodo();
 		abort();
 	}
 
@@ -233,61 +233,64 @@ void imprimirEstadoCpus() {
 	for (i = 0; i < cantCpus; i++) {
 		t_cpu_ref* cpu = list_get(listaCPUs, i);
 		char* pid = cpu != NULL && cpu->pcb != NULL ? string_from_format("%i",cpu->pcb->pid) : "VACIO";
-		printConsola("Cpu: %s, pid: %s\n", cpu->nombre, pid);
+		printConsola("[Cpu: %s, pid: %s]\n", cpu->nombre, pid);
+	}
+	if(cantCpus == 0) {
+		printConsola("[Cpus: Lista vacia]\n");
 	}
 }
 
-void imprimirColaPcbs(t_list* colaPcb) {
+void imprimirColaPcbs(t_list* colaPcb, char* prefijo) {
 	int cantElem = list_size(colaPcb);
 	int i = 0;
 	for (i = 0; i < cantElem; i++) {
 		t_pcb* pcb = list_get(colaPcb, i);
 		char* pid = pcb != NULL ? string_from_format("%i",pcb->pid) : "VACIO";
-		printConsola("Posicion %d, pid: %s\n", i, pid);
+		printConsola("%s[%d], pid: %s\n", prefijo, i, pid);
 	}
 	if(cantElem == 0) {
-		printConsola("Lista vacia\n");
+		printConsola("[Lista vacia de %s]\n", prefijo);
 	}
 }
 
 void imprimirColaDeFinalizados() {
 	t_list* colaPcb = getColaDeFinalizados();
-	printConsola("Estado Cola de finalizados\n");
-	imprimirColaPcbs(colaPcb);
+//	printConsola("Estado Cola de finalizados\n");
+	imprimirColaPcbs(colaPcb, "finalizado");
 }
 
 void imprimirProcesoEnEntradaSalida() {
 	lockEstadoEntradaSalida();
 	t_pcb* pcb = estadoEntradaSalida.pcb;
 	if(pcb != NULL) {
-		printConsola("Proceso pid: %d ejecutando entrada salida\n", pcb->pid);
+		printConsola("[ejec. e/s: pid: %d]\n", pcb->pid);
 	} else {
-		printConsola("No se esta ejecutando entrada salida\n");
+		printConsola("[ejec. e/s: disponible]\n");
 	}
 	unlockEstadoEntradaSalida();
 }
 
 void imprimirColaDeEntradaSalida() {
 	t_list* colaPcb = getColaDeEntradaSalida();
-	printConsola("Estado Cola de Entrada Salida\n");
-	imprimirColaPcbs(colaPcb);
+//	printConsola("Estado Cola de Entrada Salida\n");
+	imprimirColaPcbs(colaPcb, "espera e/s");
 }
 
 void imprimirColaDeListos() {
 	t_list* colaPcb = getColaDeListos();
-	printConsola("Estado Cola de Listos\n");
-	imprimirColaPcbs(colaPcb);
+//	printConsola("Estado Cola de Listos\n");
+	imprimirColaPcbs(colaPcb, "listos");
 }
 void imprimirColaDeNuevos() {
 	t_list* colaPcb = getColaDeNuevos();
-	printConsola("Estado Cola de Nuevos\n");
-	imprimirColaPcbs(colaPcb);
+//	printConsola("Estado Cola de Nuevos\n");
+	imprimirColaPcbs(colaPcb, "nuevos");
 }
 
 void imprimirTodo() {
+	imprimirEstadoCpus();
 	imprimirColaDeNuevos();
 	imprimirColaDeListos();
-	imprimirEstadoCpus();
 	imprimirColaDeEntradaSalida();
 	imprimirProcesoEnEntradaSalida();
 	imprimirColaDeFinalizados();

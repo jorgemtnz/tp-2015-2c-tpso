@@ -77,7 +77,7 @@ void *ejecutarEntradaSalida(void *param) {
 		while(cantidadCiclos > 0) {
 			//time_t t;
 			//time(&t);
-			//printf("\n current time is : %s ",ctime(&t));
+			//printConsola("\n current time is : %s ",ctime(&t));
 			printConsola("Cantidad ciclos restantes %d\n", cantidadCiclos);
 			usleep(1000000);
 			lockEstadoEntradaSalida();

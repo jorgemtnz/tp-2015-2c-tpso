@@ -116,6 +116,7 @@ t_cpu_ref* obtenerCPUEjecutandoPcbPorPid(uint8_t PID);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
 void imprimirEstadoCpus();
 void imprimirTodo();
+void imprimirColaPcbs(t_list* colaPcb, char* prefijo);
 void imprimirColaDeNuevos();
 void imprimirColaDeListos();
 void imprimirColaDeEntradaSalida();

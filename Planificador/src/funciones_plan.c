@@ -161,7 +161,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		break;
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
-		printf("proceso no iniciado en CPU\n");
+		printConsola("No se pudo iniciar el proceso\n");
 		break;
 	}
 	case (TIEMPO_CPU_RESUL): {
@@ -171,7 +171,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
 		for (f = 0; f < listaRecibida->cantidadDeElementos; f++) {
 			porcentaje = list_get(listaRecibida->respuestasPorcentaje, f);
-			printf("cpu %lu: %i porciento \n", porcentaje->idCpu, porcentaje->res_porcentaje);
+			printConsola("cpu %lu: %i porciento \n", porcentaje->idCpu, porcentaje->res_porcentaje);
 		}
 		break;
 	}
