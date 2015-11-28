@@ -29,7 +29,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		listaSocketsCPU = list_create();
 	}
 
-	puts("Memoria procesar mensajes");
+	//puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
 	int socketSwap;

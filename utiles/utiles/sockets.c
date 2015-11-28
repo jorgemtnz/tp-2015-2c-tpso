@@ -460,7 +460,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE;
 		if ((rv = getaddrinfo(NULL, puerto, &hints, &ai)) != 0) {
-			fprintf(stderr, "selectserver: %s\n", gai_strerror(rv));
+			fprintf(stderr, "Problemas al escuchar conexiones: %s\n", gai_strerror(rv));
 			exit(1);
 		}
 
@@ -483,7 +483,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 
 		// if we got here, it means we didn't get bound
 		if (p == NULL) {
-			fprintf(stderr, "selectserver: failed to bind\n");
+			fprintf(stderr, "El puerto ya es encuentra utilizado\n");
 			exit(2);
 		}
 		printf("Escuchando nuevas conexiones en el puerto %s\n", puerto);
@@ -554,7 +554,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						if (newfd > fdmax) {    // keep track of the max
 							fdmax = newfd;
 						}
-						printf("selectserver: new connection from %s on "
+						printf("Nueva conexion desde %s en el "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
 						funcionParaProcesarMensaje(newfd, NULL, NULL, NEW_CONNECTION, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
@@ -579,7 +579,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						// got error or connection closed by client
 						if (nbytes == 0) {
 							// connection closed
-							printf("selectserver: socket %d hung up\n", i);
+							printf("De produjo una desconexion desde el socket %d\n", i);
 							funcionParaProcesarMensaje(i, NULL, NULL, HANG_UP, extra, logger);
 						} else {
 							//perror("recv");
@@ -863,18 +863,18 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 	return 0;
 }
 
-bool mustDebug = true;
+bool mustDebug = false;
 
 void debug(const char *formato, ...) {
-	if (mustDebug) {
-	//	puts("printConsola\n");
-		va_list arguments;
-		va_start(arguments, formato);
+//	puts("printConsola\n");
+	va_list arguments;
+	va_start(arguments, formato);
 //		int res = vprintf(formato, arguments);
-		va_end(arguments);
+	va_end(arguments);
 
-		char* nuevo = string_from_vformat(formato, arguments);
-		log_debug(logger, nuevo);
+	char* nuevo = string_from_vformat(formato, arguments);
+	log_debug(logger, nuevo);
+	if (mustDebug) {
 		puts(nuevo);
 	}
 }

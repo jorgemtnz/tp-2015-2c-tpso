@@ -147,7 +147,7 @@ int ps(int socket, t_header* header, char* buffer) {
 				b++;
 			}
 
-			printf("mProc %i: %s -> Ejecutando\n", cpu->pcb->pid, splitRuta[cont - 1]);
+			printConsola("mProc %i: %s -> Ejecutando\n", cpu->pcb->pid, splitRuta[cont - 1]);
 		}
 	}
 
@@ -164,7 +164,7 @@ int ps(int socket, t_header* header, char* buffer) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Listo\n", pcb->pid, splitRuta[cont - 1]);
+		printConsola("mProc %i: %s -> Listo\n", pcb->pid, splitRuta[cont - 1]);
 	}
 	//BLOQUEADOS
 
@@ -179,7 +179,7 @@ int ps(int socket, t_header* header, char* buffer) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
+		printConsola("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
 	}
 
 	return 0;

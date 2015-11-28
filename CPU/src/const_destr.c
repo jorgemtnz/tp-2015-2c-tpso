@@ -14,9 +14,8 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
-
 	respEjec->resultadosInstrucciones = string_new();
-	respEjec->finalizoOk = false;
+
 	return respEjec;
 }
 
@@ -117,8 +116,8 @@ t_cpu* crearCPU() {
 	default: {
 
 		cPUHilo->idCPU = queHiloSoy();
-		cPUHilo->nombre = strdup("CPU mayor a 5");
 		procCPU->contadorIdCPU += 1;
+		cPUHilo->nombre = string_from_format("CPU %d", procCPU->contadorIdCPU);
 	}
 	}
 	cPUHilo->porcentajeUso = 0;

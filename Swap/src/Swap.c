@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 }
 
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-	puts("Swap procesar mensajes");
+	//puts("Swap procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra, logger);
 	t_PID* pid_a_enviar;
 	pid_a_enviar = crearEstructuraPid();
