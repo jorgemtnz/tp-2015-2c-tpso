@@ -356,6 +356,10 @@ t_leerDeProceso* deserializar_t_leerDeProceso(int fdCliente, t_tipo_mensaje tipo
 }
 void serializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	serializar_t_respuesta_ejecucion(fdCliente, tipoMensaje, estructura);
+	if(mustDebug) {
+		t_respuesta_ejecucion* resp = (t_respuesta_ejecucion*) estructura;
+		debug("Envio el pid %d, finalizo: %s\n", resp->pcb->pid, resp->finalizoOk?"Si":"NO");
+	}
 
 }
 void* deserializar_RESUL_EJECUCION_OK(int fdCliente, t_tipo_mensaje tipoMensaje) {
