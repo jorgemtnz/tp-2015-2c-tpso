@@ -503,7 +503,10 @@ void* serializar_t_pcb(int fdCliente, t_tipo_mensaje tipoMensaje, t_pcb* estruct
 	if(mustDebug) {
 		t_pcb* pcb = (t_pcb*) estructura;
 		debug("%s: Envio el pid %d\n", getNombreTipoMensaje(tipoMensaje), pcb->pid);
+
 	}
+
+
 
 	return 0;
 }

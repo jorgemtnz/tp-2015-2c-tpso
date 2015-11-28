@@ -50,6 +50,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		break;
 	}
 	case (ENTRADA_SALIDA): {
+		printf("estoy en entrada salida\n");
+
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 		ejecuta_EntradaSalida(separada_instruccion, cpu);
@@ -58,7 +60,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 				cpu->mCodCPU->respEjec);
 //		destmCod(cpu->mCodCPU);
 		cpu->estado =SI_TERMINO_RAFAGA ;
-
+		printf("\n %i \n",cpu->pcbPlanificador->pid);
+				printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 		break;
 	}
 	}
@@ -257,6 +260,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
 		printf("\n contenido: %s // PID:%i //PAG:%i\n",datosdesdeMEmoria->contenido,datosdesdeMEmoria->PID,datosdesdeMEmoria->numeroPagina);
 		printf("\n %i \n",cpu->pcbPlanificador->pid);
+		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 		if(datosdesdeMEmoria->PID != cpu->pcbPlanificador->pid)
 					break;
 		printf("\nAAAAA\n");
