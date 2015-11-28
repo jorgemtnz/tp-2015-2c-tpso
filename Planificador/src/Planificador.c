@@ -53,51 +53,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 	return 0;
 }
 
-bool conectadoAPadre = false;
-int socketPadre;
-bool finalizarProcesoEntradaSalida = false;
-
-void *ejecutarEntradaSalida(void *param) {
-
-	while (!finalizarProcesoEntradaSalida) {
-		int cantidadCiclos;
-		t_pcb* pcb;
-		lockHayEntradaSalidaParaEjecutar();
-
-		if(!conectadoAPadre) {
-			conectar(string_duplicate("127.0.0.1"), configuracion->puertoEscucha,
-						&socketPadre);
-		}
-
-		lockEstadoEntradaSalida();
-		cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
-		pcb = estadoEntradaSalida.pcb;
-		printConsola("Proceso pid: %d empieza su E/S\n", pcb->pid);
-		unlockEstadoEntradaSalida();
-		while(cantidadCiclos > 0) {
-			//time_t t;
-			//time(&t);
-			//printConsola("\n current time is : %s ",ctime(&t));
-			printConsola("Cantidad ciclos restantes %d\n", cantidadCiclos);
-			usleep(1000000);
-			lockEstadoEntradaSalida();
-			estadoEntradaSalida.cantidadCiclos--;
-			cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
-			unlockEstadoEntradaSalida();
-		}
-
-		lockEstadoEntradaSalida();
-		estadoEntradaSalida.finalizoEntradaSalida = true;
-		unlockEstadoEntradaSalida();
-
-		printConsola("Proceso pid: %d finaliza su E/S\n", pcb->pid);
-		enviarStruct(socketPadre, NOTIFICACION_HILO_ENTRADA_SALIDA, NULL);
-	}
-
-	putsConsola("Fin del hilo de entrada salida");
-	return NULL;
-}
-
 char* decirHolaMundo() {
 	return "Hola Mundo";
 }
