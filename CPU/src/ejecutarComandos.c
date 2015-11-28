@@ -112,13 +112,32 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
 }
-
+//solo cuando quiero que no me regrese el mismo proceso
 void resultadoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
 	//		++++++++++++++++++++++funcion finalizar
-	cpu->mCodCPU->respEjec->finalizoOk = true;
+	cpu->mCodCPU->respEjec->finalizoOk = true;//finalizo entonces ya no se manda nada
+	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
+			cpu->mCodCPU->respEjec);
+	pthread_mutex_lock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger,"rafaga de proceso terminada");
+	log_info(logger,
+			string_from_format("Id del proceso %i \n",
+					cpu->pcbPlanificador->pid));
+	pthread_mutex_unlock(&mutexCPULogs);
+///	free(cpu->mCodCPU->respEjec);
+}
+
+void resul_noTerminoAlPlanificador(t_cpu* cpu) {
+	//int socketPlanificador = atoi(
+	//		(char*) dictionary_get(conexiones, "Planificador"));
+	int socketPlanificador = cpu->socketPlanificador;
+	//		++++++++++++++++++++++funcion finalizar
+	cpu->mCodCPU->respEjec->finalizoOk = false;//finalizo entonces ya no se manda nada
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);

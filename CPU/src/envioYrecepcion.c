@@ -132,8 +132,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 						cpu);
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
-
-				resultadoAlPlanificador(cpu);
+//espera que regrese el proceso en un futuro porque no ha terminado
+				 resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 			}
 		} else { // es planificacion FIFO
@@ -218,7 +218,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //				printf("dsp de ejecuta inst\n");
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
-				resultadoAlPlanificador(cpu);
+				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 			}
 		} else { // es planificacion FIFO
@@ -271,7 +271,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						cpu);
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
-				resultadoAlPlanificador(cpu);
+				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 
 			}
