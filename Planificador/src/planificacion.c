@@ -75,22 +75,22 @@ void ejecutarPlanificadorLargoPlazo() {
 	bool finalizado;
 	t_pcb* pcbEnEntradaSalida;
 
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	lockEstadoEntradaSalida();
 	ejecutando = estadoEntradaSalida.pcb != NULL;
 	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 	finalizado = estadoEntradaSalida.finalizoEntradaSalida;
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+	unlockEstadoEntradaSalida();
 
 	if(ejecutando) {
 		printConsola("Proceso pid: %d en E/S\n", pcbEnEntradaSalida->pid);
 		if(finalizado) {
 			printConsola("E/S FINALIZADA\n", pcbEnEntradaSalida->pid);
-			pthread_mutex_lock(&mutexEstadoEntradaSalida);
+			lockEstadoEntradaSalida();
 			t_pcb* pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 			estadoEntradaSalida.cantidadCiclos = 0;
 			estadoEntradaSalida.pcb = NULL;
 			estadoEntradaSalida.finalizoEntradaSalida = false;
-			pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+			unlockEstadoEntradaSalida();
 			list_add(getColaDeListos(), pcbEnEntradaSalida);
 			printConsola("El proceso pid: %d va a la cola de listos\n", pcbEnEntradaSalida->pid);
 		} else {
@@ -98,9 +98,9 @@ void ejecutarPlanificadorLargoPlazo() {
 		}
 	}
 
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	lockEstadoEntradaSalida();
 	ejecutando = estadoEntradaSalida.pcb != NULL;
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+	unlockEstadoEntradaSalida();
 
 	if(!ejecutando) {
 		printConsola("E/S Disponible\n");
@@ -109,16 +109,16 @@ void ejecutarPlanificadorLargoPlazo() {
 			t_pcb_entrada_salida* pcbEntradaSalida = (t_pcb_entrada_salida*)list_get(getColaDeEntradaSalida(), 0);
 			if(pcbEntradaSalida != NULL) {
 				list_remove(getColaDeEntradaSalida(), 0);
-				pthread_mutex_lock(&mutexEstadoEntradaSalida);
+				lockEstadoEntradaSalida();
 				estadoEntradaSalida.cantidadCiclos = pcbEntradaSalida->cantidadCiclos;
 				estadoEntradaSalida.pcb = pcbEntradaSalida->pcb;
 				estadoEntradaSalida.finalizoEntradaSalida = false;
-				pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+				unlockEstadoEntradaSalida();
 
 				//deja correr
 				printConsola("Proceso pid: %d va a ejecutar su E/S\n", pcbEntradaSalida->pcb->pid);
 
-				pthread_mutex_unlock(&mutexHayEntradaSalidaParaEjecutar);
+				unlockHayEntradaSalidaParaEjecutar();
 			}
 		} else {
 			printConsola("No hay procesos esperando E/S\n");
@@ -191,6 +191,8 @@ void ejecucionAFinalizado(t_pcb* pcb) {
 
 	quitarProcesoDeCpu(cpu);
 	list_add(getColaDeFinalizados(), pcb);
+
+	imprimirTodo();
 }
 
 void ejecucionAColaDeListos(t_pcb* pcb) {
@@ -224,25 +226,24 @@ void quitarProcesoDeCpu(t_cpu_ref* cpu) {
 void imprimirEstadoCpus() {
 	int cantCpus = list_size(listaCPUs);
 	int i = 0;
-	putsConsola("\n");
-	for (i = 0; i < cantCpus; ++i) {
+	for (i = 0; i < cantCpus; i++) {
 		t_cpu_ref* cpu = list_get(listaCPUs, i);
-		printConsola("Cpu: %s, pid: %d\n", cpu->nombre, cpu->pcb != NULL?cpu->pcb->pid:-1);
+		char* pid = cpu != NULL && cpu->pcb != NULL ? string_from_format("%i",cpu->pcb->pid) : "VACIO";
+		printConsola("Cpu: %s, pid: %s\n", cpu->nombre, pid);
 	}
 }
 
 void imprimirColaPcbs(t_list* colaPcb) {
 	int cantElem = list_size(colaPcb);
 	int i = 0;
-	putsConsola("\n");
-	for (i = 0; i < cantElem; ++i) {
-		t_cpu_ref* cpu = list_get(colaPcb, i);
-		printConsola("Posicion %d, pid: %s\n", i, cpu->pcb != NULL ? string_itoa(cpu->pcb->pid) : "VACIO");
+	for (i = 0; i < cantElem; i++) {
+		t_pcb* pcb = list_get(colaPcb, i);
+		char* pid = pcb != NULL ? string_from_format("%i",pcb->pid) : "VACIO";
+		printConsola("Posicion %d, pid: %s\n", i, pid);
 	}
 	if(cantElem == 0) {
 		printConsola("Lista vacia\n");
 	}
-	putsConsola("\n");
 }
 
 void imprimirColaDeFinalizados() {
@@ -252,14 +253,14 @@ void imprimirColaDeFinalizados() {
 }
 
 void imprimirProcesoEnEntradaSalida() {
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	lockEstadoEntradaSalida();
 	t_pcb* pcb = estadoEntradaSalida.pcb;
 	if(pcb != NULL) {
 		printConsola("Proceso pid: %d ejecutando entrada salida\n", pcb->pid);
 	} else {
 		printConsola("No se esta ejecutando entrada salida\n");
 	}
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+	unlockEstadoEntradaSalida();
 }
 
 void imprimirColaDeEntradaSalida() {

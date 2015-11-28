@@ -1,7 +1,6 @@
 #include "Planificador.h"
 #include <time.h>
 
-
 int main(int argc, char *argv[]) {
 	//conexiones = dictionary_create();
 
@@ -14,11 +13,11 @@ int main(int argc, char *argv[]) {
 		return ejecutarTests();
 	}
 
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+	lockEstadoEntradaSalida();
 	estadoEntradaSalida.cantidadCiclos = 5;
 	estadoEntradaSalida.finalizoEntradaSalida = false;
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
-	pthread_mutex_lock(&mutexHayEntradaSalidaParaEjecutar);
+	unlockEstadoEntradaSalida();
+	lockHayEntradaSalidaParaEjecutar();
 	pthread_t idHilo;
 	pthread_create(&idHilo, NULL, ejecutarEntradaSalida, &estadoEntradaSalida);
 
@@ -63,38 +62,36 @@ void *ejecutarEntradaSalida(void *param) {
 	while (!finalizarProcesoEntradaSalida) {
 		int cantidadCiclos;
 		t_pcb* pcb;
-		pthread_mutex_lock(&mutexHayEntradaSalidaParaEjecutar);
+		lockHayEntradaSalidaParaEjecutar();
 
 		if(!conectadoAPadre) {
 			conectar(string_duplicate("127.0.0.1"), configuracion->puertoEscucha,
 						&socketPadre);
 		}
 
-		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		lockEstadoEntradaSalida();
 		cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
 		pcb = estadoEntradaSalida.pcb;
 		printConsola("Proceso pid: %d empieza su E/S\n", pcb->pid);
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+		unlockEstadoEntradaSalida();
 		while(cantidadCiclos > 0) {
-			time_t t;
-			time(&t);
-			printf("\n current time is : %s ",ctime(&t));
+			//time_t t;
+			//time(&t);
+			//printf("\n current time is : %s ",ctime(&t));
 			printConsola("Cantidad ciclos restantes %d\n", cantidadCiclos);
 			usleep(1000000);
-			pthread_mutex_lock(&mutexEstadoEntradaSalida);
+			lockEstadoEntradaSalida();
 			estadoEntradaSalida.cantidadCiclos--;
 			cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
-			pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+			unlockEstadoEntradaSalida();
 		}
 
-		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		lockEstadoEntradaSalida();
 		estadoEntradaSalida.finalizoEntradaSalida = true;
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+		unlockEstadoEntradaSalida();
 
 		printConsola("Proceso pid: %d finaliza su E/S\n", pcb->pid);
 		enviarStruct(socketPadre, NOTIFICACION_HILO_ENTRADA_SALIDA, NULL);
-
-		pthread_mutex_lock(&mutexHayEntradaSalidaParaEjecutar);
 	}
 
 	putsConsola("Fin del hilo de entrada salida");

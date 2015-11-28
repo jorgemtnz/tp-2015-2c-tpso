@@ -114,11 +114,21 @@ void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
 void imprimirEstadoCpus();
+void imprimirTodo();
+void imprimirColaDeNuevos();
+void imprimirColaDeListos();
+void imprimirColaDeEntradaSalida();
+void imprimirProcesoEnEntradaSalida();
+void imprimirColaDeFinalizados();
 
 void ejecucionAColaDeListos(t_pcb* pcb);
 void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion);
 //++++++++++++++++++++++++++++++++++++entrada salida +++++++++++++++++++++++++++++++++++++++
 void *ejecutarEntradaSalida(void *param);
+void lockEstadoEntradaSalida();
+void unlockEstadoEntradaSalida();
+void lockHayEntradaSalidaParaEjecutar();
+void unlockHayEntradaSalidaParaEjecutar();
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket, char* nombre);
