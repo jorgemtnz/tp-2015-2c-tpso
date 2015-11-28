@@ -78,7 +78,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 
 		t_pcb* pcbEnEntradaSalida = NULL;
 
-		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		lockEstadoEntradaSalida();
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 
 		if (pcbEnEntradaSalida != NULL) {
@@ -96,7 +96,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 					}
 				}
 
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+		unlockEstadoEntradaSalida();
 
 
 

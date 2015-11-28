@@ -270,19 +270,19 @@ bool existePID(uint8_t pid) {
 		}
 
 		t_pcb* pcbEnEntradaSalida = NULL;
-		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		lockEstadoEntradaSalida();
 
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 		if (pcbEnEntradaSalida != NULL) {
 			if (pcbEnEntradaSalida->pid == pid) {
 
-				pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+				unlockEstadoEntradaSalida();
 
 				return true;
 			}
 		}
 
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+		unlockEstadoEntradaSalida();
 
 	}
 
@@ -305,3 +305,20 @@ bool existePID(uint8_t pid) {
 	return false;
 
 }
+
+void lockEstadoEntradaSalida() {
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+}
+
+void unlockEstadoEntradaSalida() {
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+}
+
+void lockHayEntradaSalidaParaEjecutar() {
+	pthread_mutex_lock(&mutexHayEntradaSalidaParaEjecutar);
+}
+
+void unlockHayEntradaSalidaParaEjecutar() {
+	pthread_mutex_unlock(&mutexHayEntradaSalidaParaEjecutar);
+}
+

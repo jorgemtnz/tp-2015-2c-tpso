@@ -103,8 +103,9 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco, textoAEscribir);
 
 		//LOG
-		char* textoLogger = string_from_format("Acceso a memoria realizado, PID: %i, N° de"
-				" página: %i y N° de marco: %i", idProc, nroPag, marcoYBit->idMarco);
+		char* textoLogger = string_new();
+				string_append(&textoLogger,string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+				" página: %i y N° de marco: %i", idProc, nroPag, marcoYBit->idMarco));
 		my_log_info(textoLogger);
 
 		enviarRtaEscribirACPU(escritura, socketCPU);
@@ -132,8 +133,9 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 	} else { // aca significa que trajo el id porque esta en memoria
 		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
-		char* textoLogger = string_from_format("Acceso a memoria realizado, PID: %i, N° de"
-				" página: %i y N° de marco: %i", idProc, pag, marcoYBit->idMarco);
+		char* textoLogger = string_new();
+				string_append(&textoLogger,string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+				" página: %i y N° de marco: %i", idProc, pag, marcoYBit->idMarco));
 		my_log_info(textoLogger);
 		lecturaMandarCpu->contenido = contenido;
 		enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu, socketCPU);
