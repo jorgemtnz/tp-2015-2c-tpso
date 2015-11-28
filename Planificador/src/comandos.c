@@ -80,12 +80,13 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
 
-		if (pcbEnEntradaSalida->pid == pid) {
-
-			list_remove(listaCPUs, a);
-			cpu->pcb->finalizar = true;
-			list_add_in_index(listaCPUs, a, cpu);
-			a = list_size(listaCPUs) + 1;
+		if (pcbEnEntradaSalida != NULL) {
+			if (pcbEnEntradaSalida->pid == pid) {
+				list_remove(listaCPUs, a);
+				cpu->pcb->finalizar = true;
+				list_add_in_index(listaCPUs, a, cpu);
+				a = list_size(listaCPUs) + 1;
+			}
 		}
 
 	}

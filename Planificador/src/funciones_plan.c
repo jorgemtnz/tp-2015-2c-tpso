@@ -275,10 +275,11 @@ bool existePID(uint8_t pid) {
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
 
 		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+		if (pcbEnEntradaSalida != NULL) {
+			if (pcbEnEntradaSalida->pid == pid) {
 
-		if (pcbEnEntradaSalida->pid == pid) {
-
-			return true;
+				return true;
+			}
 		}
 
 	}
