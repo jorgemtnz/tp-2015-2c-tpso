@@ -1,5 +1,65 @@
 #include "Memoria.h"
 
+void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag){
+	t_TablaDePaginas * campoTablaDePagReemplazar;
+	campoTablaDePagReemplazar = iniciarTablaDePaginas();
+	campoTablaDePagReemplazar=campoTablaDePag;
+		printf("\n indice %i \n",index);
+	list_replace(listaTablaDePag, index, campoTablaDePagReemplazar);
+}
+
+void mostrarTablaDePag(){
+	int a;
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	printf("\n ENTRO A TABLA DE PAGINAS:\n");
+	for(a=0; a < list_size(listaTablaDePag);a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+		printf("CampoTablaDePag: PID: %i / PAG: %i / ID:%i\n",campoTablaDePag->idProc, campoTablaDePag->paginaDelProceso, campoTablaDePag->idMarco);
+	}
+
+}
+
+void reemplazar_TLB(int index,t_TLB* campoTLB){
+	t_TLB * campoTLBReemplazar;
+	campoTLBReemplazar = iniciarTLB();
+	campoTLBReemplazar=campoTLB;
+		printf("\n indice %i \n",index);
+	list_replace(listaTablaDePag, index, campoTLBReemplazar);
+}
+
+void mostrarTLB(){
+	int a;
+	t_TLB * campoTLB;
+	campoTLB = iniciarTLB();
+	printf("\n ENTRO A TLB:\n");
+	for(a=0; a < list_size(listaTLB);a++){
+		campoTLB = list_get(listaTLB,a);
+		printf("CampoTLB: PID: %i / PAG: %i / ID:%i\n",campoTLB->idProc, campoTLB->paginaDelProceso, campoTLB->idMarco);
+	}
+
+}
+
+void reemplazar_Memoria(int index,t_marco* campoMarco){
+	t_marco * campoMarcoReemplazar;
+	campoMarcoReemplazar = iniciarMarco();
+	campoMarcoReemplazar=campoMarco;
+	printf("\n indice %i \n",index);
+	list_replace(listaMemoria, index, campoMarcoReemplazar);
+}
+
+void mostrarMemoria(){
+	int a;
+	t_marco * campoMarco;
+	campoMarco = iniciarMarco();
+	printf("\n ENTRO A MEMORIA:\n");
+	for(a=0; a < list_size(listaTablaDePag);a++){
+		campoMarco = list_get(listaMemoria,a);
+		printf("CampoMemoria: CONTENIDO: %s / ID:%i\n",campoMarco->contenido, campoMarco->idMarco);
+	}
+
+}
+
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//warning no usa variable, se debe cual es el uso de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
@@ -33,8 +93,9 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
 			flagTDP = 1;
 			//LOG
-			char* textoLogger = string_from_format("Acceso a Tabla de paginas, PID: %i, N° de"
-								" página: %i y N° de marco: %i", idProc, nroPag, campoTablaDePag->idMarco);
+			char* textoLogger = string_new();
+					string_append(&textoLogger,string_from_format("Acceso a Tabla de paginas, PID: %i, N° de"
+								" página: %i y N° de marco: %i", idProc, nroPag, campoTablaDePag->idMarco));
 						my_log_info(textoLogger);
 		}
 	}
@@ -42,22 +103,26 @@ t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//LOG
 		if (aux == 0) {
 			if (flagTLB == 1) {
-				char* textoLogger = string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
-						nroPag, marcoYBit->idMarco);
+				char* textoLogger = string_new();
+						string_append(&textoLogger,string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
+						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			} else {
-				char* textoLogger = string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
-						nroPag, marcoYBit->idMarco);
+				char* textoLogger = string_new();
+				string_append(&textoLogger , string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
+						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			}
 		} else {
 			if (flagTLB == 1) {
-				char* textoLogger = string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
-						nroPag, marcoYBit->idMarco);
+				char* textoLogger = string_new();
+				string_append(&textoLogger ,string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
+						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			} else {
-				char* textoLogger = string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
-						nroPag, marcoYBit->idMarco);
+				char* textoLogger = string_new();
+				string_append(&textoLogger, string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
+						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			}
 		}
@@ -75,7 +140,6 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	campoTablaDePag = iniciarTablaDePaginas();
 	t_marco * campoMarco;
 	t_marco * campoMarcoReemplazar;
-	t_TablaDePaginas * campoTablaDePagReemplazar;
 	t_TLB* campoTLBReemplazar;
 	campoMarco = iniciarMarco();
 	pthread_mutex_lock(&mutexListaTLB);
@@ -101,10 +165,8 @@ void escribirEnMarcoYponerBitDeModificada(int idMarco, char* contenido) {
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar = campoTablaDePag;
-			campoTablaDePagReemplazar->bitPagModificada = 1;
-			list_replace(listaTablaDePag, a, campoTablaDePagReemplazar);
+			campoTablaDePag->bitPagModificada = 1;
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flagTablaDePag = 1;
 		}
 	}
@@ -131,7 +193,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 	t_marco* campoAux;
 	campoAux = iniciarMarco();
 	t_TablaDePaginas * campoTablaDePag;
-	t_TablaDePaginas * campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 	int tamanioTablaDePag, a, flag = 0;
 	pthread_mutex_lock(&mutexTablaPags);
@@ -142,14 +203,12 @@ void cargarNuevoMarcoAMemoria(char* contenido, int PID, int pag, int flagEscritu
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID && campoTablaDePag->paginaDelProceso == pag) {
 			campoAux->idMarco = campoTablaDePag->idMarco;
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar= campoTablaDePag;
-			campoTablaDePagReemplazar->bitPresencia = 1;
+			campoTablaDePag->bitPresencia = 1;
 			if(flagEscritura == 1){
-				campoTablaDePagReemplazar->bitPagModificada = 1;
+				campoTablaDePag->bitPagModificada = 1;
 
 			}
-			list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flag = 1;
 		}
 	}
@@ -451,7 +510,8 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 					a = list_size(listaTablaDePag)+1;
 				}
 			}
-			char* textoLogger = string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,marcoYFlag->marco->idMarco);
+			char* textoLogger = string_new();
+			string_append(&textoLogger,string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,marcoYFlag->marco->idMarco));
 			my_log_info(textoLogger);
 
 
@@ -515,7 +575,8 @@ void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACar
 				a = list_size(listaTablaDePag)+1;
 			}
 		}
-		char* textoLogger = string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,campoAux->idMarco);
+		char* textoLogger = string_new();
+				string_append(&textoLogger,string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,campoAux->idMarco));
 		my_log_info(textoLogger);
 
 
@@ -559,7 +620,8 @@ void sacarAlMasViejoUsadoDeMemoria(int socketSwap, int PIDACargar, char* conteni
 					a = list_size(listaTablaDePag)+1;
 				}
 			}
-			char* textoLogger = string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,campoAux->idMarco);
+			char* textoLogger = string_new();
+					string_append(&textoLogger,string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,campoAux->idMarco));
 			my_log_info(textoLogger);
 
 }
@@ -679,7 +741,8 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar, char* co
 					a = list_size(listaTablaDePag)+1;
 				}
 			}
-			char* textoLogger = string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,marcoYFlag->marco->idMarco);
+			char* textoLogger = string_new();
+				string_append(&textoLogger,	string_from_format("Acceso a swap (fallo de página), PID: %i, pagina a reemplazar: %i , pagina nueva: %i, marco: %i",PIDACargar,pagVieja,pagACargar,marcoYFlag->marco->idMarco));
 			my_log_info(textoLogger);
 }
 
@@ -698,7 +761,6 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
 	t_TablaDePaginas* campoTablaDePag;
-	t_TablaDePaginas* campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 	char* contenido = malloc(sizeof(char));
 
@@ -726,10 +788,8 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
 				campoTablaDePag->bitPresencia = 0;
 				if (bitTablaDePag == 1) {
-					campoTablaDePagReemplazar = iniciarTablaDePaginas();
-					campoTablaDePagReemplazar = campoTablaDePag;
-					campoTablaDePagReemplazar->bitPagModificada = 0;
-					list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+					campoTablaDePag->bitPagModificada = 0;
+					reemplazar_tablaDePag(a,campoTablaDePag);
 					pagina = campoTablaDePag->paginaDelProceso;
 					idProc = campoTablaDePag->idProc;
 				}
@@ -796,8 +856,9 @@ t_list* buscarLosMarcoYBitDeProceso(int idProc) {
 	usleep(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaDePag; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		marcoYBit = iniciarMarcoYBit();
+
 		if (campoTablaDePag->idProc == idProc) {
+			marcoYBit = iniciarMarcoYBit();
 			marcoYBit->idMarco = campoTablaDePag->idMarco;
 			marcoYBit->bitPresencia = campoTablaDePag->bitPresencia;
 			list_add(listamarcoYBit, marcoYBit);
@@ -900,17 +961,14 @@ void eliminarDeTablaDePaginas(int id) {
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePaginas = list_size(listaTablaDePag);
 	t_TablaDePaginas* campoTablaDePag;
-	t_TablaDePaginas* campoTablaDePagReemplazar;
 	campoTablaDePag = iniciarTablaDePaginas();
 
 	usleep(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaDePaginas && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == id) {
-			campoTablaDePagReemplazar = iniciarTablaDePaginas();
-			campoTablaDePagReemplazar = campoTablaDePag;
-			campoTablaDePagReemplazar->bitPresencia = 0;
-			list_replace(listaTablaDePag,a,campoTablaDePagReemplazar);
+			campoTablaDePag->bitPresencia = 0;
+			reemplazar_tablaDePag(a,campoTablaDePag);
 			flag = 1;
 		}
 	}

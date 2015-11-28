@@ -161,7 +161,7 @@ bool primeraMayorque(time_t unaFecha, time_t otraFecha);
 double dameDiferencia(time_t unaFecha, time_t otraFecha);
 bool fechasIguales(time_t unaFecha, time_t otraFecha);
 void resetValPorcentaje(t_cpu* cpu);
-
+void resul_noTerminoAlPlanificador(t_cpu* cpu);
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 

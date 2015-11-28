@@ -50,7 +50,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 						datosDesdeSwap->cantidadPaginas;
 				iniciar(estructuraIniciar->PID,
 						estructuraIniciar->cantidadPaginas, getSocketCPU(estructuraIniciar->PID));
-				char* textoLogger = string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i\n",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas);
+				char* textoLogger = string_new();
+				string_append(&textoLogger,string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i\n",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas));
 				my_log_info(textoLogger);
 				break;
 			}
@@ -71,6 +72,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
 				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
+
+
+
 				break;
 			}
 			case (INICIAR_PROCESO_MEM): {
@@ -90,6 +94,31 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				sleep(configuracion->retardoMemoria);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
+
+
+
+				t_TablaDePaginas* campoTablaDePag;
+
+				campoTablaDePag = iniciarTablaDePaginas();
+
+
+				char* textoALoggear = string_new();
+				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
+				int a;
+
+				for (a = 0; a < list_size(listaTablaDePag); a++) {
+
+					campoTablaDePag = list_get(listaTablaDePag, a);
+
+
+					string_append(&textoALoggear, string_from_format("Marco: %i, Pagina: %i ;", campoTablaDePag->idMarco, campoTablaDePag->paginaDelProceso));
+
+
+				}
+
+				my_log_info(textoALoggear);
+
+
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
 			}
