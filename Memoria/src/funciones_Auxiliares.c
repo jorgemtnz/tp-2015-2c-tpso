@@ -4,7 +4,6 @@ void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag){
 	t_TablaDePaginas * campoTablaDePagReemplazar;
 	campoTablaDePagReemplazar = iniciarTablaDePaginas();
 	campoTablaDePagReemplazar=campoTablaDePag;
-		printf("\n indice %i \n",index);
 	list_replace(listaTablaDePag, index, campoTablaDePagReemplazar);
 }
 
@@ -499,6 +498,7 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 	if (marcoYFlag->flag == 0) {
 		mostrarMemoria();
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(PIDACargar);
+		mostrarMemoria();
 	}
 
 	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
