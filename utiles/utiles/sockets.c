@@ -708,10 +708,6 @@ int conectar(char* ip, char* puerto, int *sock) {
 }
 
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-//	puts("default procesar mensajes");
-	if(header != NULL) {
-		my_log_info("BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
-	}
 	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);
 	} else {
