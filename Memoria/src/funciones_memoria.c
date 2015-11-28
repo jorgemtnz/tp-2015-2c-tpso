@@ -183,6 +183,7 @@ void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU) {
+	printf("\n contenido: %s // PID:%i //PAG:%i\n",estructura->contenido,estructura->PID,estructura->numeroPagina);
 	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
 }
 

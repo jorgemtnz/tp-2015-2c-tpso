@@ -27,14 +27,14 @@ endif
 all: CPU
 
 dependents:
-	-cd /home/utnso/tp-2015-2c-tpso/commons-library/Debug && $(MAKE) all
-	-cd /home/utnso/tp-2015-2c-tpso/utiles/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug && $(MAKE) all
 
 # Tool invocations
-CPU: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpso/utiles/Debug/libutiles.so
+CPU: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug/libutiles.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/tp-2015-2c-tpso/utiles/Debug" -L"/home/utnso/tp-2015-2c-tpso/commons-library/Debug" -o "CPU" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/tp-2015-2c-tpsobranch/utiles/Debug" -L"/home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug" -o "CPU" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -45,7 +45,7 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
-/home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so:
-/home/utnso/tp-2015-2c-tpso/utiles/Debug/libutiles.so:
+/home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so:
+/home/utnso/tp-2015-2c-tpsobranch/utiles/Debug/libutiles.so:
 
 -include ../makefile.targets

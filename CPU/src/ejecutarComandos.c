@@ -112,7 +112,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
-	cpu->pcbPlanificador=NULL;
+	cpu->pcbPlanificador->pid =-1;
 }
 
 void resultadoAlPlanificador(t_cpu* cpu) {
@@ -139,7 +139,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU);
-	cpu->pcbPlanificador=NULL;
+	cpu->pcbPlanificador->pid =-1;
 }
 //solo cuando quiero que no me regrese el mismo proceso
 void resul_noTerminoAlPlanificador(t_cpu* cpu) {
@@ -162,5 +162,5 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
-	cpu->pcbPlanificador=NULL;
+	cpu->pcbPlanificador->pid =-1;
 }

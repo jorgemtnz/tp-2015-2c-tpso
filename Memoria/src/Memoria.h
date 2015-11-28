@@ -149,6 +149,7 @@ void asignarSeniales();
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
+void revisarMemoria();
 void mostrarTablaDePag();
 void mostrarTLB();
 void mostrarMemoria();

@@ -247,14 +247,18 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	}
 
 	case (RESUL_ESCRIBIR): {
+
 		//es el fin de la ejecucion de escribir
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		//++++++++++++++cpu libre
 
 		t_contenido_pagina* datosdesdeMEmoria = (t_contenido_pagina*) buffer;
+		printf("\n contenido: %s // PID:%i //PAG:%i\n",datosdesdeMEmoria->contenido,datosdesdeMEmoria->PID,datosdesdeMEmoria->numeroPagina);
+		printf("\n %i \n",cpu->pcbPlanificador->pid);
 		if(datosdesdeMEmoria->PID != cpu->pcbPlanificador->pid)
 					break;
+		printf("\nAAAAA\n");
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -262,6 +266,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						+ strlen(
 								cpu->mCodCPU->respEjec->resultadosInstrucciones)
 						+ 1 + strlen("mProc; - Pagina; escrita:\0"));
+		printf("\nBBBBB\n");
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i; - Pagina %i; escrita: %s ;\0",
 						datosdesdeMEmoria->PID, datosdesdeMEmoria->numeroPagina,
@@ -279,7 +284,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				string_from_format("contenido escrito %s \n",
 						datosdesdeMEmoria->contenido));
 		pthread_mutex_unlock(&mutexCPULogs);
-
+printf("\nCCCC\n");
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) { //RR
 			if (cpu->pcbPlanificador->tamanioRafaga
