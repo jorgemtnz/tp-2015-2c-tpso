@@ -273,14 +273,16 @@ bool existePID(uint8_t pid) {
 		pthread_mutex_lock(&mutexEstadoEntradaSalida);
 
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
-
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
 		if (pcbEnEntradaSalida != NULL) {
 			if (pcbEnEntradaSalida->pid == pid) {
 
+				pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+				printf("SSSSSSSSS \n");
 				return true;
 			}
 		}
+printf("CCCC \n");
+		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
 
 	}
 
