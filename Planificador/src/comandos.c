@@ -75,6 +75,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 				a = list_size(listaCPUs) + 1;
 			}
 		}
+
 		t_pcb* pcbEnEntradaSalida = NULL;
 
 		pthread_mutex_lock(&mutexEstadoEntradaSalida);
