@@ -18,6 +18,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+
 ++++++++++++++++++++++++++++++++++++++++
 prueba2 b
 ./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P2b_planificador.conf
@@ -29,6 +30,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
+
 +++++++++++++++++++++++++++++++++++++++++
 prueba2 c
 
@@ -43,6 +45,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/cpu.cod
+
 +++++++++++++++++++++++++++++++++++++++++++++++
 prueba3 a
 
@@ -52,6 +55,7 @@ prueba3 a
 ./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P3a_cpu.conf
 
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 prueba3 b
 
@@ -64,6 +68,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
+
 +++++++++++++++++++++++++++++++++++++++++++++
 prueba3 c
 
@@ -85,6 +90,7 @@ prueba4 a
 ./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4a_cpu.conf
 
 correr /home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+
 ++++++++++++++++++++++++++++++++++++++++++++++
 
 prueba4 b
@@ -95,6 +101,7 @@ prueba4 b
 ./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4b_cpu.conf
 
 correr /home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+
 ++++++++++++++++++++++++++++++++++++++++++++++
 prueba4 c
 
@@ -104,6 +111,7 @@ prueba4 c
 ./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4c_cpu.conf
 
 correr /home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+
 ++++++++++++++++++++++++++++++++++++++++++++++
 prueba4 d
 
@@ -113,6 +121,7 @@ prueba4 d
 ./CPU/Debug/CPU  /home/utnso/tp-2015-2c-tpso/CPU/P4d_cpu.conf
 
 correr /home/utnso/tp-2015-2c-tpso/scripts/mem.cod
+
 ++++++++++++++++++++++++++++++++++++++++++++++
 
 prueba5 
@@ -135,6 +144,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/io.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/io.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/io.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/io.cod
+
 
 
 
