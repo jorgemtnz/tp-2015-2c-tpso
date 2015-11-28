@@ -8,6 +8,22 @@ void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag){
 	list_replace(listaTablaDePag, index, campoTablaDePagReemplazar);
 }
 
+void reemplazar_TLB(int index,t_TLB* campoTLB){
+	t_TLB * campoTLBDePagReemplazar;
+	campoTLB = iniciarTLB();
+	campoTLBDePagReemplazar=campoTLB;
+		printf("\n indice %i \n",index);
+	list_replace(listaTablaDePag, index, campoTLBDePagReemplazar);
+}
+
+void reemplazar_Memoria(int index,t_marco* campoMarco){
+	t_marco * campoMarcoReemplazar;
+	campoMarcoReemplazar = iniciarMarco();
+	campoMarcoReemplazar=campoMarco;
+	printf("\n indice %i \n",index);
+	list_replace(listaMemoria, index, campoMarcoReemplazar);
+}
+
 
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//warning no usa variable, se debe cual es el uso de flagTDP

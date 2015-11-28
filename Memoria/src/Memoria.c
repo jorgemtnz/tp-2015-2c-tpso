@@ -97,26 +97,26 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 				t_TablaDePaginas* campoTablaDePag;
 
-											campoTablaDePag = iniciarTablaDePaginas();
-											char* textoALoggear = string_new();
-											char* textoAux = string_new();
+				campoTablaDePag = iniciarTablaDePaginas();
+				char* textoALoggear = string_new();
+				char* textoAux = string_new();
 
-											string_append(&textoALoggear ,"TABLA DE PAGINAS FINAL: ");
-											int a;
+				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
+				int a;
 
+				for (a = 0; a < list_size(listaTablaDePag); a++) {
 
-											for(a= 0; a< list_size(listaTablaDePag); a++){
+					campoTablaDePag = list_get(listaTablaDePag, a);
 
+					string_append(&textoAux, string_from_format("Marco: %i, Pagina: %i ;", campoTablaDePag->idMarco, campoTablaDePag->paginaDelProceso));
 
-												campoTablaDePag = list_get(listaTablaDePag,a);
+					string_append(&textoALoggear, textoAux);
 
-												string_append(&textoAux,string_from_format("Marco: %i, Pagina: %i ;",campoTablaDePag->idMarco,campoTablaDePag->paginaDelProceso));
+				}
 
-											string_append(&textoALoggear,textoAux);
-
-											}
-
-								my_log_info(textoALoggear);
+				my_log_info(textoALoggear);
+				int tamanio;
+				printf("\nTAMANIOOO %i\n",list_size(listaTablaDePag));
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
 			}
