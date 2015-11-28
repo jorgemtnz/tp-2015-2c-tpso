@@ -318,7 +318,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(int idProc) {
 	return respuesta;
 }
 
-void sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+int sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a, tamanioListaMarco, primero = 0;
@@ -348,7 +348,7 @@ void sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, int PIDACargar, int p
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
 
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
 
@@ -431,7 +431,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 	marcoYFlag = iniciarMarcoYFlag();
 	int a, flagReemplazo = 0,tamanioMemoria;
 	tamanioMemoria=list_size(listaMemoria);
-	int* indice = malloc(sizeof(int));
+	int* indice ;
 	t_marco* campoMarco;
 	t_marco* campoMarcoAux;
 	campoMarco=iniciarMarco();
@@ -439,6 +439,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 
 
 	indice = list_get(listaIndices, PID);
+	printf("\nindice:%i, tamanioMemoria:%i, flagReemplazo:%i \n",*indice,tamanioMemoria,flagReemplazo);
 
 	usleep(configuracion->retardoMemoria * 1000);// este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
@@ -447,6 +448,8 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 
 	for (a = *indice; a < tamanioMemoria && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
+		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitModificada: %i\n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
+
 		if (campoMarco->bitModificada == 1 && campoMarco->bitUso == 0) {
 			flagReemplazo = 1;
 			*indice = a ;
@@ -457,8 +460,11 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 			list_replace(listaMemoria, a, campoMarcoAux);
 		}
 	}
+	printf("\nindice:%i, tamanioMemoria:%i, flagReemplazo:%i \n",*indice,tamanioMemoria,flagReemplazo);
+
 	for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
+
 		if (campoMarco->bitModificada == 1 && campoMarco->bitUso == 0) {
 			flagReemplazo = 1;
 			*indice = a;
@@ -475,14 +481,13 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 		marcoYFlag->marco = campoMarco;
 	}
 
-
 	list_replace(listaIndices, PID, indice);
 
 	return marcoYFlag;
 }
 
 
-void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+int sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
@@ -501,7 +506,7 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, int PIDACa
 		mostrarMemoria();
 	}
 
-	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 
 
@@ -524,7 +529,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
+int sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar, int flagEscritura, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	int a, tamanioListaMarco, primero = 0;
@@ -553,7 +558,7 @@ void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACar
 
 	}
 	pthread_mutex_unlock(&mutexListaMemoria);
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 
 }
@@ -696,7 +701,7 @@ void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar, char* co
 
 }
 
-void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
+int verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar, int flagEscritura, int socketSwap) {
 	/* solo se usa en las funciones de sacar a un marco de memoria entonces
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
@@ -767,7 +772,9 @@ void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int P
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
 		}
 
+		return 1;
 	}
+	return 0;
 
 }
 char* traerContenidoDeMarco(int idMarco) {
@@ -992,42 +999,40 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(int idProc, int pag, char* conteni
 	string_append(&algoritmoFIFO, "FIFO");
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
-	int flagSaco=0;
+	int respuesta=0;
 
 	if (strcmp(configuracion->algoritmo_reemplazo, algoritmoLRU) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
-			sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
-			flagSaco = 1;
+			 respuesta= sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
+
 		} else if (estaLlenaLaMemoria()) {
 			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
-			flagSaco = 1;
+
 		}
 
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoCLOCK) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
+			 respuesta=sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 
-			sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
-
-			flagSaco = 1;
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
-			flagSaco = 1;
+
 		}
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) {
-			sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
-			flagSaco = 1;
+			 respuesta = sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
+
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunFifo(socketSwap, idProc, contenido, pag, flagEscritura);
-			flagSaco = 1;
+
 		}
 	}
 
 	// aca significa que no tuvo que sacar ninguno
-	if(flagSaco == 0){
+	if(respuesta == 0){
 	cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
@@ -1359,9 +1364,6 @@ t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoA
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
-	t_list* listaMarcoYIndices;
-	listaMarcoYIndices = list_create();
-	listaMarcoYIndices = buscarLosMarcosDeProcesoEnMemoriaConSusIndices(PIDACargar);
 
 	marcoYFlag = buscarModificadaYUsoEnCeroDeProceso(PIDACargar );
 	if (marcoYFlag->flag == 0) {

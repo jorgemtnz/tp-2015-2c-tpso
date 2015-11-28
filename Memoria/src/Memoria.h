@@ -178,12 +178,12 @@ void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(int idProc,int nroPag, char* tex
 void cargarNuevoMarcoAMemoria(char* contenido,int PID, int pag, int flagEscritura);
 bool llegoAlMaximoDelProcesoLaMemoria(int idProc);
 void sacarAlMasViejoUsadoDeMemoria(int socketSwap,int PIDACargar,char* contenidoACargar,int pagACargar, int flagEscritura);
-void sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
-void sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
+int sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, int PIDACargar, int pagACargar,int flagEscritura,int socketSwap);
+int sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, int PIDACargar, int pagACargar, int socketSwap);
 void sacarAlPrimeroDeMemoria(int socketSwap, int PIDACargar, char* contenidoACargar, int pagACargar);
 void sacarDeMemoriaSegunClockModificado(int socketSwap, int PIDACargar,
 		char* contenidoACargar, int pagACargar, int flagEscritura);
-void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
+int sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
@@ -197,7 +197,7 @@ char* traerContenidoDeMarco(int idMarco);
 void cargarNuevoEnTLB(int PID,int pag,int id);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-void verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int flagEscritura,int socketSwap);
+int verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, int PIDaCargar, int pagACargar,int flagEscritura,int socketSwap);
 t_list* buscarLosMarcoYBitDeProceso(int idProc);
 t_list* buscarLosMarcosDeProcesoEnMemoria( int PID);
 void eliminarDeMemoria(int id);
