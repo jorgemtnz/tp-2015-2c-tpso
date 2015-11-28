@@ -208,9 +208,13 @@ void ejecucionAColaDeListos(t_pcb* pcb) {
 }
 
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb) {
+	return obtenerCPUEjecutandoPcbPorPid(pcb->pid);
+}
+
+t_cpu_ref* obtenerCPUEjecutandoPcbPorPid(uint8_t PID) {
 	bool estaCPUEnUsoPorPcb(void* elemento) {
 		t_cpu_ref* cpu = (t_cpu_ref*) elemento;
-		return cpu->pcb != NULL && cpu->pcb->pid == pcb->pid;
+		return cpu->pcb != NULL && cpu->pcb->pid == PID;
 	}
 
 	t_cpu_ref* cpuEnUso = (t_cpu_ref*) list_find(listaCPUs, estaCPUEnUsoPorPcb);

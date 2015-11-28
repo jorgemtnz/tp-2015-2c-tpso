@@ -179,6 +179,20 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		ejecutarPlanificadorLargoPlazo();
 		break;
 	}
+	case (RESUL_EJECUCION_ERROR): {
+		t_respuesta_ejecucion* resp = (t_respuesta_ejecucion*) buffer;
+		t_cpu_ref* cpu = obtenerCPUEjecutandoPcbPorPid(resp->pcb->pid);
+		if(cpu == NULL) {
+			printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", resp->pcb->pid);
+			imprimirEstadoCpus();
+			abort();
+		}
+
+		list_add(getColaDeFinalizados(), cpu->pcb);
+		quitarProcesoDeCpu(cpu);
+		printConsola("No se pudo iniciar el proceso pid: %d\n", resp->pcb->pid);
+		break;
+	}
 	default: {
 		printConsola("No se reconoce el mensaje de tipo %s\n", getNombreTipoMensaje(header->tipoMensaje));
 	}

@@ -53,8 +53,8 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
 				cpu->mCodCPU->respEjec);
-		free(cpu->mCodCPU->respEjec);
-		cpu->mCodCPU->respEjec=NULL;
+//		free(cpu->mCodCPU->respEjec);
+//		cpu->mCodCPU->respEjec=NULL;
 		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
@@ -180,9 +180,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//ESTO HAY QUE CAMBIARLO EN EL PLANIFICADOR PARA QUE ANDE (OJO)
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
 				cpu->mCodCPU->respEjec	);
-		free(cpu->mCodCPU->respEjec);
-		cpu->mCodCPU->respEjec=NULL;
-//		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
+//		free(cpu->mCodCPU->respEjec);
+//		cpu->mCodCPU->respEjec=NULL;
+		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
@@ -297,6 +297,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		if(cpu->mCodCPU->respEjec == NULL) {
+			cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
+		}
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -332,8 +335,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = SI_TERMINO_RAFAGA;
-		free(cpu->mCodCPU->respEjec);
-		cpu->mCodCPU->respEjec=NULL;
+//		free(cpu->mCodCPU->respEjec);
+//		cpu->mCodCPU->respEjec=NULL;
 		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
 		break;
 	}

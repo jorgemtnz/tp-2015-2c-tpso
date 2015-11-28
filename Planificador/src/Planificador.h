@@ -112,6 +112,7 @@ t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
 void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
+t_cpu_ref* obtenerCPUEjecutandoPcbPorPid(uint8_t PID);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
 void imprimirEstadoCpus();
 void imprimirTodo();

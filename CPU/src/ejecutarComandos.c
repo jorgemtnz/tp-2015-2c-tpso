@@ -80,10 +80,14 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 
 	cpu->terminaInstruccion = NO_TERMINO;
 	//+++++++++++++++
-	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
-			cpu->mCodCPU->respEjec->resultadosInstrucciones,
-			strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
-					+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
+	if(cpu->mCodCPU->respEjec == NULL) {
+		cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
+	}
+	cpu->mCodCPU->respEjec->resultadosInstrucciones = malloc(
+			//cpu->mCodCPU->respEjec->resultadosInstrucciones,
+			//strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
+					//+
+					strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
 					+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
 	if (cpu->pcbPlanificador->instruccionFinal
@@ -137,8 +141,8 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-	free(cpu->mCodCPU->respEjec);
-	cpu->mCodCPU->respEjec = NULL;
+//	free(cpu->mCodCPU->respEjec);
+//	cpu->mCodCPU->respEjec = NULL;
 }
 
 void resul_noTerminoAlPlanificador(t_cpu* cpu) {
@@ -163,6 +167,6 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-	free(cpu->mCodCPU->respEjec);
-	cpu->mCodCPU->respEjec = NULL;
+//	free(cpu->mCodCPU->respEjec);
+//	cpu->mCodCPU->respEjec = NULL;
 }
