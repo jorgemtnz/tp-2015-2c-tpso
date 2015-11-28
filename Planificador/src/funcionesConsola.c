@@ -10,7 +10,7 @@ int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 		} else {
 			while(string_ends_with(buffer, "\n\n")){
 				int stringLen = string_length(buffer);
-				buffer[stringLen - 1] = "\0";
+				buffer[stringLen - 1] = '\0';
 			}
 			char** split = string_split(buffer, "\n");
 			buffer = split[0];
