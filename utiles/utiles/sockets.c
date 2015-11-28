@@ -129,6 +129,9 @@ int enviarPorSocket(int fdCliente, const void *msg, int *len) {
 	while (total < *len) {
 		bytes_enviados = send(fdCliente, msg + total, bytesleft, 0);
 		if (bytes_enviados == -1) {
+			if(errno==EINTR){
+				continue;
+			}
 			break;
 		}
 		total += bytes_enviados;
@@ -263,6 +266,9 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 	while (total < len) {
 		bytes_enviados = send(fdCliente, msg + total, bytesleft, 0);
 		if (bytes_enviados == -1) {
+			if(errno==EINTR){
+				continue;
+			}
 			break;
 		}
 		total += bytes_enviados;
@@ -272,7 +278,6 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 
 	if (bytes_enviados == -1) {
 		perror("[ERROR] Funcion send\bytes_enviados");
-		exit(-1);
 	}
 
 	return bytes_enviados;
@@ -526,11 +531,14 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	// main loop
 	for (;;) {
 		read_fds = master; // copy it
+		SELECT:;
 		if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1) {
+			if (errno==EINTR){
+				goto SELECT;
+			}
 			perror("select");
 			exit(4);
 		}
-
 		// run through the existing connections looking for data to read
 		for (i = 0; i <= fdmax; i++) {
 			if (FD_ISSET(i, &read_fds)) { // we got one!!
