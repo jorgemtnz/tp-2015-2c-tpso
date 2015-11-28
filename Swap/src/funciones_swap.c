@@ -149,8 +149,8 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 			}
 			tamanioEnBytes = procesoAInsertarEnLista->cantPagsUso * configuracion->tamanioPagina;
 			char* contenidoLogger = string_new();
-			contenidoLogger = string_from_format("Proceso mProc asignado, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i",
-					procesoAInsertarEnLista->PID, byteInicial, tamanioEnBytes);
+			string_append(&contenidoLogger ,string_from_format("Proceso mProc asignado, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i",
+					procesoAInsertarEnLista->PID, byteInicial, tamanioEnBytes));
 			log_info(logger, contenidoLogger);
 
 			estructura->PID = procesoAInsertarEnLista->PID;
@@ -166,7 +166,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	} else {
 
 		char* contenidoLogger = string_new();
-		contenidoLogger = string_from_format("Proceso mProc rechazado por falta de espacio (PID: %i)", estructuraIniciar->PID);
+		string_append(&contenidoLogger , string_from_format("Proceso mProc rechazado por falta de espacio (PID: %i)", estructuraIniciar->PID));
 		log_info(logger, contenidoLogger);
 
 		estructura->PID = estructuraIniciar->PID;
@@ -212,8 +212,8 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	}
 	tamanioEnBytes = configuracion->tamanioPagina; //SIEMPRE SE ESCRIBE DE A UNA PAGINA
 
-	contenidoLogger = string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
-			procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
+	string_append(&contenidoLogger , string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
+			procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 	log_info(logger, contenidoLogger);
 	}
 
@@ -237,9 +237,9 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	respuestaDeEscribir->contenido = procesoAEscribir->contenido;
 	respuestaDeEscribir->resultado = OK;
 if(bit == 1){
-	contenidoLogger = string_from_format(
+	string_append(&contenidoLogger ,string_from_format(
 			"Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s", procesoAEscribir->PID,
-			byteInicial, tamanioEnBytes, procesoAEscribir->contenido);
+			byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 	log_info(logger, contenidoLogger);}
 	return respuestaDeEscribir;
 	//free(unProceso);
@@ -282,8 +282,8 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 
 	}
 	char* contenidoLogger = string_new();
-	contenidoLogger = string_from_format("Lectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i", procesoRecibido->PID,
-			byteInicial, tamanioEnBytes);
+	string_append(&contenidoLogger , string_from_format("Lectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i", procesoRecibido->PID,
+			byteInicial, tamanioEnBytes));
 	log_info(logger, contenidoLogger);
 
 	if (procesoRecibido->numeroPaginaFin - procesoRecibido->numeroPaginaInicio != 0) {
@@ -316,9 +316,9 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	//enviarResultadoLeerOK(socket, respuestaDeLeer);
 	respuestaDeLeer->resultado = OK;
 
-	contenidoLogger = string_from_format(
+	string_append(&contenidoLogger, string_from_format(
 			"Finalizo leer correctamente , el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i , el contenido es: %s", procesoRecibido->PID,
-			byteInicial, tamanioEnBytes, respuestaDeLeer->contenido);
+			byteInicial, tamanioEnBytes, respuestaDeLeer->contenido));
 	log_info(logger, contenidoLogger);
 
 	return respuestaDeLeer;
@@ -376,8 +376,8 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	int byteInicial = unProceso->ubicacion * configuracion->tamanioPagina;
 	int tamanioEnBytes = unProceso->cantPagsUso * configuracion->tamanioPagina;
 	char* contenidoLogger = string_new();
-	contenidoLogger = string_from_format("Proceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i",
-			respuestaDeFinalizar->PID, byteInicial, tamanioEnBytes);
+	string_append(&contenidoLogger ,string_from_format("Proceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i",
+			respuestaDeFinalizar->PID, byteInicial, tamanioEnBytes));
 	log_info(logger, contenidoLogger);
 
 	return respuestaDeFinalizar;
