@@ -19,6 +19,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 
+en otra consola tail -f /home/utnso/tp-2015-2c-tpso/LOG_SWAP.log
 ++++++++++++++++++++++++++++++++++++++++
 prueba2 b
 ./Planificador/Debug/Planificador  /home/utnso/tp-2015-2c-tpso/Planificador/P2b_planificador.conf
@@ -31,6 +32,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/corto.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/nosoy.cod
 
+tail -f /home/utnso/tp-2015-2c-tpso/LOG_SWAP.log
 +++++++++++++++++++++++++++++++++++++++++
 prueba2 c
 
@@ -81,6 +83,7 @@ correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 correr /home/utnso/tp-2015-2c-tpso/scripts/localidad.cod
 
+en consola memoria  TLB_FLUSH
 ++++++++++++++++++++++++++++++++++++++++++++++
 prueba4 a
 

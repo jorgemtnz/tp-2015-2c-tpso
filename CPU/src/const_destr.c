@@ -39,7 +39,7 @@ t_mCod* crearmCod() {
 	if (mCod == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>mCod");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>mCod");
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
@@ -54,7 +54,7 @@ t_configuracion* crearConfiguracion() {
 	if (configuracion == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>configuracion");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger,
 				"[ERROR] No se reservo memoria para CPU>..>configuracion");
 		pthread_mutex_unlock(&mutexCPULogs);
@@ -75,7 +75,7 @@ t_cpu* crearCPU() {
 	if (cPUHilo == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>CPUHilo");
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
@@ -106,11 +106,20 @@ t_cpu* crearCPU() {
 		procCPU->contadorIdCPU += 1;
 		break;
 	}
-	default:
-		cPUHilo->idCPU = queHiloSoy();
-		cPUHilo->nombre = strdup("CPU mayor a 4");
-		procCPU->contadorIdCPU += 1;
 
+	case 4: {
+		cPUHilo->idCPU = queHiloSoy();
+		cPUHilo->nombre = strdup("CPU quinta");
+		procCPU->contadorIdCPU += 1;
+		break;
+	}
+
+	default: {
+
+		cPUHilo->idCPU = queHiloSoy();
+		cPUHilo->nombre = strdup("CPU mayor a 5");
+		procCPU->contadorIdCPU += 1;
+	}
 	}
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->terminaInstruccion = SI_TERMINO;
@@ -134,7 +143,7 @@ t_ProcCPU* crearProcCPU() {
 	if (procCPU == NULL) {
 		perror("[ERROR] No se reservo memoria para CPU>..>procCPU");
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] No se reservo memoria para CPU>..>procCPU");
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);

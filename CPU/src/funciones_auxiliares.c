@@ -77,7 +77,7 @@ int putsConsola (const char *msg) {
 
 char* queCPUsoy(t_cpu* cpu){
 	char* resultado = string_new();
-	resultado = string_from_format("soy la CPU %s \n",cpu->nombre);
+	resultado = string_from_format("soy la  %s \n",cpu->nombre);
 	return resultado;
 
 }
