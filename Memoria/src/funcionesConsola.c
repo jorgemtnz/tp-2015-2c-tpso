@@ -102,7 +102,8 @@ void limpiarTLB(){
 		list_clean(listaTLB);
 		pthread_mutex_unlock(&mutexListaTLB);
 	} else {
-		puts("TLB inactiva");
+		my_log_info("TLB inactiva");
+		puts("");
 	}
 }
 void limpiarMemoria(){
@@ -121,6 +122,7 @@ void limpiarMemoria(){
 			escrituraSwap->numeroPagina = campoTabla->paginaDelProceso;
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
 		}
+		campoTabla->bitPagModificada=0;
 	}
 	pthread_mutex_unlock(&mutexTablaPags);
 	pthread_mutex_lock(&mutexListaMemoria);
@@ -142,7 +144,6 @@ void volcarMemoria(){
 	}
 	else if (pid == 0) {
 		t_marco* campoMarco;
-		char* texto = string_new();
 		pthread_mutex_lock(&mutexListaMemoria);
 		if (list_is_empty(listaMemoria)){
 			my_log_info("Memoria vacía");
@@ -151,8 +152,9 @@ void volcarMemoria(){
 		}
 		for (a=0;a<list_size(listaMemoria);a++){
 			campoMarco= list_get(listaMemoria,a);
-			string_from_format(texto,"El marco %s ubicado en la posición %s contiene: %s",string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido);
-			my_log_info(texto);
+			my_log_info(string_from_format("El marco %s ubicado en la posición %s contiene: %s"
+					,string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido));
+			puts("");
 		}
 		pthread_mutex_unlock(&mutexListaMemoria);
 		exit(EXIT_SUCCESS);
