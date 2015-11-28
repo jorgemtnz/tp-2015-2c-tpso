@@ -67,14 +67,24 @@ void revisarMemoria(){
 		return;
 	}
 
-	int a;
+	int a,b,tamanioMemoria;
 	t_marco* campoMarco;
 	campoMarco=iniciarMarco();
+	t_marco* campoMarcoAux;
+	campoMarcoAux=iniciarMarco();
+	tamanioMemoria =list_size(listaMemoria);
 
-
-	for(a=0;a<list_size(listaMemoria);a++){
+	for(a=0;a<tamanioMemoria;a++){
 		campoMarco= list_get(listaMemoria,a);
+		for(b=a;b<tamanioMemoria;b++){
+			campoMarcoAux = list_get(listaMemoria,b);
+			if(campoMarcoAux->idMarco == campoMarco->idMarco && a != b){
+				list_remove(listaMemoria,b);
+				b--;
+				tamanioMemoria--;
 
+			}
+		}
 	}
 }
 
