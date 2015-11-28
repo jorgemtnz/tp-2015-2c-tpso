@@ -277,11 +277,11 @@ bool existePID(uint8_t pid) {
 			if (pcbEnEntradaSalida->pid == pid) {
 
 				pthread_mutex_unlock(&mutexEstadoEntradaSalida);
-				printf("SSSSSSSSS \n");
+
 				return true;
 			}
 		}
-printf("CCCC \n");
+
 		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
 
 	}
