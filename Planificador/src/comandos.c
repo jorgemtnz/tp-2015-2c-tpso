@@ -88,6 +88,7 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 
 						pcbEnEntradaSalida->finalizar = true;
 
+						cpu->pcb = pcbEnEntradaSalida;
 						list_add_in_index(listaCPUs, a, cpu);
 
 						a = list_size(listaCPUs) + 1;
