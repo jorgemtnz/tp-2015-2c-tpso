@@ -150,6 +150,8 @@ void asignarSeniales();
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
 void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag);
+void reemplazar_TLB(int index,t_TLB* campoTLB);
+void reemplazar_Memoria(int index,t_marco* campoMarco);
 void leerArchivoDeConfiguracion();
 void iniciar(int idProc, int cantPag, int socketCPU);
 void leer(int idProc, int pag, int socketSwap, int socketCPU);
