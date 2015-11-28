@@ -187,8 +187,8 @@ void sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		int PIDACargar, int pagACargar, int flagEscritura, int socketSwap);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
 t_marco_con_flag* buscarModificadaYUsoEnCero();
-t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(int PID, t_list* listaMarcoYIndices);
-t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID, t_list* listaMarcoYIndices);
+t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(int PID);
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID);
 //warning no declarado aca, entonces lo agrego
 void sacarAlPrimeroDeTLB() ;
 void eliminarDeTLB(int idMenor);
