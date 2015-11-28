@@ -98,13 +98,16 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 
 		usleep(configuracion->retardoMemoria * 1000);
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, textoAEscribir, socketSwap);
+		char* textoLogger = string_new();
+		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i", idProc, nroPag));
+		my_log_info(textoLogger);
 
 	} else {	// entonces tengo el id del marco
 		escribirEnMarcoYponerBitDeModificada(marcoYBit->idMarco, textoAEscribir);
 
 		//LOG
 		char* textoLogger = string_new();
-				string_append(&textoLogger,string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+		string_append(&textoLogger, string_from_format("Acceso a memoria realizado, PID: %i, N° de"
 				" página: %i y N° de marco: %i", idProc, nroPag, marcoYBit->idMarco));
 		my_log_info(textoLogger);
 
@@ -130,11 +133,13 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		usleep(configuracion->retardoMemoria * 1000);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
-
+		char* textoLogger = string_new();
+		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i", idProc, pag));
+		my_log_info(textoLogger);
 	} else { // aca significa que trajo el id porque esta en memoria
 		contenido = traerContenidoDeMarco(marcoYBit->idMarco);
 		char* textoLogger = string_new();
-				string_append(&textoLogger,string_from_format("Acceso a memoria realizado, PID: %i, N° de"
+		string_append(&textoLogger, string_from_format("Acceso a memoria realizado, PID: %i, N° de"
 				" página: %i y N° de marco: %i", idProc, pag, marcoYBit->idMarco));
 		my_log_info(textoLogger);
 		lecturaMandarCpu->contenido = contenido;
