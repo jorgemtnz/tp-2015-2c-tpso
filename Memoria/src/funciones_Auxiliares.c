@@ -2,18 +2,42 @@
 
 void reemplazar_tablaDePag(int index,t_TablaDePaginas* campoTablaDePag){
 	t_TablaDePaginas * campoTablaDePagReemplazar;
-	campoTablaDePag = iniciarTablaDePaginas();
+	campoTablaDePagReemplazar = iniciarTablaDePaginas();
 	campoTablaDePagReemplazar=campoTablaDePag;
 		printf("\n indice %i \n",index);
 	list_replace(listaTablaDePag, index, campoTablaDePagReemplazar);
 }
 
+void mostrarTablaDePag(){
+	int a;
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+	printf("\n ENTRO A TABLA DE PAGINAS:\n");
+	for(a=0; a < list_size(listaTablaDePag);a++){
+		campoTablaDePag = list_get(listaTablaDePag,a);
+		printf("CampoTablaDePag: PID: %i / PAG: %i / ID:%i\n",campoTablaDePag->idProc, campoTablaDePag->paginaDelProceso, campoTablaDePag->idMarco);
+	}
+
+}
+
 void reemplazar_TLB(int index,t_TLB* campoTLB){
-	t_TLB * campoTLBDePagReemplazar;
-	campoTLB = iniciarTLB();
-	campoTLBDePagReemplazar=campoTLB;
+	t_TLB * campoTLBReemplazar;
+	campoTLBReemplazar = iniciarTLB();
+	campoTLBReemplazar=campoTLB;
 		printf("\n indice %i \n",index);
-	list_replace(listaTablaDePag, index, campoTLBDePagReemplazar);
+	list_replace(listaTablaDePag, index, campoTLBReemplazar);
+}
+
+void mostrarTLB(){
+	int a;
+	t_TLB * campoTLB;
+	campoTLB = iniciarTLB();
+	printf("\n ENTRO A TLB:\n");
+	for(a=0; a < list_size(listaTLB);a++){
+		campoTLB = list_get(listaTLB,a);
+		printf("CampoTLB: PID: %i / PAG: %i / ID:%i\n",campoTLB->idProc, campoTLB->paginaDelProceso, campoTLB->idMarco);
+	}
+
 }
 
 void reemplazar_Memoria(int index,t_marco* campoMarco){
@@ -24,6 +48,17 @@ void reemplazar_Memoria(int index,t_marco* campoMarco){
 	list_replace(listaMemoria, index, campoMarcoReemplazar);
 }
 
+void mostrarMemoria(){
+	int a;
+	t_marco * campoMarco;
+	campoMarco = iniciarMarco();
+	printf("\n ENTRO A MEMORIA:\n");
+	for(a=0; a < list_size(listaTablaDePag);a++){
+		campoMarco = list_get(listaMemoria,a);
+		printf("CampoMemoria: CONTENIDO: %s / ID:%i\n",campoMarco->contenido, campoMarco->idMarco);
+	}
+
+}
 
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//warning no usa variable, se debe cual es el uso de flagTDP

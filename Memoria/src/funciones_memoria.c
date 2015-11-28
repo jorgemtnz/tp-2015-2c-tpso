@@ -22,7 +22,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		my_log_error(logMsg);
 		exit(-1);
 	} else {
-		t_config* archivoConfig=NULL;
+		t_config* archivoConfig;
 		archivoConfig = config_create(nombreArchivoConfig);
 		//warning asignacion diferentes tipos
 		configuracion = iniciarArchivoConfig();
@@ -144,9 +144,7 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 }
 
 void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
-	//warning no uso de variable, entonces se comenta
 	int a, tamanioListaId;
-//	int id;
 	t_list * listaDemarcoYBit;
 	listaDemarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
 	tamanioListaId = list_size(listaDemarcoYBit);

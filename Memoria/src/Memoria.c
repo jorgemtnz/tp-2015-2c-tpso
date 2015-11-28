@@ -95,6 +95,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				sleep(configuracion->retardoMemoria);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 
+				mostrarTablaDePag();
+
 				t_TablaDePaginas* campoTablaDePag;
 
 				campoTablaDePag = iniciarTablaDePaginas();
