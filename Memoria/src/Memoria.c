@@ -95,6 +95,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				usleep(configuracion->retardoMemoria * 1000);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 
+				revisarMemoria();
+
 				t_TablaDePaginas* campoTablaDePag;
 
 				campoTablaDePag = iniciarTablaDePaginas();
@@ -119,6 +121,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					}
 				}
 				my_log_info(textoALoggear);
+				mostrarMemoria();
 
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
