@@ -719,6 +719,10 @@ int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_n
 			if(string_starts_with(buffer, "\n")){
 				buffer = "";
 			} else {
+				while(string_ends_with(buffer, "\n\n")){
+					int stringLen = string_length(buffer);
+					buffer[stringLen - 1] = "\0";
+				}
 				char** split = string_split(buffer, "\n");
 				buffer = split[0];
 			}
