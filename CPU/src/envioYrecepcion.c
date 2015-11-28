@@ -2,13 +2,16 @@
 //agregar comportamiento en cada break
 //ejecutar todo tipo de comandos del mCod
 void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
+
+	//ya tengo creado un mCod y con respEjec que vinieron en el contexto
+
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	pthread_mutex_unlock(&mutexCPULogs);
 
 	switch (token) {
-	case (INICIAR_PROCESO_MEM): {
+	case (INICIAR_PROCESO_MEM): {//aca entra por primera vez
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -53,9 +56,9 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 		enviarStruct(socketPlanificador, ENTRADA_SALIDA,
 				cpu->mCodCPU->respEjec);
-//		free(cpu->mCodCPU->respEjec);
-//		cpu->mCodCPU->respEjec=NULL;
-		cpu->estado = SI_TERMINO_RAFAGA;
+//		destmCod(cpu->mCodCPU);
+		cpu->estado =SI_TERMINO_RAFAGA ;
+
 		break;
 	}
 	}
@@ -71,7 +74,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	int token;
 	token = header->tipoMensaje;
 	switch (token) {
-	case (CONTEXTO_MPROC): {
+	case (CONTEXTO_MPROC): {//cuando llega aca es porque es la primera vez sea FIFO o RR
+//		cpu->pcbPlanificador->proximaInstruccion = 0 que viene del planificador
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
@@ -98,8 +102,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //				pcbPlanificador->rutaArchivoMcod);
 		cpu->estado = NO_TERMINO_RAFAGA;
 		cpu->pcbPlanificador = pcbPlanificador;
-		procesaCodigo(cpu);
-
+		//en procesaCodigo() se crea la respEjec del mCod
+		procesaCodigo(cpu);	//aca dentro se actualiza la cpu->pcbPlanificador->proximaInstruccion y será distinta de cero
 		break;
 	}
 
@@ -108,7 +112,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		//recibe desde memoria y debe continuar con la ejecucion
-
+//primera vez que se esta usando la respuesta , fue creada creaRespuestaEjecucion()
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -126,7 +130,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				string_from_format("Id del proceso %i \n", datosDesdeMem->PID));
 		pthread_mutex_unlock(&mutexCPULogs);
 		//se ejecuta la siguiente instruccion si corresponde
-		if (cpu->pcbPlanificador->tieneDesalojo == true) {
+		if (cpu->pcbPlanificador->tieneDesalojo == true) {	//estoy en RR
 			if (cpu->pcbPlanificador->tamanioRafaga
 					>= cpu->cantInstEjecutadas) {
 				ejecuta_Instruccion(
@@ -134,8 +138,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						cpu);
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 //espera que regrese el proceso en un futuro porque no ha terminado
-				 resul_noTerminoAlPlanificador(cpu);
+				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
+
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -151,6 +156,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//al dar error se debe devolver el proceso
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		//la respuesta ya fue creada antes y ya se hizo resultadosInstrucciones = string_new()
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -169,20 +175,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 
-		if (cpu->pcbPlanificador->instruccionFinal
-					== cpu->pcbPlanificador->proximaInstruccion) {
-				cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
-			} else {
-				cpu->mCodCPU->respEjec->finalizoOk = false;
-			}
-
+		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada de regreso
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-		//ESTO HAY QUE CAMBIARLO EN EL PLANIFICADOR PARA QUE ANDE (OJO)
+
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
-				cpu->mCodCPU->respEjec	);
-//		free(cpu->mCodCPU->respEjec);
-//		cpu->mCodCPU->respEjec=NULL;
-		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
+				cpu->mCodCPU->respEjec);
+//		destmCod(cpu->mCodCPU); //liero espacio porque luego reservo cuando me llega otro proceso
+
 		cpu->estado = SI_TERMINO_RAFAGA;
 		break;
 	}
@@ -219,14 +218,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) {
 			if (cpu->pcbPlanificador->tamanioRafaga
-					>= cpu->cantInstEjecutadas) {
+					>= cpu->cantInstEjecutadas) { //estoy en RR
 
 				ejecuta_Instruccion(
 						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 						cpu);
 //				printf("dsp de ejecuta inst\n");
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
-
+//estoy en RR y se debe ir
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 			}
@@ -252,7 +251,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				sizeof(t_contenido_pagina) + 1
 						+ strlen(
 								cpu->mCodCPU->respEjec->resultadosInstrucciones)
-						+ 1 + strlen("mProc; - Pagina; escrita:;\0"));
+						+ 1 + strlen("mProc; - Pagina; escrita:\0"));
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				string_from_format("mProc %i; - Pagina %i; escrita: %s ;\0",
 						datosdesdeMEmoria->PID, datosdesdeMEmoria->numeroPagina,
@@ -272,7 +271,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		pthread_mutex_unlock(&mutexCPULogs);
 
 		//se ejecuta la siguiente instruccion si corresponde
-		if (cpu->pcbPlanificador->tieneDesalojo == true) {
+		if (cpu->pcbPlanificador->tieneDesalojo == true) { //RR
 			if (cpu->pcbPlanificador->tamanioRafaga
 					>= cpu->cantInstEjecutadas) {
 				ejecuta_Instruccion(
@@ -297,7 +296,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadas += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		t_PID* datosDesdeMem = (t_PID*) buffer;
-		if(cpu->mCodCPU->respEjec == NULL) {
+		if (cpu->mCodCPU->respEjec == NULL) {
 			cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
 		}
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -309,14 +308,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
 		//		++++++++++++++++++++++funcion finalizar
-
-		if (cpu->pcbPlanificador->instruccionFinal
-					== cpu->pcbPlanificador->proximaInstruccion) {
-				cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
-			} else {
-				cpu->mCodCPU->respEjec->finalizoOk = false;
-			}
-
+		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 		cpu->mCodCPU->respEjec->cant_entrada_salida = 0;
 		string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -335,9 +327,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 				cpu->mCodCPU->respEjec);
 		cpu->estado = SI_TERMINO_RAFAGA;
-//		free(cpu->mCodCPU->respEjec);
-//		cpu->mCodCPU->respEjec=NULL;
-		cpu->mCodCPU->respEjec = creaRespuestaEjecucion();
+//		destmCod(cpu->mCodCPU); //libero para esperar al proximo
+
 		break;
 	}
 
