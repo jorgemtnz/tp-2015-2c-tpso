@@ -14,9 +14,8 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
-
 	respEjec->resultadosInstrucciones = string_new();
-	respEjec->finalizoOk = false;
+
 	return respEjec;
 }
 

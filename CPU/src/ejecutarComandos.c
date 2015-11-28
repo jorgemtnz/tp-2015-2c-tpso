@@ -2,6 +2,7 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
+//	if((cpu->pcbPlanificador->tieneDesalojo == true)&&)
 	cpu->terminaInstruccion = NO_TERMINO;
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
@@ -83,20 +84,14 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	if(cpu->mCodCPU->respEjec == NULL) {
 		cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
 	}
-	cpu->mCodCPU->respEjec->resultadosInstrucciones = malloc(
-			//cpu->mCodCPU->respEjec->resultadosInstrucciones,
-			//strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
-					//+
-					strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
-					+ strlen(separada_instruccion[1]));
+	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
+				cpu->mCodCPU->respEjec->resultadosInstrucciones,
+				strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
+						+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
+						+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
-	if (cpu->pcbPlanificador->instruccionFinal
-			== cpu->pcbPlanificador->proximaInstruccion) {
-		cpu->mCodCPU->respEjec->finalizoOk = true;
-	} else {
-		cpu->mCodCPU->respEjec->finalizoOk = false;
-	}
 
+		cpu->mCodCPU->respEjec->finalizoOk = false;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
@@ -118,19 +113,19 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
 }
-//solo cuando quiero que no me regrese el mismo proceso
+
 void resultadoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
 	//		++++++++++++++++++++++funcion finalizar
 
-	if (cpu->pcbPlanificador->instruccionFinal
-			== cpu->pcbPlanificador->proximaInstruccion) {
-		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
-	} else {
-		cpu->mCodCPU->respEjec->finalizoOk = false;
-	}
+//	if (cpu->pcbPlanificador->instruccionFinal
+//			== cpu->pcbPlanificador->proximaInstruccion) {
+//		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
+//	} else {
+		cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
+//	}
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
@@ -141,23 +136,19 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-//	free(cpu->mCodCPU->respEjec);
-//	cpu->mCodCPU->respEjec = NULL;
-}
+//	destmCod(cpu->mCodCPU);
 
+}
+//solo cuando quiero que no me regrese el mismo proceso
 void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
 	//		++++++++++++++++++++++funcion finalizar
-	if (cpu->pcbPlanificador->instruccionFinal
-			== cpu->pcbPlanificador->proximaInstruccion) {
-		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
-	} else {
-		cpu->mCodCPU->respEjec->finalizoOk = false;
-	}
 
-	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
+		cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
+
+	cpu->mCodCPU->respEjec->pcb = (cpu->pcbPlanificador);
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
 	pthread_mutex_lock(&mutexCPULogs);
@@ -167,6 +158,6 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-//	free(cpu->mCodCPU->respEjec);
-//	cpu->mCodCPU->respEjec = NULL;
+//	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
+
 }

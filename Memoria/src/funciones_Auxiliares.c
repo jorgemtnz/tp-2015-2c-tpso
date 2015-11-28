@@ -58,6 +58,26 @@ void mostrarMemoria(){
 
 }
 
+void revisarMemoria(){
+
+	char* algoritmoCLOCK = string_new();
+	string_append(&algoritmoCLOCK, "CLOCK");
+
+	if(strcmp(configuracion->algoritmo_reemplazo, algoritmoCLOCK) != 0){
+		return;
+	}
+
+	int a;
+	t_marco* campoMarco;
+	campoMarco=iniciarMarco();
+
+
+	for(a=0;a<list_size(listaMemoria);a++){
+		campoMarco= list_get(listaMemoria,a);
+
+	}
+}
+
 t_marco_y_bit* buscarSiEstaEnMemoria(int idProc, int nroPag) {
 	//warning no usa variable, se debe cual es el uso de flagTDP
 	int tamanioTLB, a, tamanioTablaPag, flagTLB = 0, flagTDP = 0;
@@ -439,7 +459,6 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 
 
 	indice = list_get(listaIndices, PID);
-	printf("\nindice:%i, tamanioMemoria:%i, flagReemplazo:%i \n",*indice,tamanioMemoria,flagReemplazo);
 
 	usleep(configuracion->retardoMemoria * 1000);// este sleep vale por este for y por el de abajo,
 										  // si no se entiende por que, preguntarle a los matis
@@ -448,7 +467,6 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 
 	for (a = *indice; a < tamanioMemoria && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
-		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitModificada: %i\n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
 
 		if (campoMarco->bitModificada == 1 && campoMarco->bitUso == 0) {
 			flagReemplazo = 1;
@@ -456,11 +474,10 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 		} else {
 				campoMarcoAux=iniciarMarco();
 				campoMarcoAux = campoMarco;
-				campoMarcoAux->bitUso = 0;
-			list_replace(listaMemoria, a, campoMarcoAux);
+				campoMarco->bitUso = 0;
+			list_replace(listaMemoria, a, campoMarco);
 		}
 	}
-	printf("\nindice:%i, tamanioMemoria:%i, flagReemplazo:%i \n",*indice,tamanioMemoria,flagReemplazo);
 
 	for (a = 0; a < *indice && flagReemplazo == 0; a++) {
 		campoMarco = list_get(listaMemoria, a);
@@ -471,8 +488,8 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(int PID) {
 		} else {
 			campoMarcoAux = iniciarMarco();
 			campoMarcoAux = campoMarco;
-			campoMarcoAux->bitUso = 0;
-			list_replace(listaMemoria, a, campoMarcoAux);
+			campoMarco->bitUso = 0;
+			list_replace(listaMemoria, a, campoMarco);
 		}
 	}
 	marcoYFlag->flag = flagReemplazo;
@@ -885,7 +902,6 @@ t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(int PID) {
 				marcoYIndice = iniciarMarcoYIndice();
 				marcoYIndice->marco = campoMarco;
 				marcoYIndice->indice = b;
-				printf("\nB:%i\n",b);
 				list_add(listaMarcosYIndices,marcoYIndice);
 				flag = 1;
 			}
