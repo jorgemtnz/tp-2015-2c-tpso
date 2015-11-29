@@ -15,7 +15,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 	}
 
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
-	int result = checkearRutaArchivoConfig(nombreArchivoConfig);
+	uint8_t result = checkearRutaArchivoConfig(nombreArchivoConfig);
 	if (result == -1) {
 		logMsg = string_from_format("Archivo de configuracion no encontrado. Parametro especificado: %s\n", nombreArchivoConfig);
 		puts(logMsg);
@@ -51,8 +51,8 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(int idProc, int cantPag, int socketCPU) {
-	int contador;
+void iniciar(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU) {
+	uint8_t contador;
 	t_TablaDePaginas* tablaDePag;
 	t_PID * estructuraEnvio;
 	estructuraEnvio = crearPID();
@@ -73,7 +73,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 	estructuraEnvio->PID = idProc;
 
-	int* cero = malloc(sizeof(int));
+	uint8_t* cero = malloc(sizeof(uint8_t));
 	*cero = 0;
 	list_add_in_index(listaIndices, idProc, cero);
 
@@ -81,7 +81,7 @@ void iniciar(int idProc, int cantPag, int socketCPU) {
 
 }
 
-void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
+void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap, uint8_t socketCPU) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
@@ -116,7 +116,7 @@ void escribir(int idProc, int nroPag, char* textoAEscribir, int socketSwap, int 
 
 }
 
-void leer(int idProc, int pag, int socketSwap, int socketCPU) {
+void leer(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU) {
 
 	char* contenido;
 
@@ -148,8 +148,8 @@ void leer(int idProc, int pag, int socketSwap, int socketCPU) {
 
 }
 
-void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
-	int a, tamanioListaId;
+void finalizar(t_PID* estructuraFinalizar, uint8_t socketSwap) {
+	uint8_t a, tamanioListaId;
 	t_list * listaDemarcoYBit;
 	listaDemarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
 	tamanioListaId = list_size(listaDemarcoYBit);
@@ -173,21 +173,21 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 
 }
 
-void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
+void enviarIniciarAlSwap(t_iniciar_swap *estructura, uint8_t socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap) {
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, uint8_t socketSwap) {
 	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
 }
-void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {
+void enviarRtaIniciarOkCPU(t_PID * estructura, uint8_t socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
-void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU) {
-	printf("\n contenido: %s // PID:%i //PAG:%i\n",estructura->contenido,estructura->PID,estructura->numeroPagina);
+void enviarRtaEscribirACPU(t_contenido_pagina *estructura, uint8_t socketCPU) {
+	printf("\n contenido: %s // PID:%i //PAG:%i\n", estructura->contenido, estructura->PID, estructura->numeroPagina);
 	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
 }
 
-void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU) {
+void enviarRtaIniciarFalloCPU(t_PID * estructura, uint8_t socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_NO_OK_CPU, estructura);
 }
 

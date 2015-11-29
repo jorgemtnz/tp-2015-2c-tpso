@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 t_list* listaSocketsCPU;
-//int socketCPU;
+//uint8_t socketCPU;
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	if(listaSocketsCPU == NULL) {
@@ -32,7 +32,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	//puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
-	int socketSwap;
+	uint8_t socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();
@@ -57,7 +57,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
 				t_PID* rtaDesdeSwap = (t_PID*) buffer;
-				int socketCPU = getSocketCPU(rtaDesdeSwap->PID);
+				uint8_t socketCPU = getSocketCPU(rtaDesdeSwap->PID);
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap, socketCPU);
 				break;
 			}
@@ -70,7 +70,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (RESUL_FIN_OK): {
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
-				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
+				uint8_t socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 
 
@@ -103,8 +103,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 				char* textoALoggear = string_new();
 				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
-				int a, b;
-				int pag, id;
+				uint8_t a, b;
+				uint8_t pag, id;
 
 				t_marco* campoMemoria;
 				campoMemoria = iniciarMarco();
@@ -143,7 +143,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_contenido_pagina* estructuraRtaLeer;
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
-				int flagEscritura = 0;
+				uint8_t flagEscritura = 0;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
 						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
@@ -162,7 +162,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraRtaLeerPorEscribir->PID = datosDesdeSwap->PID;
 				estructuraRtaLeerPorEscribir->numeroPagina = datosDesdeSwap->numeroPagina;
 
-				int flagEscritura = 1;
+				uint8_t flagEscritura = 1;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(
 						estructuraRtaLeerPorEscribir->PID,
 						estructuraRtaLeerPorEscribir->numeroPagina,
@@ -181,7 +181,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
 				registrarPidCpu(socket, datosDesdeCPU->PID);
-				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
+				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 
@@ -235,11 +235,11 @@ char* getNombre() {
 	return "Memoria";
 }
 
-int getSocketCPU(int pid) {
+uint8_t getSocketCPU(uint8_t pid) {
 	return atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid)));
 }
 
-bool hayQueRegistrarPidCpu(int socket) {
+bool hayQueRegistrarPidCpu(uint8_t socket) {
 	bool esSocketCPU(void* elemento) {
 		return string_equals((char*) elemento, string_itoa(socket));
 	}
@@ -248,11 +248,11 @@ bool hayQueRegistrarPidCpu(int socket) {
 	return encontrado != NULL;
 }
 
-char* getKeyPidCpu(int pid) {
+char* getKeyPidCpu(uint8_t pid) {
 	return string_from_format("CPU-PID:%d", pid);
 }
 
-void registrarPidCpu(int socket, int pid) {
+void registrarPidCpu(uint8_t socket, uint8_t pid) {
 
 	if(hayQueRegistrarPidCpu(socket)){
 		char* keyCPU = getKeyPidCpu(pid);
