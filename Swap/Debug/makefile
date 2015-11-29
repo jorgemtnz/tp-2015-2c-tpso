@@ -27,8 +27,8 @@ endif
 all: Swap
 
 dependents:
-	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) all
-	-cd /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) clean all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug && $(MAKE) clean all
 
 # Tool invocations
 Swap: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug/libutiles.so

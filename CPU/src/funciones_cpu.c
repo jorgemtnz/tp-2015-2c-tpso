@@ -74,6 +74,12 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 // ejecuta las instrucciones del mCod
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
+	puts(
+						string_from_format(
+								"se esta procesando el codigo  %s  %s PID %i \n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
+
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
