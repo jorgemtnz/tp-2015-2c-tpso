@@ -76,12 +76,13 @@ void procesaCodigo(t_cpu* cpu) {
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	pthread_mutex_unlock(&mutexCPULogs);
-	if(cpu->mCodCPU!=NULL){
-		destmCod(cpu->mCodCPU);
-	}
+	printf("CCCC\n");
+
 
 
 	t_mCod* mCodCPU = crearmCod();
+	printf("dddddd\n");
+
 //++++++++++++++++++++++++++++++++
 	int fd = open(cpu->pcbPlanificador->rutaArchivoMcod, O_RDONLY);
 	if (fd == -1) {
@@ -118,7 +119,7 @@ void procesaCodigo(t_cpu* cpu) {
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	pthread_mutex_unlock(&mutexCPULogs);
-
+	printf("eeeee\n");
 	ejecuta_Instruccion(
 			cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 			cpu);

@@ -17,7 +17,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, INICIAR_PROCESO_MEM,
 				cpu->estructuraSolicitud);
-//		free(cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
 		cpu->quantumReloj += 1;
 		break;
@@ -27,7 +27,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, ESCRIBIR_MEM, cpu->estructuraSolicitud);
-//		free(cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
 		cpu->quantumReloj += 1;
 		break;
@@ -37,7 +37,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
 		enviarStruct(socketMemoria, LEER_MEM, cpu->estructuraSolicitud);
-//		free(cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
 		cpu->quantumReloj += 1;
 		break;
@@ -48,7 +48,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		int socketMemoria = cpu->socketMemoria;
 		ejecuta_FinProcesoMemoria(cpu);
 		enviarStruct(socketMemoria, FIN_PROCESO_MEM, cpu->estructuraSolicitud);
-//		free(cpu->estructuraSolicitud);
+		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
 		cpu->quantumReloj += 1;
 		break;
@@ -66,11 +66,11 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 
 		puts(
-						string_from_format(
-								"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								cpu->pcbPlanificador->pid));
-		cpu->mCodCPU=NULL;
+				string_from_format(
+						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
+//		cpu->mCodCPU=NULL;
 		cpu->pcbPlanificador = NULL;
 		cpu->quantumReloj += 1;
 		break;
@@ -117,8 +117,16 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //		printf("Ruta recibida del planificador: %s\n",
 //				pcbPlanificador->rutaArchivoMcod);
 		cpu->estado = NO_TERMINO_RAFAGA;
+		if (pcbPlanificador->proximaInstruccion != 0) {
+			//significa que no es la primra vez que llega
+			destmCod(cpu->mCodCPU);
+			destPCB(cpu->pcbPlanificador);
+			printf("AAA\n");
+		}
+
 		cpu->pcbPlanificador = pcbPlanificador;
 		//en procesaCodigo() se crea la respEjec del mCod
+		printf("BBBBBB\n");
 		procesaCodigo(cpu);	//aca dentro se actualiza la cpu->pcbPlanificador->proximaInstruccion y será distinta de cero
 		break;
 	}
@@ -169,13 +177,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 								"se envia por Quantum %s  %s PID %i\n",
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 								cpu->pcbPlanificador->pid));
-				puts(
-										string_from_format(
-												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												cpu->pcbPlanificador->pid));
-				cpu->pcbPlanificador = NULL;
-				cpu->mCodCPU = NULL;
+
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -230,10 +232,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid));
 		puts(
-								string_from_format(
-										"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-										queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-										cpu->pcbPlanificador->pid));
+				string_from_format(
+						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
 		cpu->pcbPlanificador = NULL;
 		cpu->mCodCPU = NULL;
 		break;
@@ -295,10 +297,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 								cpu->pcbPlanificador->pid));
 				puts(
-										string_from_format(
-												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												cpu->pcbPlanificador->pid));
+						string_from_format(
+								"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
 				cpu->pcbPlanificador = NULL;
 				cpu->mCodCPU = NULL;
 			}
@@ -372,10 +374,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 								cpu->pcbPlanificador->pid));
 				puts(
-										string_from_format(
-												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												cpu->pcbPlanificador->pid));
+						string_from_format(
+								"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
 				cpu->pcbPlanificador = NULL;
 				cpu->mCodCPU = NULL;
 			}
@@ -442,10 +444,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid));
 		puts(
-								string_from_format(
-										"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-										queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-										cpu->pcbPlanificador->pid));
+				string_from_format(
+						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
 		cpu->pcbPlanificador = NULL;
 		cpu->mCodCPU = NULL;
 		cpu->quantumReloj = 0;

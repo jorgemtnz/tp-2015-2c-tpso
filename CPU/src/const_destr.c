@@ -120,6 +120,7 @@ t_cpu* crearCPU() {
 		cPUHilo->nombre = string_from_format("CPU %d", procCPU->contadorIdCPU);
 	}
 	}
+	cPUHilo->pcbPlanificador;
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->terminaInstruccion = SI_TERMINO;
 	cPUHilo->cantInstEjecutadasPorcentaje = 0;
@@ -133,7 +134,7 @@ t_cpu* crearCPU() {
 //	cPUHilo->terminaInstruccion = SI_TERMINO;
 //	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
 //	cPUHilo->finInstruccion=malloc (sizeof(time_t));
-	cPUHilo->quantumReloj=0;
+	cPUHilo->quantumReloj = 0;
 	return cPUHilo;
 }
 
@@ -159,8 +160,9 @@ t_ProcCPU* crearProcCPU() {
 void destmCod(t_mCod* unmCod) {
 	destRespEjec(unmCod->respEjec);
 	destVectorInstruccion(unmCod->bufferInstrucciones);
-
-	free(unmCod);
+	if (unmCod != NULL) {
+		free(unmCod);
+	}
 }
 
 void destConfig(t_configuracion* unaConfig) {
@@ -206,4 +208,10 @@ void destEscrMem(t_contenido_pagina* estruc) {
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
 	free(respEjec->resultadosInstrucciones);
 	free(respEjec);
+}
+
+void destPCB(t_pcb* pcb){
+	free(pcb->rutaArchivoMcod);
+	free(pcb);
+
 }

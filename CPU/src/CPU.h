@@ -138,7 +138,7 @@ void destVectorInstruccion(char** vectorInstruccion);
 void destIniciarSwap(t_iniciar_swap* estructura);
 void destEscrMem(t_contenido_pagina* estruc);
 void destRespEjec(t_respuesta_ejecucion* respEjec);
-
+void destPCB(t_pcb* pcb);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares y ejecucion y ejecucionResult
 //============================================================================
 int reconoceTokenInstruccion(char* string);
