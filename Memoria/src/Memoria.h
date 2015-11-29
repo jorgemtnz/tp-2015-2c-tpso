@@ -138,7 +138,7 @@ t_leerDeProcesoPorEscribir* crearEstructuraLeerProcesoPorEscribir();
 void levantarConsola();
 void mostrarComandos();
 uint8_t idFuncion(char* funcion);
-void aplicarFuncion(uint8_t idFuncion);
+void aplicarFuncion(int idFuncion);
 uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer);
 void limpiarTLB();
 void limpiarMemoria();

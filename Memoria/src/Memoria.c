@@ -121,7 +121,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					}
 				}
 				my_log_info(textoALoggear);
-				mostrarMemoria();
+
 
 				finalizar(estructuraFinalizar, socketSwap);
 				break;

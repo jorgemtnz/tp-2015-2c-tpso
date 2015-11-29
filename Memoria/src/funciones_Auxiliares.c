@@ -123,7 +123,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag) {
 			//LOG
 			char* textoLogger = string_new();
 					string_append(&textoLogger,string_from_format("Acceso a Tabla de paginas, PID: %i, N° de"
-								" página: %i y N° de marco: %i", idProc, nroPag, campoTablaDePag->idMarco));
+								" página: %i y N° de marco: %i\n", idProc, nroPag, campoTablaDePag->idMarco));
 						my_log_info(textoLogger);
 		}
 	}
@@ -132,24 +132,24 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag) {
 		if (aux == 0) {
 			if (flagTLB == 1) {
 				char* textoLogger = string_new();
-						string_append(&textoLogger,string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
+						string_append(&textoLogger,string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i\n", idProc,
 						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			} else {
 				char* textoLogger = string_new();
-				string_append(&textoLogger , string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
+				string_append(&textoLogger , string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i\n", idProc,
 						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			}
 		} else {
 			if (flagTLB == 1) {
 				char* textoLogger = string_new();
-				string_append(&textoLogger ,string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i", idProc,
+				string_append(&textoLogger ,string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i\n", idProc,
 						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			} else {
 				char* textoLogger = string_new();
-				string_append(&textoLogger, string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i", idProc,
+				string_append(&textoLogger, string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB miss, N° de marco resultante: %i\n", idProc,
 						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			}
@@ -1020,42 +1020,43 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 	string_append(&algoritmoFIFO, "FIFO");
 	t_contenido_pagina* lecturaMandarCpu;
 	lecturaMandarCpu = iniciarContenidoPagina();
-	uint8_t respuesta=0;
+	uint8_t respuesta=0,flagSaco=0;
 
 	if (strcmp(configuracion->algoritmo_reemplazo, algoritmoLRU) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			 respuesta= sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
-
+			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
 			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
-
+			 flagSaco=1;
 		}
 
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoCLOCK) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) { // si llega al max de procesos no importa si esta llena la memoria porque si o si va a sacar a uno
 			 respuesta=sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
-
+			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
-
+			 flagSaco=1;
 		}
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) {
 			 respuesta = sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
-
+			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
 			sacarDeMemoriaSegunFifo(socketSwap, idProc, contenido, pag, flagEscritura);
-
+			 flagSaco=1;
 		}
 	}
 
 	// aca significa que no tuvo que sacar ninguno
 	if(respuesta == 0){
-	cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
-	lecturaMandarCpu->PID = idProc;
+		if( flagSaco==0){
+			cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
+		}lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 	string_append(&lecturaMandarCpu->contenido, contenido);
 

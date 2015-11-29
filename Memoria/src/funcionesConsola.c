@@ -27,7 +27,7 @@ uint8_t idFuncion(char* funcion) {
 	return (i <= 3 - 1) ? (i + 1) : -1;
 }
 
-void aplicarFuncion(uint8_t idFuncion) {
+void aplicarFuncion(int idFuncion) {
 	enum nomFun {
 		TLB_FLUSH = 1, MEM_FLUSH, MEM_DUMP, MOSTRAR_COMANDOS
 	};
@@ -80,15 +80,15 @@ uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer) 
 		}
 	}
 	if(string_equals(buffer, "TLB_FLUSH")) {
-		my_log_info("Recibo señal SIGUSR1");
+		my_log_info("Recibo señal SIGUSR1\n");
 		puts("");
 		kill(pid,SIGUSR1);
 	} else if(string_equals(buffer, "MEM_FLUSH")) {
-		my_log_info("Recibo señal SIGUSR2");
+		my_log_info("Recibo señal SIGUSR2\n");
 		puts("");
 		kill(pid,SIGUSR2);
 	} else if(string_equals(buffer, "MEM_DUMP")) {
-		my_log_info("Recibo señal SIGPOLL");
+		my_log_info("Recibo señal SIGPOLL\n");
 		puts("");
 		kill(pid,SIGPOLL);
 	} else {
@@ -102,7 +102,7 @@ void limpiarTLB(){
 		list_clean(listaTLB);
 		pthread_mutex_unlock(&mutexListaTLB);
 	} else {
-		my_log_info("TLB inactiva");
+		my_log_info("TLB inactiva\n");
 		puts("");
 	}
 }
@@ -133,26 +133,26 @@ void limpiarMemoria(){
 	pthread_mutex_unlock(&mutexListaTLB);
 }
 void volcarMemoria(){
-	my_log_info("Volcado de memoria iniciado");
+	my_log_info("Volcado de memoria iniciado\n");
 	puts("");
 	uint8_t pid,a;
 	pid = fork();
 	if (pid<0) {
 		puts(string_itoa(errno));
-		my_log_error("Fallo la creación del proceso hijo");
+		my_log_error("Fallo la creación del proceso hijo\n");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0) {
 		t_marco* campoMarco;
 		pthread_mutex_lock(&mutexListaMemoria);
 		if (list_is_empty(listaMemoria)){
-			my_log_info("Memoria vacía");
+			my_log_info("Memoria vacía\n");
 			puts("");
 			exit(EXIT_SUCCESS);
 		}
 		for (a=0;a<list_size(listaMemoria);a++){
 			campoMarco= list_get(listaMemoria,a);
-			my_log_info(string_from_format("El marco %s ubicado en la posición %s contiene: %s"
+			my_log_info(string_from_format("El marco %s ubicado en la posición %s contiene: %s\n"
 					,string_itoa(campoMarco->idMarco) ,string_itoa(campoMarco->posicion) ,campoMarco->contenido));
 			puts("");
 		}
@@ -161,27 +161,27 @@ void volcarMemoria(){
 	}
 	else {
 		wait(EXIT_SUCCESS);
-		my_log_info("Volcado de memoria finalizado");
+		my_log_info("Volcado de memoria finalizado\n");
 		puts("");
 	}
 }
 
 void atencionSIGUSR1(){
 	pthread_t hilo1;
-	my_log_info("Limpieza de TLB iniciada");
+	my_log_info("Limpieza de TLB iniciada\n");
 	puts("");
 	pthread_create(&hilo1,NULL,(void*) limpiarTLB,NULL);
 	pthread_join(hilo1,NULL);
-	my_log_info("Limpieza de TLB finalizada");
+	my_log_info("Limpieza de TLB finalizada\n");
 	puts("");
 }
 
 void atencionSIGUSR2(){
 	pthread_t hilo2;
-	my_log_info("Limpieza de Memoria iniciada");
+	my_log_info("Limpieza de Memoria iniciada\n");
 	puts("");
 	pthread_create(&hilo2,NULL,(void*) limpiarMemoria,NULL);
 	pthread_join(hilo2,NULL);
-	my_log_info("Limpieza de Memoria finalizada");
+	my_log_info("Limpieza de Memoria finalizada\n");
 	puts("");
 }
