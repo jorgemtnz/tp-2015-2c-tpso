@@ -77,7 +77,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	sleep(configuracion->retardo);
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu, int socketPlanificador) {
 	cpu->terminaInstruccion = NO_TERMINO;
 	//+++++++++++++++
 	if(cpu->mCodCPU->respEjec == NULL) {
@@ -89,18 +89,16 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 						+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
 						+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
-
 		cpu->mCodCPU->respEjec->finalizoOk = false;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-
 	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
 	string_append(&cpu->mCodCPU->respEjec->resultadosInstrucciones,
 			string_from_format("mProc %d %s %d ", cpu->pcbPlanificador->pid,
 					"en entrada-salida de tiempo \n ",
 					atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
-	cpu->cantInstEjecutadas += 1;
+	cpu->cantInstEjecutadasPorcentaje += 1;
 	cpu->terminaInstruccion = SI_TERMINO;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -112,7 +110,8 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
-	cpu->pcbPlanificador->pid =-1;
+	enviarStruct(socketPlanificador, ENTRADA_SALIDA,
+					cpu->mCodCPU->respEjec);
 }
 
 void resultadoAlPlanificador(t_cpu* cpu) {
@@ -139,7 +138,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU);
-	cpu->pcbPlanificador->pid =-1;
+
 }
 //solo cuando quiero que no me regrese el mismo proceso
 void resul_noTerminoAlPlanificador(t_cpu* cpu) {
@@ -162,5 +161,5 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
-	cpu->pcbPlanificador->pid =-1;
+
 }

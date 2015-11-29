@@ -122,7 +122,7 @@ t_cpu* crearCPU() {
 	}
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->terminaInstruccion = SI_TERMINO;
-	cPUHilo->cantInstEjecutadas = 0;
+	cPUHilo->cantInstEjecutadasPorcentaje = 0;
 	cPUHilo->mCodCPU = crearmCod();
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
@@ -133,6 +133,7 @@ t_cpu* crearCPU() {
 //	cPUHilo->terminaInstruccion = SI_TERMINO;
 //	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
 //	cPUHilo->finInstruccion=malloc (sizeof(time_t));
+	cPUHilo->quantumReloj=0;
 	return cPUHilo;
 }
 

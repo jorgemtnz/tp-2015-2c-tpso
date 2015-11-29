@@ -91,7 +91,7 @@ typedef struct {
 	pthread_t idCPU;
 	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
-	uint8_t cantInstEjecutadas; //cuenta las instrucciones ejecutadas
+	uint8_t cantInstEjecutadasPorcentaje; //cuenta las instrucciones ejecutadas
 	uint8_t terminaInstruccion;     //marca el define USO 1 NO_USO 0  en el proceso
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
     char* nombre;
@@ -105,6 +105,7 @@ typedef struct {
 //    uint8_t retardoTotal;
 //    uint8_t terminaInstruccion;
     //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
+      uint8_t quantumReloj;
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -151,7 +152,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
-void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu, int socketPlanificador) ;
 int putsConsola (const char *msg) ;
 char* queCPUsoy(t_cpu* cpu);
 pthread_t queHiloSoy();

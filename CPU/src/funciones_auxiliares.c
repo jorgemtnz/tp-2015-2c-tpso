@@ -121,6 +121,6 @@ double dameDiferencia(time_t unaFecha, time_t otraFecha){
 }
 
 void resetValPorcentaje(t_cpu* cpu){
-	cpu->cantInstEjecutadas=0;
+	cpu->cantInstEjecutadasPorcentaje=0;
 //cpu->finInstruccion = time(&cpu->inicioInstruccion);//ambas con la misma fecha
 }
