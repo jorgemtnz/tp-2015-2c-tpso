@@ -8,7 +8,7 @@
 
 void levantarConsola() {
 	char comando[20];
-	int idFunc;
+	uint8_t idFunc;
 
 	mostrarComandos();
 	while (1) {
@@ -20,14 +20,14 @@ void levantarConsola() {
 	}
 }
 
-int idFuncion(char* funcion) {
-	int i;
+uint8_t idFuncion(char* funcion) {
+	uint8_t i;
 	char* funcionesConsola[] = {  "TLB_FLUSH", "MEM_FLUSH", "MEM_DUMP"};
 	for (i=0;(i < 3) && (strcmp(funcion, funcionesConsola[i]) != 0); i++);
 	return (i <= 3 - 1) ? (i + 1) : -1;
 }
 
-void aplicarFuncion(int idFuncion) {
+void aplicarFuncion(uint8_t idFuncion) {
 	enum nomFun {
 		TLB_FLUSH = 1, MEM_FLUSH, MEM_DUMP, MOSTRAR_COMANDOS
 	};
@@ -59,7 +59,7 @@ void mostrarComandos() {
 	char* descripcionesConsola[] = { "Limpiar la TLB",
 			"Limpiar la Memoria Principal", "Volcado de la Memoria a un Log"};
 
-	int contador = 0;
+	uint8_t contador = 0;
 	while (contador <= 2) {
 		printf("*------------------------------------------*\n");
 		printf("COMANDO 	= %s\n", funcionesConsola[contador]);
@@ -69,7 +69,7 @@ void mostrarComandos() {
 	}
 }
 
-int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
+uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer) {
 	pid_t pid=getpid();
 	if(buffer != NULL && strstr(buffer, "\n")) {
 		if(string_starts_with(buffer, "\n")){
@@ -107,9 +107,9 @@ void limpiarTLB(){
 	}
 }
 void limpiarMemoria(){
-	int i;
+	uint8_t i;
 	t_TablaDePaginas* campoTabla;
-	int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	uint8_t socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 	pthread_mutex_lock(&mutexTablaPags);
 	for (i=0;i<list_size(listaTablaDePag);i++){
 		campoTabla = list_get(listaTablaDePag,i);
@@ -135,7 +135,7 @@ void limpiarMemoria(){
 void volcarMemoria(){
 	my_log_info("Volcado de memoria iniciado");
 	puts("");
-	int pid,a;
+	uint8_t pid,a;
 	pid = fork();
 	if (pid<0) {
 		puts(string_itoa(errno));

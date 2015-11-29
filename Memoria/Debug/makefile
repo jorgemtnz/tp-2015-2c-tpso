@@ -27,14 +27,14 @@ endif
 all: Memoria
 
 dependents:
-	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) all
-	-cd /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpso/commons-library/Debug && $(MAKE) clean all
+	-cd /home/utnso/tp-2015-2c-tpso/utiles/Debug && $(MAKE) clean all
 
 # Tool invocations
-Memoria: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpsobranch/utiles/Debug/libutiles.so
+Memoria: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so /home/utnso/tp-2015-2c-tpso/utiles/Debug/libutiles.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -pthread -L"/home/utnso/tp-2015-2c-tpsobranch/utiles/Debug" -L"/home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug" -o "Memoria" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -pthread -L"/home/utnso/tp-2015-2c-tpso/utiles/Debug" -L"/home/utnso/tp-2015-2c-tpso/commons-library/Debug" -o "Memoria" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
