@@ -178,9 +178,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->quantumReloj = 0;
 				puts(
 						string_from_format(
-								"se envia por Quantum %s  %s PID %i\n",
+								"se envia por Quantum %s  %s PID %i quantumReloj %i\n",
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								cpu->pcbPlanificador->pid));
+								cpu->pcbPlanificador->pid, cpu->quantumReloj));
 
 			}
 		} else { // es planificacion FIFO
@@ -235,9 +235,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->estado = SI_TERMINO_RAFAGA;
 		puts(
 				string_from_format(
-						"se envia por proceso iniciar no ok %s  %s PID %i\n",
+						"se envia por proceso iniciar no ok %s  %s PID %i quantumReloj %i \n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						cpu->pcbPlanificador->pid));
+						cpu->pcbPlanificador->pid, cpu->quantumReloj));
 
 		//se cuenta aca como terminado de ejecutar la instruccion iniciar
 		cpu->cantInstEjecutadasPorcentaje += 1;
@@ -295,9 +295,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->quantumReloj = 0;
 				puts(
 						string_from_format(
-								"se envia por Quantum %s  %s PID %i\n",
+								"se envia por Quantum %s  %s PID %i quantumReloj %i\n",
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								cpu->pcbPlanificador->pid));
+								cpu->pcbPlanificador->pid, cpu->quantumReloj));
 //				puts(
 //						string_from_format(
 //								"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
@@ -372,9 +372,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				cpu->quantumReloj = 0;
 				puts(
 						string_from_format(
-								"se envia por Quantum %s  %s PID %i\n",
+								"se envia por Quantum %s  %s PID %i quantumReloj %i\n",
 								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								cpu->pcbPlanificador->pid));
+								cpu->pcbPlanificador->pid, cpu->quantumReloj));
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -434,9 +434,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->actualPID = -1;
 		cpu->estado = SI_TERMINO_RAFAGA;
 		puts(
-				string_from_format("se envia por finalizar %s  %s PID %i \n",
+				string_from_format("se envia por finalizar %s  %s PID %i quantumReloj %i\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						cpu->pcbPlanificador->pid));
+						cpu->pcbPlanificador->pid, cpu->quantumReloj));
 
 		cpu->quantumReloj = 0;
 		//se cuenta el fin de la instruccion finalizar

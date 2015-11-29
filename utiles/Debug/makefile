@@ -26,13 +26,13 @@ endif
 all: libutiles.so
 
 dependents:
-	-cd /home/utnso/tp-2015-2c-tpso/commons-library/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) all
 
 # Tool invocations
-libutiles.so: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so
+libutiles.so: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/tp-2015-2c-tpso/commons-library/Debug" -shared -o "libutiles.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug" -shared -o "libutiles.so" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -43,6 +43,6 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
-/home/utnso/tp-2015-2c-tpso/commons-library/Debug/libcommons-library.so:
+/home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so:
 
 -include ../makefile.targets
