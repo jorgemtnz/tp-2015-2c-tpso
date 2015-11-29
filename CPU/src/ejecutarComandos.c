@@ -7,6 +7,10 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
+
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 	cpu->estructuraSolicitud = (t_iniciar_swap*) estructura;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	pthread_mutex_lock(&mutexCPULogs);
@@ -30,6 +34,10 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	string_append(&estructura->contenido, separada_instruccion[2]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
+
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -51,6 +59,10 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
+
+	free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -67,7 +79,11 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->terminaInstruccion = NO_TERMINO;
 	estructura->PID = cpu->pcbPlanificador->pid;
-	//cpu->pcbPlanificador->proximaInstruccion = 0;
+
+	free(cpu->estructuraSolicitud);
+		cpu->estructuraSolicitud = NULL;
+
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -77,19 +93,20 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	sleep(configuracion->retardo);
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu, int socketPlanificador) {
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
+		int socketPlanificador) {
 	cpu->terminaInstruccion = NO_TERMINO;
 	//+++++++++++++++
-	if(cpu->mCodCPU->respEjec == NULL) {
+	if (cpu->mCodCPU->respEjec == NULL) {
 		cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
 	}
 	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
-				cpu->mCodCPU->respEjec->resultadosInstrucciones,
-				strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
-						+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
-						+ strlen(separada_instruccion[1]));
+			cpu->mCodCPU->respEjec->resultadosInstrucciones,
+			strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
+					+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
+					+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
-		cpu->mCodCPU->respEjec->finalizoOk = false;
+	cpu->mCodCPU->respEjec->finalizoOk = false;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
@@ -110,8 +127,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu, int socketPl
 					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
 	sleep(configuracion->retardo);
-	enviarStruct(socketPlanificador, ENTRADA_SALIDA,
-					cpu->mCodCPU->respEjec);
+	enviarStruct(socketPlanificador, ENTRADA_SALIDA, cpu->mCodCPU->respEjec);
 }
 
 void resultadoAlPlanificador(t_cpu* cpu) {
@@ -124,7 +140,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 //			== cpu->pcbPlanificador->proximaInstruccion) {
 //		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
 //	} else {
-		cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
+	cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
 //	}
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 
@@ -137,7 +153,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-//	destmCod(cpu->mCodCPU);
+cpu->actualPID=-1;
 
 }
 //solo cuando quiero que no me regrese el mismo proceso
@@ -147,7 +163,7 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 	int socketPlanificador = cpu->socketPlanificador;
 	//		++++++++++++++++++++++funcion finalizar
 
-		cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
+	cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
 
 	cpu->mCodCPU->respEjec->pcb = (cpu->pcbPlanificador);
 
@@ -161,5 +177,5 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
-
+	cpu->actualPID=-1;
 }

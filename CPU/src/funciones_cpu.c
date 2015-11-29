@@ -61,11 +61,13 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 
 	//le estoy mandando solo la instruccion sin el token
 	pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar interpretaInstruccion ");
-		log_info(logger, string_from_format("token:  %i \n", token));
-		log_info(logger,string_from_format("\n================ Ejecutando %s\n", instruccion->instruccion_separada[0]));
-		pthread_mutex_unlock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger, "se va a ejecutar interpretaInstruccion ");
+	log_info(logger, string_from_format("token:  %i \n", token));
+	log_info(logger,
+			string_from_format("\n================ Ejecutando %s\n",
+					instruccion->instruccion_separada[0]));
+	pthread_mutex_unlock(&mutexCPULogs);
 //	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);
 	ejecutar(token, instruccion->instruccion_separada, cpu);
 }
@@ -73,15 +75,10 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
 	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	pthread_mutex_unlock(&mutexCPULogs);
-	printf("CCCC\n");
 
-	t_mCod* mCodCPU = crearmCod();
-	printf("dddddd\n");
-
-//++++++++++++++++++++++++++++++++
 	int fd = open(cpu->pcbPlanificador->rutaArchivoMcod, O_RDONLY);
 	if (fd == -1) {
 		perror("Error al abrir el archivo");
@@ -103,21 +100,22 @@ void procesaCodigo(t_cpu* cpu) {
 		i++;
 	} //el buffer solo contiene las instrucciones, sin punto y coma
 //	printf("%s sin enter\n", sin_enter);
+	t_mCod* mCodCPU = crearmCod();
 	mCodCPU->bufferInstrucciones = string_split(sin_enter, ";");
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(
 			mCodCPU->bufferInstrucciones);
 	cpu->mCodCPU->bufferInstrucciones = mCodCPU->bufferInstrucciones;
 	cpu->mCodCPU->cantidadInstrucciones = mCodCPU->cantidadInstrucciones;
 	//se resta uno, porque se conto el cero anteriormente
-	cpu->pcbPlanificador->instruccionFinal= mCodCPU->cantidadInstrucciones-1;
+	cpu->pcbPlanificador->instruccionFinal = mCodCPU->cantidadInstrucciones - 1;
 
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
 //aca estoy haciendo la ejecucion de una de las instrucciones
 	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	pthread_mutex_unlock(&mutexCPULogs);
-	printf("eeeee\n");
+//	printf("eeeee\n");
 	ejecuta_Instruccion(
 			cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 			cpu);

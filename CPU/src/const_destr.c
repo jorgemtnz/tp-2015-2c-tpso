@@ -15,7 +15,7 @@ t_respuesta_ejecucion* creaRespuestaEjecucion() {
 		exit(-1);
 	}
 	respEjec->resultadosInstrucciones = string_new();
-
+	respEjec->pcb = NULL;
 	return respEjec;
 }
 
@@ -30,6 +30,7 @@ t_instruccion* creaInstruccion() {
 		pthread_mutex_unlock(&mutexCPULogs);
 		exit(-1);
 	}
+
 	return instruccion;
 }
 
@@ -45,6 +46,7 @@ t_mCod* crearmCod() {
 	}
 	mCod->cantidadInstrucciones = 0;
 	mCod->respEjec = creaRespuestaEjecucion();
+	printf("se crea un mCod\n");
 	return mCod;
 }
 
@@ -65,7 +67,6 @@ t_configuracion* crearConfiguracion() {
 	configuracion->vg_ipPlanificador = '\0';
 	configuracion->vg_puertoMemoria = 0;
 	configuracion->vg_puertoPlanificador = 0;
-
 	return configuracion;
 }
 
@@ -135,6 +136,7 @@ t_cpu* crearCPU() {
 //	cPUHilo->inicioInstruccion = malloc(sizeof(time_t));
 //	cPUHilo->finInstruccion=malloc (sizeof(time_t));
 	cPUHilo->quantumReloj = 0;
+	cPUHilo->actualPID=-1;
 	return cPUHilo;
 }
 
@@ -158,60 +160,73 @@ t_ProcCPU* crearProcCPU() {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
-	destRespEjec(unmCod->respEjec);
-	destVectorInstruccion(unmCod->bufferInstrucciones);
 	if (unmCod != NULL) {
+		destRespEjec(unmCod->respEjec);
+		destVectorInstruccion(unmCod->bufferInstrucciones);
 		free(unmCod);
 	}
 }
 
 void destConfig(t_configuracion* unaConfig) {
-	free(unaConfig);
+	if (unaConfig != NULL)
+		free(unaConfig);
 }
 
 void destHiloCPU(t_cpu* unHiloCPU) {
-	free(unHiloCPU->nombre);
-	free(unHiloCPU->estructuraSolicitud);
-	free(unHiloCPU->respuestaInstruccion);
-//	free(unHiloCPU->pcbPlanificador);
-	destmCod(unHiloCPU->mCodCPU);
-	free(unHiloCPU);
+	if (unHiloCPU != NULL) {
+		free(unHiloCPU->nombre);
+		free(unHiloCPU->estructuraSolicitud);
+		free(unHiloCPU->respuestaInstruccion);
+		destPCB(unHiloCPU->pcbPlanificador);
+		destmCod(unHiloCPU->mCodCPU);
+		free(unHiloCPU);
+	}
 }
 
 void destProcCPU(t_ProcCPU* unCPU) {
-
-	list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
-	free(unCPU);
+	if (unCPU != NULL) {
+		list_destroy_and_destroy_elements(unCPU->listaCPU, (void*) destHiloCPU);
+		free(unCPU);
+	}
 }
 
 void destInstruccion(t_instruccion* unaInstruccion) {
-	free(unaInstruccion);
+	if (unaInstruccion != NULL)
+		free(unaInstruccion);
 }
 
 void destVectorInstruccion(char** vectorInstruccion) {
-	int i = 0;
-	while (vectorInstruccion[i] != NULL) {
-		free(vectorInstruccion[i]);
-		i++;
+	if (vectorInstruccion != NULL) {
+		int i = 0;
+		while (vectorInstruccion[i] != NULL) {
+			free(vectorInstruccion[i]);
+			i++;
+		}
+		free(vectorInstruccion);
 	}
-	free(vectorInstruccion);
 }
 
 void destIniciarSwap(t_iniciar_swap* estructura) {
-	free(estructura);
+	if (estructura != NULL)
+		free(estructura);
 }
 
 void destEscrMem(t_contenido_pagina* estruc) {
-	free(estruc);
+	if (estruc != NULL)
+		free(estruc);
 }
 
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
-	free(respEjec->resultadosInstrucciones);
-	free(respEjec);
+	if (respEjec != NULL) {
+		free(respEjec->resultadosInstrucciones);
+		free(respEjec);
+	}
 }
 
-void destPCB(t_pcb* pcb){
-	free(pcb->rutaArchivoMcod);
-	free(pcb);
+void destPCB(t_pcb* pcb) {
+	if (pcb != NULL) {
+		free(pcb->rutaArchivoMcod);
+		free(pcb);
 
+	}
 }

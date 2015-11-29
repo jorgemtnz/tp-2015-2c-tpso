@@ -106,6 +106,7 @@ typedef struct {
 //    uint8_t terminaInstruccion;
     //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
       uint8_t quantumReloj;
+      int actualPID;
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
