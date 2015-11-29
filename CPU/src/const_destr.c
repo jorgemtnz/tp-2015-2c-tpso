@@ -46,7 +46,7 @@ t_mCod* crearmCod() {
 	}
 	mCod->cantidadInstrucciones = 0;
 	mCod->respEjec = creaRespuestaEjecucion();
-	printf("se crea un mCod\n");
+//	printf("se crea un mCod\n");
 	return mCod;
 }
 
