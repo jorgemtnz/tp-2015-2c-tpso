@@ -14,16 +14,16 @@ void revisarQueExistaPidYPagina(uint8_t pag, uint8_t PID, int socketCPU){
 	}
 	if(flagEncontro==0)
 		printf("no se inicio este pid %i \n",PID );
-//lo comento porque no hice que cpu lo reciba
-//	if(flagEncontro==0){
-//
-//		printf("\n\n MEMORIA RECIBIO PID:%i Y PAG:%i\n\n",PID,pag);
-//		t_error* error;
-//		error =iniciarError();
-//		error->PID = PID;
-//		error->pag = pag;
-//		enviarStruct(socketCPU, ERROR_EJECUCION, error);
-//	}
+
+	if(flagEncontro==0){
+
+		printf("\n\n MEMORIA RECIBIO PID:%i Y PAG:%i\n\n",PID,pag);
+		t_error* error;
+		error =iniciarError();
+		error->PID = PID;
+		error->pag = pag;
+		enviarStruct(socketCPU, ERROR_EJECUCION, error);
+	}
 
 }
 

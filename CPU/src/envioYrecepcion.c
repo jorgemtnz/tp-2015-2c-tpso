@@ -464,6 +464,16 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		pthread_mutex_unlock(&mutexCPULogs);
 		break;
 	}
+
+	case (ERROR_EJECUCION):{
+		t_error* error = (t_error*) buffer;
+		puts(
+						string_from_format("%s  %s ERROR, recibio memoria  PID %i y mi PID es %i\n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								error->PID,cpu->pcbPlanificador->pid));
+
+		break;
+	}
 	case (TIEMPO_CPU): {
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
