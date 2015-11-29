@@ -78,8 +78,6 @@ void procesaCodigo(t_cpu* cpu) {
 	pthread_mutex_unlock(&mutexCPULogs);
 	printf("CCCC\n");
 
-
-
 	t_mCod* mCodCPU = crearmCod();
 	printf("dddddd\n");
 

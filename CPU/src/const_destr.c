@@ -120,7 +120,7 @@ t_cpu* crearCPU() {
 		cPUHilo->nombre = string_from_format("CPU %d", procCPU->contadorIdCPU);
 	}
 	}
-	cPUHilo->pcbPlanificador;
+
 	cPUHilo->porcentajeUso = 0;
 	cPUHilo->terminaInstruccion = SI_TERMINO;
 	cPUHilo->cantInstEjecutadasPorcentaje = 0;
