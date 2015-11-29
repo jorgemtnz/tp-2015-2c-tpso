@@ -17,6 +17,15 @@ t_TablaDePaginas* iniciarTablaDePaginas(){
 	return tablaDePag;
 }
 
+t_error* iniciarError(){
+	t_error* error = malloc(sizeof(error));
+	if (error == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarError");
+		my_log_error("[ERROR] No se reservo memoria para iniciarError");
+		exit(-1);
+	}
+	return error;
+}
 
 
 t_TLB* iniciarTLB() {

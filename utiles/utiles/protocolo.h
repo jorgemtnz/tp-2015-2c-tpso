@@ -33,6 +33,7 @@ typedef enum {
 	//+++memoria+++++++++++++++++++
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
+	ERROR_EJECUCION,
 	LEER_SWAP_POR_ESCRIBIR,
 	RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR,
 	ESCRIBIR_SWAP,
@@ -166,6 +167,12 @@ typedef struct {
 	uint8_t cantidadDeElementos;
 }t_porcentajeCPUs;
 
+typedef struct{
+	uint8_t PID;
+	uint8_t pag;
+}t_error;
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -271,6 +278,8 @@ t_PID* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura);
 
+void* serializar_t_error(int fdCliente, t_tipo_mensaje tipoMensaje, t_error* estructura);
+t_error* deserializar_t_error(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
 void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura);
@@ -348,6 +357,10 @@ void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
+void* serializar_ERROR_EJECUCION(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) ;
+void* deserializar_ERROR_EJECUCION(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+
 void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

@@ -123,6 +123,7 @@ typedef struct{
 	uint8_t indice;
 }t_marco_con_indice;
 
+
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
@@ -149,11 +150,12 @@ void asignarSeniales();
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
+void revisarQueExistaPidYPagina(uint8_t pag, uint8_t PID, int socketCPU);
 void revisarMemoria();
 void mostrarTablaDePag();
 void mostrarTLB();
-void mostrarMemoria();
 void reemplazar_tablaDePag(uint8_t index,t_TablaDePaginas* campoTablaDePag);
+void mostrarMemoria();
 void reemplazar_TLB(uint8_t index,t_TLB* campoTLB);
 void reemplazar_Memoria(uint8_t index,t_marco* campoMarco);
 void leerArchivoDeConfiguracion();
@@ -163,6 +165,7 @@ void finalizar(t_PID* estructuraFinalizar,uint8_t socketSwap);
 void inicializadoCorrecto(uint8_t idProc, uint8_t cantPag);
 void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap, uint8_t socketCPU);
 t_TablaDePaginas* iniciarTablaDePaginas();
+t_error* iniciarError();
 t_contenido_pagina * iniciarEscrituraProc();
 t_TLB* iniciarTLB();
 t_marco * iniciarMarco();

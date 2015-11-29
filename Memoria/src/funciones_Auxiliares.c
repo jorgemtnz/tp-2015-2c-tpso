@@ -1,5 +1,30 @@
 #include "Memoria.h"
 
+void revisarQueExistaPidYPagina(uint8_t pag, uint8_t PID, int socketCPU){
+	int a,tamanioTablaDePag,flagEncontro=0;
+	tamanioTablaDePag= list_size(listaTablaDePag);
+	t_TablaDePaginas * campoTablaDePag;
+	campoTablaDePag = iniciarTablaDePaginas();
+
+	for(a=0;a<tamanioTablaDePag && flagEncontro==0;a++){
+		campoTablaDePag= list_get(listaTablaDePag,a);
+		if(pag == campoTablaDePag->paginaDelProceso && PID == campoTablaDePag->idProc){
+			flagEncontro=1;
+		}
+	}
+
+	if(flagEncontro==0){
+
+		printf("\n\n MEMORIA RECIBIO PID:%i Y PAG:%i\n\n",PID,pag);
+		t_error* error;
+		error =iniciarError();
+		error->PID = PID;
+		error->pag = pag;
+		enviarStruct(socketCPU, ERROR_EJECUCION, error);
+	}
+
+}
+
 void reemplazar_tablaDePag(uint8_t index,t_TablaDePaginas* campoTablaDePag){
 	t_TablaDePaginas * campoTablaDePagReemplazar;
 	campoTablaDePagReemplazar = iniciarTablaDePaginas();
@@ -42,7 +67,6 @@ void reemplazar_Memoria(uint8_t index,t_marco* campoMarco){
 	t_marco * campoMarcoReemplazar;
 	campoMarcoReemplazar = iniciarMarco();
 	campoMarcoReemplazar=campoMarco;
-	printf("\n indice %i \n",index);
 	list_replace(listaMemoria, index, campoMarcoReemplazar);
 }
 
