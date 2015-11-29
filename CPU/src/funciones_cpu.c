@@ -76,6 +76,11 @@ void procesaCodigo(t_cpu* cpu) {
 	log_info(logger,identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	pthread_mutex_unlock(&mutexCPULogs);
+	if(cpu->mCodCPU!=NULL){
+		destmCod(cpu->mCodCPU);
+	}
+
+
 	t_mCod* mCodCPU = crearmCod();
 //++++++++++++++++++++++++++++++++
 	int fd = open(cpu->pcbPlanificador->rutaArchivoMcod, O_RDONLY);

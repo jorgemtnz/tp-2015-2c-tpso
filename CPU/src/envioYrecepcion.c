@@ -11,7 +11,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	pthread_mutex_unlock(&mutexCPULogs);
 
 	switch (token) {
-	case (INICIAR_PROCESO_MEM): {//aca entra por primera vez
+	case (INICIAR_PROCESO_MEM): { //aca entra por primera vez
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
 		//int socketMemoria = atoi((char*) dictionary_get(conexiones, "Memoria"));
 		int socketMemoria = cpu->socketMemoria;
@@ -19,7 +19,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 				cpu->estructuraSolicitud);
 //		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
-		cpu->quantumReloj+=1;
+		cpu->quantumReloj += 1;
 		break;
 	}
 	case (ESCRIBIR_MEM): {
@@ -29,7 +29,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketMemoria, ESCRIBIR_MEM, cpu->estructuraSolicitud);
 //		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
-		cpu->quantumReloj+=1;
+		cpu->quantumReloj += 1;
 		break;
 	}
 	case (LEER_MEM): {
@@ -39,7 +39,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketMemoria, LEER_MEM, cpu->estructuraSolicitud);
 //		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
-		cpu->quantumReloj+=1;
+		cpu->quantumReloj += 1;
 		break;
 	}
 	case (FIN_PROCESO_MEM): {
@@ -50,7 +50,7 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		enviarStruct(socketMemoria, FIN_PROCESO_MEM, cpu->estructuraSolicitud);
 //		free(cpu->estructuraSolicitud);
 		cpu->estructuraSolicitud = NULL;
-		cpu->quantumReloj+=1;
+		cpu->quantumReloj += 1;
 		break;
 	}
 	case (ENTRADA_SALIDA): {
@@ -58,14 +58,21 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
-		ejecuta_EntradaSalida(separada_instruccion, cpu,socketPlanificador);
+		ejecuta_EntradaSalida(separada_instruccion, cpu, socketPlanificador);
 
 //		destmCod(cpu->mCodCPU);
-		cpu->estado =SI_TERMINO_RAFAGA ;
+		cpu->estado = SI_TERMINO_RAFAGA;
 //		printf("\n %i \n", cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
-				cpu->pcbPlanificador=NULL;
-				cpu->quantumReloj+=1;
+
+		puts(
+						string_from_format(
+								"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
+		cpu->mCodCPU=NULL;
+		cpu->pcbPlanificador = NULL;
+		cpu->quantumReloj += 1;
 		break;
 	}
 	}
@@ -84,7 +91,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	case (CONTEXTO_MPROC): {//cuando llega aca es porque es la primera vez sea FIFO o RR
 //		cpu->pcbPlanificador->proximaInstruccion = 0 que viene del planificador
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
-		printf("se imprime pcb-> PID recibido %i \n", pcbPlanificador->pid);
+		printf("contexto recibido pcb-> PID recibido %i \n",
+				pcbPlanificador->pid);
 		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "llega mensaje CONTEXTO_MPROC ");
@@ -123,10 +131,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //primera vez que se esta usando la respuesta , fue creada creaRespuestaEjecucion()
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 
-		if(cpu->pcbPlanificador==NULL){
-					printf("recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",datosDesdeMem->PID);
-					break;
-				}
+		if (cpu->pcbPlanificador == NULL) {
+			printf(
+					"recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",
+					datosDesdeMem->PID);
+			break;
+		}
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -144,8 +154,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		pthread_mutex_unlock(&mutexCPULogs);
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) {	//estoy en RR
-			if (cpu->pcbPlanificador->tamanioRafaga
-					> cpu->quantumReloj) {
+			if (cpu->pcbPlanificador->tamanioRafaga > cpu->quantumReloj) {
 				ejecuta_Instruccion(
 						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 						cpu);
@@ -153,9 +162,20 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //espera que regrese el proceso en un futuro porque no ha terminado
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
-				cpu->pcbPlanificador=NULL;
-				cpu->quantumReloj=0;
-				puts(string_from_format("se envia por Quantum %s  %s\n",queCPUsoy(cpu),identificaCPU(cpu->idCPU)));
+
+				cpu->quantumReloj = 0;
+				puts(
+						string_from_format(
+								"se envia por Quantum %s  %s PID %i\n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
+				puts(
+										string_from_format(
+												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+												cpu->pcbPlanificador->pid));
+				cpu->pcbPlanificador = NULL;
+				cpu->mCodCPU = NULL;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -171,10 +191,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//al dar error se debe devolver el proceso
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
-		if(cpu->pcbPlanificador==NULL){
-					printf("recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",datosDesdeMem->PID);
-					break;
-				}
+		if (cpu->pcbPlanificador == NULL) {
+			printf(
+					"recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",
+					datosDesdeMem->PID);
+			break;
+		}
 		//la respuesta ya fue creada antes y ya se hizo resultadosInstrucciones = string_new()
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -196,13 +218,24 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada de regreso
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-		cpu->pcbPlanificador=NULL;
+
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
 				cpu->mCodCPU->respEjec);
 //		destmCod(cpu->mCodCPU); //liero espacio porque luego reservo cuando me llega otro proceso
-		cpu->quantumReloj=0;
+		cpu->quantumReloj = 0;
 		cpu->estado = SI_TERMINO_RAFAGA;
-		puts(string_from_format("se envia por proceso iniciar no ok %s  %s\n",queCPUsoy(cpu),identificaCPU(cpu->idCPU)));
+		puts(
+				string_from_format(
+						"se envia por proceso iniciar no ok %s  %s PID %i\n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
+		puts(
+								string_from_format(
+										"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+										queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+										cpu->pcbPlanificador->pid));
+		cpu->pcbPlanificador = NULL;
+		cpu->mCodCPU = NULL;
 		break;
 	}
 
@@ -212,8 +245,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->terminaInstruccion = SI_TERMINO;
 		//se cuenta aca para tener en cuenta el retraso de pedirle a memoria
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
-		if(cpu->pcbPlanificador==NULL){
-			printf("recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",datosDesdeMem->PID);
+		if (cpu->pcbPlanificador == NULL) {
+			printf(
+					"recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",
+					datosDesdeMem->PID);
 			break;
 		}
 
@@ -242,8 +277,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		pthread_mutex_unlock(&mutexCPULogs);
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) {
-			if (cpu->pcbPlanificador->tamanioRafaga
-					> cpu->quantumReloj) { //estoy en RR
+			if (cpu->pcbPlanificador->tamanioRafaga > cpu->quantumReloj) { //estoy en RR
 
 				ejecuta_Instruccion(
 						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
@@ -253,9 +287,20 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //estoy en RR y se debe ir
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
-				cpu->pcbPlanificador=NULL;
-				cpu->quantumReloj=0;
-				puts(string_from_format("se envia por Quantum %s  %s\n",queCPUsoy(cpu),identificaCPU(cpu->idCPU)));
+
+				cpu->quantumReloj = 0;
+				puts(
+						string_from_format(
+								"se envia por Quantum %s  %s PID %i\n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
+				puts(
+										string_from_format(
+												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+												cpu->pcbPlanificador->pid));
+				cpu->pcbPlanificador = NULL;
+				cpu->mCodCPU = NULL;
 			}
 		} else { // es planificacion FIFO
 
@@ -277,10 +322,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //		printf("\n contenido: %s // PID:%i //PAG:%i\n",datosdesdeMEmoria->contenido,datosdesdeMEmoria->PID,datosdesdeMEmoria->numeroPagina);
 //		printf("\n %i \n",cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
-		if(cpu->pcbPlanificador==NULL){
-					printf("recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",datosdesdeMEmoria->PID);
-					break;
-				}
+		if (cpu->pcbPlanificador == NULL) {
+			printf(
+					"recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",
+					datosdesdeMEmoria->PID);
+			break;
+		}
 
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -310,8 +357,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		//se ejecuta la siguiente instruccion si corresponde
 		if (cpu->pcbPlanificador->tieneDesalojo == true) { //RR
-			if (cpu->pcbPlanificador->tamanioRafaga
-					> cpu->quantumReloj) {
+			if (cpu->pcbPlanificador->tamanioRafaga > cpu->quantumReloj) {
 				ejecuta_Instruccion(
 						cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 						cpu);
@@ -319,8 +365,19 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
-				cpu->quantumReloj=0;
-				puts(string_from_format("se envia por Quantum %s  %s\n",queCPUsoy(cpu),identificaCPU(cpu->idCPU)));
+				cpu->quantumReloj = 0;
+				puts(
+						string_from_format(
+								"se envia por Quantum %s  %s PID %i\n",
+								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+								cpu->pcbPlanificador->pid));
+				puts(
+										string_from_format(
+												"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+												cpu->pcbPlanificador->pid));
+				cpu->pcbPlanificador = NULL;
+				cpu->mCodCPU = NULL;
 			}
 		} else { // es planificacion FIFO
 			ejecuta_Instruccion(
@@ -335,10 +392,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->cantInstEjecutadasPorcentaje += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
 		t_PID* datosDesdeMem = (t_PID*) buffer;
-		if(cpu->pcbPlanificador==NULL){
-					printf("recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",datosDesdeMem->PID);
-					break;
-				}
+		if (cpu->pcbPlanificador == NULL) {
+			printf(
+					"recibo de memoria PID %i que no es el que esta ejecutando la cpu \n",
+					datosDesdeMem->PID);
+			break;
+		}
 		if (cpu->mCodCPU->respEjec == NULL) {
 			cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
 		}
@@ -372,9 +431,24 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->estado = SI_TERMINO_RAFAGA;
 //		destmCod(cpu->mCodCPU); //libero para esperar al proximo
 
-		puts(string_from_format("se envia por finalizar %s  %s\n",queCPUsoy(cpu),identificaCPU(cpu->idCPU)));
-		cpu->pcbPlanificador=NULL;
-		cpu->quantumReloj=0;
+		puts(
+				string_from_format("se envia por finalizar %s  %s PID %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
+
+		puts(
+				string_from_format(
+						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid));
+		puts(
+								string_from_format(
+										"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+										queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+										cpu->pcbPlanificador->pid));
+		cpu->pcbPlanificador = NULL;
+		cpu->mCodCPU = NULL;
+		cpu->quantumReloj = 0;
 		break;
 	}
 
