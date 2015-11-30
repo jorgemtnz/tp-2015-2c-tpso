@@ -123,7 +123,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				}
 
 				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
-				revisarQueExistaPidYPagina(datosDesdeCPU->PID,pag,socketCPU);
+				revisarQueExistaPidYPagina(pag,datosDesdeCPU->PID,socketCPU);
 
 
 				my_log_info(textoALoggear);
@@ -135,7 +135,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
-				revisarQueExistaPidYPagina(datosDesdeCPU->PID,datosDesdeCPU->numeroPagina,socketCPU);
+				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =1;
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
@@ -181,7 +181,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
 				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
-				revisarQueExistaPidYPagina(datosDesdeCPU->PID,datosDesdeCPU->numeroPagina,socketCPU);
+				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 
 				aux =0;
 				my_log_info("leer pag %d del proceso %d\n",
