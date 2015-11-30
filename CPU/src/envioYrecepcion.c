@@ -88,7 +88,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				string_from_format(
 						"contexto recibido %s  %s PID %i tamanio rafaga %i \n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						pcbPlanificador->pid,pcbPlanificador->tamanioRafaga));
+						pcbPlanificador->pid, pcbPlanificador->tamanioRafaga));
 
 		cpu->actualPID = pcbPlanificador->pid;
 
@@ -145,10 +145,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
-							string_from_format(
-									" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
-									queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-									datosDesdeMem->PID));
+					string_from_format(
+							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
+							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+							datosDesdeMem->PID));
 			break;
 		}
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
@@ -177,7 +177,6 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 
-
 				puts(
 						string_from_format(
 								"se envia por Quantum %s  %s PID %i quantumReloj %i\n",
@@ -203,10 +202,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
-										string_from_format(
-												" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												datosDesdeMem->PID));
+					string_from_format(
+							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
+							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+							datosDesdeMem->PID));
 			break;
 		}
 		//la respuesta ya fue creada antes y ya se hizo resultadosInstrucciones = string_new()
@@ -246,7 +245,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//se cuenta aca como terminado de ejecutar la instruccion iniciar
 		cpu->cantInstEjecutadasPorcentaje += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
-		cpu->quantumReloj=0;
+		cpu->quantumReloj = 0;
 		break;
 	}
 
@@ -256,10 +255,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
-										string_from_format(
-												" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												datosDesdeMem->PID));
+					string_from_format(
+							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
+							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+							datosDesdeMem->PID));
 			break;
 		}
 
@@ -298,7 +297,6 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 
-
 				puts(
 						string_from_format(
 								"se envia por Quantum %s  %s PID %i quantumReloj %i\n",
@@ -335,10 +333,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
-										string_from_format(
-												" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												datosDesdeMem->PID));
+					string_from_format(
+							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
+							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+							datosDesdeMem->PID));
 			break;
 		}
 
@@ -358,8 +356,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se ejecuta resultado escribir proceso");
 		log_info(logger,
-				string_from_format("Id del proceso %i",
-						datosDesdeMem->PID));
+				string_from_format("Id del proceso %i", datosDesdeMem->PID));
 		log_info(logger,
 				string_from_format("numero de pagina escrita %i",
 						datosDesdeMem->numeroPagina));
@@ -406,10 +403,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
-										string_from_format(
-												" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
-												queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-												datosDesdeMem->PID));
+					string_from_format(
+							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
+							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+							datosDesdeMem->PID));
 			break;
 		}
 		if (cpu->mCodCPU->respEjec == NULL) {
@@ -446,7 +443,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->actualPID = -1;
 		cpu->estado = SI_TERMINO_RAFAGA;
 		puts(
-				string_from_format("se envia por finalizar %s  %s PID %i quantumReloj %i\n",
+				string_from_format(
+						"se envia por finalizar %s  %s PID %i quantumReloj %i\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid, cpu->quantumReloj));
 
@@ -465,12 +463,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		break;
 	}
 
-	case (ERROR_EJECUCION):{
+	case (ERROR_EJECUCION): {
 		t_error* error = (t_error*) buffer;
 		puts(
-						string_from_format("%s  %s ERROR, recibio memoria  PID %i y mi PID es %i\n",
-								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								error->PID,cpu->pcbPlanificador->pid));
+				string_from_format(
+						"%s  %s ERROR, recibio memoria  PID %i y mi PID es %i\n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU), error->PID,
+						cpu->pcbPlanificador->pid));
 
 		break;
 	}

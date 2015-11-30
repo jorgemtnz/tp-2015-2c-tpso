@@ -2,14 +2,15 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
+
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 //	if((cpu->pcbPlanificador->tieneDesalojo == true)&&)
 	cpu->terminaInstruccion = NO_TERMINO;
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
-
-	free(cpu->estructuraSolicitud);
-	cpu->estructuraSolicitud = NULL;
 
 	cpu->estructuraSolicitud = (t_iniciar_swap*) estructura;
 	cpu->pcbPlanificador->proximaInstruccion++;
@@ -22,10 +23,19 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 					estructura->cantidadPaginas));
 	pthread_mutex_unlock(&mutexCPULogs);
 
+	puts(
+				string_from_format(
+						" %s  %s  INICIAR_PROCESO_MEM de PID %i: se envia:PID %i, cant pag %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),cpu->actualPID, estructura->PID, estructura->cantidadPaginas ));
+
 	sleep(configuracion->retardo);
 }
 //mandar comando a  memoria con los datos y la pagina donde debe ser escrita
 void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
+
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->terminaInstruccion = NO_TERMINO;
 	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
@@ -34,9 +44,6 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	string_append(&estructura->contenido, separada_instruccion[2]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
-
-	free(cpu->estructuraSolicitud);
-	cpu->estructuraSolicitud = NULL;
 
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
@@ -53,15 +60,15 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 }
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
+	free(cpu->estructuraSolicitud);
+			cpu->estructuraSolicitud = NULL;
+
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->terminaInstruccion = NO_TERMINO;
 	estructura->contenido = string_new();
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
-
-	free(cpu->estructuraSolicitud);
-		cpu->estructuraSolicitud = NULL;
 
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
@@ -76,13 +83,12 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
+	free(cpu->estructuraSolicitud);
+			cpu->estructuraSolicitud = NULL;
+
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->terminaInstruccion = NO_TERMINO;
 	estructura->PID = cpu->pcbPlanificador->pid;
-
-	free(cpu->estructuraSolicitud);
-		cpu->estructuraSolicitud = NULL;
-
 
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
@@ -134,16 +140,9 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
-	//		++++++++++++++++++++++funcion finalizar
 
-//	if (cpu->pcbPlanificador->instruccionFinal
-//			== cpu->pcbPlanificador->proximaInstruccion) {
-//		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada
-//	} else {
 	cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
-//	}
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
-
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
 	pthread_mutex_lock(&mutexCPULogs);
@@ -161,10 +160,8 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
-	//		++++++++++++++++++++++funcion finalizar
 
 	cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
-
 	cpu->mCodCPU->respEjec->pcb = (cpu->pcbPlanificador);
 
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
