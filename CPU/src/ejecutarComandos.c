@@ -2,7 +2,11 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
-
+	puts(
+				string_from_format(
+						" %s  %s  INICIAR_PROCESO_MEM de PID %i:  dir EstructuraSolicitud %p\n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+						cpu->estructuraSolicitud));
 	free(cpu->estructuraSolicitud);
 	cpu->estructuraSolicitud = NULL;
 

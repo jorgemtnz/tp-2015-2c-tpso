@@ -26,7 +26,7 @@ endif
 all: libutiles.so
 
 dependents:
-	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) all
+	-cd /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug && $(MAKE) clean all
 
 # Tool invocations
 libutiles.so: $(OBJS) $(USER_OBJS) /home/utnso/tp-2015-2c-tpsobranch/commons-library/Debug/libcommons-library.so

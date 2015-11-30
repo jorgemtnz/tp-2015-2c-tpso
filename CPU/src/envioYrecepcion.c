@@ -471,6 +471,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU), error->PID,
 						cpu->pcbPlanificador->pid));
 
+		exit(-1);
 		break;
 	}
 	case (TIEMPO_CPU): {
