@@ -57,13 +57,13 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 //		printf("\n %i \n", cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 
-		puts(
-				string_from_format(
-						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
-						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						cpu->pcbPlanificador->pid));
+//		puts(
+//				string_from_format(
+//						"se ponen en NULL pcbPlanificador y MCodCPU %s  %s PID %i \n",
+//						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+//						cpu->pcbPlanificador->pid));
 //		cpu->mCodCPU=NULL;
-		cpu->pcbPlanificador = NULL;
+//		cpu->pcbPlanificador = NULL;
 		cpu->quantumReloj = 0;
 		break;
 	}
