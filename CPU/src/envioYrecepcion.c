@@ -143,6 +143,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //primera vez que se esta usando la respuesta , fue creada creaRespuestaEjecucion()
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 
+		puts(
+				string_from_format(
+						"recibo RESUL_INICIAR_PROC_OK_CPU %s  %s ejecuto PID %i\n"
+								"recibo PID %i quantumReloj %i\n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+						cpu->quantumReloj));
+
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
@@ -200,6 +208,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//al dar error se debe devolver el proceso
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		puts(
+				string_from_format(
+						"recibo RESUL_INICIAR_PROC_NO_OK_CPU   %s  %s\n"
+								" ejecuto PID %i recibo PID %i quantumReloj %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+						cpu->quantumReloj));
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
@@ -253,6 +268,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->quantumReloj += 1;
 
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
+		puts(
+				string_from_format("recibo RESUL_LEER_OK_CPU %s  %s ejecuto \n"
+						"ejecuto PID %i, recibo PID %i quantumReloj %i\n "
+						"contenido recibido %s pagina %i \n", queCPUsoy(cpu),
+						identificaCPU(cpu->idCPU), cpu->pcbPlanificador->pid,
+						datosDesdeMem->PID, cpu->quantumReloj,
+						datosDesdeMem->contenido, datosDesdeMem->numeroPagina));
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
@@ -328,6 +350,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->quantumReloj += 1;
 
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
+
+		puts(
+				string_from_format(
+						"recibo RESUL_ESCRIBIR %s  %s ejecuto  PID \n "
+								"%i recibo PID quantumReloj %i pagina %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+						cpu->quantumReloj, datosDesdeMem->numeroPagina));
 //		printf("\n contenido: %s // PID:%i //PAG:%i\n",datosdesdeMEmoria->contenido,datosdesdeMEmoria->PID,datosdesdeMEmoria->numeroPagina);
 //		printf("\n %i \n",cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
@@ -401,6 +431,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->quantumReloj += 1;
 
 		t_PID* datosDesdeMem = (t_PID*) buffer;
+		puts(
+				string_from_format(
+						"recibo RESUL_FIN %s  %s ejecuto PID %i \n"
+						"recibo PID %i quantumReloj %i\n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid,datosDesdeMem->PID, cpu->quantumReloj));
+
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
