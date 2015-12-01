@@ -160,11 +160,11 @@ t_ProcCPU* crearProcCPU() {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //----------------------------FUNCIONES DESTRUCTORAS------------------------------
 void destmCod(t_mCod* unmCod) {
-	if (unmCod != NULL) {
+	/*if (unmCod != NULL) {
 		destRespEjec(unmCod->respEjec);
 		destVectorInstruccion(unmCod->bufferInstrucciones);
 		free(unmCod);
-	}
+	}*/
 }
 
 void destConfig(t_configuracion* unaConfig) {

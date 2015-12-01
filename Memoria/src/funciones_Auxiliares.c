@@ -408,7 +408,7 @@ uint8_t sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, uint8_t PIDACargar
 
 }
 
-void sacarDeMemoriaSegunFifo(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarDeMemoriaSegunFifo(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_marco* campoAux;
@@ -433,7 +433,7 @@ void sacarDeMemoriaSegunFifo(uint8_t socketSwap, uint8_t PIDACargar, char* conte
 	pthread_mutex_unlock(&mutexListaMemoria);
 
 
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
 
@@ -611,7 +611,7 @@ uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t 
 
 }
 
-void sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_marco* campoAux;
@@ -637,7 +637,7 @@ void sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char*
 	pthread_mutex_unlock(&mutexListaMemoria);
 
 
-	verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(campoAux, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 
 }
@@ -726,7 +726,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 	return marcoYFlag;
 }
 
-void sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
@@ -745,7 +745,7 @@ void sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar, 
 		marcoYFlag = buscarUsoEnCeroModificadaEnUno();
 	}
 
-	verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
+	return verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
 
 }
 
@@ -1054,7 +1054,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 			 respuesta= sacarAlMasViejoUsadoDelProcesoDeMemoria(contenido, idProc, pag, flagEscritura, socketSwap);
 			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
-			sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
+			respuesta = sacarAlMasViejoUsadoDeMemoria(socketSwap, idProc, contenido, pag, flagEscritura);
 			 flagSaco=1;
 		}
 
@@ -1064,7 +1064,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 			 respuesta=sacaProcesoDeMemoriaSegunClockModificado(contenido, idProc, pag, flagEscritura, socketSwap);
 			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
-			sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
+			respuesta = sacarDeMemoriaSegunClockModificado(socketSwap, idProc, contenido, pag, flagEscritura);
 			 flagSaco=1;
 		}
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
@@ -1073,7 +1073,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 			 respuesta = sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
 			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
-			sacarDeMemoriaSegunFifo(socketSwap, idProc, contenido, pag, flagEscritura);
+			respuesta = sacarDeMemoriaSegunFifo(socketSwap, idProc, contenido, pag, flagEscritura);
 			 flagSaco=1;
 		}
 	}

@@ -181,11 +181,11 @@ void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag,uint8_t so
 void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc,uint8_t nroPag, char* textoAEscribir,uint8_t socketSwap);
 void cargarNuevoMarcoAMemoria(char* contenido,uint8_t PID, uint8_t pag, uint8_t flagEscritura);
 bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc);
-void sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap,uint8_t PIDACargar,char* contenidoACargar,uint8_t pagACargar, uint8_t flagEscritura);
+uint8_t sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap,uint8_t PIDACargar,char* contenidoACargar,uint8_t pagACargar, uint8_t flagEscritura);
 uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar,uint8_t flagEscritura,uint8_t socketSwap);
 uint8_t sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t socketSwap);
-void sacarAlPrimeroDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar);
-void sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar,
+uint8_t sacarAlPrimeroDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar);
+uint8_t sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar,
 		char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura);
 uint8_t sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
 		uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap);
