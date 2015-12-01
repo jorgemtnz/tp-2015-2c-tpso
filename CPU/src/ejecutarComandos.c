@@ -2,15 +2,13 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
-	puts(
-				string_from_format(
-						" %s  %s  INICIAR_PROCESO_MEM de PID %i:  dir EstructuraSolicitud %p\n",
-						queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
-						cpu->estructuraSolicitud));
-	free(cpu->estructuraSolicitud);
+//	puts(
+//				string_from_format(
+//						" %s  %s  INICIAR_PROCESO_MEM de PID %i:  dir EstructuraSolicitud %p\n",
+//						queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//						cpu->estructuraSolicitud));
+//	free(cpu->estructuraSolicitud);
 	cpu->estructuraSolicitud = NULL;
-
-//	if((cpu->pcbPlanificador->tieneDesalojo == true)&&)
 	cpu->terminaInstruccion = NO_TERMINO;
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
@@ -27,12 +25,12 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 					estructura->cantidadPaginas));
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	puts(
-			string_from_format(
-					" %s  %s  INICIAR_PROCESO_MEM de PID %i: se envia:PID %i, cant pag %i dirEstructura %p dir EstructuraSolicitud %p\n",
-					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
-					estructura->PID, estructura->cantidadPaginas, estructura,
-					cpu->estructuraSolicitud));
+//	puts(
+//			string_from_format(
+//					" %s  %s  INICIAR_PROCESO_MEM de PID %i: se envia:PID %i, cant pag %i dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID, estructura->cantidadPaginas, estructura,
+//					cpu->estructuraSolicitud));
 
 	sleep(configuracion->retardo);
 }
@@ -63,12 +61,12 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 			string_from_format("contenido %s \n", estructura->contenido));
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	puts(
-			string_from_format(
-					" %s  %s  ESCRIBIR_MEM de PID %i: se envia:PID %i, num pag %i  contenido %s, \n dirEstructura %p dir EstructuraSolicitud %p\n",
-					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
-					estructura->PID,estructura->numeroPagina, estructura->contenido, estructura,
-					cpu->estructuraSolicitud));
+//	puts(
+//			string_from_format(
+//					" %s  %s  ESCRIBIR_MEM de PID %i: se envia:PID %i, num pag %i  contenido %s, \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID,estructura->numeroPagina, estructura->contenido, estructura,
+//					cpu->estructuraSolicitud));
 	sleep(configuracion->retardo);
 }
 //devuelve la estructura de leerMemoria
@@ -92,12 +90,12 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 					"instruccion ejecutada: leer . numero de pagina, %i \n",
 					estructura->numeroPagina));
 	pthread_mutex_unlock(&mutexCPULogs);
-	puts(
-			string_from_format(
-					" %s  %s  LEER_MEM de PID %i: se envia:PID %i, num pag %i , \n dirEstructura %p dir EstructuraSolicitud %p\n",
-					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
-					estructura->PID,estructura->numeroPagina, estructura,
-					cpu->estructuraSolicitud));
+//	puts(
+//			string_from_format(
+//					" %s  %s  LEER_MEM de PID %i: se envia:PID %i, num pag %i , \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID,estructura->numeroPagina, estructura,
+//					cpu->estructuraSolicitud));
 
 	sleep(configuracion->retardo);
 }
@@ -117,12 +115,12 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 	log_info(logger, "instruccion ejecutada: fin proceso memoria  \n");
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	puts(
-			string_from_format(
-					" %s  %s  FIN_PROCESO_MEM de PID %i: se envia:PID %i, \n dirEstructura %p dir EstructuraSolicitud %p\n",
-					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
-					estructura->PID, estructura,
-					cpu->estructuraSolicitud));
+//	puts(
+//			string_from_format(
+//					" %s  %s  FIN_PROCESO_MEM de PID %i: se envia:PID %i, \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID, estructura,
+//					cpu->estructuraSolicitud));
 
 	sleep(configuracion->retardo);
 }
@@ -161,12 +159,12 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
 					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	puts(
-			string_from_format(
-					" %s  %s  ENTRADA_SALIDA de PID %i: se envia:PID %i,\n tiempo de entrada salida %i\n ",
-					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID
-					, cpu->mCodCPU->respEjec->cant_entrada_salida
-					));
+//	puts(
+//			string_from_format(
+//					" %s  %s  ENTRADA_SALIDA de PID %i: se envia:PID %i,\n tiempo de entrada salida %i\n ",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID
+//					, cpu->mCodCPU->respEjec->cant_entrada_salida
+//					));
 
 
 	sleep(configuracion->retardo);

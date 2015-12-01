@@ -282,16 +282,16 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			cpu->mCodCPU->respEjec->resultadosInstrucciones = string_new();
 		}
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
-		puts(
-				string_from_format(
-						"recibo RESUL_LEER_OK_CPU %s  %s ejecuto \n"
-								"ejecuto PID %i, recibo PID %i quantumReloj %i resultInstrucciones %s\n "
-								"contenido recibido %s pagina %i \n",
-						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
-						cpu->quantumReloj, datosDesdeMem->contenido,
-						datosDesdeMem->numeroPagina,
-						*cpu->mCodCPU->respEjec->resultadosInstrucciones));
+//		puts(
+//				string_from_format(
+//						"recibo RESUL_LEER_OK_CPU %s  %s ejecuto \n"
+//								"ejecuto PID %i, recibo PID %i quantumReloj %i resultInstrucciones %s\n "
+//								"contenido recibido %s pagina %i \n",
+//						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+//						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+//						cpu->quantumReloj, datosDesdeMem->contenido,
+//						datosDesdeMem->numeroPagina,
+//						*cpu->mCodCPU->respEjec->resultadosInstrucciones));
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			printf(
 					" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
@@ -542,11 +542,11 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 	case (ERROR_EJECUCION): {
 		t_error* error = (t_error*) buffer;
-		puts(
-				string_from_format(
+		printf(
+
 						"%s  %s ERROR mandado por memoria, recibio memoria  PID %i y mi PID es %i\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU), error->PID,
-						cpu->pcbPlanificador->pid));
+						cpu->pcbPlanificador->pid);
 
 		abort();
 		break;
