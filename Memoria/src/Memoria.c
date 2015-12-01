@@ -227,14 +227,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				/* solo se usa en las funciones de sacar a un marco de memoria entonces
 				 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 				 que es lo que se manda en el caso que no haya que sacar alguno */
-				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				t_contenido_pagina* datosDesdeSwap = (t_contenido_pagina*) buffer;
 				my_log_info("resultado sobreescribir ok de pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+						datosDesdeSwap->numeroPagina, datosDesdeSwap->PID);
 				t_contenido_pagina* lecturaMandarCpu;
 				lecturaMandarCpu = iniciarContenidoPagina();
-				lecturaMandarCpu = datosDesdeCPU;
+				lecturaMandarCpu = datosDesdeSwap;
 				enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
-						getSocketCPU(datosDesdeCPU->PID));
+						getSocketCPU(datosDesdeSwap->PID));
 				break;
 			}
 			default:
