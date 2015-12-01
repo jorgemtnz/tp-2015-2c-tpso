@@ -17,7 +17,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 //		log_info(logger,identificaCPU(queHiloSoy()));
 //		log_error(logger, logMsg);
 //		pthread_mutex_unlock(&mutexCPULogs);
-		exit(-1);
+		abort();
 	}
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 //	nombreArchivoConfig = strdup(
@@ -27,7 +27,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
 //	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
-		exit(-1);
+		abort();
 	} else {
 		archivoConfig = config_create(nombreArchivoConfig);
 		configuracion = malloc(sizeof(t_configuracion));

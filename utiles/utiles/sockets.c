@@ -542,6 +542,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 		// run through the existing connections looking for data to read
 		for (i = 0; i <= fdmax; i++) {
 			if (FD_ISSET(i, &read_fds)) { // we got one!!
+				debug("======================================================== inicio ciclo select\n");
 				if (soyServer && i == listener) {
 					// handle new connections
 					addrlen = sizeof remoteaddr;
@@ -652,6 +653,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						*/
 					}
 				} // END handle data from client
+				debug("======================================================== fin ciclo select\n");
 			} // END got new incoming connection
 		} // END looping through file descriptors
 	} // END for(;;)--and you thought it would never end!
@@ -864,7 +866,7 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 	return 0;
 }
 
-bool mustDebug = false;
+bool mustDebug = true;
 
 void debug(const char *formato, ...) {
 //	puts("printConsola\n");

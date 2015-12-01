@@ -296,7 +296,7 @@ void *ejecutarEntradaSalida(void *param) {
 			//time_t t;
 			//time(&t);
 			//printConsola("\n current time is : %s ",ctime(&t));
-			printConsola("Cantidad ciclos restantes %d\n", cantidadCiclos);
+			printConsola("Cantidad ciclos E/S restantes %d\n", cantidadCiclos);
 			usleep(1000000);
 			lockEstadoEntradaSalida();
 			estadoEntradaSalida.cantidadCiclos--;
