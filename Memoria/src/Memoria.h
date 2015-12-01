@@ -252,10 +252,10 @@ void hardcodearValoresEnTLB(uint8_t PID,uint8_t id, uint8_t pag);
 
 
 
-uint8_t getSocketCPU(uint8_t pid);
-bool hayQueRegistrarPidCpu(uint8_t socket);
+int getSocketCPU(uint8_t pid);
+bool hayQueRegistrarPidCpu(int socket);
 char* getKeyPidCpu(uint8_t pid);
-void registrarPidCpu(uint8_t socket, uint8_t pid);
+void registrarPidCpu(int socket, uint8_t pid);
 //========================================================================================
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++

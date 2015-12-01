@@ -473,6 +473,15 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
+			int tamanio = list_size(procCPU->listaCPU);
+			int i = 0;
+			for(i= 0; i < tamanio; i++) {
+				t_cpu* cpu = (t_cpu*)list_get(procCPU->listaCPU, i);
+				if(cpu != NULL) {
+					debug("RESUL_FIN CPU: %s, pid: i, actualPid %d, socketMemoria %d\n", cpu->nombre, /*cpu->pcbPlanificador!= NULL?cpu->pcbPlanificador->pid:-100,*/ cpu->actualPID, cpu->socketMemoria);
+				}
+
+			}
 			break;
 			cpu->quantumReloj -= 1;
 		}

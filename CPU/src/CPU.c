@@ -29,10 +29,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		pthread_t hiloactual = queHiloSoy();
 
 		bool buscaHilo(t_cpu* unaCPU) {
-			return hiloactual == unaCPU->idCPU;
+			//return hiloactual == unaCPU->idCPU;
+			return unaCPU->socketMemoria == socket || unaCPU->socketPlanificador == socket;
 		}
 
 		cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
+		if (cpu != NULL) {
+			debug("CPU procesar mensajes CPU: %s, pid: i, actualPid %d, socketMemoria %d\n", cpu->nombre, /*cpu->pcbPlanificador!= NULL?cpu->pcbPlanificador->pid:-100,*/ cpu->actualPID, cpu->socketMemoria);
+		}
 	} else {
 		    pthread_mutex_lock(&mutexCPULogs);
 			log_info(logger,identificaCPU(queHiloSoy()));

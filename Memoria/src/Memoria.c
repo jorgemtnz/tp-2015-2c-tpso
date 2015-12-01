@@ -57,7 +57,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
 				t_PID* rtaDesdeSwap = (t_PID*) buffer;
-				uint8_t socketCPU = getSocketCPU(rtaDesdeSwap->PID);
+				int socketCPU = getSocketCPU(rtaDesdeSwap->PID);
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap, socketCPU);
 				break;
 			}
@@ -70,7 +70,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (RESUL_FIN_OK): {
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
-				uint8_t socketCPU = getSocketCPU(datosDesdeSwap->PID);
+				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 
 
@@ -122,8 +122,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					}
 				}
 
-				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
-
 				my_log_info(textoALoggear);
 
 
@@ -132,14 +130,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
+				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =1;
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
-						socketSwap, getSocketCPU(datosDesdeCPU->PID));
+						socketSwap, socketCPU);
 
 				break;
 			}
@@ -178,7 +176,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
+				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 
 				aux =0;
@@ -243,11 +241,12 @@ char* getNombre() {
 	return "Memoria";
 }
 
-uint8_t getSocketCPU(uint8_t pid) {
+int getSocketCPU(uint8_t pid) {
+	debug("/////////////// get Socket %d, por pid %i, key: %s\n", atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid))), pid, getKeyPidCpu(pid));
 	return atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid)));
 }
 
-bool hayQueRegistrarPidCpu(uint8_t socket) {
+bool hayQueRegistrarPidCpu(int socket) {
 	bool esSocketCPU(void* elemento) {
 		return string_equals((char*) elemento, string_itoa(socket));
 	}
@@ -257,13 +256,17 @@ bool hayQueRegistrarPidCpu(uint8_t socket) {
 }
 
 char* getKeyPidCpu(uint8_t pid) {
-	return string_from_format("CPU-PID:%d", pid);
+	return string_from_format("CPU-PID:%i", pid);
 }
 
-void registrarPidCpu(uint8_t socket, uint8_t pid) {
+void registrarPidCpu(int socket, uint8_t pid) {
 
 	if(hayQueRegistrarPidCpu(socket)){
 		char* keyCPU = getKeyPidCpu(pid);
+		dictionary_remove(conexiones, keyCPU);
 		dictionary_put(conexiones, keyCPU, string_itoa(socket));
+		debug("/////////////// reg Socket %s, por pid %i, key: %s\n", string_itoa(socket), pid, keyCPU);
+		char* obtenido = (char*) dictionary_get(conexiones, getKeyPidCpu(pid));
+		debug("/////////////// aft Socket %d as char %s, por pid %i, key: %s\n", atoi(obtenido), obtenido, pid, getKeyPidCpu(pid));
 	}
 }
