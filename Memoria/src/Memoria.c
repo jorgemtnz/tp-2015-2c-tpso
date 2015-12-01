@@ -79,22 +79,23 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (INICIAR_PROCESO_MEM): {
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
 				usleep(configuracion->retardoMemoria * 1000);
-				registrarPidCpu(socket, datosDesdeCPU->PID);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
 			case (FIN_PROCESO_MEM): {
 				t_PID* datosDesdeCPU = (t_PID*) buffer;
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 
 				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				usleep(configuracion->retardoMemoria * 1000);
-				registrarPidCpu(socket, datosDesdeCPU->PID);
+
 
 				revisarMemoria();
 
@@ -130,12 +131,13 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =1;
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
-				registrarPidCpu(socket, datosDesdeCPU->PID);
+
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
 						socketSwap, socketCPU);
 
@@ -176,6 +178,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 
@@ -187,7 +190,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				registrarPidCpu(socket, datosDesdeCPU->PID);
+
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 
