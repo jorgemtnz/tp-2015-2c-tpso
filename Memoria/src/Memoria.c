@@ -45,6 +45,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			switch (header->tipoMensaje) {
 			case (RESUL_INICIAR_PROC_OK): {
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i cant pag %i \n",
+			//			datosDesdeSwap->PID, datosDesdeSwap->cantidadPaginas));
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeSwap->cantidadPaginas;
@@ -57,19 +59,25 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
 				t_PID* rtaDesdeSwap = (t_PID*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i \n",
+			//			rtaDesdeSwap->PID));
 				int socketCPU = getSocketCPU(rtaDesdeSwap->PID);
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap, socketCPU);
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
-				t_contenido_pagina* datosdesdeSwap =
+				t_contenido_pagina* datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
-				enviarRtaEscribirACPU(datosdesdeSwap, getSocketCPU(datosdesdeSwap->PID));
+			//	puts(string_from_format("recibo de swap PID %i num pag %i contenido %s \n",
+			//						datosDesdeSwap->PID, datosDesdeSwap->numeroPagina,datosDesdeSwap->contenido ));		
+				enviarRtaEscribirACPU(datosDesdeSwap, getSocketCPU(datosDesdeSwap->PID));
 
 				break;
 			}
 			case (RESUL_FIN_OK): {
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
+			//	puts(string_from_format("recibo de swap PID %i  \n",
+			//								datosDesdeSwap->PID ));	
 				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
 
@@ -79,6 +87,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (INICIAR_PROCESO_MEM): {
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+			//	puts(string_from_format("recibo de swap PID % cant pag %i \n",
+			//			datosDesdeCPU->PID, datosDesdeCPU->cantidadPaginas));
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas =
@@ -89,6 +99,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (FIN_PROCESO_MEM): {
 				t_PID* datosDesdeCPU = (t_PID*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i \n",
+			//							datosDesdeCPU->PID));
+				t_PID* estructuraFinalizar;
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 
 				t_PID* estructuraFinalizar;
@@ -131,6 +144,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+			//		puts(string_from_format("recibo de swap PID % num pag %i contenido %s\n",
+			//						datosDesdeCPU->PID, datosDesdeCPU->numeroPagina, datosDesdeCPU->contenido));
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
@@ -146,6 +161,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (RESUL_LEER_OK): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
+		//		puts(string_from_format("recibo de swap PID %i contenido %s num pag %i  \n",
+		//												datosDesdeSwap->PID, datosDesdeSwap->contenido, datosDesdeSwap->numeroPagina ));		
 				t_contenido_pagina* estructuraRtaLeer;
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
@@ -160,6 +177,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
+			//		puts(
+			//			string_from_format(
+			//					"recibo de swap PID %i contenido %s num pag %i  \n",
+			//					datosDesdeSwap->PID, datosDesdeSwap->contenido,
+			//					datosDesdeSwap->numeroPagina));		
 				t_contenido_pagina* estructuraRtaLeerPorEscribir;
 				estructuraRtaLeerPorEscribir = iniciarContenidoPagina();
 
@@ -178,6 +200,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
+			//		puts(
+			//			string_from_format(
+			//					"recibo de swap PID % num pag %i contenido %s\n",
+			//					datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
+			//					datosDesdeCPU->contenido));
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
