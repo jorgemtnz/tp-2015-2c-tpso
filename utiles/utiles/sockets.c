@@ -866,7 +866,7 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 	return 0;
 }
 
-bool mustDebug = false;
+bool mustDebug = true;
 
 void debug(const char *formato, ...) {
 //	puts("printConsola\n");
