@@ -26,7 +26,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	int tamanio = 0;
 	tamanio = list_size(procCPU->listaCPU);
 	if (tamanio != 0) {
-		pthread_t hiloactual = queHiloSoy();
+//		pthread_t hiloactual = queHiloSoy();
 
 		bool buscaHilo(t_cpu* unaCPU) {
 			//return hiloactual == unaCPU->idCPU;

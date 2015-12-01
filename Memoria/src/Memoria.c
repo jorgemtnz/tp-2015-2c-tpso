@@ -101,7 +101,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_PID* datosDesdeCPU = (t_PID*) buffer;
 			//		puts(string_from_format("recibo de swap PID %i \n",
 			//							datosDesdeCPU->PID));
-				t_PID* estructuraFinalizar;
+//				t_PID* estructuraFinalizar;
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 
 				t_PID* estructuraFinalizar;
