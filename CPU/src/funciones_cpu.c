@@ -74,11 +74,11 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 // ejecuta las instrucciones del mCod
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
-	puts(
-						string_from_format(
-								"se esta procesando el codigo  %s  %s PID %i \n",
-								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-								cpu->pcbPlanificador->pid));
+//	puts(
+//						string_from_format(
+//								"se esta procesando el codigo  %s  %s PID %i \n",
+//								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+//								cpu->pcbPlanificador->pid));
 
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
@@ -122,6 +122,10 @@ void procesaCodigo(t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	pthread_mutex_unlock(&mutexCPULogs);
 //	printf("eeeee\n");
+	if(cpu->pcbPlanificador->proximaInstruccion>cpu->pcbPlanificador->instruccionFinal){
+		printf("[[ERROR]]  LA PROXIMA INSTRUCCION EXCEDE EL BUFFER");
+		abort();
+	}
 	ejecuta_Instruccion(
 			cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 			cpu);
