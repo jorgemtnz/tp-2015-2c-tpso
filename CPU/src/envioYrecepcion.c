@@ -146,10 +146,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		puts(
 				string_from_format(
 						"recibo RESUL_INICIAR_PROC_OK_CPU %s  %s ejecuto PID %i\n"
-								"recibo PID %i quantumReloj %i\n",
+								"recibo PID %i quantumReloj %i valor ptr resultInstrucciones %p ptr ejec %p \n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
-						cpu->quantumReloj));
+						cpu->quantumReloj,
+						cpu->mCodCPU->respEjec->resultadosInstrucciones,
+						cpu->mCodCPU->respEjec));
 
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
@@ -158,7 +160,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
 			break;
+			cpu->quantumReloj -= 1;
 		}
+
+		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
+			cpu->mCodCPU->respEjec->resultadosInstrucciones= string_new();
+		}
+
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -211,10 +219,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		puts(
 				string_from_format(
 						"recibo RESUL_INICIAR_PROC_NO_OK_CPU   %s  %s\n"
-								" ejecuto PID %i recibo PID %i quantumReloj %i \n",
+								" ejecuto PID %i recibo PID %i quantumReloj %i valor ptr resultInstrucciones %p ptr ejec %p \n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
-						cpu->quantumReloj));
+						cpu->quantumReloj,
+						cpu->mCodCPU->respEjec->resultadosInstrucciones,
+						cpu->mCodCPU->respEjec));
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
@@ -222,7 +232,11 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
 			break;
+			cpu->quantumReloj -= 1;
 		}
+		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
+				cpu->mCodCPU->respEjec->resultadosInstrucciones= string_new();
+			}
 		//la respuesta ya fue creada antes y ya se hizo resultadosInstrucciones = string_new()
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -269,12 +283,16 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 		puts(
-				string_from_format("recibo RESUL_LEER_OK_CPU %s  %s ejecuto \n"
-						"ejecuto PID %i, recibo PID %i quantumReloj %i\n "
-						"contenido recibido %s pagina %i \n", queCPUsoy(cpu),
-						identificaCPU(cpu->idCPU), cpu->pcbPlanificador->pid,
-						datosDesdeMem->PID, cpu->quantumReloj,
-						datosDesdeMem->contenido, datosDesdeMem->numeroPagina));
+				string_from_format(
+						"recibo RESUL_LEER_OK_CPU %s  %s ejecuto \n"
+								"ejecuto PID %i, recibo PID %i quantumReloj %i valor ptr resultInstrucciones %p ptr ejec %p\n "
+								"contenido recibido %s pagina %i \n",
+						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+						cpu->quantumReloj, datosDesdeMem->contenido,
+						datosDesdeMem->numeroPagina,
+						cpu->mCodCPU->respEjec->resultadosInstrucciones,
+						cpu->mCodCPU->respEjec));
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
 					string_from_format(
@@ -282,8 +300,11 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
 			break;
+			cpu->quantumReloj -= 1;
 		}
-
+		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
+				cpu->mCodCPU->respEjec->resultadosInstrucciones= string_new();
+			}
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_contenido_pagina) + 1
@@ -354,10 +375,12 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		puts(
 				string_from_format(
 						"recibo RESUL_ESCRIBIR %s  %s ejecuto  PID \n "
-								"%i recibo PID quantumReloj %i pagina %i \n",
+								"%i recibo PID %i quantumReloj %i pagina %i valor ptr resultInstrucciones %p ptr ejec %p\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
-						cpu->quantumReloj, datosDesdeMem->numeroPagina));
+						cpu->quantumReloj, datosDesdeMem->numeroPagina,
+						cpu->mCodCPU->respEjec->resultadosInstrucciones,
+						cpu->mCodCPU->respEjec));
 //		printf("\n contenido: %s // PID:%i //PAG:%i\n",datosdesdeMEmoria->contenido,datosdesdeMEmoria->PID,datosdesdeMEmoria->numeroPagina);
 //		printf("\n %i \n",cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
@@ -368,8 +391,11 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
 			break;
+			cpu->quantumReloj -= 1;
 		}
-
+		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
+				cpu->mCodCPU->respEjec->resultadosInstrucciones= string_new();
+			}
 		// se asigna espacio contiguo para los datos del resultado
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
@@ -433,10 +459,13 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 		puts(
 				string_from_format(
-						"recibo RESUL_FIN %s  %s ejecuto PID %i \n"
-						"recibo PID %i quantumReloj %i\n",
+						"recibo RESUL_FIN %s  %s ejecuto PID %i  \n"
+								"recibo PID %i quantumReloj %i  valor ptr resultInstrucciones %p ptr ejec %p\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
-						cpu->pcbPlanificador->pid,datosDesdeMem->PID, cpu->quantumReloj));
+						cpu->pcbPlanificador->pid, datosDesdeMem->PID,
+						cpu->quantumReloj,
+						cpu->mCodCPU->respEjec->resultadosInstrucciones,
+						cpu->mCodCPU->respEjec));
 
 		if (cpu->actualPID != datosDesdeMem->PID) {
 			puts(
@@ -445,10 +474,15 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
 			break;
+			cpu->quantumReloj -= 1;
 		}
 		if (cpu->mCodCPU->respEjec == NULL) {
-			cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
+			cpu->mCodCPU->respEjec = creaRespuestaEjecucion();// malloc(sizeof(t_respuesta_ejecucion));
 		}
+		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
+				cpu->mCodCPU->respEjec->resultadosInstrucciones= string_new();
+			}
+
 		cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 				cpu->mCodCPU->respEjec->resultadosInstrucciones,
 				sizeof(t_PID)
@@ -504,7 +538,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		t_error* error = (t_error*) buffer;
 		puts(
 				string_from_format(
-						"%s  %s ERROR, recibio memoria  PID %i y mi PID es %i\n",
+						"%s  %s ERROR mandado por memoria, recibio memoria  PID %i y mi PID es %i\n",
 						queCPUsoy(cpu), identificaCPU(cpu->idCPU), error->PID,
 						cpu->pcbPlanificador->pid));
 
