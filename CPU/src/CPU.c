@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a procesar un mensaje");
 	pthread_mutex_unlock(&mutexCPULogs);
 	t_cpu* cpu;
@@ -30,20 +30,24 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 		bool buscaHilo(t_cpu* unaCPU) {
 			//return hiloactual == unaCPU->idCPU;
-			return unaCPU->socketMemoria == socket || unaCPU->socketPlanificador == socket;
+			return unaCPU->socketMemoria == socket
+					|| unaCPU->socketPlanificador == socket;
 		}
 
 		cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
 		if (cpu != NULL) {
-			debug("CPU procesar mensajes CPU: %s, pid: i, actualPid %d, socketMemoria %d\n", cpu->nombre, /*cpu->pcbPlanificador!= NULL?cpu->pcbPlanificador->pid:-100,*/ cpu->actualPID, cpu->socketMemoria);
+			debug(
+					"CPU procesar mensajes CPU: %s, pid: i, actualPid %d, socketMemoria %d\n",
+					cpu->nombre, /*cpu->pcbPlanificador!= NULL?cpu->pcbPlanificador->pid:-100,*/
+					cpu->actualPID, cpu->socketMemoria);
 		}
 	} else {
-		    pthread_mutex_lock(&mutexCPULogs);
-			log_info(logger,identificaCPU(queHiloSoy()));
-			log_error(logger,"no hay cpu conectadas" );
-			log_info(logger, "se va a procesar un mensaje");
-			pthread_mutex_unlock(&mutexCPULogs);
-		    puts("no hay cpu conectadas \n");
+		pthread_mutex_lock(&mutexCPULogs);
+		log_info(logger, identificaCPU(queHiloSoy()));
+		log_error(logger, "no hay cpu conectadas");
+		log_info(logger, "se va a procesar un mensaje");
+		pthread_mutex_unlock(&mutexCPULogs);
+		puts("no hay cpu conectadas \n");
 	}
 
 	int resultConexion_planif = 0;
@@ -54,7 +58,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 	if (tipoNotificacion == NEW_CONNECTION) {
 		pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_info(logger, "se realizo nueva conección");
 		pthread_mutex_unlock(&mutexCPULogs);
 	} else if (tipoNotificacion == TERMINAL_MESSAGE) {
@@ -67,10 +71,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					&socketPlanificador);
 			if (resultConexion_planif == -1)
 				pthread_mutex_lock(&mutexCPULogs);
-				log_info(logger,identificaCPU(queHiloSoy()));
-				log_error(logger,
-						"[ERROR]no se reconecto el CPU al Planificador");
-				pthread_mutex_unlock(&mutexCPULogs);
+			log_info(logger, identificaCPU(queHiloSoy()));
+			log_error(logger, "[ERROR]no se reconecto el CPU al Planificador");
+			pthread_mutex_unlock(&mutexCPULogs);
 			//dictionary_put(conexiones, "Planificador",
 			//		string_itoa(socketPlanificador));
 			cpu->socketPlanificador = socketPlanificador;
@@ -83,9 +86,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 					&socketMemoria);
 			if (resultConexion_Memoria == -1)
 				pthread_mutex_lock(&mutexCPULogs);
-				log_info(logger,identificaCPU(queHiloSoy()));
-				log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
-				pthread_mutex_unlock(&mutexCPULogs);
+			log_info(logger, identificaCPU(queHiloSoy()));
+			log_error(logger, "[ERROR]no se reconecto el CPU a la Memoria");
+			pthread_mutex_unlock(&mutexCPULogs);
 			//dictionary_put(conexiones, "Memoria", string_itoa(socketMemoria));
 			cpu->socketMemoria = socketMemoria;
 		}
@@ -96,7 +99,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 	} else if (tipoNotificacion == HANG_UP) {
 		pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+		log_info(logger, identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR] se desconecto un proceso");
 		pthread_mutex_unlock(&mutexCPULogs);
 	}
@@ -119,7 +122,7 @@ char* getNombre() {
 
 	cpu = list_find(procCPU->listaCPU, (void*) buscaHilo);
 
-	if(cpu != NULL) {
+	if (cpu != NULL) {
 		return cpu->nombre;
 	}
 	return "CPU-main";
