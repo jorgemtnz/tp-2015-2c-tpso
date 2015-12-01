@@ -69,7 +69,7 @@ void mostrarComandos() {
 	}
 }
 
-uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer) {
+int procesarMensajesConsola(int socket, t_header* header, char* buffer) {
 	pid_t pid=getpid();
 	if(buffer != NULL && strstr(buffer, "\n")) {
 		if(string_starts_with(buffer, "\n")){
@@ -109,7 +109,7 @@ void limpiarTLB(){
 void limpiarMemoria(){
 	uint8_t i;
 	t_TablaDePaginas* campoTabla;
-	uint8_t socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
+	int socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 	pthread_mutex_lock(&mutexTablaPags);
 	for (i=0;i<list_size(listaTablaDePag);i++){
 		campoTabla = list_get(listaTablaDePag,i);

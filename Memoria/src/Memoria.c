@@ -32,7 +32,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 	//puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
-	uint8_t socketSwap;
+	int socketSwap;
 	socketSwap = atoi((char*) dictionary_get(conexiones, "Swap"));
 	t_iniciar_swap * estructuraIniciar;
 	estructuraIniciar = crearEstructuraIniciar();

@@ -1,5 +1,4 @@
-
- //Memoria.h
+//Memoria.h
 #ifndef MEMORIA_H_
 #define MEMORIA_H_
 
@@ -27,11 +26,8 @@
 #include <unistd.h>
 #include "../Test/test.h"
 
-
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 //====================================================================================
-
-
 
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -63,7 +59,7 @@ typedef struct { // estructura que se carga en la lista de memoria principal
 
 typedef struct {
 	uint8_t idProc;
-	uint8_t paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
+	uint8_t paginaDelProceso; // supongo que las paginas del proceso arrancan desde 1
 	uint8_t idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	uint8_t bitPagModificada; // si esta en memoria ver si fue modificada
 	uint8_t bitPresencia; // 1 esta en mem, 0 no
@@ -72,7 +68,7 @@ typedef struct {
 
 typedef struct {
 	uint8_t idProc;
-	uint8_t paginaDelProceso;// supongo que las paginas del proceso arrancan desde 1
+	uint8_t paginaDelProceso; // supongo que las paginas del proceso arrancan desde 1
 	uint8_t idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	uint8_t bitPagModificada; // si esta en memoria ver si fue modificada
 	uint8_t bitPresencia; // 1 esta en mem, 0 no
@@ -81,29 +77,29 @@ typedef struct {
 typedef struct {
 	uint8_t idProc;
 	uint8_t CantPag;
-}t_iniciarProc;
+} t_iniciarProc;
 
 typedef struct {
 	uint8_t idMarco;
 	uint8_t bitPresencia;
-}t_marco_y_bit;
+} t_marco_y_bit;
 
 typedef struct {
 	uint8_t idProc;
 	char* contenido;
 	uint8_t Pag;
-}t_escrituraProc;
+} t_escrituraProc;
 
 typedef struct {
 	pid_t idProc;
 	uint8_t pagIn;
 	uint8_t pagFin;
 	char* contenido;
-}t_lectura;
+} t_lectura;
 
 typedef struct {
 	pid_t idProc;
-}t_finalizarProc;
+} t_finalizarProc;
 
 typedef struct {
 	uint8_t PID;
@@ -111,18 +107,17 @@ typedef struct {
 	uint8_t socketSwap;
 	uint8_t idMarco;
 	char* contenido;
-}t_escribir_falso;
+} t_escribir_falso;
 
-typedef struct{
+typedef struct {
 	t_marco* marco;
 	uint8_t flag; //0 no lo encontro, 1 si lo encontro
-}t_marco_con_flag;
+} t_marco_con_flag;
 
-typedef struct{
+typedef struct {
 	t_marco* marco;
 	uint8_t indice;
-}t_marco_con_indice;
-
+} t_marco_con_indice;
 
 // +++++++++++++++++++++++++++++++++++++++ Prototipos +++++++++++++++++++++++++++++++++++++
 //=======================================================================================
@@ -140,7 +135,7 @@ void levantarConsola();
 void mostrarComandos();
 uint8_t idFuncion(char* funcion);
 void aplicarFuncion(int idFuncion);
-uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer);
+int procesarMensajesConsola(int socket, t_header* header, char* buffer);
 void limpiarTLB();
 void limpiarMemoria();
 void volcarMemoria();
@@ -154,16 +149,17 @@ void revisarQueExistaPidYPagina(uint8_t pag, uint8_t PID, int socketCPU);
 void revisarMemoria();
 void mostrarTablaDePag();
 void mostrarTLB();
-void reemplazar_tablaDePag(uint8_t index,t_TablaDePaginas* campoTablaDePag);
+void reemplazar_tablaDePag(uint8_t index, t_TablaDePaginas* campoTablaDePag);
 void mostrarMemoria();
-void reemplazar_TLB(uint8_t index,t_TLB* campoTLB);
-void reemplazar_Memoria(uint8_t index,t_marco* campoMarco);
+void reemplazar_TLB(uint8_t index, t_TLB* campoTLB);
+void reemplazar_Memoria(uint8_t index, t_marco* campoMarco);
 void leerArchivoDeConfiguracion();
-void iniciar(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU);
-void leer(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU);
-void finalizar(t_PID* estructuraFinalizar,uint8_t socketSwap);
+void iniciar(uint8_t idProc, uint8_t cantPag, int socketCPU);
+void leer(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU);
+void finalizar(t_PID* estructuraFinalizar, int socketSwap);
 void inicializadoCorrecto(uint8_t idProc, uint8_t cantPag);
-void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap, uint8_t socketCPU);
+void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir,
+		int socketSwap, int socketCPU);
 t_TablaDePaginas* iniciarTablaDePaginas();
 t_error* iniciarError();
 t_contenido_pagina * iniciarEscrituraProc();
@@ -175,82 +171,102 @@ t_marco_y_bit* iniciarMarcoYBit();
 void* uint8_terpretarPaquete(Paquete* unPaquete, uint8_t fdReceptor);
 t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(uint8_t idMarco, char* contenido);
-void enviarIniciarASwap(t_iniciar_swap *estructura, uint8_t socketSwap);
-void enviarFinalizarASwap(t_PID *estructura, uint8_t socketSwap);
-void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag,uint8_t socketSwap);
-void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc,uint8_t nroPag, char* textoAEscribir,uint8_t socketSwap);
-void cargarNuevoMarcoAMemoria(char* contenido,uint8_t PID, uint8_t pag, uint8_t flagEscritura);
+void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
+void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
+void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag,
+		int socketSwap);
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc, uint8_t nroPag,
+		char* textoAEscribir, int socketSwap);
+void cargarNuevoMarcoAMemoria(char* contenido, uint8_t PID, uint8_t pag,
+		uint8_t flagEscritura);
 bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc);
-uint8_t sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap,uint8_t PIDACargar,char* contenidoACargar,uint8_t pagACargar, uint8_t flagEscritura);
-uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar,uint8_t flagEscritura,uint8_t socketSwap);
-uint8_t sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t socketSwap);
-uint8_t sacarAlPrimeroDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar);
-uint8_t sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar,
+uint8_t sacarAlMasViejoUsadoDeMemoria(int socketSwap, uint8_t PIDACargar,
+		char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura);
+uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar,
+		uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura,
+		int socketSwap);
+uint8_t sacarAlPrimeroDeMemoriaDelProceso(char* contenidoACargar,
+		uint8_t PIDACargar, uint8_t pagACargar, int socketSwap);
+uint8_t sacarAlPrimeroDeMemoria(int socketSwap, uint8_t PIDACargar,
+		char* contenidoACargar, uint8_t pagACargar);
+uint8_t sacarDeMemoriaSegunClockModificado(int socketSwap, uint8_t PIDACargar,
 		char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura);
 uint8_t sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar,
-		uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap);
-t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() ;
+		uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura,
+		int socketSwap);
+t_marco_con_flag* buscarUsoEnCeroModificadaEnUno();
 t_marco_con_flag* buscarModificadaYUsoEnCero();
 t_marco_con_flag* buscarModificadaYUsoEnCeroDeProceso(uint8_t PID);
 t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(uint8_t PID);
 //warning no declarado aca, entonces lo agrego
-void sacarAlPrimeroDeTLB() ;
+void sacarAlPrimeroDeTLB();
 void eliminarDeTLB(uint8_t idMenor);
 t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(uint8_t PID);
 char* traerContenidoDeMarco(uint8_t idMarco);
-void cargarNuevoEnTLB(uint8_t PID,uint8_t pag,uint8_t id);
-void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, uint8_t socketCPU);
+void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id);
+void enviarACPUContenidoPaginaDeUnProcesoPorLeer(
+		t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();
-uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, uint8_t PIDaCargar, uint8_t pagACargar,uint8_t flagEscritura,uint8_t socketSwap);
+uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar,
+		uint8_t PIDaCargar, uint8_t pagACargar, uint8_t flagEscritura,
+		uint8_t socketSwap);
 t_list* buscarLosMarcoYBitDeProceso(uint8_t idProc);
-t_list* buscarLosMarcosDeProcesoEnMemoria( uint8_t PID);
+t_list* buscarLosMarcosDeProcesoEnMemoria(uint8_t PID);
 void eliminarDeMemoria(uint8_t id);
 void eliminarDeTablaDePaginas(uint8_t id);
 void eliminarDeTLBSiEstaPorNuevoId(uint8_t idMenor);
 void eliminarDeTablaDePaginasDefinitivamente(uint8_t id);
 void eliminarDeTLBDefinitivamente(uint8_t id);
 void enviarASwapEliminarProceso(uint8_t idProc);
-void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina, char* contenido, uint8_t socketSwap);
-void enviarRtaIniciarFalloCPU (t_PID * estructura, uint8_t socketCPU);
-void enviarRtaEscribirACPU(t_contenido_pagina *estructura, uint8_t socketCPU);
-void enviarIniciarAlSwap(t_iniciar_swap *estructura, uint8_t socketSwap);
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, uint8_t socketSwap);
+void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina,
+		char* contenido, int socketSwap);
+void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU);
+void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU);
+void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
 
-void enviarRtaIniciarOkCPU (t_PID * estructura, uint8_t socketCPU);
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura,uint8_t socketCPU, uint8_t socketSwap);
-t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap,uint8_t socketCPU);
-t_PID* iniciar_falso(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU);
-t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU);
-t_PID* finalizar_falso(t_PID* estructuraFinalizar,uint8_t socketSwap);
-t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(uint8_t idProc, uint8_t pag,
-		char* contenido, uint8_t flagEscritura, uint8_t socketCPU, uint8_t socketSwap);
+void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU);
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag,
+		char* contenido, uint8_t flagEscritura, int socketCPU, int socketSwap);
+t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag,
+		char* textoAEscribir, int socketSwap, int socketCPU);
+t_PID* iniciar_falso(uint8_t idProc, uint8_t cantPag, int socketCPU);
+t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, int socketSwap,
+		int socketCPU);
+t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap);
+
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(
+		uint8_t idProc, uint8_t pag, char* contenido, int flagEscritura,
+		int socketCPU, int socketSwap);
+
 //warning no definido en test_memoria.c , entonces lo agrego aca.
-char* decirHolaMundo() ;
+char* decirHolaMundo();
 //warning no definido en Memoria.c , entonces lo agrego aca.
-void enviarFinalizarACPU(t_PID* estructuraFinalizar, uint8_t socketCPU);
+void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU);
 t_leerDeProceso* crearEstructuraLeer();
 t_contenido_pagina* iniciarContenidoPagina();
 //warning no definido en funciones_Auxiliares.c , entonces lo agrego aca.
-t_contenido_pagina * iniciarEscrituraProc() ;
+t_contenido_pagina * iniciarEscrituraProc();
 t_escribir_falso* crearEscribirFalso();
-t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(uint8_t idProc, uint8_t pag,
-		char* contenido, uint8_t flagEscritura, uint8_t socketCPU, uint8_t socketSwap);
-t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap);
-t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(uint8_t socketSwap, uint8_t PIDACargar,
-		char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura);
-
-uint8_t procesarMensajesConsola(uint8_t socket, t_header* header, char* buffer);
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(
+		uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura,
+		int socketCPU, int socketSwap);
+t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(
+		char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar,
+		uint8_t flagEscritura, int socketSwap);
+t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(int socketSwap,
+		uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar,
+		uint8_t flagEscritura);
 
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
-int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
+int procesarMensajes(int socket, t_header* header, char* buffer,
+		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 
 void inicializacionDesdeCero();
 void iniciarConfiguracionTLBNoHabilitada();
 void iniciarConfiguracionTLBHabilitada();
-void hardcodearValoresEnTLB(uint8_t PID,uint8_t id, uint8_t pag);
-
-
+void hardcodearValoresEnTLB(uint8_t PID, uint8_t id, uint8_t pag);
 
 int getSocketCPU(uint8_t pid);
 bool hayQueRegistrarPidCpu(int socket);
@@ -260,13 +276,12 @@ void registrarPidCpu(int socket, uint8_t pid);
 
 // +++++++++++++++++++++++++++++++++++ Variables Globales +++++++++++++++++++++++++++++++++++
 
-
-
 //===========================================================================================
 t_configuracion* configuracion;
 t_dictionary* conexiones;
 // ----------- Contadores -------- //
-uint8_t variableIdMarco,variableTLB,variableEnvejecimientoMarco,indiceClockM,variableParaFifo; // contador de paginas de la tabla de paginas
+uint8_t variableIdMarco, variableTLB, variableEnvejecimientoMarco, indiceClockM,
+		variableParaFifo; // contador de paginas de la tabla de paginas
 uint8_t aux;
 // ----------- Listas ------------ //
 t_list* listaMemoria;

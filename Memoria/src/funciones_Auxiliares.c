@@ -374,7 +374,7 @@ bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc) {
 	return respuesta;
 }
 
-uint8_t sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap) {
+uint8_t sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	uint8_t a, tamanioListaMarco, primero = 0;
@@ -408,7 +408,7 @@ uint8_t sacaProcesoDeMemoriaSegunFifo(char* contenidoACargar, uint8_t PIDACargar
 
 }
 
-uint8_t sacarDeMemoriaSegunFifo(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarDeMemoriaSegunFifo(int socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_marco* campoAux;
@@ -535,7 +535,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUnoDeProceso(uint8_t PID) {
 }
 
 
-uint8_t sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap) {
+uint8_t sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, int socketSwap) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
@@ -577,7 +577,7 @@ bool estaLlenaLaMemoria() {
 	return respuesta;
 }
 
-uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap) {
+uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, int socketSwap) {
 
 	// busco todos los id de un proceso, luego el menor va a ser el mas viejo
 	uint8_t a, tamanioListaMarco, primero = 0;
@@ -611,7 +611,7 @@ uint8_t sacarAlMasViejoUsadoDelProcesoDeMemoria(char* contenidoACargar, uint8_t 
 
 }
 
-uint8_t sacarAlMasViejoUsadoDeMemoria(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarAlMasViejoUsadoDeMemoria(int socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 	t_marco* campoMarco;
 	campoMarco = iniciarMarco();
 	t_marco* campoAux;
@@ -726,7 +726,7 @@ t_marco_con_flag* buscarUsoEnCeroModificadaEnUno() {
 	return marcoYFlag;
 }
 
-uint8_t sacarDeMemoriaSegunClockModificado(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+uint8_t sacarDeMemoriaSegunClockModificado(int socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
@@ -1036,7 +1036,7 @@ void eliminarDeTablaDePaginasDefinitivamente(uint8_t PID) {
 
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, uint8_t socketCPU, uint8_t socketSwap) {
+void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, int socketCPU, int socketSwap) {
 
 	char* algoritmoLRU = string_new();
 	string_append(&algoritmoLRU, "LRU");
@@ -1102,15 +1102,15 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 
 }
 
-void enviarIniciarASwap(t_iniciar_swap *estructura, uint8_t socketSwap) {
+void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
 
-void enviarFinalizarASwap(t_PID *estructura, uint8_t socketSwap) {
+void enviarFinalizarASwap(t_PID *estructura, int socketSwap) {
 	enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
 }
 
-void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina, char* contenido, uint8_t socketSwap) {
+void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina, char* contenido, int socketSwap) {
 	t_contenido_pagina* estructura;
 	estructura = iniciarContenidoPagina();
 	estructura->PID = idProc;
@@ -1119,11 +1119,11 @@ void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina, ch
 	enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);
 }
 
-void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, uint8_t socketCPU) {
+void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_LEER_OK_CPU, lecturaMandarCpu);
 }
 
-void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag, uint8_t socketSwap) {
+void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag, int socketSwap) {
 	t_leerDeProceso* estructura;
 	estructura = crearEstructuraLeer();
 	estructura->PID = idProc;
@@ -1131,7 +1131,7 @@ void traerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t nroDePag, uint8_t s
 	estructura->numeroPaginaInicio = nroDePag;
 	enviarStruct(socketSwap, LEER_SWAP, estructura);
 }
-void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap) {
+void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSwap) {
 	t_leerDeProcesoPorEscribir* estructura;
 	estructura = crearEstructuraLeerProcesoPorEscribir();
 	estructura->PID = idProc;
@@ -1141,7 +1141,7 @@ void traerDeSwapUnaPaginaDeUnProcesoPorEscribir(uint8_t idProc, uint8_t nroPag, 
 	enviarStruct(socketSwap, LEER_SWAP_POR_ESCRIBIR, estructura);
 }
 
-void enviarFinalizarACPU(t_PID* estructuraFinalizar, uint8_t socketCPU) {
+void enviarFinalizarACPU(t_PID* estructuraFinalizar, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_FIN, estructuraFinalizar);
 }
 
@@ -1183,7 +1183,7 @@ void hardcodearValoresEnTLB(uint8_t PID, uint8_t id, uint8_t pag) {
 	pthread_mutex_unlock(&mutexListaTLB);
 }
 
-t_PID* iniciar_falso(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU) {
+t_PID* iniciar_falso(uint8_t idProc, uint8_t cantPag, int socketCPU) {
 	uint8_t contador;
 	t_TablaDePaginas* tablaDePag;
 	t_PID * estructuraEnvio;
@@ -1209,7 +1209,7 @@ t_PID* iniciar_falso(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU) {
 	return estructuraEnvio;
 }
 
-t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap, uint8_t socketCPU) {
+t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
 
 	t_contenido_pagina * escritura;
 	aux = 0;
@@ -1243,7 +1243,7 @@ t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag, char* textoAEsc
 
 }
 
-t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, uint8_t socketCPU, uint8_t socketSwap) {
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(uint8_t idProc, uint8_t pag, char* contenido, int flagEscritura, int socketCPU, int socketSwap) {
 
 	char* algoritmoLRU = string_new();
 	string_append(&algoritmoLRU, "LRU");
@@ -1301,7 +1301,7 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalso(uint8_t idProc
 
 }
 
-t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU) {
+t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU) {
 
 	char* contenido;
 	aux = 1;
@@ -1332,7 +1332,7 @@ t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, uint8_t socketSwap, 
 	}
 }
 
-t_PID* finalizar_falso(t_PID* estructuraFinalizar, uint8_t socketSwap) {
+t_PID* finalizar_falso(t_PID* estructuraFinalizar, int socketSwap) {
 
 	uint8_t a, tamanioListaMarcoYBit;
 	t_list * listaDeMarcoYBit;
@@ -1355,7 +1355,7 @@ t_PID* finalizar_falso(t_PID* estructuraFinalizar, uint8_t socketSwap) {
 	return estructuraFinalizar;
 }
 
-t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, uint8_t socketCPU, uint8_t socketSwap) {
+t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, int socketCPU, int socketSwap) {
 
 	char* algoritmo = string_new();
 	string_append(&algoritmo, "LRU");
@@ -1408,7 +1408,7 @@ t_contenido_pagina* respuestaTraerDeSwapUnaPaginaDeUnProcesoFalsoFalso(uint8_t i
 
 }
 
-t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, uint8_t socketSwap) {
+t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoACargar, uint8_t PIDACargar, uint8_t pagACargar, uint8_t flagEscritura, int socketSwap) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();
@@ -1431,7 +1431,7 @@ t_marco_con_flag* sacaProcesoDeMemoriaSegunClockModificadoFalso(char* contenidoA
 
 }
 
-t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(uint8_t socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
+t_marco_con_flag* sacarDeMemoriaSegunClockModificadoFalso(int socketSwap, uint8_t PIDACargar, char* contenidoACargar, uint8_t pagACargar, uint8_t flagEscritura) {
 
 	t_marco_con_flag* marcoYFlag;
 	marcoYFlag = iniciarMarcoYFlag();

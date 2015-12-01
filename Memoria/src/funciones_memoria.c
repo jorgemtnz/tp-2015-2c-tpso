@@ -51,7 +51,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 
 }
 
-void iniciar(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU) {
+void iniciar(uint8_t idProc, uint8_t cantPag, int socketCPU) {
 	uint8_t contador;
 	t_TablaDePaginas* tablaDePag;
 	t_PID * estructuraEnvio;
@@ -81,7 +81,7 @@ void iniciar(uint8_t idProc, uint8_t cantPag, uint8_t socketCPU) {
 
 }
 
-void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t socketSwap, uint8_t socketCPU) {
+void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSwap, int socketCPU) {
 
 	t_contenido_pagina * escritura;
 	escritura = iniciarContenidoPagina();
@@ -116,7 +116,7 @@ void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, uint8_t sock
 
 }
 
-void leer(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU) {
+void leer(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU) {
 
 	char* contenido;
 
@@ -148,7 +148,7 @@ void leer(uint8_t idProc, uint8_t pag, uint8_t socketSwap, uint8_t socketCPU) {
 
 }
 
-void finalizar(t_PID* estructuraFinalizar, uint8_t socketSwap) {
+void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 	uint8_t a, tamanioListaId;
 	t_list * listaDemarcoYBit;
 	listaDemarcoYBit = buscarLosMarcoYBitDeProceso(estructuraFinalizar->PID);
@@ -173,20 +173,20 @@ void finalizar(t_PID* estructuraFinalizar, uint8_t socketSwap) {
 
 }
 
-void enviarIniciarAlSwap(t_iniciar_swap *estructura, uint8_t socketSwap) {
+void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, uint8_t socketSwap) {
+void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap) {
 	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
 }
-void enviarRtaIniciarOkCPU(t_PID * estructura, uint8_t socketCPU) {
+void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
 }
-void enviarRtaEscribirACPU(t_contenido_pagina *estructura, uint8_t socketCPU) {
+void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_ESCRIBIR, estructura);
 }
 
-void enviarRtaIniciarFalloCPU(t_PID * estructura, uint8_t socketCPU) {
+void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_NO_OK_CPU, estructura);
 }
 
