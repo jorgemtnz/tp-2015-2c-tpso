@@ -123,8 +123,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				}
 
 				uint8_t socketCPU = getSocketCPU(datosDesdeCPU->PID);
-				revisarQueExistaPidYPagina(pag,datosDesdeCPU->PID,socketCPU);
-
 
 				my_log_info(textoALoggear);
 
