@@ -360,9 +360,9 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 			espacioLibre->ubicacion = unProceso->ubicacion;
 
 			espacioLibre->cantPagsLibres = unProceso->cantPagsUso;
-
+log_info(logger,string_from_format("ESPACIO LIBRE  A AGREGAR ubica %i // pag libres %i \n\n\n\n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres));
 			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
-
+imprimirListaDeLibres();
 			//BORRAR DEL ESPACIO DE DATOS
 			char* espacioVacio = string_new();
 			espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
@@ -479,6 +479,22 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 	l_espacioLibre* espacioB;
 	espacioB = crearEspacioLibre();
 	int a;
+	int tamanio = list_size(listaDeEspaciosLibres);
+espacioA = list_get(listaDeEspaciosLibres,tamanio-1);
+//POR SI SE AGREGA EL ESPACIO LIBRE DE UBICACION = CONF.TAMANIOPAGINA Y CANTPAGLIBRES 0
+if((tamanio > 1) && (espacioA->ubicacion == configuracion->cantidadPaginas)){
+	espacioA = list_get(listaDeEspaciosLibres,tamanio-1);
+	espacioB = list_get(listaDeEspaciosLibres,tamanio-2);
+	if(espacioB->ubicacion + espacioB->cantPagsLibres == espacioA->ubicacion){
+		list_remove(listaDeEspaciosLibres,tamanio-1);
+		list_remove(listaDeEspaciosLibres,tamanio-2);
+		espacioB->cantPagsLibres = espacioB->cantPagsLibres + espacioA->cantPagsLibres;
+		list_add(listaDeEspaciosLibres,espacioB);
+	}
+}
+///
+
+
 
 	if (list_size(listaDeEspaciosLibres) > 1) {
 		for (a = 0; a < list_size(listaDeEspaciosLibres) - 1; a++) {
@@ -517,6 +533,7 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 		espacioA = list_get(listaDeEspaciosLibres, 0);
 
 		if (espacioLibre->ubicacion < espacioA->ubicacion) {
+			log_info(logger,string_from_format("\n\n\nEN EL IF ubica %i // pag libres %i \n\n\n\n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres));
 
 			list_add_in_index(listaDeEspaciosLibres, 0, espacioLibre);
 

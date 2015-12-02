@@ -209,6 +209,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					if (estructuraFinalizar->PID == contador->PID) {
 						printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
 								contador->lecturas, contador->escrituras);
+						printf("\n\n\n\n\n\n\n\n\n\n\n");
 						list_remove(contadorLecturasYEscrituras, a);
 						a = list_size(contadorLecturasYEscrituras) + 1;
 					}
