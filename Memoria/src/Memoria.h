@@ -224,7 +224,7 @@ void enviarASwapContenidoPaginaDesactualizada(uint8_t PIDaResponder, uint8_t PID
 void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU);
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU);
 void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap);
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap);
+void enviarEscribirAlSwap(t_sobreescribir_swap *estructura, int socketSwap);
 
 void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU);
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag,

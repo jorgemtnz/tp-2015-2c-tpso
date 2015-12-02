@@ -115,14 +115,17 @@ void limpiarMemoria(){
 		campoTabla = list_get(listaTablaDePag,i);
 		campoTabla->bitPresencia=0;
 		if (campoTabla->bitPagModificada==1){
-			t_contenido_pagina * escrituraSwap;
-			escrituraSwap = iniciarContenidoPagina();
-			escrituraSwap->PID = campoTabla->idProc;
-			escrituraSwap->contenido = traerContenidoDeMarco(campoTabla->idMarco);
-			escrituraSwap->numeroPagina = campoTabla->paginaDelProceso;
-			enviarEscribirAlSwap(escrituraSwap, socketSwap);
+			t_sobreescribir_swap* estructura;
+			estructura = crearEstructuraReemplazar();
+			estructura->PIDAResponderleAMemoria = 236; // EESTE CAMPO ES EL QUE VERIFICA SWAP
+			estructura->PIDAReemplazar = campoTabla->idProc;
+			estructura->contenido = traerContenidoDeMarco(campoTabla->idMarco);
+			estructura->numeroPagina = campoTabla->paginaDelProceso;
+			enviarEscribirAlSwap(estructura, socketSwap);
 		}
 		campoTabla->bitPagModificada=0;
+		reemplazar_tablaDePag(i,campoTabla);
+
 	}
 	pthread_mutex_unlock(&mutexTablaPags);
 	pthread_mutex_lock(&mutexListaMemoria);

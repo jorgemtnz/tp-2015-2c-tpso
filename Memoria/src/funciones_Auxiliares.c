@@ -812,12 +812,13 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 			usleep(configuracion->retardoMemoria * 1000);
 			enviarASwapContenidoPaginaDesactualizada(PIDaCargar,idProc, pagina, contenido, socketSwap);
 		} else { // por escribir
-			t_contenido_pagina * escrituraSwap;
-			escrituraSwap = iniciarContenidoPagina();
-			escrituraSwap->PID = idProc;
-			escrituraSwap->contenido = contenido;
-			escrituraSwap->numeroPagina = pagina;
-			enviarEscribirAlSwap(escrituraSwap, socketSwap);
+			t_sobreescribir_swap* estructura;
+			estructura = crearEstructuraReemplazar();
+			estructura->PIDAReemplazar = idProc;
+			estructura->PIDAResponderleAMemoria = PIDaCargar;
+			estructura->contenido = contenido;
+			estructura->numeroPagina = pagina;
+			enviarEscribirAlSwap(estructura, socketSwap);
 		}
 
 		return 1;

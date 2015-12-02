@@ -176,7 +176,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, INICIAR_PROC_SWAP, estructura);
 }
-void enviarEscribirAlSwap(t_contenido_pagina *estructura, int socketSwap) {
+void enviarEscribirAlSwap(t_sobreescribir_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
 }
 void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {

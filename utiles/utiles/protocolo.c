@@ -286,12 +286,12 @@ void* deserializar_ERROR_EJECUCION(int fdCliente, t_tipo_mensaje tipoMensaje) {
 
 void* serializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_ESCRIBIR_SWAP");
-	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
+	serializar_t_sobreescribir_swap(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 
 void* deserializar_ESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
+	t_sobreescribir_swap* estructura = deserializar_t_sobreescribir_swap(fdCliente, tipoMensaje);
 	//puts("Deserializando serializar_ESCRIBIR_SWAP");
 	return estructura;
 }
