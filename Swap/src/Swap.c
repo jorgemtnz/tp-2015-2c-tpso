@@ -198,7 +198,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 
 			resultado = finalizar(estructuraFinalizar->PID, listaDeProcesosCargados, listaDeEspaciosLibres);
 
-			pid_a_enviar->PID = resultado->PID;
+			pid_a_enviar->PID = estructuraFinalizar->PID;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {

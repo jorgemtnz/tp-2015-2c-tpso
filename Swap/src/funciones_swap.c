@@ -339,8 +339,8 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	int a, b;
 	l_procesosCargados* unProceso;
 	l_espacioLibre* espacioLibre;
-	t_contenido_pagina* procesoAEscribir;
-	procesoAEscribir = crearEscribirEnProceso();
+	t_sobreescribir_swap* procesoAEscribir;
+	procesoAEscribir = crearEstructuraReemplazar();
 	espacioLibre = crearEspacioLibre();
 	unProceso = crearProceso();
 	t_respuesta_iniciar_o_finalizar* respuestaDeFinalizar;
@@ -363,7 +363,7 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 			espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
 			int bit = 0;
 			for (b = 0; b < unProceso->cantPagsUso; b++) {
-				procesoAEscribir->PID = unProceso->PID;
+				procesoAEscribir->PIDAReemplazar = unProceso->PID;
 				procesoAEscribir->contenido = espacioVacio;
 				procesoAEscribir->numeroPagina = b;
 
