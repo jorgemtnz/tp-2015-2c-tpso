@@ -113,18 +113,18 @@ void calcularPorcentaje() {
 			}
 
 			//muestra y loguea resultado
-//			puts(
-//					string_from_format(
-//							KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET));
-//			puts(string_from_format("%s,\n", queCPUsoy(cpu)));
-//			puts(string_from_format("Para el minuto %d, \n", i));
-//			puts(
-//					string_from_format(
-//							"el porcentaje de uso es de  %d, porciento. \n",
-//							cpu->porcentajeUso));
-//			puts(
-//					string_from_format(
-//							KBLU "++++++++++++++++++++++"RESET "+++++++++"KBLU "++++++++++++++++++++++++++\n"RESET));
+			puts(
+					string_from_format(
+							KRED "++++++++++++++++++++++"RESET "++++++++"KRED "+++++++++++++++++++++++++++\n" RESET));
+			puts(string_from_format("%s,\n", queCPUsoy(cpu)));
+			puts(string_from_format("Para el minuto %d, \n", i));
+			puts(
+					string_from_format(
+							"el porcentaje de uso es de  %d, porciento. \n",
+							cpu->porcentajeUso));
+			puts(
+					string_from_format(
+							KBLU "++++++++++++++++++++++"RESET "+++++++++"KBLU "++++++++++++++++++++++++++\n"RESET));
 
 			pthread_mutex_lock(&mutexCPULogs);
 			log_info(logger, identificaCPU(queHiloSoy()));
