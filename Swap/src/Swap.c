@@ -83,7 +83,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 		case (ESCRIBIR_SWAP): {
 			//conviene hacerlo en la misma linea
 
-			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
+			t_sobreescribir_swap* procesoAEscribir = (t_sobreescribir_swap*) buffer;
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar = crearContenidoPagina();
 			t_contador* contador = crearContador();
@@ -94,7 +94,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			borrarContenidoPagina(procesoAEscribir);
 			bit = 1;
 			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
-			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->PID = procesoAEscribir->PIDAResponderleAMemoria;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 
@@ -103,7 +103,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (contador->PID == procesoAEscribir->PID) {
+					if (contador->PID == procesoAEscribir->PIDAReemplazar) {
 						contador->escrituras++;
 						list_replace(contadorLecturasYEscrituras, a, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;
@@ -223,7 +223,7 @@ if(estructuraFinalizar->PID == contador->PID){
 		}
 		case (SOBREESCRIBIR_SWAP): {
 
-			t_contenido_pagina* procesoAEscribir = (t_contenido_pagina*) buffer;
+			t_sobreescribir_swap* procesoAEscribir = (t_sobreescribir_swap*) buffer;
 			t_devolucion_escribir_o_leer* resultado;
 			t_contenido_pagina* paginaAEnviar;
 			t_contenido_pagina* paginaEnBlanco;
@@ -239,7 +239,7 @@ if(estructuraFinalizar->PID == contador->PID){
 			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
 
 			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
-			paginaAEnviar->PID = resultado->PID;
+			paginaAEnviar->PID = procesoAEscribir->PIDAResponderleAMemoria ;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 
@@ -248,7 +248,7 @@ if(estructuraFinalizar->PID == contador->PID){
 				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
-					if (contador->PID == procesoAEscribir->PID) {
+					if (contador->PID == procesoAEscribir->PIDAReemplazar) {
 						contador->escrituras++;
 						list_replace(contadorLecturasYEscrituras, a, contador);
 						a = list_size(contadorLecturasYEscrituras) + 1;
