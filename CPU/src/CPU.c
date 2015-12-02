@@ -94,7 +94,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 		}
 
 	} else if (tipoNotificacion == MESSAGE) {
-
+//printf("llega a recibir mensajes varios\n");
 		recibirMensajeVarios(header, buffer, extra, cpu);
 
 	} else if (tipoNotificacion == HANG_UP) {

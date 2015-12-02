@@ -78,18 +78,21 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	log_info(logger, "se va a ejecutar recibirMensajeVarios ");
 	pthread_mutex_unlock(&mutexCPULogs);
 	int token;
+
 	token = header->tipoMensaje;
+
 	switch (token) {
 	case (CONTEXTO_MPROC): {//llega por FIFO o RR puede ser la primera vez o no
 		//es la primera vez que viene del planificador si
 //		pcbPlanificador->proximaInstruccion = 0
+//		printf("BB000000\n");
 		t_pcb* pcbPlanificador = (t_pcb*) buffer;
 //		puts(
 //				string_from_format(
 //						"contexto recibido %s  %s PID %i tamanio rafaga %i \n",
 //						queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 //						pcbPlanificador->pid, pcbPlanificador->tamanioRafaga));
-
+//		printf("BB11111\n");
 		cpu->actualPID = pcbPlanificador->pid;
 
 		pthread_mutex_lock(&mutexCPULogs);
@@ -132,7 +135,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		cpu->pcbPlanificador = pcbPlanificador;
 		//en procesaCodigo() se crea la respEjec del mCod
-//		printf("BBBBBB\n");
+//	printf("BBBBBB\n");
 		procesaCodigo(cpu);	//aca dentro se actualiza la cpu->pcbPlanificador->proximaInstruccion y será distinta de cero
 		break;
 	}
