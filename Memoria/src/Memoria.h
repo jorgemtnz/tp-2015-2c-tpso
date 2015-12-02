@@ -27,6 +27,29 @@
 #include "../Test/test.h"
 
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
+
+#define IDMARCO_VACIO -1
+#define ESTA_EN_MEM 1
+#define NO_ESTA_EN_MEM 0
+#define TLB_HABILITADA 1
+#define TLB_NO_HABILITADA 0
+#define BIT_PAG_MODIFICADA_SI 1
+#define FLAG_ENCONTRO_ENCENDIDO 0
+#define FLAG_ENCONTRO_APAGADO 1
+#define FLAG_TDP_ENCENDIDO 1
+#define FLAG_TDP_APAGADO 0
+#define FLAG_TLB_ENCENDIDO 1
+#define FLAG_TLB_APAGADO 0
+#define FLAG_MEMORIA_ENCENDIDO 1
+#define FLAG_MEMORIA_APAGADO 0
+#define FLAG_ESCRITURA_ENCENDIDO 1
+#define FLAG_ESCRITURA_APAGADO 0
+#define FLAG_MAX_PROC_MEM_NO 0
+#define FLAG_MAX_PROC_MEM_SI 1
+#define FLAG_ENCENDIDO 1
+#define FLAG_APAGADO 0
+//ejemplo de uso
+// flag = 0  se cambia por flag = FLAG_ENCENDIDO
 //====================================================================================
 
 // +++++++++++++++++++++++++++++++++++++++ Estructuras +++++++++++++++++++++++++++++++++++++
