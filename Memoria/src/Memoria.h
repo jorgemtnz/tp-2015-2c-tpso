@@ -123,6 +123,7 @@ typedef struct {
 //=======================================================================================
 // Funciones Constructoras crea los malloc de las estructuras e inicializa
 //============================================================
+t_sobreescribir_swap* crearEstructuraReemplazar();
 t_iniciar_swap* crearEstructuraIniciar();
 t_PID* crearPID();
 t_configuracion* iniciarArchivoConfig();
@@ -218,7 +219,7 @@ void eliminarDeTLBSiEstaPorNuevoId(uint8_t idMenor);
 void eliminarDeTablaDePaginasDefinitivamente(uint8_t id);
 void eliminarDeTLBDefinitivamente(uint8_t id);
 void enviarASwapEliminarProceso(uint8_t idProc);
-void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina,
+void enviarASwapContenidoPaginaDesactualizada(uint8_t PIDaResponder, uint8_t PIDaReemplazar, uint8_t pagina,
 		char* contenido, int socketSwap);
 void enviarRtaIniciarFalloCPU(t_PID * estructura, int socketCPU);
 void enviarRtaEscribirACPU(t_contenido_pagina *estructura, int socketCPU);

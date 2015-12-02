@@ -810,11 +810,11 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 	if (bitTablaDePag == 1 || bitTLB == 1) {
 		if (flagEscritura == 0) { // por leer
 			usleep(configuracion->retardoMemoria * 1000);
-			enviarASwapContenidoPaginaDesactualizada(PIDaCargar, pagina, contenido, socketSwap);
+			enviarASwapContenidoPaginaDesactualizada(PIDaCargar,idProc, pagina, contenido, socketSwap);
 		} else { // por escribir
 			t_contenido_pagina * escrituraSwap;
 			escrituraSwap = iniciarContenidoPagina();
-			escrituraSwap->PID = PIDaCargar;
+			escrituraSwap->PID = idProc;
 			escrituraSwap->contenido = contenido;
 			escrituraSwap->numeroPagina = pagina;
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
@@ -1110,10 +1110,11 @@ void enviarFinalizarASwap(t_PID *estructura, int socketSwap) {
 	enviarStruct(socketSwap, FIN_PROCESO_SWAP, estructura);
 }
 
-void enviarASwapContenidoPaginaDesactualizada(uint8_t idProc, uint8_t pagina, char* contenido, int socketSwap) {
-	t_contenido_pagina* estructura;
-	estructura = iniciarContenidoPagina();
-	estructura->PID = idProc;
+void enviarASwapContenidoPaginaDesactualizada(uint8_t PIDaReesponder,uint8_t idProcAReemplazar, uint8_t pagina, char* contenido, int socketSwap) {
+	t_sobreescribir_swap* estructura;
+	estructura = crearEstructuraReemplazar();
+	estructura->PIDAResponderleAMemoria = PIDaReesponder;
+	estructura->PIDAReemplazar = idProcAReemplazar;
 	estructura->numeroPagina = pagina;
 	estructura->contenido = contenido;
 	enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);

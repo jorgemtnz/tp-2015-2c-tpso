@@ -109,11 +109,11 @@ void* deserializar_RESUL_LEER_OK_CPU(int fdCliente, t_tipo_mensaje tipoMensaje) 
 
 void* serializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) {
 	//puts("Serializando serializar_SOBREESCRIBIR_SWAP");
-	serializar_t_contenido_pagina(fdCliente, tipoMensaje, estructura);
+	serializar_t_sobreescribir_swap(fdCliente, tipoMensaje, estructura);
 	return 0;
 }
 void* deserializar_SOBREESCRIBIR_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje) {
-	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
+	t_sobreescribir_swap* estructura = deserializar_t_sobreescribir_swap(fdCliente, tipoMensaje);
 	//puts("Deserializando deserializar_SOBREESCRIBIR_SWAP");
 	return estructura;
 }
@@ -172,6 +172,25 @@ void* serializar_RESUL_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje, void*
 void* deserializar_RESUL_ESCRIBIR(int fdCliente, t_tipo_mensaje tipoMensaje) {
 	t_contenido_pagina* estructura = deserializar_t_contenido_pagina(fdCliente, tipoMensaje);
 	//puts("Deserializando deserializar_RESUL_TRAER_PAG_SWAP_OK");
+	return estructura;
+}
+
+//OK
+void serializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_sobreescribir_swap* estructura) {
+	serializar_int8_t(fdCliente, estructura->PIDAReemplazar);debug("%s Socket: %d, PIDaReemplazar enviado: %i\n", getNombreTipoMensaje(tipoMensaje), fdCliente, estructura->PIDAReemplazar);
+	serializar_int8_t(fdCliente, estructura->PIDAResponderleAMemoria);debug("%s Socket: %d, PIDaResponderleAMemoria enviado: %i\n", getNombreTipoMensaje(tipoMensaje), fdCliente, estructura->PIDAResponderleAMemoria);
+	serializar_string(fdCliente, estructura->contenido);
+	serializar_int8_t(fdCliente, estructura->numeroPagina);
+}
+
+//OK
+t_sobreescribir_swap* deserializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje) {
+	t_sobreescribir_swap* estructura = malloc(sizeof(t_sobreescribir_swap));
+	estructura->PIDAReemplazar = deserializar_int8_t(fdCliente);debug("%s Socket %d, PIDaReemplazar recibido: %i\n", getNombreTipoMensaje(tipoMensaje), fdCliente, estructura->PIDAReemplazar);
+	estructura->PIDAResponderleAMemoria = deserializar_int8_t(fdCliente);debug("%s Socket %d, PIDaResponderleAMemoria recibido: %i\n", getNombreTipoMensaje(tipoMensaje), fdCliente, estructura->PIDAResponderleAMemoria);
+	estructura->contenido = deserializar_string(fdCliente);
+	estructura->numeroPagina = deserializar_int8_t(fdCliente);
+
 	return estructura;
 }
 

@@ -126,6 +126,21 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	return contenido;
 }
 
+t_sobreescribir_swap* crearEstructuraReemplazar(){
+	t_sobreescribir_swap* contenido = malloc(sizeof(t_sobreescribir_swap));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para crearEstructuraReemplazar");
+		my_log_error("[ERROR] No se reservo memoria para crearEstructuraReemplazar");
+		exit(-1);
+	}
+	contenido->PIDAReemplazar = 0;
+	contenido->PIDAResponderleAMemoria = 0;
+	contenido->numeroPagina = 0;
+
+
+	return contenido;
+}
+
 
 t_escribir_falso* crearEscribirFalso(){
 	t_escribir_falso* contenido = malloc(sizeof(t_escribir_falso));

@@ -121,6 +121,13 @@ typedef struct CPU_REF {
 
 //SWAP Y MEMORIA
 
+typedef struct {
+	uint8_t PIDAReemplazar; // SOLO SETEADO EN EL SOBREESCRIBIR
+	uint8_t PIDAResponderleAMemoria; // ESTE SIEMPRE TIENE QUE TENER EL PID A RESPONDER
+	char* contenido;
+	uint8_t numeroPagina;
+} t_sobreescribir_swap;
+
 typedef struct IniciarSwap {
 	uint8_t PID;
 	uint16_t cantidadPaginas;
@@ -260,10 +267,16 @@ void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
+void serializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_sobreescribir_swap* estructura);
+t_sobreescribir_swap* deserializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+
 void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_contenido_pagina* estructura);
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+
+
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
