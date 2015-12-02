@@ -96,14 +96,19 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	if (list_size(listaDeEspaciosLibres) != 0) {
 		for (a = 0; a < list_size(listaDeEspaciosLibres); a++) {
 			espacioLibre = list_get(listaDeEspaciosLibres, a);
+
 			cantidadDePagLibres += espacioLibre->cantPagsLibres;
+			printf("\n\n\nCANT LIBRES  %i\n\n",cantidadDePagLibres);
 		}
+
 	} else { //SI ESTAN TODAS LAS PAG LIBRES
 		cantidadDePagLibres = configuracion->cantidadPaginas;
 		espacioLibre->ubicacion = 0;
 		espacioLibre->cantPagsLibres = configuracion->cantidadPaginas;
 		list_add(listaDeEspaciosLibres, espacioLibre);
 	}
+	imprimirListaDeLibres();
+				imprimirListaProcesos();
 	if (cantidadDePagLibres >= estructuraIniciar->cantidadPaginas) {
 
 		acomodarEspaciosLibres(listaDeEspaciosLibres); // POR SI QUEDARON DON BLOQUES LIBRES CONTINUOS
@@ -538,4 +543,22 @@ t_devolucion_escribir_o_leer* borrarContenidoPagina(t_sobreescribir_swap* proces
 	bit = 0;
 	resultado = escribir(listaDeProcesosCargados, paginaEnBlanco, bit);
 	return resultado;
+}
+
+void imprimirListaDeLibres(){
+	int a;
+	l_espacioLibre * espacioLibre = crearEspacioLibre();
+	for(a=0; a< list_size(listaDeEspaciosLibres);a++){
+		espacioLibre = list_get(listaDeEspaciosLibres,a);
+		printf("ESPACIO LIBRE UBICACION: %i // CANTIDADPAGINAS: %i \n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres);
+	}
+}
+
+void imprimirListaProcesos(){
+	int a;
+	l_procesosCargados * proceso = crearProceso();
+	for(a=0; a< list_size(listaDeProcesosCargados);a++){
+		proceso = list_get(listaDeProcesosCargados,a);
+		printf("PROCESO:%i // UBICACION: %i // CANTIDADPAGINAS: %i \n",proceso->PID,proceso->ubicacion,proceso->cantPagsUso);
+	}
 }

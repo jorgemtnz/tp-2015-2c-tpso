@@ -64,6 +64,9 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_iniciar_swap* estructuraAEnviar = crearEstructuraIniciar();
 			t_contador* contador = crearContador();
 			resultado = crearDevolucionIniciarOFinalizar();
+
+
+
 			resultado = iniciar(estructuraIniciar, listaDeEspaciosLibres, listaDeProcesosCargados);
 			estructuraAEnviar->PID = resultado->PID;
 			estructuraAEnviar->cantidadPaginas = estructuraIniciar->cantidadPaginas;
