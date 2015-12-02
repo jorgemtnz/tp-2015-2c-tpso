@@ -183,7 +183,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	return estructura;
 }
 
-t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir, int bit) {
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobreescribir_swap* procesoAEscribir, int bit) {
 
 	usleep(configuracion->retardo_swap * 1000);
 	l_procesosCargados* unProceso;
@@ -194,7 +194,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	int a, ubicacion;
 	for (a = 0; a <= list_size(listaDeProcesosCargados); a++) { //BUSCO EL PROCESO CON EL MISMO PID EN LA LISTA
 		unProceso = list_get(listaDeProcesosCargados, a);
-		if (unProceso->PID == procesoAEscribir->PID) {
+		if (unProceso->PID == procesoAEscribir->PIDAReemplazar) {
 
 			ubicacion = unProceso->ubicacion;
 			a = list_size(listaDeProcesosCargados) + 1; //salgo del for
@@ -215,7 +215,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 
 		string_append(&contenidoLogger,
 				string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
-						procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
+						procesoAEscribir->PIDAReemplazar, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 		log_info(logger, contenidoLogger);
 	}
 
@@ -243,7 +243,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_conten
 	if (bit == 1) {
 		string_append(&contenidoLogger,
 				string_from_format("Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
-						procesoAEscribir->PID, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
+						procesoAEscribir->PIDAReemplazar, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 		log_info(logger, contenidoLogger);
 	}
 	return respuestaDeEscribir;
@@ -522,16 +522,17 @@ void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEs
 
 }
 
-t_devolucion_escribir_o_leer* borrarContenidoPagina(t_contenido_pagina* procesoAEscribir) {
+t_devolucion_escribir_o_leer* borrarContenidoPagina(t_sobreescribir_swap* procesoAEscribir) {
 	//BORRO EL CONTENIDO VIEJO DE LA PAGINA
 	char* espacioVacio = string_new();
 	int bit;
 	espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
-	t_contenido_pagina* paginaEnBlanco;
-	paginaEnBlanco = crearContenidoPagina();
+	t_sobreescribir_swap* paginaEnBlanco;
+	paginaEnBlanco = crearEstructuraReemplazar();
 	t_devolucion_escribir_o_leer* resultado;
 	resultado = crearDevolucionEscribirOLeer();
-	paginaEnBlanco->PID = procesoAEscribir->PID;
+	paginaEnBlanco->PIDAReemplazar = procesoAEscribir->PIDAReemplazar;
+	paginaEnBlanco->PIDAResponderleAMemoria = procesoAEscribir->PIDAResponderleAMemoria;
 	paginaEnBlanco->contenido = espacioVacio;
 	paginaEnBlanco->numeroPagina = procesoAEscribir->numeroPagina;
 	bit = 0;
