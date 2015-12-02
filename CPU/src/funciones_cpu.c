@@ -110,6 +110,7 @@ void procesaCodigo(t_cpu* cpu) {
 	mCodCPU->bufferInstrucciones = string_split(sin_enter, ";");
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(
 			mCodCPU->bufferInstrucciones);
+	cpu->mCodCPU = mCodCPU;
 	cpu->mCodCPU->bufferInstrucciones = mCodCPU->bufferInstrucciones;
 	cpu->mCodCPU->cantidadInstrucciones = mCodCPU->cantidadInstrucciones;
 	//se resta uno, porque se conto el cero anteriormente

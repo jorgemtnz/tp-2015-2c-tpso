@@ -162,7 +162,9 @@ t_ProcCPU* crearProcCPU() {
 void destmCod(t_mCod* unmCod) {
 	if (unmCod != NULL) {
 		destRespEjec(unmCod->respEjec);
+		unmCod->respEjec = NULL;
 		destVectorInstruccion(unmCod->bufferInstrucciones);
+		unmCod->bufferInstrucciones = NULL;
 		free(unmCod);
 	}
 }
@@ -179,6 +181,7 @@ void destHiloCPU(t_cpu* unHiloCPU) {
 		free(unHiloCPU->respuestaInstruccion);
 		destPCB(unHiloCPU->pcbPlanificador);
 		destmCod(unHiloCPU->mCodCPU);
+		unHiloCPU->mCodCPU = NULL;
 		free(unHiloCPU);
 	}
 }
@@ -219,6 +222,7 @@ void destEscrMem(t_contenido_pagina* estruc) {
 void destRespEjec(t_respuesta_ejecucion* respEjec) {
 	if (respEjec != NULL) {
 		free(respEjec->resultadosInstrucciones);
+		respEjec->resultadosInstrucciones = NULL;
 		free(respEjec);
 	}
 }
@@ -226,6 +230,7 @@ void destRespEjec(t_respuesta_ejecucion* respEjec) {
 void destPCB(t_pcb* pcb) {
 	if (pcb != NULL) {
 		free(pcb->rutaArchivoMcod);
+		pcb->rutaArchivoMcod = NULL;
 		free(pcb);
 
 	}

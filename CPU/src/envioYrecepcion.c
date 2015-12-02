@@ -121,7 +121,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			//significa que no es la primera vez que llega
 			//por lo que voy a descartar lo que ya tenia
 			destmCod(cpu->mCodCPU);
+			cpu->mCodCPU = NULL;
 			destPCB(cpu->pcbPlanificador);
+			cpu->pcbPlanificador = NULL;
 
 //			puts(
 //					string_from_format(
