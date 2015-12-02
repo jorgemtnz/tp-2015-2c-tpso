@@ -103,6 +103,8 @@ t_sobreescribir_swap* crearEstructuraReemplazar();
 //============================================================================
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
+void imprimirListaDeLibres();
+void imprimirListaProcesos();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
