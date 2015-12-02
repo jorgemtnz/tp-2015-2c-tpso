@@ -810,11 +810,11 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 	if (bitTablaDePag == 1 || bitTLB == 1) {
 		if (flagEscritura == 0) { // por leer
 			usleep(configuracion->retardoMemoria * 1000);
-			enviarASwapContenidoPaginaDesactualizada(idProc, pagina, contenido, socketSwap);
+			enviarASwapContenidoPaginaDesactualizada(PIDaCargar, pagina, contenido, socketSwap);
 		} else { // por escribir
 			t_contenido_pagina * escrituraSwap;
 			escrituraSwap = iniciarContenidoPagina();
-			escrituraSwap->PID = idProc;
+			escrituraSwap->PID = PIDaCargar;
 			escrituraSwap->contenido = contenido;
 			escrituraSwap->numeroPagina = pagina;
 			enviarEscribirAlSwap(escrituraSwap, socketSwap);
