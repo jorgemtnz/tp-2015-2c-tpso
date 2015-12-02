@@ -87,20 +87,21 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			t_devolucion_escribir_o_leer* resultado = crearDevolucionEscribirOLeer();
 			t_contenido_pagina* paginaAEnviar = crearContenidoPagina();
 			t_contador* contador = crearContador();
-			int a,bit;
+			int a, bit;
 			//warning no se usa variable, entonces comento
 //			t_contenido_pagina* paginaEnBlanco = crearContenidoPagina();
 
 			borrarContenidoPagina(procesoAEscribir);
 			bit = 1;
-			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir, bit);
 			paginaAEnviar->PID = procesoAEscribir->PIDAResponderleAMemoria;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 
 			if (resultado->resultado == OK) {
-
-				enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
+				if (procesoAEscribir->PIDAResponderleAMemoria != 236) {
+					enviarStruct(socket, RESUL_ESCRIBIR_OK, paginaAEnviar);
+				}
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
 					if (contador->PID == procesoAEscribir->PIDAReemplazar) {
@@ -133,7 +134,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			if (resultado->resultado == OK) {
 
 				enviarStruct(socket, RESUL_LEER_OK, paginaAEnviar);
-
 
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
@@ -184,7 +184,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			} else {
 				log_info(logger, "FALLO EL LEER");
 			}
-		//	free(procesoRecibido);
+			//	free(procesoRecibido);
 			//free(resultado);
 			//free(paginaAEnviar);
 			break;
@@ -201,18 +201,15 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			pid_a_enviar->PID = resultado->PID;
 			if (resultado->resultado == OK) {
 				enviarStruct(socket, RESUL_FIN_OK, pid_a_enviar);
-for(a=0 ; a<list_size(contadorLecturasYEscrituras); a++){
-				contador = list_get(contadorLecturasYEscrituras, a);
-if(estructuraFinalizar->PID == contador->PID){
-	printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
-							contador->lecturas, contador->escrituras);
-	list_remove(contadorLecturasYEscrituras, a);
-	a = list_size(contadorLecturasYEscrituras) +1;
-}
-}
-
-
-
+				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
+					contador = list_get(contadorLecturasYEscrituras, a);
+					if (estructuraFinalizar->PID == contador->PID) {
+						printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
+								contador->lecturas, contador->escrituras);
+						list_remove(contadorLecturasYEscrituras, a);
+						a = list_size(contadorLecturasYEscrituras) + 1;
+					}
+				}
 
 			} else {
 				log_info(logger, "FALLO EL FINALIZAR");
@@ -238,14 +235,15 @@ if(estructuraFinalizar->PID == contador->PID){
 
 			//ESCRIBO EL CONTENIDO NUEVO EN LA PAGINA
 
-			resultado = escribir(listaDeProcesosCargados, procesoAEscribir,bit);
-			paginaAEnviar->PID = procesoAEscribir->PIDAResponderleAMemoria ;
+			resultado = escribir(listaDeProcesosCargados, procesoAEscribir, bit);
+			paginaAEnviar->PID = procesoAEscribir->PIDAResponderleAMemoria;
 			paginaAEnviar->contenido = resultado->contenido;
 			paginaAEnviar->numeroPagina = resultado->numeroPagina;
 
 			if (resultado->resultado == OK) {
-
-				enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
+				if (procesoAEscribir->PIDAResponderleAMemoria != 236) {
+					enviarStruct(socket, RESUL_SOBREESCRIBIR_OK, paginaAEnviar);
+				}
 				for (a = 0; a < list_size(contadorLecturasYEscrituras); a++) {
 					contador = list_get(contadorLecturasYEscrituras, a);
 					if (contador->PID == procesoAEscribir->PIDAReemplazar) {
