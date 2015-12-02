@@ -150,7 +150,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 			tamanioEnBytes = procesoAInsertarEnLista->cantPagsUso * configuracion->tamanioPagina;
 			char* contenidoLogger = string_new();
 			string_append(&contenidoLogger,
-					string_from_format("Proceso mProc asignado, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i",
+					string_from_format("\nProceso mProc asignado, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i \n",
 							procesoAInsertarEnLista->PID, byteInicial, tamanioEnBytes));
 			log_info(logger, contenidoLogger);
 
@@ -167,7 +167,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 	} else {
 
 		char* contenidoLogger = string_new();
-		string_append(&contenidoLogger, string_from_format("Proceso mProc rechazado por falta de espacio (PID: %i)", estructuraIniciar->PID));
+		string_append(&contenidoLogger, string_from_format("\n Proceso mProc rechazado por falta de espacio (PID: %i) \n", estructuraIniciar->PID));
 		log_info(logger, contenidoLogger);
 
 		estructura->PID = estructuraIniciar->PID;
@@ -214,7 +214,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobree
 		tamanioEnBytes = configuracion->tamanioPagina; //SIEMPRE SE ESCRIBE DE A UNA PAGINA
 
 		string_append(&contenidoLogger,
-				string_from_format("Escritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
+				string_from_format("\nEscritura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s \n",
 						procesoAEscribir->PIDAReemplazar, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 		log_info(logger, contenidoLogger);
 	}
@@ -242,7 +242,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobree
 	respuestaDeEscribir->resultado = OK;
 	if (bit == 1) {
 		string_append(&contenidoLogger,
-				string_from_format("Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s",
+				string_from_format("Finalizo el escribir correctamente el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i, el contenido es: %s\n",
 						procesoAEscribir->PIDAReemplazar, byteInicial, tamanioEnBytes, procesoAEscribir->contenido));
 		log_info(logger, contenidoLogger);
 	}
@@ -288,7 +288,7 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	}
 	char* contenidoLogger = string_new();
 	string_append(&contenidoLogger,
-			string_from_format("Lectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i", procesoRecibido->PID, byteInicial,
+			string_from_format("\nLectura solicitada, el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i \n", procesoRecibido->PID, byteInicial,
 					tamanioEnBytes));
 	log_info(logger, contenidoLogger);
 
@@ -323,7 +323,7 @@ t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* lis
 	respuestaDeLeer->resultado = OK;
 
 	string_append(&contenidoLogger,
-			string_from_format("Finalizo leer correctamente , el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i , el contenido es: %s",
+			string_from_format("Finalizo leer correctamente , el PID es: %i, el byte inicial es: %i, el tamanio en bytes es: %i , el contenido es: %s \n",
 					procesoRecibido->PID, byteInicial, tamanioEnBytes, respuestaDeLeer->contenido));
 	log_info(logger, contenidoLogger);
 
@@ -382,7 +382,7 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 	int tamanioEnBytes = unProceso->cantPagsUso * configuracion->tamanioPagina;
 	char* contenidoLogger = string_new();
 	string_append(&contenidoLogger,
-			string_from_format("Proceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i", respuestaDeFinalizar->PID,
+			string_from_format("\nProceso mProc liberado , el PID es: %i, el byte inicial es: %i, el tamanio en bytes liberado es: %i\n", respuestaDeFinalizar->PID,
 					byteInicial, tamanioEnBytes));
 	log_info(logger, contenidoLogger);
 
@@ -438,7 +438,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
 	usleep(configuracion->retardo_compactacion * 1000);
-	log_info(logger, "Compactacion iniciada por fragmentacion externa");
+	log_info(logger, "\nCompactacion iniciada por fragmentacion externa\n");
 	l_procesosCargados* espacioProcAux;
 	espacioProcAux = crearProceso();
 	l_procesosCargados* espacioProcSig;
@@ -464,7 +464,7 @@ void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCarg
 
 	list_add(listaDeEspaciosLibres, nuevoEspacioLibre);
 
-	log_info(logger, "Compactacion finalizada correctamente");
+	log_info(logger, "Compactacion finalizada correctamente\n");
 
 }
 

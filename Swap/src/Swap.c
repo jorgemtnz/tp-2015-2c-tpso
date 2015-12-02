@@ -111,7 +111,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					}
 				}
 			} else {
-				log_info(logger, "FALLO EL ESCRIBIR");
+				log_info(logger, "FALLO EL ESCRIBIR \n\n");
 			}
 			free(procesoAEscribir);
 			free(resultado);
@@ -145,7 +145,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				}
 
 			} else {
-				log_info(logger, "FALLO EL LEER");
+				log_info(logger, "FALLO EL LEER \n\n");
 			}
 			free(procesoRecibido);
 			free(resultado);
@@ -182,7 +182,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					}
 				}
 			} else {
-				log_info(logger, "FALLO EL LEER");
+				log_info(logger, "FALLO EL LEER \n\n");
 			}
 			//	free(procesoRecibido);
 			//free(resultado);
@@ -212,7 +212,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				}
 
 			} else {
-				log_info(logger, "FALLO EL FINALIZAR");
+				log_info(logger, "FALLO EL FINALIZAR \n\n");
 			}
 			//free(estructuraFinalizar);
 			//free(resultado);
@@ -253,7 +253,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					}
 				}
 			} else {
-				log_info(logger, "FALLO EL SOBREESCRIBIR");
+				log_info(logger, "FALLO EL SOBREESCRIBIR \n\n");
 			}
 			free(procesoAEscribir);
 			free(resultado);
