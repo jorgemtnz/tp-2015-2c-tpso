@@ -151,9 +151,25 @@ int ps(int socket, t_header* header, char* buffer) {
 		}
 	}
 
-	//LISTO
+	//NUEVO
 	char* ruta = string_new();
 	t_pcb* pcb = crearPcb(ruta);
+	b = 0;
+	cont = 0;
+
+	for (a = 0; a < list_size(colaDeNuevos); a++) {
+		pcb = list_get(colaDeNuevos, a);
+		char** splitRuta = string_split(pcb->rutaArchivoMcod, "/");
+		while (splitRuta[b] != NULL) {
+			cont++;
+			b++;
+		}
+		printConsola("mProc %i: %s -> Nuevo\n", pcb->pid, splitRuta[cont - 1]);
+	}
+
+	//LISTO
+	ruta = string_new();
+	pcb = crearPcb(ruta);
 	b = 0;
 	cont = 0;
 
@@ -181,6 +197,8 @@ int ps(int socket, t_header* header, char* buffer) {
 		}
 		printConsola("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
 	}
+
+	imprimirProcesoEnEntradaSalida();
 
 	return 0;
 }
