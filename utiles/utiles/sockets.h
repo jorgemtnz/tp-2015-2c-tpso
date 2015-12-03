@@ -14,7 +14,7 @@
 #include <sys/time.h>
 #include <errno.h>      //perror
 #include <arpa/inet.h>  //INADDR_ANY
-#include <unistd.h>     //close  usleep
+#include <unistd.h>     //close  uretardo
 #include <netdb.h> 		//gethostbyname
 #include <netinet/in.h>
 #include <fcntl.h> //fcntl
@@ -106,6 +106,10 @@ void my_log_some(bool info, const char* formato, va_list arguments);
 void my_log_info(const char *formato, ...);
 void my_log_error(const char *formato, ...);
 
+void uretardo(unsigned int micro);
+void retardo(unsigned int seconds);
+
+void procesarParametros(int argc, char *argv[]);
 
 // Para cliente y/o servidor
 void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int socketSwap, int (*funcionParaProcesarMensaje)(int, t_header*, char*, t_tipo_notificacion, void*, t_log*), void* extra,  t_log* logger);
@@ -132,4 +136,5 @@ void debug(const char *formato, ...);
 //variables globales
 t_log* logger;
 bool mustDebug;
+bool rapido;
 #endif /* SOCKETS_H_ */

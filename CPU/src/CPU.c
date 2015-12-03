@@ -1,7 +1,7 @@
 #include "CPU.h"
 
 int main(int argc, char *argv[]) {
-
+	procesarParametros(argc, argv);
 	procCPU = crearProcCPU();
 	logger = log_create("LOG_CPU.log", "CPU", false, LOG_LEVEL_INFO); //Inicializacion logger
 

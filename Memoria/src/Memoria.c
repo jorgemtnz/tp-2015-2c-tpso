@@ -1,6 +1,7 @@
 #include "Memoria.h"
 
 int main(int argc, char *argv[]) {
+	procesarParametros(argc, argv);
 	conexiones = dictionary_create();
 	inicializacionDesdeCero();
 	asignarSeniales();
@@ -93,7 +94,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
-				usleep(configuracion->retardoMemoria * 1000);
+				uretardo(configuracion->retardoMemoria * 1000);
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -107,7 +108,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
-				usleep(configuracion->retardoMemoria * 1000);
+				uretardo(configuracion->retardoMemoria * 1000);
 
 
 				revisarMemoria();

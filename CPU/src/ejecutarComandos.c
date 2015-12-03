@@ -32,7 +32,7 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 //					estructura->PID, estructura->cantidadPaginas, estructura,
 //					cpu->estructuraSolicitud));
 
-	sleep(configuracion->retardo);
+	retardo(configuracion->retardo);
 }
 //mandar comando a  memoria con los datos y la pagina donde debe ser escrita
 void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
@@ -67,7 +67,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 //					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
 //					estructura->PID,estructura->numeroPagina, estructura->contenido, estructura,
 //					cpu->estructuraSolicitud));
-	sleep(configuracion->retardo);
+	retardo(configuracion->retardo);
 }
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
@@ -97,7 +97,7 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 //					estructura->PID,estructura->numeroPagina, estructura,
 //					cpu->estructuraSolicitud));
 
-	sleep(configuracion->retardo);
+	retardo(configuracion->retardo);
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
@@ -122,7 +122,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 //					estructura->PID, estructura,
 //					cpu->estructuraSolicitud));
 
-	sleep(configuracion->retardo);
+	retardo(configuracion->retardo);
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
@@ -167,7 +167,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
 //					));
 
 
-	sleep(configuracion->retardo);
+	retardo(configuracion->retardo);
 
 	enviarStruct(socketPlanificador, ENTRADA_SALIDA, cpu->mCodCPU->respEjec);
 }

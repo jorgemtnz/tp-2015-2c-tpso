@@ -671,6 +671,30 @@ void my_log_some(bool info, const char* formato, va_list arguments) {
 	}
 }
 
+void uretardo(unsigned int micro) {
+	unsigned int milis = micro / 1000;
+	unsigned int seconds = milis / 1000;
+	retardo(seconds);
+}
+
+void retardo(unsigned int seconds) {
+	int factor = 1000;
+	if(!rapido) {
+		factor = factor * 1000;
+	}
+
+	usleep(seconds * factor);
+}
+
+void procesarParametros(int argc, char *argv[]) {
+	int i;
+	for (i = 0; i < argc; ++i) {
+		if (string_equals(argv[i], "rapido")) {
+			rapido = true;
+		}
+	}
+}
+
 void my_log_info(const char *formato, ...) {
 	va_list arguments;
 	va_start(arguments, formato);
@@ -867,6 +891,7 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 }
 
 bool mustDebug = true;
+bool rapido = false;
 
 void debug(const char *formato, ...) {
 //	puts("printConsola\n");
