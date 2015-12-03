@@ -218,7 +218,7 @@ void escribirEnMarcoYponerBitDeModificada(uint8_t idMarco, char* contenido) {
 	// en la Tabla de Pag)
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaPag = list_size(listaTablaDePag);
-	usleep(configuracion->retardoMemoria * 1000);
+	uretardo(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaPag && flagTablaDePag == NO_ENCONTRO; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == idMarco) {
@@ -812,7 +812,7 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 
 	if (bitTablaDePag == SI || bitTLB == SI) {
 		if (flagEscritura == POR_LECTURA) { // por leer
-			usleep(configuracion->retardoMemoria * 1000);
+			uretardo(configuracion->retardoMemoria * 1000);
 			enviarASwapContenidoPaginaDesactualizada(PIDaCargar,idProc, pagina, contenido, socketSwap);
 		} else { // por escribir
 			t_sobreescribir_swap* estructura;
@@ -837,7 +837,7 @@ char* traerContenidoDeMarco(uint8_t idMarco) {
 	t_marco* campoMemoria;
 	campoMemoria = iniciarMarco();
 
-	usleep(configuracion->retardoMemoria * 1000);
+	uretardo(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioMemoria && flag == CONTINUA_FOR; a++) {
 		campoMemoria = list_get(listaMemoria, a);
 		if (campoMemoria->idMarco == idMarco) {
@@ -897,7 +897,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(uint8_t PID) {
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = CONTINUA_FOR; // no lo encnotro
-		usleep(configuracion->retardoMemoria * 1000);
+		uretardo(configuracion->retardoMemoria * 1000);
 		for (b = 0; b < tamanioListaMarcos && flag == CONTINUA_FOR; b++) {
 			campoMarco = list_get(listaMemoria, b);
 			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
@@ -930,7 +930,7 @@ t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(uint8_t PID) {
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = CONTINUA_FOR;//no encontro
-		usleep(configuracion->retardoMemoria * 1000);
+		uretardo(configuracion->retardoMemoria * 1000);
 		for (b = 0; b < tamanioListaMarcos && flag == CONTINUA_FOR; b++) {
 			campoMarco = list_get(listaMemoria, b);
 			if (campoMarco->idMarco == marcoYBit->idMarco && marcoYBit->bitPresencia == 1) {
@@ -973,7 +973,7 @@ void eliminarDeTablaDePaginas(uint8_t id) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	usleep(configuracion->retardoMemoria * 1000);
+	uretardo(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaDePaginas && flag == CONTINUA_FOR; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idMarco == id) {
@@ -1027,7 +1027,7 @@ void eliminarDeTablaDePaginasDefinitivamente(uint8_t PID) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 
-	usleep(configuracion->retardoMemoria * 1000);
+	uretardo(configuracion->retardoMemoria * 1000);
 	for (a = 0; a < tamanioTablaDePaginas; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID) {
