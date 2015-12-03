@@ -29,25 +29,25 @@
 // +++++++++++++++++++++++++++++++++++++++ Define +++++++++++++++++++++++++++++++++++++
 
 #define IDMARCO_VACIO -1
-#define ESTA_EN_MEM 1
-#define NO_ESTA_EN_MEM 0
-#define TLB_HABILITADA 1
-#define TLB_NO_HABILITADA 0
-#define BIT_PAG_MODIFICADA_SI 1
-#define FLAG_ENCONTRO_ENCENDIDO 0
-#define FLAG_ENCONTRO_APAGADO 1
-#define FLAG_TDP_ENCENDIDO 1
-#define FLAG_TDP_APAGADO 0
-#define FLAG_TLB_ENCENDIDO 1
-#define FLAG_TLB_APAGADO 0
-#define FLAG_MEMORIA_ENCENDIDO 1
-#define FLAG_MEMORIA_APAGADO 0
-#define FLAG_ESCRITURA_ENCENDIDO 1
-#define FLAG_ESCRITURA_APAGADO 0
+#define SI_ESTA_EN_MEMORIA 1 //bitPresencia
+#define NO_ESTA_EN_MEMORIA 0  //bitPresencia
+#define PAG_MODIFICADA_SI 1 //bitPagModificada
+#define PAG_MODIFICADA_NO 0  //bitPagModificada
+#define POR_LECTURA 0  //FLAG_ESCRITURA
+#define POR_ESCRITURA 1 //FLAG_ESCRITURA
 #define FLAG_MAX_PROC_MEM_NO 0
 #define FLAG_MAX_PROC_MEM_SI 1
-#define FLAG_ENCENDIDO 1
-#define FLAG_APAGADO 0
+#define SI_ENCONTRO 1
+#define NO_ENCONTRO 0
+#define AUX_LECTURA 1
+#define AUX_ESCRITURA 0
+#define CONTINUA_FOR 0
+#define DETIENE_FOR 1
+#define SI 1
+#define NO 0
+#define SOY_EL_PRIMERO 0
+#define NO_SACAR_DE_MEMORIA 0 // no llamo a ninguna funcIon de sacar a memoria
+#define SI_SACAR_DE_MEMORIA 1
 //ejemplo de uso
 // flag = 0  se cambia por flag = FLAG_ENCENDIDO
 //====================================================================================
@@ -85,7 +85,7 @@ typedef struct {
 	uint8_t paginaDelProceso; // supongo que las paginas del proceso arrancan desde 1
 	uint8_t idMarco; // si esta vacio va -1, lo que indica que se tiene que ir a buscar al swap
 	uint8_t bitPagModificada; // si esta en memoria ver si fue modificada
-	uint8_t bitPresencia; // 1 esta en mem, 0 no
+	uint8_t bitPresencia; // 1 esta en memORIA, 0 no
 	uint8_t posicion;
 } t_TLB;
 

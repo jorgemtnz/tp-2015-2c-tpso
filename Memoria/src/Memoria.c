@@ -118,19 +118,22 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 
 				char* textoALoggear = string_new();
 				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
-				uint8_t a, b;
+				uint8_t a, b, flag=CONTINUA_FOR;
 				uint8_t pag, id;
 
 				t_marco* campoMemoria;
 				campoMemoria = iniciarMarco();
 				for (a = 0; a < list_size(listaMemoria); a++) {
 					campoMemoria = list_get(listaMemoria, a);
-					for (b = 0; b < list_size(listaTablaDePag); b++) {
+		    flag =CONTINUA_FOR ;//no ecnotro
+					//lo busca en tabla de pagina
+					for (b = 0; b < list_size(listaTablaDePag) && flag == CONTINUA_FOR; b++) {
 						campoTablaDePag = list_get(listaTablaDePag, b);
 						if (campoMemoria->idMarco == campoTablaDePag->idMarco) {
 							pag = campoTablaDePag->paginaDelProceso;
 							id = campoTablaDePag->idMarco;
 							string_append(&textoALoggear, string_from_format("Marco: %i, Pagina: %i ;", id, pag));
+							flag =DETIENE_FOR;// encontro_id_campos_iguales Y SE DETIENE
 						}
 
 					}
@@ -149,7 +152,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
-				aux =1;
+				aux =1;// aux esta en lectura
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 
@@ -166,7 +169,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_contenido_pagina* estructuraRtaLeer;
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
-				uint8_t flagEscritura = 0;
+				uint8_t flagEscritura = POR_LECTURA;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
 						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
@@ -190,7 +193,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraRtaLeerPorEscribir->PID = datosDesdeSwap->PID;
 				estructuraRtaLeerPorEscribir->numeroPagina = datosDesdeSwap->numeroPagina;
 
-				uint8_t flagEscritura = 1;
+				uint8_t flagEscritura = POR_ESCRITURA;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(
 						estructuraRtaLeerPorEscribir->PID,
 						estructuraRtaLeerPorEscribir->numeroPagina,
@@ -209,7 +212,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 
-				aux =0;
+				aux =0;// 0 escritura  , 1 en lectura
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
