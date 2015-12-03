@@ -89,7 +89,7 @@ void calcularPorcentaje() {
 	int i = 0;
 	while (1) {
 		i++;
-		sleep(60); //duerme cada 60 segundos
+		retardo(60); //duerme cada 60 segundos
 		void sacaPorcentaje(t_cpu* cpu) {
 			// 60 instrucciones equivale al 100%
 			time_t now;

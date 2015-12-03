@@ -1,6 +1,7 @@
 #include "Swap.h"
 
 int main(int argc, char *argv[]) {
+	procesarParametros(argc, argv);
 	l_procesosCargados* proceso = crearProceso();
 	l_espacioLibre* espacioLibre = crearEspacioLibre();
 	t_contador* contador = crearContador();

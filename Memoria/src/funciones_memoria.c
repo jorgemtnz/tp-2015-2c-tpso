@@ -37,7 +37,12 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidadMarcos = config_get_int_value(archivoConfig, "CANTIDAD_MARCOS");
 		configuracion->tamanioMarcos = config_get_int_value(archivoConfig, "TAMANIO_MARCO");
 		configuracion->entradasTlb = config_get_int_value(archivoConfig, "ENTRADAS_TLB");
-		configuracion->tlbHabilitada = config_get_int_value(archivoConfig, "TLB_HABILITADA");
+		if (string_equals(config_get_string_value(archivoConfig, "TLB_HABILITADA"),"SI")){
+			configuracion->tlbHabilitada=1;
+		}
+		else if (string_equals(config_get_string_value(archivoConfig, "TLB_HABILITADA"),"NO")){
+			configuracion->tlbHabilitada=0;
+		}
 		configuracion->retardoMemoria = config_get_int_value(archivoConfig, "RETARDO_MEMORIA");
 		configuracion->algoritmo_reemplazo = strdup(config_get_string_value(archivoConfig, "ALGORITMO_REEMPLAZO"));
 		my_log_info("[INFO]: Archivo de configuracion leido correctamente\n");
@@ -96,7 +101,7 @@ void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSw
 
 	if (marcoYBit->bitPresencia == 0) { // traer de swap una pag, cargarla a memoria
 
-		usleep(configuracion->retardoMemoria * 1000);
+		uretardo(configuracion->retardoMemoria * 1000);
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, textoAEscribir, socketSwap);
 		char* textoLogger = string_new();
 		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i\n", idProc, nroPag));
@@ -131,7 +136,7 @@ void leer(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU) {
 	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
-		usleep(configuracion->retardoMemoria * 1000);
+		uretardo(configuracion->retardoMemoria * 1000);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		char* textoLogger = string_new();
 		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i\n", idProc, pag));
@@ -168,7 +173,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 		}
 	}
 
-	usleep(configuracion->retardoMemoria * 1000);
+	uretardo(configuracion->retardoMemoria * 1000);
 	enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 
 }

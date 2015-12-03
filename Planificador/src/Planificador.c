@@ -2,6 +2,7 @@
 #include <time.h>
 
 int main(int argc, char *argv[]) {
+	procesarParametros(argc, argv);
 	//conexiones = dictionary_create();
 
 	crearLogger();
