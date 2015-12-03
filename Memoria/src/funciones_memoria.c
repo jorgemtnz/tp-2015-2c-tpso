@@ -37,7 +37,12 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		configuracion->cantidadMarcos = config_get_int_value(archivoConfig, "CANTIDAD_MARCOS");
 		configuracion->tamanioMarcos = config_get_int_value(archivoConfig, "TAMANIO_MARCO");
 		configuracion->entradasTlb = config_get_int_value(archivoConfig, "ENTRADAS_TLB");
-		configuracion->tlbHabilitada = config_get_int_value(archivoConfig, "TLB_HABILITADA");
+		if (string_equals(config_get_string_value(archivoConfig, "TLB_HABILITADA"),"SI")){
+			configuracion->tlbHabilitada=1;
+		}
+		else if (string_equals(config_get_string_value(archivoConfig, "TLB_HABILITADA"),"NO")){
+			configuracion->tlbHabilitada=0;
+		}
 		configuracion->retardoMemoria = config_get_int_value(archivoConfig, "RETARDO_MEMORIA");
 		configuracion->algoritmo_reemplazo = strdup(config_get_string_value(archivoConfig, "ALGORITMO_REEMPLAZO"));
 		my_log_info("[INFO]: Archivo de configuracion leido correctamente\n");
