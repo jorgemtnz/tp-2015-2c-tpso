@@ -227,7 +227,7 @@ void sacarAlPrimeroDeTLB();
 void eliminarDeTLB(uint8_t idMenor);
 t_list* buscarLosMarcosDeProcesoEnMemoriaConSusIndices(uint8_t PID);
 char* traerContenidoDeMarco(uint8_t idMarco);
-void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id);
+void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id,uint8_t flagEscritura);
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(
 		t_contenido_pagina* lecturaMandarCpu, int socketCPU);
 bool estaLlenaLaMemoria();

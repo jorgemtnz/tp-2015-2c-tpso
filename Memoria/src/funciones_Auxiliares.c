@@ -60,7 +60,7 @@ void mostrarTLB(){
 	printf("\n ENTRO A TLB:\n");
 	for(a=0; a < list_size(listaTLB);a++){
 		campoTLB = list_get(listaTLB,a);
-		printf("CampoTLB: PID: %i / PAG: %i / ID:%i\n",campoTLB->idProc, campoTLB->paginaDelProceso, campoTLB->idMarco);
+		printf("CampoTLB: PID: %i / PAG: %i / ID:%i /MOD: %i /PRES:%i\n",campoTLB->idProc, campoTLB->paginaDelProceso, campoTLB->idMarco,campoTLB->bitPagModificada,campoTLB->bitPresencia);
 	}
 
 }
@@ -79,7 +79,7 @@ void mostrarMemoria(){
 	printf("\n ENTRO A MEMORIA:\n");
 	for(a=0; a < list_size(listaMemoria);a++){
 		campoMarco = list_get(listaMemoria,a);
-		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitModificada: %i\n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
+		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitModificada: %i \n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
 	}
 
 }
@@ -263,7 +263,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, uint8_t PID, uint8_t pag, uint8_t
 			campoTablaDePag->bitPresencia = SI_ESTA_EN_MEMORIA;
 			if(flagEscritura == POR_ESCRITURA){
 				campoTablaDePag->bitPagModificada = PAG_MODIFICADA_SI;
-
 			}
 			reemplazar_tablaDePag(a,campoTablaDePag);
 			flag = DETIENE_FOR;
@@ -280,7 +279,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, uint8_t PID, uint8_t pag, uint8_t
 	campoAux->posicionCargadoAMemoria =variableParaFifo;
 
 	if (configuracion->tlbHabilitada ==SI) {
-		cargarNuevoEnTLB(PID, pag, campoAux->idMarco);
+		cargarNuevoEnTLB(PID, pag, campoAux->idMarco,flagEscritura);
 	}
 // flagEscritura 1
 	if (flagEscritura ==POR_ESCRITURA) {// se llama por la funcion de escritura
@@ -297,7 +296,7 @@ void cargarNuevoMarcoAMemoria(char* contenido, uint8_t PID, uint8_t pag, uint8_t
 
 }
 
-void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id) {
+void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id,uint8_t flagEscritura) {
 	uint8_t tamanioTLB;
 	t_TLB * campoTLB;
 	campoTLB = iniciarTLB();
@@ -310,7 +309,11 @@ void cargarNuevoEnTLB(uint8_t PID, uint8_t pag, uint8_t id) {
 	}
 
 	variableTLB++;
-	campoTLB->bitPagModificada = NO;
+	if(flagEscritura==1){
+		campoTLB->bitPagModificada = 1;
+	}else {
+		campoTLB->bitPagModificada = 0;
+	}
 	campoTLB->idMarco = id;
 	campoTLB->idProc = PID;
 	campoTLB->paginaDelProceso = pag;
@@ -357,9 +360,11 @@ bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc) {
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	uretardo(configuracion->retardoMemoria * 1000);
-	for (a = 0; a < tamanioTablaDePag; a++) {
+	printf("\n\n%i\n\n",idProc);
+	mostrarTablaDePag();
+	for (a = 0; a < tamanioTablaDePag && flag ==0 ; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
-		if (campoTablaDePag->idProc == idProc && campoTablaDePag->bitPresencia == 1 && flag == 0) { // o sea esta en memoria
+		if (campoTablaDePag->idProc == idProc && campoTablaDePag->bitPresencia == 1 ) { // o sea esta en memoria
 			contadorMarcosEnMemoria++;
 			if (contadorMarcosEnMemoria == configuracion->maximosMarcosPorProceso) {
 				flag = SI_ENCONTRO;
@@ -757,8 +762,8 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 	 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 	 que es lo que se manda en el caso que no haya que sacar alguno */
 // en 0 no lo encnotro
-	uint8_t tamanioTLB, tamanioTablaDePag, a, flagTLB = NO_ENCONTRO, flagTablaDePag=NO_ENCONTRO, pagina, idProc;
-	uint8_t bitTLB = NO, bitTablaDePag = NO,id;
+	uint8_t tamanioTLB, tamanioTablaDePag, a, flagTLB = 0, flagTablaDePag=0, pagina, idProc;
+	uint8_t bitTLB, bitTablaDePag,id;
 	pthread_mutex_lock(&mutexListaTLB);
 	tamanioTLB = list_size(listaTLB);
 	pthread_mutex_lock(&mutexTablaPags);
@@ -768,24 +773,24 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 	t_TablaDePaginas* campoTablaDePag;
 	campoTablaDePag = iniciarTablaDePaginas();
 	char* contenido = malloc(sizeof(char));
-
+	mostrarTLB();
 	if (configuracion->tlbHabilitada == 1) {
-		for (a = 0; a < tamanioTLB && flagTLB == NO_ENCONTRO; a++) {
+		for (a = 0; a < tamanioTLB && flagTLB == 0; a++) {
 			campoTLB = list_get(listaTLB, a);
 			if (campoTLB->idMarco == campoMarco->idMarco) {
-				flagTLB = SI_ENCONTRO;
+				flagTLB = 1;
 				bitTLB = campoTLB->bitPagModificada;
 				if (bitTLB == SI) {
 					pagina = campoTLB->paginaDelProceso;
 					idProc = campoTLB->idProc;
-					list_remove(listaTLB,a);
 				}
+				list_remove(listaTLB,a);
 			}
 		}
 
 	}
 //bitTLB 1 es porque esta en modificada
-		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == NO_ENCONTRO && flagTLB == NO_ENCONTRO; a++) {
+		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0 && flagTLB == 0; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			if (campoTablaDePag->idMarco == campoMarco->idMarco) {
 
@@ -795,10 +800,10 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 				//cuando la pagina esta modificada 1
 				if (bitTablaDePag == PAG_MODIFICADA_SI) {
 					campoTablaDePag->bitPagModificada = PAG_MODIFICADA_NO;
-					reemplazar_tablaDePag(a,campoTablaDePag);
 					pagina = campoTablaDePag->paginaDelProceso;
 					idProc = campoTablaDePag->idProc;
 				}
+				reemplazar_tablaDePag(a,campoTablaDePag);
 			}
 		}
 	id = campoMarco->idMarco;
@@ -1074,6 +1079,7 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) {
+			printf("\n\nSI\n");
 			 respuesta = sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
 			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
@@ -1083,12 +1089,14 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 	}
 
 	// aca significa que no tuvo que sacar ninguno
-	if(respuesta == POR_LECTURA){//para saber si fue por ercibir a swap 1,  0 solo para lectura
-		if( flagSaco==NO_SACAR_DE_MEMORIA){// no llmo a ninguna funcona de sacar a memoria
+	printf("\n\n%i\n\n",respuesta);
+	if(respuesta == 0){//para saber si fue por ercibir a swap 1,  0 solo para lectura
+		if (flagSaco == NO_SACAR_DE_MEMORIA) { // no llmo a ninguna funcona de sacar a memoria
 			cargarNuevoMarcoAMemoria(contenido, idProc, pag, flagEscritura);
-		}lecturaMandarCpu->PID = idProc;
-	lecturaMandarCpu->numeroPagina = pag;
-	string_append(&lecturaMandarCpu->contenido, contenido);
+		}
+		lecturaMandarCpu->PID = idProc;
+		lecturaMandarCpu->numeroPagina = pag;
+		string_append(&lecturaMandarCpu->contenido, contenido);
 
 
 	if (flagEscritura == POR_LECTURA) {// 0 por lectura

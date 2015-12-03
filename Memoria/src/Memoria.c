@@ -110,11 +110,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
 				uretardo(configuracion->retardoMemoria * 1000);
 
-
-				revisarMemoria();
-
 				t_TablaDePaginas* campoTablaDePag;
-
 				campoTablaDePag = iniciarTablaDePaginas();
 
 				char* textoALoggear = string_new();
@@ -126,7 +122,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				campoMemoria = iniciarMarco();
 				for (a = 0; a < list_size(listaMemoria); a++) {
 					campoMemoria = list_get(listaMemoria, a);
-		    flag =CONTINUA_FOR ;//no ecnotro
+					flag =CONTINUA_FOR ;//no ecnotro
 					//lo busca en tabla de pagina
 					for (b = 0; b < list_size(listaTablaDePag) && flag == CONTINUA_FOR; b++) {
 						campoTablaDePag = list_get(listaTablaDePag, b);

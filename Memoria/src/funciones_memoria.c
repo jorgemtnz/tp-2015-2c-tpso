@@ -173,7 +173,6 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 		}
 	}
 
-	uretardo(configuracion->retardoMemoria * 1000);
 	enviarFinalizarASwap(estructuraFinalizar, socketSwap);
 
 }
