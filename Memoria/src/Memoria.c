@@ -152,7 +152,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				aux =1;// aux esta en lectura
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
-
+mostrarMemoria();
+mostrarTablaDePag();
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
 						socketSwap, socketCPU);
 
@@ -217,7 +218,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-
+				mostrarMemoria();mostrarTablaDePag();
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 

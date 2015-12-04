@@ -42,7 +42,7 @@ void mostrarTablaDePag(){
 	printf("\n ENTRO A TABLA DE PAGINAS:\n");
 	for(a=0; a < list_size(listaTablaDePag);a++){
 		campoTablaDePag = list_get(listaTablaDePag,a);
-		printf("CampoTablaDePag: PID: %i / PAG: %i / ID:%i\n",campoTablaDePag->idProc, campoTablaDePag->paginaDelProceso, campoTablaDePag->idMarco);
+		printf("CampoTablaDePag: PID: %i / PAG: %i / ID:%i / PRE:%i \n",campoTablaDePag->idProc, campoTablaDePag->paginaDelProceso, campoTablaDePag->idMarco,campoTablaDePag->bitPresencia);
 	}
 
 }
@@ -80,9 +80,8 @@ void mostrarMemoria(){
 	printf("\n ENTRO A MEMORIA:\n");
 	for(a=0; a < list_size(listaMemoria);a++){
 		campoMarco = list_get(listaMemoria,a);
-		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitModificada: %i \n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
+		printf("CampoMemoria: CONTENIDO: %s / ID:%i /BitUso: %i /BitMod: %i \n",campoMarco->contenido, campoMarco->idMarco,campoMarco->bitUso, campoMarco->bitModificada);
 	}
-
 }
 
 void revisarMemoria(){
@@ -364,7 +363,6 @@ bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc) {
 	campoTablaDePag = iniciarTablaDePaginas();
 	uretardo(configuracion->retardoMemoria );
 	printf("\n\n%i\n\n",idProc);
-	mostrarTablaDePag();
 	for (a = 0; a < tamanioTablaDePag && flag ==0 ; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->bitPresencia == 1 ) { // o sea esta en memoria
@@ -560,9 +558,7 @@ uint8_t sacaProcesoDeMemoriaSegunClockModificado(char* contenidoACargar, uint8_t
 	}
 
 	if (marcoYFlag->flag == NO_ENCONTRO) {
-		mostrarMemoria();
 		marcoYFlag = buscarUsoEnCeroModificadaEnUnoDeProceso(PIDACargar);
-		mostrarMemoria();
 	}
 
 	return verificarBitDeModificada(marcoYFlag->marco, contenidoACargar, PIDACargar, pagACargar, flagEscritura, socketSwap);
@@ -789,18 +785,16 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 				list_remove(listaTLB,a);
 			}
 		}
-
 	}
 //bitTLB 1 es porque esta en modificada
 
-
-		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0 && flagTLB == 0; a++) {
+		for (a = 0; a < tamanioTablaDePag && flagTablaDePag == 0 ; a++) {
 			campoTablaDePag = list_get(listaTablaDePag, a);
 			uretardo(configuracion->retardoMemoria );
 			if (campoTablaDePag->idMarco == campoMarco->idMarco) {
-				flagTablaDePag = SI_ENCONTRO;
+				flagTablaDePag =1;
 				bitTablaDePag = campoTablaDePag->bitPagModificada;
-				campoTablaDePag->bitPresencia = NO;
+				campoTablaDePag->bitPresencia = 0;
 				//cuando la pagina esta modificada 1
 				if (bitTablaDePag == PAG_MODIFICADA_SI) {
 					campoTablaDePag->bitPagModificada = PAG_MODIFICADA_NO;
@@ -1052,7 +1046,8 @@ void eliminarDeTablaDePaginasDefinitivamente(uint8_t PID) {
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char* contenido, uint8_t flagEscritura, int socketCPU, int socketSwap) {
-
+	variableParaMostrar ++;
+	printf("\n\nCANT VECES TRAJO PAG: %i\n\n",variableParaMostrar);
 	char* algoritmoLRU = string_new();
 	string_append(&algoritmoLRU, "LRU");
 	char* algoritmoCLOCK = string_new();
@@ -1085,7 +1080,6 @@ void respuestaTraerDeSwapUnaPaginaDeUnProceso(uint8_t idProc, uint8_t pag, char*
 	} else if(strcmp(configuracion->algoritmo_reemplazo, algoritmoFIFO) == 0) {
 
 		if (llegoAlMaximoDelProcesoLaMemoria(idProc)) {
-			printf("\n\nSI\n");
 			 respuesta = sacaProcesoDeMemoriaSegunFifo(contenido, idProc, pag, flagEscritura, socketSwap);
 			 flagSaco=1;
 		} else if (estaLlenaLaMemoria()) {
@@ -1175,6 +1169,7 @@ void inicializacionDesdeCero() {
 	variableEnvejecimientoMarco = 0;
 	indiceClockM = 0;
 	variableParaFifo = 0;
+	variableParaMostrar=0;
 
 }
 

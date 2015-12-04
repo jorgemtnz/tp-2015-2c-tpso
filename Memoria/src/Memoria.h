@@ -306,7 +306,7 @@ t_dictionary* conexiones;
 // ----------- Contadores -------- //
 uint8_t variableIdMarco, variableTLB, variableEnvejecimientoMarco, indiceClockM,
 		variableParaFifo; // contador de paginas de la tabla de paginas
-uint8_t aux;
+uint8_t aux,variableParaMostrar;
 // ----------- Listas ------------ //
 t_list* listaMemoria;
 t_list* listaTLB;
