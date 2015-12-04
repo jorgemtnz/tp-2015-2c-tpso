@@ -887,7 +887,7 @@ char* traerContenidoDeMarco(uint8_t idMarco) {
 }
 
 t_list* buscarLosMarcoYBitDeProceso(uint8_t idProc) {
-	uint8_t a, tamanioTablaDePag,cantPagDelPID,tamanioTLB,flag=0;
+	uint8_t a, tamanioTablaDePag,cantPagDelPID,tamanioTLB;
 	t_list* listamarcoYBit;
 	listamarcoYBit = list_create();
 	pthread_mutex_lock(&mutexTablaPags);
@@ -899,8 +899,6 @@ t_list* buscarLosMarcoYBitDeProceso(uint8_t idProc) {
 
 	t_TLB* campoTLB;
 	campoTLB = iniciarTLB();
-	t_marco* campoMemoria;
-	campoMemoria = iniciarMarco();
 
 	if (configuracion->tlbHabilitada == 1) {
 		tamanioTLB = list_size(listaTLB);
