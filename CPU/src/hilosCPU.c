@@ -91,9 +91,8 @@ void calcularPorcentaje() {
 		i++;
 		retardo(60); //duerme cada 60 segundos
 		void sacaPorcentaje(t_cpu* cpu) {
-			// 60 instrucciones equivale al 100%
-			time_t now;
-			time(&now); //no se esta ejecutando actualmente la cpu
+			// 60 instrucciones ejecutadas equivale al 100%
+
 			if (cpu->estado == NO_TERMINO_RAFAGA
 					&& cpu->terminaInstruccion == NO_TERMINO) {
 //esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo

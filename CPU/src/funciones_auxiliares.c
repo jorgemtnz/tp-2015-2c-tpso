@@ -94,7 +94,12 @@ char* identificaCPU( pthread_t idHilo){
 }
 
 uint8_t instEquivalenteCienPorciento(uint8_t retardoTotal){
-	float_t divisor = 0.0001 + retardoTotal;
+	uint8_t divisor=0;
+	if(retardoTotal==0){
+		divisor=1;
+	}else{
+		divisor = retardoTotal;
+	}
 
 	int cienPorcien =0;
 	cienPorcien= (uint8_t) 60/divisor;

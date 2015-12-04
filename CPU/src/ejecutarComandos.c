@@ -10,6 +10,7 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 //	free(cpu->estructuraSolicitud);
 	cpu->estructuraSolicitud = NULL;
 	cpu->terminaInstruccion = NO_TERMINO;
+
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
@@ -39,9 +40,9 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 
 	free(cpu->estructuraSolicitud);
 	cpu->estructuraSolicitud = NULL;
-
-	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->terminaInstruccion = NO_TERMINO;
+	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
+
 	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->contenido = string_new();
@@ -147,8 +148,7 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
 					"en entrada-salida de tiempo \n ",
 					atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
-	cpu->cantInstEjecutadasPorcentaje += 1;
-	cpu->terminaInstruccion = SI_TERMINO;
+
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
