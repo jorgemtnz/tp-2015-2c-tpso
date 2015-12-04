@@ -52,7 +52,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 void crearArchivo() {
 
 	char *pathArchivo = string_new();
-	string_append(&pathArchivo, "/home/utnso/tp-2015-2c-tpso/Swap/");
+	string_append(&pathArchivo, "./Swap/");
 	string_append(&pathArchivo, configuracion->nombreSwap);
 
 	abrirOCrearArchivoLecturaEscritura(pathArchivo, logger);
