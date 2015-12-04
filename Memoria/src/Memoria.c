@@ -94,7 +94,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
-				uretardo(configuracion->retardoMemoria * 1000);
+				uretardo(configuracion->retardoMemoria );
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
@@ -108,7 +108,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
-				uretardo(configuracion->retardoMemoria * 1000);
+				uretardo(configuracion->retardoMemoria );
 
 				t_TablaDePaginas* campoTablaDePag;
 				campoTablaDePag = iniciarTablaDePaginas();
