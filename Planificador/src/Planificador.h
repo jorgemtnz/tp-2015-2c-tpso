@@ -100,6 +100,7 @@ bool existePID(uint8_t pid);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
+t_pcb_entrada_salida* crearPcbES(char* rutaArchivoMcod);
 t_cpu_ref* crearCpuRef();
 void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();

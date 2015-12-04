@@ -278,7 +278,7 @@ bool existePID(uint8_t pid) {
 	char* ruta = string_new();
 
 	t_pcb* pcb = crearPcb(ruta);
-	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
+	t_pcb_entrada_salida* pcbES = crearPcbES(ruta);
 
 	for (a = 0; a < list_size(listaCPUs); a++) {
 

@@ -24,6 +24,12 @@ t_pcb* crearPcb(char* rutaArchivoMcod) {
 //	printConsola("Se creo el proceso PID: %d\n", pcb->pid);
 	return pcb;
 }
+t_pcb_entrada_salida* crearPcbES(char* rutaArchivoMcod){
+	t_pcb_entrada_salida* pcb = malloc(sizeof(t_pcb_entrada_salida));
+	pcb->pcb = crearPcb(rutaArchivoMcod);
+	pcb->cantidadCiclos = 0;
+	return pcb;
+}
 t_cpu_ref* crearCpuRef(){
 	t_cpu_ref* cpu = malloc(sizeof(t_cpu_ref));
 	cpu->conectada = false;
