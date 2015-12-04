@@ -104,7 +104,8 @@ void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSw
 		uretardo(configuracion->retardoMemoria );
 		traerDeSwapUnaPaginaDeUnProcesoPorEscribir(idProc, nroPag, textoAEscribir, socketSwap);
 		char* textoLogger = string_new();
-		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i\n", idProc, nroPag));
+		fallo++;
+		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página:%i),  PID: %i, pagina: %i\n",fallo, idProc, nroPag));
 		my_log_info(textoLogger);
 
 	} else {	// entonces tengo el id del marco
@@ -139,7 +140,8 @@ void leer(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU) {
 		uretardo(configuracion->retardoMemoria);
 		traerDeSwapUnaPaginaDeUnProceso(idProc, pag, socketSwap); // aca se tiene que pedir a swap la pagina a y del proceso idProc
 		char* textoLogger = string_new();
-		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página),  PID: %i, pagina: %i\n", idProc, pag));
+		fallo ++;
+		string_append(&textoLogger, string_from_format("Acceso a swap (fallo de página: %i),  PID: %i, pagina: %i\n",fallo, idProc, pag));
 		my_log_info(textoLogger);
 	} else { // aca significa que trajo el id porque esta en memoria
 		contenido = traerContenidoDeMarco(marcoYBit->idMarco);

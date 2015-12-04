@@ -152,8 +152,6 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				aux =1;// aux esta en lectura
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
-mostrarMemoria();
-mostrarTablaDePag();
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
 						socketSwap, socketCPU);
 
@@ -209,7 +207,6 @@ mostrarTablaDePag();
 				registrarPidCpu(socket, datosDesdeCPU->PID);
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
-
 				aux =0;// 0 escritura  , 1 en lectura
 				my_log_info("leer pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
@@ -218,7 +215,6 @@ mostrarTablaDePag();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				mostrarMemoria();mostrarTablaDePag();
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 

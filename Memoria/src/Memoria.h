@@ -169,6 +169,7 @@ void asignarSeniales();
 
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares
 //============================================================================
+uint8_t obtenerCantPagDelPID(uint8_t PID);
 void revisarQueExistaPidYPagina(uint8_t pag, uint8_t PID, int socketCPU);
 void revisarMemoria();
 void mostrarTablaDePag();
@@ -306,7 +307,7 @@ t_dictionary* conexiones;
 // ----------- Contadores -------- //
 uint8_t variableIdMarco, variableTLB, variableEnvejecimientoMarco, indiceClockM,
 		variableParaFifo; // contador de paginas de la tabla de paginas
-uint8_t aux,variableParaMostrar;
+uint8_t aux,variableParaMostrar,fallo;
 // ----------- Listas ------------ //
 t_list* listaMemoria;
 t_list* listaTLB;
