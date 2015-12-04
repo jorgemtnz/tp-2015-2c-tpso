@@ -265,7 +265,7 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion
 	pcbEntradaSalida->pcb = respuestaEjecucion->pcb;
 	pcbEntradaSalida->cantidadCiclos = respuestaEjecucion->cant_entrada_salida;
 	list_add(getColaDeEntradaSalida(), pcbEntradaSalida);
-
+	debug("pid %i\n", pcbEntradaSalida->pcb->pid);
 	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
 
 	ejecutarPlanificadorLargoPlazo();

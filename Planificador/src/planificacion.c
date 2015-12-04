@@ -116,8 +116,8 @@ void ejecutarPlanificadorLargoPlazo() {
 		if (hayEntradaSalidaEsperando) {
 			t_pcb_entrada_salida* pcbEntradaSalida = (t_pcb_entrada_salida*)list_get(getColaDeEntradaSalida(), 0);
 			if(pcbEntradaSalida != NULL) {
-				list_remove(getColaDeEntradaSalida(), 0);
 				lockEstadoEntradaSalida();
+				list_remove(getColaDeEntradaSalida(), 0);
 				estadoEntradaSalida.cantidadCiclos = pcbEntradaSalida->cantidadCiclos;
 				estadoEntradaSalida.pcb = pcbEntradaSalida->pcb;
 				estadoEntradaSalida.finalizoEntradaSalida = false;
@@ -297,7 +297,7 @@ void *ejecutarEntradaSalida(void *param) {
 			//time(&t);
 			//printConsola("\n current time is : %s ",ctime(&t));
 			printConsola("Cantidad ciclos E/S restantes %d\n", cantidadCiclos);
-			uretardo(1000000);
+			uretardo(1 * 1000);
 			lockEstadoEntradaSalida();
 			estadoEntradaSalida.cantidadCiclos--;
 			cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
@@ -342,7 +342,7 @@ void imprimirColaPcbs(t_list* colaPcb, char* prefijo) {
 	for (i = 0; i < cantElem; i++) {
 		t_pcb* pcb = list_get(colaPcb, i);
 		char* pid = pcb != NULL ? string_from_format("%i",pcb->pid) : "VACIO";
-		printConsola("%s[%d], pid: %s\n", prefijo, i, pid);
+		printConsola("%s[%d], pid: %s %s\n", prefijo, i, pid, pcb->rutaArchivoMcod);
 	}
 	if(cantElem == 0) {
 		printConsola("[Lista vacia de %s]\n", prefijo);
@@ -350,9 +350,9 @@ void imprimirColaPcbs(t_list* colaPcb, char* prefijo) {
 }
 
 void imprimirColaDeFinalizados() {
-	t_list* colaPcb = getColaDeFinalizados();
+	t_list* colaFinalizados = getColaDeFinalizados();
 //	printConsola("Estado Cola de finalizados\n");
-	imprimirColaPcbs(colaPcb, "finalizado");
+	imprimirColaPcbs(colaFinalizados, "finalizado");
 }
 
 void imprimirProcesoEnEntradaSalida() {
@@ -369,7 +369,17 @@ void imprimirProcesoEnEntradaSalida() {
 void imprimirColaDeEntradaSalida() {
 	t_list* colaPcb = getColaDeEntradaSalida();
 //	printConsola("Estado Cola de Entrada Salida\n");
-	imprimirColaPcbs(colaPcb, "espera e/s");
+	char* prefijo = "espera e/s";
+	int cantElem = list_size(colaPcb);
+	int i = 0;
+	for (i = 0; i < cantElem; i++) {
+		t_pcb_entrada_salida* pcbes = list_get(colaPcb, i);
+		char* pid = pcbes != NULL && pcbes->pcb != NULL ? string_from_format("%i",pcbes->pcb->pid) : "VACIO";
+		printConsola("%s[%d], pid: %s %s\n", prefijo, i, pid, pcbes->pcb->rutaArchivoMcod);
+	}
+	if(cantElem == 0) {
+		printConsola("[Lista vacia de %s]\n", prefijo);
+	}
 }
 
 void imprimirColaDeListos() {
