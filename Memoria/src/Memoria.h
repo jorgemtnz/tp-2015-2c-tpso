@@ -194,7 +194,7 @@ t_marco_con_flag * iniciarMarcoYFlag();
 t_marco_con_indice* iniciarMarcoYIndice();
 t_marco_y_bit* iniciarMarcoYBit();
 void* uint8_terpretarPaquete(Paquete* unPaquete, uint8_t fdReceptor);
-t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag); // retorna o el id o un -1 si no esta en memoria
+t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag, uint8_t flagEscritura); // retorna o el id o un -1 si no esta en memoria
 void escribirEnMarcoYponerBitDeModificada(uint8_t idMarco, char* contenido);
 void enviarIniciarASwap(t_iniciar_swap *estructura, int socketSwap);
 void enviarFinalizarASwap(t_PID *estructura, int socketSwap);
@@ -307,7 +307,7 @@ t_dictionary* conexiones;
 // ----------- Contadores -------- //
 uint8_t variableIdMarco, variableTLB, variableEnvejecimientoMarco, indiceClockM,
 		variableParaFifo; // contador de paginas de la tabla de paginas
-uint8_t aux,variableParaMostrar,fallo;
+uint8_t aux,variableParaMostrar,fallo,cantEscriturasEnSwap;
 // ----------- Listas ------------ //
 t_list* listaMemoria;
 t_list* listaTLB;

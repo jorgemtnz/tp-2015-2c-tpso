@@ -134,7 +134,7 @@ void revisarMemoria(){
 	}
 }
 
-t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag) {
+t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag, uint8_t flagEscritura) {
 	//warning no usa variable, se debe cual es el uso de flagTDP
 	uint8_t tamanioTLB, a, tamanioTablaPag, flagTLB =NO_ENCONTRO ,  flagTDP = NO_ENCONTRO;
 			//  flagTLB el otro flag idem no encontro  0 ,  si encontro 1
@@ -178,7 +178,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag) {
 	}
 	pthread_mutex_unlock(&mutexTablaPags);
 	//LOG
-		if (aux == AUX_ESCRITURA ) {// nunca psa queno encuentra en ninguno de los dos
+		if (flagEscritura == 1 ) {// nunca psa queno encuentra en ninguno de los dos
 			if (flagTLB == SI_ENCONTRO) {//si encontro en TLB
 				char* textoLogger = string_new();
 						string_append(&textoLogger,string_from_format("Solicitud de escritura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i\n", idProc,
@@ -190,7 +190,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag) {
 						nroPag, marcoYBit->idMarco));
 				my_log_info(textoLogger);
 			}
-		} else {//AUX_LECTURA
+		} else {
 			if (flagTLB == SI_ENCONTRO) {
 				char* textoLogger = string_new();
 				string_append(&textoLogger ,string_from_format("Solicitud de lectura recibida, PID: %i , N° de página: %i, TLB hit, N° de marco resultante: %i\n", idProc,
@@ -1181,6 +1181,10 @@ void enviarASwapContenidoPaginaDesactualizada(uint8_t PIDaReesponder,uint8_t idP
 	estructura->numeroPagina = pagina;
 	estructura->contenido = contenido;
 	enviarStruct(socketSwap, SOBREESCRIBIR_SWAP, estructura);
+	char* textoLogger = string_new();
+	cantEscriturasEnSwap++;
+	string_append(&textoLogger,string_from_format("Escritura enviada a swap nro: %i\n",cantEscriturasEnSwap));
+	my_log_info(textoLogger);
 }
 
 void enviarACPUContenidoPaginaDeUnProcesoPorLeer(t_contenido_pagina* lecturaMandarCpu, int socketCPU) {
@@ -1222,6 +1226,7 @@ void inicializacionDesdeCero() {
 	variableParaFifo = 0;
 	variableParaMostrar=0;
 	fallo=0;
+	cantEscriturasEnSwap=0;
 
 }
 
@@ -1285,7 +1290,7 @@ t_escribir_falso* escribir_falso(uint8_t idProc, uint8_t nroPag, char* textoAEsc
 	t_escribir_falso* estructuraDevolucionEscribirFalso;
 	estructuraDevolucionEscribirFalso = crearEscribirFalso();
 
-	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag,1);
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
@@ -1381,7 +1386,7 @@ t_contenido_pagina* leer_falso(uint8_t idProc, uint8_t pag, int socketSwap, int 
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 
-	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, pag,0);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		uretardo(configuracion->retardoMemoria );

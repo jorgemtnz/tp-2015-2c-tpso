@@ -208,7 +208,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =0;// 0 escritura  , 1 en lectura
-				my_log_info("leer pag %d del proceso %d\n",
+				my_log_info("escribir pag %d del proceso %d\n",
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();

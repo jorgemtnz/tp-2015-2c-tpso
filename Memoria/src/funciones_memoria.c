@@ -93,7 +93,7 @@ void escribir(uint8_t idProc, uint8_t nroPag, char* textoAEscribir, int socketSw
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
 
-	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, nroPag,1);
 
 	escritura->numeroPagina = nroPag;
 	escritura->PID = idProc;
@@ -134,7 +134,7 @@ void leer(uint8_t idProc, uint8_t pag, int socketSwap, int socketCPU) {
 	lecturaMandarCpu->PID = idProc;
 	lecturaMandarCpu->numeroPagina = pag;
 
-	marcoYBit = buscarSiEstaEnMemoria(idProc, pag);
+	marcoYBit = buscarSiEstaEnMemoria(idProc, pag,0);
 
 	if (marcoYBit->bitPresencia == 0) {	// no lo encontro
 		uretardo(configuracion->retardoMemoria);
@@ -184,6 +184,10 @@ void enviarIniciarAlSwap(t_iniciar_swap *estructura, int socketSwap) {
 }
 void enviarEscribirAlSwap(t_sobreescribir_swap *estructura, int socketSwap) {
 	enviarStruct(socketSwap, ESCRIBIR_SWAP, estructura);
+	char* textoLogger = string_new();
+	cantEscriturasEnSwap++;
+	string_append(&textoLogger, string_from_format("Escritura enviada a swap nro: %i\n", cantEscriturasEnSwap));
+	my_log_info(textoLogger);
 }
 void enviarRtaIniciarOkCPU(t_PID * estructura, int socketCPU) {
 	enviarStruct(socketCPU, RESUL_INICIAR_PROC_OK_CPU, estructura);
