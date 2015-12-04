@@ -258,7 +258,6 @@ void cargarNuevoMarcoAMemoria(char* contenido, uint8_t PID, uint8_t pag, uint8_t
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaDePag = list_size(listaTablaDePag);
 
-	uretardo(configuracion->retardoMemoria );
 	for (a = 0; a < tamanioTablaDePag && flag == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		uretardo(configuracion->retardoMemoria);
@@ -821,7 +820,7 @@ uint8_t verificarBitDeModificada(t_marco* campoMarco, char* contenidoACargar, ui
 	cargarNuevoMarcoAMemoria(contenidoACargar, PIDaCargar, pagACargar, flagEscritura);
 
 	if (bitTablaDePag == SI || bitTLB == SI) {
-		uretardo(configuracion->retardoMemoria * 1000);
+		uretardo(configuracion->retardoMemoria );
 		if (flagEscritura == POR_LECTURA) { // por leer
 			enviarASwapContenidoPaginaDesactualizada(PIDaCargar,idProc, pagina, contenido, socketSwap);
 		} else { // por escribir
