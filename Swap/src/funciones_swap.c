@@ -190,7 +190,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 
 t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobreescribir_swap* procesoAEscribir, int bit) {
 
-	uretardo(configuracion->retardo_swap * 1000);
+	uretardo(configuracion->retardo_swap);
 	l_procesosCargados* unProceso;
 	unProceso = crearProceso();
 	t_devolucion_escribir_o_leer* respuestaDeEscribir;
@@ -258,7 +258,7 @@ t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobree
 }
 
 t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados) {
-	uretardo(configuracion->retardo_swap * 1000);
+	uretardo(configuracion->retardo_swap);
 	int a, x;
 	char* datosLeidos = string_new();
 	char* datosLeidosFinal = string_new();
@@ -442,7 +442,7 @@ void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres) {
 }
 
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados) {
-	uretardo(configuracion->retardo_compactacion * 1000);
+	uretardo(configuracion->retardo_compactacion);
 	log_info(logger, "\nCompactacion iniciada por fragmentacion externa\n");
 	l_procesosCargados* espacioProcAux;
 	espacioProcAux = crearProceso();

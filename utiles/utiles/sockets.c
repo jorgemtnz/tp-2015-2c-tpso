@@ -671,8 +671,7 @@ void my_log_some(bool info, const char* formato, va_list arguments) {
 	}
 }
 
-void uretardo(unsigned int micro) {
-	unsigned int seconds = micro / 1000;
+void uretardo(unsigned int seconds) {
 	retardo(seconds);
 }
 

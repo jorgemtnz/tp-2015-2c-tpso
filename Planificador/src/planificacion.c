@@ -297,7 +297,7 @@ void *ejecutarEntradaSalida(void *param) {
 			//time(&t);
 			//printConsola("\n current time is : %s ",ctime(&t));
 			printConsola("Cantidad ciclos E/S restantes %d\n", cantidadCiclos);
-			uretardo(1 * 1000);
+			uretardo(1);
 			lockEstadoEntradaSalida();
 			estadoEntradaSalida.cantidadCiclos--;
 			cantidadCiclos = estadoEntradaSalida.cantidadCiclos;
