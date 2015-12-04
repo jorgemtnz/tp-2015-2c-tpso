@@ -681,6 +681,8 @@ void retardo(unsigned int seconds) {
 		factor = factor * 1000;
 	}
 
+	factor = factor * (factorRapidez / 100);
+
 	usleep(seconds * factor);
 }
 
@@ -689,6 +691,17 @@ void procesarParametros(int argc, char *argv[]) {
 	for (i = 0; i < argc; ++i) {
 		if (string_equals(argv[i], "rapido")) {
 			rapido = true;
+		} else if (string_ends_with(argv[i], "%")) {
+			char** params = string_split(argv[i], "%:");
+			char* velocidad = params[0];
+			float rapidez = atof(velocidad);
+			if(rapidez <= 0) {
+				printf("El porcentaje debe ser mayor  a 0.");
+			}
+			if(rapidez > 100) {
+				printf("El porcentaje debe ser menor o igual a 100");
+			}
+			factorRapidez = rapidez;
 		}
 	}
 }
@@ -888,8 +901,9 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 	return 0;
 }
 
-bool mustDebug = true;
+bool mustDebug = false;
 bool rapido = false;
+float factorRapidez = 100.0;
 
 void debug(const char *formato, ...) {
 //	puts("printConsola\n");

@@ -137,4 +137,5 @@ void debug(const char *formato, ...);
 t_log* logger;
 bool mustDebug;
 bool rapido;
+float factorRapidez;
 #endif /* SOCKETS_H_ */
