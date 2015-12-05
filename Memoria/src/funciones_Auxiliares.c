@@ -162,7 +162,9 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag, uint8_t fla
 	// sino veo si esta en la tabla de paginas
 	pthread_mutex_lock(&mutexTablaPags);
 	tamanioTablaPag = list_size(listaTablaDePag);
-	uretardo(configuracion->retardoMemoria);
+	if(flagTLB==0){
+		uretardo(configuracion->retardoMemoria);
+	}
 	for (a = 0; a < tamanioTablaPag && flagTDP == 0 && flagTLB == 0; a++) {
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == idProc && campoTablaDePag->paginaDelProceso == nroPag) {
@@ -952,7 +954,6 @@ t_list* buscarLosMarcosDeProcesoEnMemoria(uint8_t PID) {
 	tamanioListaMarcoYBit = list_size(listaMarcoYBit);
 
 	tamanioListaMarcos = list_size(listaMemoria);
-	uretardo(configuracion->retardoMemoria );
 	for (a = 0; a < tamanioListaMarcoYBit; a++) {
 		marcoYBit = list_get(listaMarcoYBit, a);
 		flag = CONTINUA_FOR; // no lo encnotro

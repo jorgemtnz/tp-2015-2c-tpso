@@ -227,17 +227,17 @@ void imprimirFinalizado(t_pcb* pcb) {
 
 int calcularTiempoRespuesta(t_pcb* pcb) {
 	double elapsed = difftime(pcb->tiempoFinal, pcb->tiempoInicial) * 1000;
-	return (int) elapsed;
+	return abs((int) elapsed);
 }
 
 int calcularTiempoEjecucion(t_pcb* pcb) {
-	return pcb->tiempoEjecucion;
+	return abs(pcb->tiempoEjecucion);
 }
 
 int calcularTiempoEspera(t_pcb* pcb) {
 	int tiempoRespuesta = calcularTiempoRespuesta(pcb);
 	int tiempoEjecucion = calcularTiempoEjecucion(pcb);
-	return (tiempoRespuesta - tiempoEjecucion) - pcb->tiempoEntradaSalida;
+	return abs(abs(tiempoRespuesta - tiempoEjecucion) - abs(pcb->tiempoEntradaSalida));
 }
 
 void ejecucionAColaDeListos(t_pcb* pcb) {
