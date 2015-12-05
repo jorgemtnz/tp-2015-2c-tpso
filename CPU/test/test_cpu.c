@@ -62,7 +62,7 @@ static void test_crearProcesoCPU() {
 
 static void test_crearCPU() {
 	t_cpu* cpuPrimera = crearCPU();
-	CU_ASSERT_EQUAL(cpuPrimera->cantInstEjecutadas, 0);
+	CU_ASSERT_EQUAL(cpuPrimera->cantInstEjecutadasPorcentaje, 0);
 //	CU_ASSERT_EQUAL(cpuPrimera->estadoEjecucion, 0);
 	CU_ASSERT_EQUAL(list_size(procCPU->listaCPU), 0);
 	CU_ASSERT_EQUAL(cpuPrimera->porcentajeUso, 0);

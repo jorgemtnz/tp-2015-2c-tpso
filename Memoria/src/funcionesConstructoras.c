@@ -17,6 +17,15 @@ t_TablaDePaginas* iniciarTablaDePaginas(){
 	return tablaDePag;
 }
 
+t_error* iniciarError(){
+	t_error* error = malloc(sizeof(error));
+	if (error == NULL) {
+		perror("[ERROR] No se reservo memoria para iniciarError");
+		my_log_error("[ERROR] No se reservo memoria para iniciarError");
+		exit(-1);
+	}
+	return error;
+}
 
 
 t_TLB* iniciarTLB() {
@@ -112,6 +121,21 @@ t_iniciar_swap* crearEstructuraIniciar(){
 	}
 	contenido->PID = 0;
 	contenido->cantidadPaginas = 0;
+
+
+	return contenido;
+}
+
+t_sobreescribir_swap* crearEstructuraReemplazar(){
+	t_sobreescribir_swap* contenido = malloc(sizeof(t_sobreescribir_swap));
+	if (contenido == NULL) {
+		perror("[ERROR] No se reservo memoria para crearEstructuraReemplazar");
+		my_log_error("[ERROR] No se reservo memoria para crearEstructuraReemplazar");
+		exit(-1);
+	}
+	contenido->PIDAReemplazar = 0;
+	contenido->PIDAResponderleAMemoria = 0;
+	contenido->numeroPagina = 0;
 
 
 	return contenido;

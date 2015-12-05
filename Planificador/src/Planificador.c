@@ -2,6 +2,7 @@
 #include <time.h>
 
 int main(int argc, char *argv[]) {
+	procesarParametros(argc, argv);
 	//conexiones = dictionary_create();
 
 	crearLogger();
@@ -29,7 +30,7 @@ int main(int argc, char *argv[]) {
 }
 
 void crearLogger() {
-	logger = log_create("LOG_PLAN.log", "Planificador", false, LOG_LEVEL_INFO);
+	logger = log_create("LOG_PLAN.log", "Planificador", false, LOG_LEVEL_DEBUG);
 }
 
 

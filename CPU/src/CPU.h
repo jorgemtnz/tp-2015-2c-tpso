@@ -47,8 +47,8 @@
 #define INST_FINALIZAR 5
 #define NO_TERMINO 1
 #define SI_TERMINO 0
-//#define NO_TERMINO 1
-//#define SI_TERMINO 0
+#define NO 0
+#define SI 1
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -91,7 +91,7 @@ typedef struct {
 	pthread_t idCPU;
 	uint8_t porcentajeUso; //indica el porcentaje de utilizacion del ultimo minuto 60 ints equivale al 100 porciento
 	t_pcb* pcbPlanificador;
-	uint8_t cantInstEjecutadas; //cuenta las instrucciones ejecutadas
+	uint8_t cantInstEjecutadasPorcentaje; //cuenta las instrucciones ejecutadas
 	uint8_t terminaInstruccion;     //marca el define USO 1 NO_USO 0  en el proceso
 	t_mCod* mCodCPU; // para manejar lo relacionado al codigo ejecutado y resultados de rafaga
     char* nombre;
@@ -100,11 +100,14 @@ typedef struct {
     uint8_t estado;   //para si esta disponible o no la CPU teniendo en cuenta el regreso desde memoria
     int socketPlanificador;
     int socketMemoria;
-//    time_t inicioInstruccion;//incluye el retardo en segundos
-//    time_t finInstruccion;
+    time_t *inicioInstruccion;//incluye el retardo en segundos
+    time_t *finInstruccion;
+    double  acumuladoSegundos;
 //    uint8_t retardoTotal;
 //    uint8_t terminaInstruccion;
     //uint8_t retardo acumulado; // para tener el retardo por cada instruccion de memoria += swap si corresponde
+      uint8_t quantumReloj;
+      int actualPID;
 } t_cpu;
 
 //---------------------------------------------estructura principal del proceso CPU--------------
@@ -137,7 +140,7 @@ void destVectorInstruccion(char** vectorInstruccion);
 void destIniciarSwap(t_iniciar_swap* estructura);
 void destEscrMem(t_contenido_pagina* estruc);
 void destRespEjec(t_respuesta_ejecucion* respEjec);
-
+void destPCB(t_pcb* pcb);
 // +++++++++++++++++++++++++++++++++++Funciones Auxiliares y ejecucion y ejecucionResult
 //============================================================================
 int reconoceTokenInstruccion(char* string);
@@ -151,17 +154,22 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu);
 void ejecuta_FinProcesoMemoria(t_cpu* cpu);
 void resultadoAlPlanificador( t_cpu* cpu);
-void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu);
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu, int socketPlanificador) ;
 int putsConsola (const char *msg) ;
 char* queCPUsoy(t_cpu* cpu);
 pthread_t queHiloSoy();
 char* identificaCPU( pthread_t idHilo);
-uint8_t instEquivalenteCienPorciento(uint8_t retardoTotal);
+double instEquivalenteCienPorciento(uint8_t retardoTotal);
 bool primeraMayorque(time_t unaFecha, time_t otraFecha);
-double dameDiferencia(time_t unaFecha, time_t otraFecha);
+double dameDiferencia(time_t *unaFecha, time_t *otraFecha);
 bool fechasIguales(time_t unaFecha, time_t otraFecha);
 void resetValPorcentaje(t_cpu* cpu);
-void resul_noTerminoAlPlanificador(t_cpu* cpu);
+void resul_TerminoAlPlanificador(t_cpu* cpu ,int estado);
+void calculaAcumulado(t_cpu* cpu);
+void calculafecha(t_cpu* cpu);
+void incrementaInstPorcentaje(t_cpu* cpu);
+void decrementeInstProcentaje(t_cpu* cpu);
+int redondea(double tiempoPromedio) ;
 // +++++++++++++++++++++++++++++++++++Funciones
 //============================================================================
 
@@ -187,7 +195,7 @@ t_configuracion* configuracion;
 t_ProcCPU* procCPU;  //proceso CPU que controla la lista de los hilos CPU
 char* resultadoFinal;
 pthread_mutex_t mutexCPULogs;
-
+pthread_mutex_t mutexCPUPorcentaje;
 t_equipo* un;
 //t_dictionary* conexiones;
 

@@ -1,0 +1,10 @@
+iniciar 10;
+entrada-salida 100;
+leer 0;
+escribir 1 "IO B";
+leer 1;
+escribir 0 "IO B";
+leer 0;
+escribir 1 "IO B";
+leer 1;
+finalizar;

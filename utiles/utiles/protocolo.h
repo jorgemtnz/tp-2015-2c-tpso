@@ -33,6 +33,7 @@ typedef enum {
 	//+++memoria+++++++++++++++++++
 	INICIAR_PROC_SWAP,
 	LEER_SWAP,
+	ERROR_EJECUCION,
 	LEER_SWAP_POR_ESCRIBIR,
 	RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR,
 	ESCRIBIR_SWAP,
@@ -120,6 +121,13 @@ typedef struct CPU_REF {
 
 //SWAP Y MEMORIA
 
+typedef struct {
+	uint8_t PIDAReemplazar; // SOLO SETEADO EN EL SOBREESCRIBIR
+	uint8_t PIDAResponderleAMemoria; // ESTE SIEMPRE TIENE QUE TENER EL PID A RESPONDER
+	char* contenido;
+	uint8_t numeroPagina;
+} t_sobreescribir_swap;
+
 typedef struct IniciarSwap {
 	uint8_t PID;
 	uint16_t cantidadPaginas;
@@ -165,6 +173,12 @@ typedef struct {
 	t_list* respuestasPorcentaje;
 	uint8_t cantidadDeElementos;
 }t_porcentajeCPUs;
+
+typedef struct{
+	uint8_t PID;
+	uint8_t pag;
+}t_error;
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++ FUNCIONES  ++++++++++++++++++++++++++++++++++++++++++++++
@@ -253,10 +267,16 @@ void* serializar_t_rta_iniciar_ok_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,
 t_PID* deserializar_t_rta_iniciar_ok_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
 
+void serializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje, t_sobreescribir_swap* estructura);
+t_sobreescribir_swap* deserializar_t_sobreescribir_swap(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+
 void serializar_t_contenido_pagina(int fdCliente, t_tipo_mensaje tipoMensaje,
 		t_contenido_pagina* estructura);
 t_contenido_pagina* deserializar_t_contenido_pagina(int fdCliente,
 		t_tipo_mensaje tipoMensaje);
+
+
 
 void* serializar_RESUL_INICIAR_PROC_NO_OK_CPU(int fdCliente,
 		t_tipo_mensaje tipoMensaje, void* estructura);
@@ -271,6 +291,8 @@ t_PID* deserializar_t_rta_iniciar_no_ok_CPU(int fdCliente,
 t_leerDeProcesoPorEscribir* deserializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje) ;
 void* serializar_t_leerDeProcesoPorEscribir(int fdCliente, t_tipo_mensaje tipoMensaje, t_leerDeProcesoPorEscribir* estructura);
 
+void* serializar_t_error(int fdCliente, t_tipo_mensaje tipoMensaje, t_error* estructura);
+t_error* deserializar_t_error(int fdCliente, t_tipo_mensaje tipoMensaje);
 
 //+++++++++++++++++++++++++++++ FIN DUPLICADO+++++++++++++++++++++++++++++++++
 void serializar_TIEMPO_CPU(int fdCliente, t_tipo_mensaje tipoMensaje,t_PID*  estructura);
@@ -348,6 +370,10 @@ void* serializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje,
 void* deserializar_LEER_SWAP(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);
+void* serializar_ERROR_EJECUCION(int fdCliente, t_tipo_mensaje tipoMensaje, void* estructura) ;
+void* deserializar_ERROR_EJECUCION(int fdCliente, t_tipo_mensaje tipoMensaje);
+
+
 void* deserializar_LEER_MEM(int fdCliente, t_tipo_mensaje tipoMensaje);
 void* serializar_ESCRIBIR_MEM(int fdCliente, t_tipo_mensaje tipoMensaje,
 		void* estructura);

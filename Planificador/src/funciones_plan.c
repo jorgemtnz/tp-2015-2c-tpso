@@ -190,7 +190,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 
 		list_add(getColaDeFinalizados(), cpu->pcb);
 		quitarProcesoDeCpu(cpu);
-		printConsola("No se pudo iniciar el proceso pid: %d\n", resp->pcb->pid);
+		printConsola("No se pudo iniciar el proceso pid: %d %s\n", resp->pcb->pid, resp->pcb->rutaArchivoMcod);
 		break;
 	}
 	default: {
@@ -200,14 +200,14 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 }
 
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
-	putsConsola("Resultado de la ejecucion:\n");
-	printConsola("Socket: %d, PID: %d\n", socket, respuestaEjecucion->pcb->pid);
+	printConsola("Resultado de la ejecucion:\n");
+	printConsola("Socket: %d, [PID: %d] %s\n", socket, respuestaEjecucion->pcb->pid, respuestaEjecucion->pcb->rutaArchivoMcod);
 	//ESTO ES PARA EL COMANDO FINALIZAR
 	if (respuestaEjecucion->pcb->finalizar == true) {
 		respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;
 	}
 
-	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk ? "Si" : "No");
+	printConsola("Fin proceso: %s\n", respuestaEjecucion->finalizoOk ? "Si" : "No");
 
 	imprimirRespuestasDeInstrucciones(respuestaEjecucion);
 
@@ -243,8 +243,8 @@ void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion
 
 void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
 	//por ahora para debugguear visual, pero se debe poner en cola bloqueados y hacerlo esperar
-	putsConsola("Resultado de la ejecucion:\n");
-	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+	debug("Resultado de la ejecucion:\n");
+	debug("PID: %d\n", respuestaEjecucion->pcb->pid);
 
 //ESTO ES PARA EL COMANDO FINALIZAR
 	if (respuestaEjecucion->pcb->finalizar == true) {
@@ -265,8 +265,8 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion
 	pcbEntradaSalida->pcb = respuestaEjecucion->pcb;
 	pcbEntradaSalida->cantidadCiclos = respuestaEjecucion->cant_entrada_salida;
 	list_add(getColaDeEntradaSalida(), pcbEntradaSalida);
-
-	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
+	//debug("pid %i\n", pcbEntradaSalida->pcb->pid);
+	debug("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
 
 	ejecutarPlanificadorLargoPlazo();
 
@@ -278,7 +278,7 @@ bool existePID(uint8_t pid) {
 	char* ruta = string_new();
 
 	t_pcb* pcb = crearPcb(ruta);
-	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
+	t_pcb_entrada_salida* pcbES = crearPcbES(ruta);
 
 	for (a = 0; a < list_size(listaCPUs); a++) {
 
