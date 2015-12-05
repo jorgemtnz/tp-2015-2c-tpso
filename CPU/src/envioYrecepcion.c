@@ -10,15 +10,15 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-	time_t *now = malloc(sizeof(time_t));
-	time(now);
-
-	cpu->inicioInstruccion = now;
-	pthread_mutex_lock(&mutexCPUPorcentaje);
-	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-			cpu->inicioInstruccion);
-	pthread_mutex_unlock(&mutexCPUPorcentaje);
+//	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//	time_t *now = malloc(sizeof(time_t));
+//	time(now);
+//
+//	cpu->inicioInstruccion = now;
+//	pthread_mutex_lock(&mutexCPUPorcentaje);
+//	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//			cpu->inicioInstruccion);
+//	pthread_mutex_unlock(&mutexCPUPorcentaje);
 
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): { //aca entra por primera vez
@@ -63,18 +63,19 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 
 		ejecuta_EntradaSalida(separada_instruccion, cpu, socketPlanificador);
 
-		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-		time_t *now = malloc(sizeof(time_t));
-		time(now);
-		cpu->inicioInstruccion = now;
-		pthread_mutex_lock(&mutexCPUPorcentaje);
-		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-				cpu->inicioInstruccion);
+//		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//		time_t *now = malloc(sizeof(time_t));
+//		time(now);
+//		cpu->inicioInstruccion = now;
+//		pthread_mutex_lock(&mutexCPUPorcentaje);
+//		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//				cpu->inicioInstruccion);
 		pthread_mutex_unlock(&mutexCPUPorcentaje);
 //		destmCod(cpu->mCodCPU);
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje( cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
 		cpu->estado = SI_TERMINO_RAFAGA;
+		calculaAcumulado(cpu);
 //		printf("\n %i \n", cpu->pcbPlanificador->pid);
 //		printf("cpu nombre%s, id %lu\n", cpu->nombre, cpu->idCPU);
 
@@ -170,8 +171,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		//para el fin
 
 		cpu->quantumReloj += 1;
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje( cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
+		calculaAcumulado(cpu);
 		//recibe desde memoria y debe continuar con la ejecucion
 //primera vez que se esta usando la respuesta , fue creada creaRespuestaEjecucion()
 		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
@@ -195,7 +197,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 					" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
 					queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 					datosDesdeMem->PID);
-			cpu->cantInstEjecutadasPorcentaje -= 1;
+			decrementeInstProcentaje(cpu);
 			cpu->quantumReloj -= 1;
 			abort();
 		}
@@ -223,7 +225,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						cpu);
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 //espera que regrese el proceso en un futuro porque no ha terminado
-				resul_noTerminoAlPlanificador(cpu);
+				resul_TerminoAlPlanificador(cpu, NO);
+				resultadoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 
 //				puts(
@@ -244,9 +247,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
 		cpu->quantumReloj += 1;
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje(cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
 		cpu->estado = SI_TERMINO_RAFAGA;
+		calculaAcumulado(cpu);
 		//al dar error se debe devolver el proceso
 		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
 			cpu->mCodCPU->respEjec->resultadosInstrucciones = string_new();
@@ -266,7 +270,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 							" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
 							queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 							datosDesdeMem->PID));
-			cpu->cantInstEjecutadasPorcentaje -= 1;
+			decrementeInstProcentaje(cpu);
 			cpu->quantumReloj -= 1;
 			abort();
 		}
@@ -293,14 +297,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada de regreso
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 
-		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-		time_t *now = malloc(sizeof(time_t));
-		time(now);
-		cpu->inicioInstruccion = now;
-		pthread_mutex_lock(&mutexCPUPorcentaje);
-		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-				cpu->inicioInstruccion);
-		pthread_mutex_unlock(&mutexCPUPorcentaje);
+//		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//		time_t *now = malloc(sizeof(time_t));
+//		time(now);
+//		cpu->inicioInstruccion = now;
+//		pthread_mutex_lock(&mutexCPUPorcentaje);
+//		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//				cpu->inicioInstruccion);
+//		pthread_mutex_unlock(&mutexCPUPorcentaje);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
 				cpu->mCodCPU->respEjec);
 
@@ -320,9 +324,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 	case (RESUL_LEER_OK_CPU): {
 		cpu->quantumReloj += 1;
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje(cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
-
+calculaAcumulado(cpu);
 		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
 			cpu->mCodCPU->respEjec->resultadosInstrucciones = string_new();
 		}
@@ -342,7 +346,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 					" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
 					queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 					datosDesdeMem->PID);
-			cpu->cantInstEjecutadasPorcentaje -= 1;
+			decrementeInstProcentaje(cpu);
 			cpu->quantumReloj -= 1;
 			abort();
 		}
@@ -380,7 +384,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 //estoy en RR y se debe ir
 
-				resul_noTerminoAlPlanificador(cpu);
+				resul_TerminoAlPlanificador(cpu, NO);
+				resultadoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 //
 //				puts(
@@ -411,8 +416,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 	case (RESUL_ESCRIBIR): {
 		cpu->quantumReloj += 1;
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje(cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
+	calculaAcumulado(cpu);
 		t_contenido_pagina* datosDesdeMem = (t_contenido_pagina*) buffer;
 
 		if (cpu->mCodCPU->respEjec->resultadosInstrucciones == NULL) {
@@ -432,7 +438,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 					" %s  %s recibo de memoria PID %i y cpu ya no lo esta ejecutando \n",
 					queCPUsoy(cpu), identificaCPU(cpu->idCPU),
 					datosDesdeMem->PID);
-			cpu->cantInstEjecutadasPorcentaje -= 1;
+			decrementeInstProcentaje(cpu);
 			cpu->quantumReloj -= 1;
 			abort();
 
@@ -471,7 +477,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 						cpu);
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 
-				resul_noTerminoAlPlanificador(cpu);
+				resul_TerminoAlPlanificador(cpu, NO);
+				resultadoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 
 //				puts(
@@ -496,9 +503,10 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 	case (RESUL_FIN): {
 		cpu->quantumReloj += 1;
-		cpu->cantInstEjecutadasPorcentaje += 1;
+		incrementaInstPorcentaje(cpu);
 		cpu->terminaInstruccion = SI_TERMINO;
 		cpu->estado = SI_TERMINO_RAFAGA;
+		calculaAcumulado(cpu);
 		t_PID* datosDesdeMem = (t_PID*) buffer;
 
 		if (cpu->mCodCPU->respEjec == NULL) {
@@ -535,7 +543,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 				}
 
 			}
-			cpu->cantInstEjecutadasPorcentaje -= 1;
+			decrementeInstProcentaje(cpu);
 			cpu->quantumReloj -= 1;
 			abort();
 
@@ -571,14 +579,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		cpu->actualPID = -1;
 
-		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-		time_t *now = malloc(sizeof(time_t));
-		time(now);
-		cpu->inicioInstruccion = now;
-		pthread_mutex_lock(&mutexCPUPorcentaje);
-		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-				cpu->inicioInstruccion);
-		pthread_mutex_unlock(&mutexCPUPorcentaje);
+//		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//		time_t *now = malloc(sizeof(time_t));
+//		time(now);
+//		cpu->inicioInstruccion = now;
+//		pthread_mutex_lock(&mutexCPUPorcentaje);
+//		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//				cpu->inicioInstruccion);
+//		pthread_mutex_unlock(&mutexCPUPorcentaje);
 //		puts(
 //				string_from_format(
 //						"se envia por finalizar %s  %s PID %i quantumReloj %i\n",

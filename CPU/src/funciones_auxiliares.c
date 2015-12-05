@@ -94,8 +94,8 @@ char* identificaCPU(pthread_t idHilo) {
 	return resultado;
 }
 
-uint8_t instEquivalenteCienPorciento(uint8_t retardoTotal) {
-	uint8_t divisor = 0;
+double instEquivalenteCienPorciento(uint8_t retardoTotal) {
+	double divisor = 0;
 	if (retardoTotal == 0) {
 		divisor = 1;
 	} else {
@@ -128,15 +128,60 @@ double dameDiferencia(time_t* unaFecha, time_t *otraFecha) {
 //		printf("diferencia cero fechaAnterior %s fechaactual %s \n, ", ctime( unaFecha),ctime( otraFecha));
 		return 0;
 	}
-	double retorno = abs( difftime(*unaFecha, *otraFecha));;
+	double retorno = abs(difftime(*unaFecha, *otraFecha));
+	;
 //	printf("diferencia en segundos %f \n",retorno);
-	return  retorno;
+	return retorno;
 }
 
 void resetValPorcentaje(t_cpu* cpu) {
 	cpu->cantInstEjecutadasPorcentaje = 0;
-
-	cpu->acumuladoSegundos=0;
-
+	cpu->acumuladoSegundos = 0;
+//	printf("cantInstEjecutadasPorcentaje % d\n",
+//			cpu->cantInstEjecutadasPorcentaje);
+//	printf("acumuladoSegundos %f \n", cpu->acumuladoSegundos);
 //cpu->finInstruccion = time(&cpu->inicioInstruccion);//ambas con la misma fecha
+}
+
+void calculaAcumulado(t_cpu* cpu) {
+	time_t *now = malloc(sizeof(time_t));
+	time(now); //fin de una instruccion
+
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->acumuladoSegundos += dameDiferencia(cpu->inicioInstruccion, now);
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
+
+}
+
+void calculafecha(t_cpu* cpu) {
+	time_t *now = malloc(sizeof(time_t));
+	time(now); //fin de una instruccion
+	cpu->inicioInstruccion = now;
+}
+
+void incrementaInstPorcentaje(t_cpu* cpu) {
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->cantInstEjecutadasPorcentaje += 1;
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
+}
+
+void decrementeInstProcentaje(t_cpu* cpu) {
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->cantInstEjecutadasPorcentaje -= 1;
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
+}
+
+int redondea(double tiempoPromedio) {
+
+	double parte_entera = 0;
+	double result = 60 / tiempoPromedio;
+	double parte_decimal = modf(result, &parte_entera);
+//	printf("++++++++++++PARTE DECIMAL %f\n", parte_decimal);
+	if (parte_decimal > 0) {
+
+		return (int) parte_entera + 1;
+	} else {
+		return (int) parte_entera;
+	}
+
 }

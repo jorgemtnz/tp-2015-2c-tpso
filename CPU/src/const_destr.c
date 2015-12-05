@@ -236,3 +236,9 @@ void destPCB(t_pcb* pcb) {
 
 	}
 }
+
+void destFecha(time_t* fecha){
+	if (fecha != NULL) {
+	free(fecha);
+	}
+}

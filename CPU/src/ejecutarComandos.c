@@ -11,6 +11,7 @@ void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
 	cpu->estructuraSolicitud = NULL;
 	cpu->terminaInstruccion = NO_TERMINO;
 
+	calculafecha(cpu);
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
@@ -41,6 +42,7 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	free(cpu->estructuraSolicitud);
 	cpu->estructuraSolicitud = NULL;
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 
 	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
@@ -77,6 +79,7 @@ void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
 
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	estructura->contenido = string_new();
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->PID = cpu->pcbPlanificador->pid;
@@ -107,6 +110,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	estructura->PID = cpu->pcbPlanificador->pid;
 
 	cpu->estructuraSolicitud = estructura;
@@ -129,6 +133,7 @@ void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
 void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
 		int socketPlanificador) {
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	//+++++++++++++++
 	if (cpu->mCodCPU->respEjec == NULL) {
 		cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
@@ -176,7 +181,7 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
 
-	cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
+
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
@@ -188,41 +193,19 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 	cpu->actualPID = -1;
-	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-	time_t *now = malloc(sizeof(time_t));
-	time(now);
-	cpu->inicioInstruccion = now;
-	pthread_mutex_lock(&mutexCPUPorcentaje);
-	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-			cpu->inicioInstruccion);
-	pthread_mutex_unlock(&mutexCPUPorcentaje);
+//	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//	time_t *now = malloc(sizeof(time_t));
+//	time(now);
+//	cpu->inicioInstruccion = now;
+//	pthread_mutex_lock(&mutexCPUPorcentaje);
+//	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//			cpu->inicioInstruccion);
+//	pthread_mutex_unlock(&mutexCPUPorcentaje);
 }
 //solo cuando quiero que no me regrese el mismo proceso
-void resul_noTerminoAlPlanificador(t_cpu* cpu) {
-	//int socketPlanificador = atoi(
-	//		(char*) dictionary_get(conexiones, "Planificador"));
-	int socketPlanificador = cpu->socketPlanificador;
-
+void resul_TerminoAlPlanificador(t_cpu* cpu ,int estado) {
+if(estado==SI)
+	cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
+if(estado==NO)
 	cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
-	cpu->mCodCPU->respEjec->pcb = (cpu->pcbPlanificador);
-
-	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
-			cpu->mCodCPU->respEjec);
-	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger, "rafaga de proceso terminada");
-	log_info(logger,
-			string_from_format("Id del proceso %i \n",
-					cpu->pcbPlanificador->pid));
-	pthread_mutex_unlock(&mutexCPULogs);
-//	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
-	cpu->actualPID = -1;
-	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
-	time_t *now = malloc(sizeof(time_t));
-	time(now);
-	cpu->inicioInstruccion = now;
-	pthread_mutex_lock(&mutexCPUPorcentaje);
-	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
-			cpu->inicioInstruccion);
-	pthread_mutex_unlock(&mutexCPUPorcentaje);
 }
