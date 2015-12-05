@@ -98,7 +98,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 			espacioLibre = list_get(listaDeEspaciosLibres, a);
 
 			cantidadDePagLibres += espacioLibre->cantPagsLibres;
-			printf("\n\n\nCANT LIBRES  %i\n\n",cantidadDePagLibres);
+
 		}
 
 	} else { //SI ESTAN TODAS LAS PAG LIBRES
@@ -107,8 +107,7 @@ t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_li
 		espacioLibre->cantPagsLibres = configuracion->cantidadPaginas;
 		list_add(listaDeEspaciosLibres, espacioLibre);
 	}
-	imprimirListaDeLibres();
-				imprimirListaProcesos();
+
 	if (cantidadDePagLibres >= estructuraIniciar->cantidadPaginas) {
 
 		acomodarEspaciosLibres(listaDeEspaciosLibres); // POR SI QUEDARON DON BLOQUES LIBRES CONTINUOS
@@ -360,9 +359,9 @@ t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosC
 			espacioLibre->ubicacion = unProceso->ubicacion;
 
 			espacioLibre->cantPagsLibres = unProceso->cantPagsUso;
-log_info(logger,string_from_format("ESPACIO LIBRE  A AGREGAR ubica %i // pag libres %i \n\n\n\n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres));
+
 			agregarEnLaPosicionAdecuada(espacioLibre, listaDeEspaciosLibres);
-imprimirListaDeLibres();
+
 			//BORRAR DEL ESPACIO DE DATOS
 			char* espacioVacio = string_new();
 			espacioVacio = string_repeat('\0', configuracion->tamanioPagina);
@@ -533,7 +532,6 @@ if((tamanio > 1) && (espacioA->ubicacion == configuracion->cantidadPaginas)){
 		espacioA = list_get(listaDeEspaciosLibres, 0);
 
 		if (espacioLibre->ubicacion < espacioA->ubicacion) {
-			log_info(logger,string_from_format("\n\n\nEN EL IF ubica %i // pag libres %i \n\n\n\n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres));
 
 			list_add_in_index(listaDeEspaciosLibres, 0, espacioLibre);
 
@@ -569,6 +567,7 @@ void imprimirListaDeLibres(){
 		espacioLibre = list_get(listaDeEspaciosLibres,a);
 		printf("ESPACIO LIBRE UBICACION: %i // CANTIDADPAGINAS: %i \n",espacioLibre->ubicacion,espacioLibre->cantPagsLibres);
 	}
+	printf("\n");
 }
 
 void imprimirListaProcesos(){
@@ -578,4 +577,5 @@ void imprimirListaProcesos(){
 		proceso = list_get(listaDeProcesosCargados,a);
 		printf("PROCESO:%i // UBICACION: %i // CANTIDADPAGINAS: %i \n",proceso->PID,proceso->ubicacion,proceso->cantPagsUso);
 	}
+	printf("\n");
 }

@@ -76,6 +76,12 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
 				contador->PID = estructuraIniciar->PID;
 				list_add(contadorLecturasYEscrituras, contador);
+				printf("\n");
+				printf("Estado de la partición swap: \n\n");
+				imprimirListaProcesos();
+				imprimirListaDeLibres();
+				printf("*------------------------------------------*\n");
+
 			} else {
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
@@ -210,7 +216,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 					if (estructuraFinalizar->PID == contador->PID) {
 						printf("FIN DEL MPROC %i \nCANTIDAD DE LECTURAS REALIZADAS: %i \nCANTIDAD DE ESCRITURAS REALIZADAS: %i\n", estructuraFinalizar->PID,
 								contador->lecturas, contador->escrituras);
-						printf("\n\n\n\n\n\n\n\n\n\n\n");
+						printf("*------------------------------------------*\n");
 						list_remove(contadorLecturasYEscrituras, a);
 						a = list_size(contadorLecturasYEscrituras) + 1;
 					}
@@ -267,7 +273,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 			break;
 		}
 		default:
-			printf("mensaje no valido");
+			printf("Mensaje no válido");
 
 		}
 		break;
