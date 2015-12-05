@@ -133,7 +133,7 @@ void calcularPorcentaje() {
 //					cienPorcien);
 
 			double resultadoPor = ((cpu->cantInstEjecutadasPorcentaje * 100)
-					/ cienPorcien);
+					/ (cienPorcien+0.0001));
 			double parte_entera;
 			modf(resultadoPor, &parte_entera);
 			cpu->porcentajeUso =(int)  parte_entera;
