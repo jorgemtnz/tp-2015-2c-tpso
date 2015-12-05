@@ -675,6 +675,8 @@ void uretardo(unsigned int seconds) {
 	retardo(seconds);
 }
 
+int contadorRetardos = 0;
+
 void retardo(unsigned int seconds) {
 	int factor = 1000;
 	if(!rapido) {
@@ -683,8 +685,11 @@ void retardo(unsigned int seconds) {
 
 	factor = factor * (factorRapidez / 100);
 
+	//printf("######################################################### super retardo en micro %d ........ contador %d\n", (seconds*factor), contadorRetardos++);
+
 	usleep(seconds * factor);
 }
+
 
 void procesarParametros(int argc, char *argv[]) {
 	int i;
@@ -702,6 +707,10 @@ void procesarParametros(int argc, char *argv[]) {
 				printf("El porcentaje debe ser menor o igual a 100");
 			}
 			factorRapidez = rapidez;
+		} else if(string_equals(argv[i], "debug")) {
+			mustDebug = true;
+		} else if(string_equals(argv[i], "nodebug")) {
+			mustDebug = false;
 		}
 	}
 }
