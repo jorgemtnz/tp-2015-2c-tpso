@@ -269,7 +269,7 @@ char* getNombre() {
 }
 
 int getSocketCPU(uint8_t pid) {
-	debug("/////////////// get Socket %d, por pid %i, key: %s\n", atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid))), pid, getKeyPidCpu(pid));
+	debug("get Socket %d, por pid %i, key: %s\n", atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid))), pid, getKeyPidCpu(pid));
 	return atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid)));
 }
 
@@ -292,8 +292,7 @@ void registrarPidCpu(int socket, uint8_t pid) {
 		char* keyCPU = getKeyPidCpu(pid);
 		dictionary_remove(conexiones, keyCPU);
 		dictionary_put(conexiones, keyCPU, string_itoa(socket));
-		debug("/////////////// reg Socket %s, por pid %i, key: %s\n", string_itoa(socket), pid, keyCPU);
-		char* obtenido = (char*) dictionary_get(conexiones, getKeyPidCpu(pid));
-		debug("/////////////// aft Socket %d as char %s, por pid %i, key: %s\n", atoi(obtenido), obtenido, pid, getKeyPidCpu(pid));
+		debug("reg Socket %s, por pid %i, key: %s\n", string_itoa(socket), pid, keyCPU);
+
 	}
 }
