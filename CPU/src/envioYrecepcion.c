@@ -10,6 +10,16 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 	log_info(logger, "se va a ejecutar la funcion ejecutar");
 	pthread_mutex_unlock(&mutexCPULogs);
 
+	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+	time_t *now = malloc(sizeof(time_t));
+	time(now);
+
+	cpu->inicioInstruccion = now;
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+			cpu->inicioInstruccion);
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
+
 	switch (token) {
 	case (INICIAR_PROCESO_MEM): { //aca entra por primera vez
 		ejecuta_IniciarProceso(separada_instruccion, cpu);
@@ -50,8 +60,17 @@ void ejecutar(int token, char** separada_instruccion, t_cpu* cpu) {
 		cpu->quantumReloj += 1;
 		//int socketPlanificador = atoi((char*) dictionary_get(conexiones, "Planificador"));
 		int socketPlanificador = cpu->socketPlanificador;
+
 		ejecuta_EntradaSalida(separada_instruccion, cpu, socketPlanificador);
 
+		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+		time_t *now = malloc(sizeof(time_t));
+		time(now);
+		cpu->inicioInstruccion = now;
+		pthread_mutex_lock(&mutexCPUPorcentaje);
+		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+				cpu->inicioInstruccion);
+		pthread_mutex_unlock(&mutexCPUPorcentaje);
 //		destmCod(cpu->mCodCPU);
 		cpu->cantInstEjecutadasPorcentaje += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
@@ -96,6 +115,9 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //						pcbPlanificador->pid, pcbPlanificador->tamanioRafaga));
 //		printf("BB11111\n");
 		cpu->actualPID = pcbPlanificador->pid;
+
+		free(cpu->inicioInstruccion);
+		cpu->inicioInstruccion = NULL;
 
 		pthread_mutex_lock(&mutexCPULogs);
 		log_info(logger, identificaCPU(queHiloSoy()));
@@ -145,6 +167,8 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 	}
 
 	case (RESUL_INICIAR_PROC_OK_CPU): {
+		//para el fin
+
 		cpu->quantumReloj += 1;
 		cpu->cantInstEjecutadasPorcentaje += 1;
 		cpu->terminaInstruccion = SI_TERMINO;
@@ -269,6 +293,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 		cpu->mCodCPU->respEjec->finalizoOk = true; //finalizo entonces ya no se manda nada de regreso
 		cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 
+		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+		time_t *now = malloc(sizeof(time_t));
+		time(now);
+		cpu->inicioInstruccion = now;
+		pthread_mutex_lock(&mutexCPUPorcentaje);
+		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+				cpu->inicioInstruccion);
+		pthread_mutex_unlock(&mutexCPUPorcentaje);
 		enviarStruct(socketPlanificador, RESUL_EJECUCION_ERROR,
 				cpu->mCodCPU->respEjec);
 
@@ -347,6 +379,7 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 //				printf("dsp de ejecuta inst\n");
 			} else { //devuelve el resultado con el string de las instrucciones ya ejecutadas
 //estoy en RR y se debe ir
+
 				resul_noTerminoAlPlanificador(cpu);
 				cpu->estado = SI_TERMINO_RAFAGA;
 //
@@ -538,6 +571,14 @@ void recibirMensajeVarios(t_header* header, char* buffer, void* extra,
 
 		cpu->actualPID = -1;
 
+		time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+		time_t *now = malloc(sizeof(time_t));
+		time(now);
+		cpu->inicioInstruccion = now;
+		pthread_mutex_lock(&mutexCPUPorcentaje);
+		cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+				cpu->inicioInstruccion);
+		pthread_mutex_unlock(&mutexCPUPorcentaje);
 //		puts(
 //				string_from_format(
 //						"se envia por finalizar %s  %s PID %i quantumReloj %i\n",

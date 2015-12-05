@@ -97,19 +97,27 @@ void calcularPorcentaje() {
 					&& cpu->terminaInstruccion == NO_TERMINO) {
 //esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo
 				cpu->cantInstEjecutadasPorcentaje += 1; // tengo en cuenta que esta ejecutando una instruccion en este intervalo
+//
+////				cpu->retardoTotal = (uint8_t) dameDiferencia(
+////						cpu->inicioInstruccion, cpu->finInstruccion);
+//				printf("acumuladoSegundos %f\n", cpu->acumuladoSegundos);
+//				cpu->porcentajeUso = (uint8_t)(cpu->acumuladoSegundos * 100)
+//						/60;
 
-//				cpu->retardoTotal = (uint8_t) dameDiferencia(
-//						cpu->inicioInstruccion, cpu->finInstruccion);
-				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadasPorcentaje * 100)
-						/ instEquivalenteCienPorciento(configuracion->retardo));
+//				resetValPorcentaje(cpu); //lo reseteo porque luego cuando termine la instruccion se contara
+			}  //ya termino la rafaga
+//				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadasPorcentaje * 100)
+//						/ instEquivalenteCienPorciento(configuracion->retardo));
+			pthread_mutex_lock(&mutexCPUPorcentaje);
+				cpu->porcentajeUso = (cpu->acumuladoSegundos * 100)
+										/60;
 
-				resetValPorcentaje(cpu); //lo reseteo porque luego cuando termine la instruccion se contara
-			} else { //ya termino la rafaga
-				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadasPorcentaje * 100)
-						/ instEquivalenteCienPorciento(configuracion->retardo));
+				if (cpu->porcentajeUso >100)
+					cpu->porcentajeUso =93.331133;
 
+//				printf("acumuladoSegundos %f\n", cpu->acumuladoSegundos);
 				resetValPorcentaje(cpu);
-			}
+				pthread_mutex_unlock(&mutexCPUPorcentaje);
 
 			//muestra y loguea resultado
 			puts(
@@ -119,7 +127,7 @@ void calcularPorcentaje() {
 			puts(string_from_format("Para el minuto %d, \n", i));
 			puts(
 					string_from_format(
-							"el porcentaje de uso es de  %d, porciento. \n",
+							"el porcentaje de uso es de  %f, porciento. \n",
 							cpu->porcentajeUso));
 			puts(
 					string_from_format(
@@ -130,7 +138,7 @@ void calcularPorcentaje() {
 			log_info(logger, "se ejecuta el calculo del porcentaje de la cpu");
 			log_info(logger, string_from_format("para el minuto %i \n", i));
 			log_info(logger,
-					string_from_format("porcentaje de %i \n",
+					string_from_format("porcentaje de %f \n",
 							cpu->porcentajeUso));
 			pthread_mutex_unlock(&mutexCPULogs);
 		}

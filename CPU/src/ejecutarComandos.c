@@ -166,7 +166,6 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
 //					, cpu->mCodCPU->respEjec->cant_entrada_salida
 //					));
 
-
 	retardo(configuracion->retardo);
 
 	enviarStruct(socketPlanificador, ENTRADA_SALIDA, cpu->mCodCPU->respEjec);
@@ -189,7 +188,14 @@ void resultadoAlPlanificador(t_cpu* cpu) {
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
 	cpu->actualPID = -1;
-
+	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+	time_t *now = malloc(sizeof(time_t));
+	time(now);
+	cpu->inicioInstruccion = now;
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+			cpu->inicioInstruccion);
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
 }
 //solo cuando quiero que no me regrese el mismo proceso
 void resul_noTerminoAlPlanificador(t_cpu* cpu) {
@@ -211,4 +217,12 @@ void resul_noTerminoAlPlanificador(t_cpu* cpu) {
 	pthread_mutex_unlock(&mutexCPULogs);
 //	destmCod(cpu->mCodCPU); //libero, cuando me llegue de nuevo por el contextoProc entonces se crea junto a la respuesta
 	cpu->actualPID = -1;
+	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+	time_t *now = malloc(sizeof(time_t));
+	time(now);
+	cpu->inicioInstruccion = now;
+	pthread_mutex_lock(&mutexCPUPorcentaje);
+	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+			cpu->inicioInstruccion);
+	pthread_mutex_unlock(&mutexCPUPorcentaje);
 }

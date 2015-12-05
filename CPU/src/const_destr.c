@@ -129,7 +129,8 @@ t_cpu* crearCPU() {
 	cPUHilo->respuestaInstruccion = NULL;
 	cPUHilo->estructuraSolicitud = NULL;
 	cPUHilo->estado = SI_TERMINO_RAFAGA;
-//	time(&cPUHilo->inicioInstruccion);
+	cPUHilo->inicioInstruccion=NULL;
+	cPUHilo->acumuladoSegundos=0;
 //	time(&cPUHilo->finInstruccion);
 //	cPUHilo->retardoTotal =0;
 //	cPUHilo->terminaInstruccion = SI_TERMINO;
