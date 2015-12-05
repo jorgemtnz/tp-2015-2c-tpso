@@ -61,49 +61,65 @@ int finalizarPid(int socket, t_header* header, char* buffer) {
 		return -1;
 	}
 
-	t_pcb* pcbEnEntradaSalida = NULL;
-	pthread_mutex_lock(&mutexEstadoEntradaSalida);
-
-	pcbEnEntradaSalida = estadoEntradaSalida.pcb;
-	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
-
 	int a;
 	t_cpu_ref * cpu = crearCpuRef();
 	char* ruta = string_new();
 	t_pcb* pcb = crearPcb(ruta);
-	for (a = 0; a < list_size(listaCPUs); a++) {
+	t_pcb_entrada_salida* pcb2 = crearPcbES(ruta);
+	bool encontrado = false;
+	for (a = 0; (a < list_size(listaCPUs))&&(!encontrado); a++) {
 		cpu = list_get(listaCPUs, a);
 		if (cpu->pcb != NULL) {
 			if (cpu->pcb->pid == pid) {
 				list_remove(listaCPUs, a);
 				cpu->pcb->finalizar = true;
 				list_add_in_index(listaCPUs, a, cpu);
-				a = list_size(listaCPUs) + 1;
+				encontrado = true;
 			}
 		}
-	}
 
-	for (a = 0; a < list_size(colaDeListos); a++) {
+		t_pcb* pcbEnEntradaSalida = NULL;
+
+		lockEstadoEntradaSalida();
+		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+
+		if (pcbEnEntradaSalida != NULL) {
+
+					if (pcbEnEntradaSalida->pid == pid) {
+
+						pcbEnEntradaSalida->proximaInstruccion = pcbEnEntradaSalida->instruccionFinal;
+
+						encontrado = true;
+					}
+				}
+
+		unlockEstadoEntradaSalida();
+
+
+
+	}
+	encontrado = false;
+
+	for (a = 0; (a < list_size(colaDeListos))&&(!encontrado); a++) {
 		pcb = list_get(colaDeListos, a);
 
 		if (pcb->pid == pid) {
-			list_remove(colaDeListos, a);
-			pcb->proximaInstruccion = pcb->instruccionFinal;
-			list_add_in_index(colaDeListos, a, pcb);
+			 pcb->proximaInstruccion = pcb->instruccionFinal;
 
-			a = list_size(colaDeListos) + 1;
+			 encontrado = true;
 
 		}
 	}
-	for (a = 0; a < list_size(colaDeEntradaSalida); a++) {
-		pcb = list_get(colaDeEntradaSalida, a);
+	encontrado = false;
+	for (a = 0; (a < list_size(colaDeEntradaSalida))&&(!encontrado); a++) {
+		pcb2 = list_get(colaDeEntradaSalida, a);
 
-		if (pcb->pid == pid) {
+		if (pcb2->pcb->pid == pid) {
 			list_remove(colaDeEntradaSalida, a);
-			pcb->proximaInstruccion = pcb->instruccionFinal;
-			list_add_in_index(colaDeEntradaSalida, a, pcb);
-			list_add(colaDeListos, pcb);
-			a = list_size(colaDeEntradaSalida) + 1;
+			pcb2->pcb->proximaInstruccion = pcb2->pcb->instruccionFinal;
+			list_add_in_index(colaDeEntradaSalida, a, pcb2);
+			list_add(colaDeListos, pcb2);
+			encontrado = true;
 
 		}
 	}
@@ -128,13 +144,29 @@ int ps(int socket, t_header* header, char* buffer) {
 				b++;
 			}
 
-			printf("mProc %i: %s -> Ejecutando\n", cpu->pcb->pid, splitRuta[cont - 1]);
+			printConsola("mProc %i: %s -> Ejecutando\n", cpu->pcb->pid, splitRuta[cont - 1]);
 		}
 	}
 
-	//LISTO
+	//NUEVO
 	char* ruta = string_new();
 	t_pcb* pcb = crearPcb(ruta);
+	b = 0;
+	cont = 0;
+
+	for (a = 0; a < list_size(colaDeNuevos); a++) {
+		pcb = list_get(colaDeNuevos, a);
+		char** splitRuta = string_split(pcb->rutaArchivoMcod, "/");
+		while (splitRuta[b] != NULL) {
+			cont++;
+			b++;
+		}
+		printConsola("mProc %i: %s -> Nuevo\n", pcb->pid, splitRuta[cont - 1]);
+	}
+
+	//LISTO
+	ruta = string_new();
+	pcb = crearPcb(ruta);
 	b = 0;
 	cont = 0;
 
@@ -145,7 +177,7 @@ int ps(int socket, t_header* header, char* buffer) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Listo\n", pcb->pid, splitRuta[cont - 1]);
+		printConsola("mProc %i: %s -> Listo\n", pcb->pid, splitRuta[cont - 1]);
 	}
 	//BLOQUEADOS
 
@@ -160,8 +192,10 @@ int ps(int socket, t_header* header, char* buffer) {
 			cont++;
 			b++;
 		}
-		printf("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
+		printConsola("mProc %i: %s -> Bloqueado\n", pcbES->pcb->pid, splitRuta[cont - 1]);
 	}
+
+	imprimirProcesoEnEntradaSalida();
 
 	return 0;
 }

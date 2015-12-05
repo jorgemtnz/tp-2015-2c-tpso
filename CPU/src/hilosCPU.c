@@ -81,36 +81,69 @@ int hiloCPU() {
 int hiloPorcentaje() {
 
 	//este es el hilo 0
+
 	calcularPorcentaje();
 	return 0;
+
 }
 
 void calcularPorcentaje() {
 	int i = 0;
 	while (1) {
 		i++;
-		sleep(60); //duerme cada 60 segundos
+		retardo(60); //duerme cada 60 segundos
+
 		void sacaPorcentaje(t_cpu* cpu) {
-			// 60 instrucciones equivale al 100%
-			time_t now;
-			time(&now); //no se esta ejecutando actualmente la cpu
+			// 60 instrucciones ejecutadas equivale al 100%
+//en este if es para una instruccion que empezo antes de los 60s y terminara despues de estos
 			if (cpu->estado == NO_TERMINO_RAFAGA
 					&& cpu->terminaInstruccion == NO_TERMINO) {
-//esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo
-				cpu->cantInstEjecutadas += 1; // tengo en cuenta que esta ejecutando una instruccion en este intervalo
+////esta ejecutando aun una instruccion, pero no ha terminado, entonces la sumo, esta en memoria
+				incrementaInstPorcentaje(cpu);
+				calculaAcumulado(cpu);
 
-//				cpu->retardoTotal = (uint8_t) dameDiferencia(
-//						cpu->inicioInstruccion, cpu->finInstruccion);
-				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
-						/ instEquivalenteCienPorciento(configuracion->retardo));
 
-				resetValPorcentaje(cpu); //lo reseteo porque luego cuando termine la instruccion se contara
-			} else { //ya termino la rafaga
-				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadas * 100)
-						/ instEquivalenteCienPorciento(configuracion->retardo));
+////				cpu->retardoTotal = (uint8_t) dameDiferencia(
+////						cpu->inicioInstruccion, cpu->finInstruccion);
+//				printf("acumuladoSegundos %f\n", cpu->acumuladoSegundos);
+//				cpu->porcentajeUso = (uint8_t)(cpu->acumuladoSegundos * 100)
+//						/60;
 
-				resetValPorcentaje(cpu);
-			}
+//				resetValPorcentaje(cpu); //lo reseteo porque luego cuando termine la instruccion se contara
+			}  //ya termino la rafaga
+//				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadasPorcentaje * 100)
+//						/ instEquivalenteCienPorciento(configuracion->retardo));
+			pthread_mutex_lock(&mutexCPUPorcentaje);
+			//	cpu->porcentajeUso = (cpu->acumuladoSegundos * 100)
+			//							/60;
+
+//			printf("cant Inst ejecutadas %d \n",
+//					cpu->cantInstEjecutadasPorcentaje);
+//			printf("acumuladoSegundos %f\n", cpu->acumuladoSegundos);
+//			cpu->porcentajeUso = (cpu->acumuladoSegundos * 100) / 60;
+
+//			if (cpu->porcentajeUso > 100)
+//				cpu->porcentajeUso = 93.331133;
+//			tiempo promedio que demora una instruccion
+			double result = cpu->acumuladoSegundos
+					/ cpu->cantInstEjecutadasPorcentaje;
+			//cuantas instrucciones se podrian ejecutar en 60 segundos
+			int cienPorcien =  redondea(result);
+//			printf("max instrucciones que se pueden ejecutar %d \n",
+//					cienPorcien);
+
+			double resultadoPor = ((cpu->cantInstEjecutadasPorcentaje * 100)
+					/ cienPorcien);
+			double parte_entera;
+			modf(resultadoPor, &parte_entera);
+			cpu->porcentajeUso =(int)  parte_entera;
+
+//			cpu->porcentajeUso = ((cpu->cantInstEjecutadasPorcentaje * 100)
+//					/ instEquivalenteCienPorciento(configuracion->retardo));
+			resetValPorcentaje(cpu);
+			//calculo el inicio de la otra mitad de esta instruccion
+						calculafecha(cpu);
+			pthread_mutex_unlock(&mutexCPUPorcentaje);
 
 			//muestra y loguea resultado
 			puts(
@@ -120,7 +153,7 @@ void calcularPorcentaje() {
 			puts(string_from_format("Para el minuto %d, \n", i));
 			puts(
 					string_from_format(
-							"el porcentaje de uso es de  %d, porciento. \n",
+							"el porcentaje de uso es de  %i porciento. \n",
 							cpu->porcentajeUso));
 			puts(
 					string_from_format(

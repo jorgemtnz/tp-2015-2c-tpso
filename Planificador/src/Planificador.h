@@ -100,6 +100,7 @@ bool existePID(uint8_t pid);
 //++++++++++++++++++++++++++++++++++++planificacion +++++++++++++++++++++++++++++++++++++++
 void crearPlanificacion(char* nombreAlgoritmo, char* quantum);
 t_pcb* crearPcb(char* rutaArchivoMcod);
+t_pcb_entrada_salida* crearPcbES(char* rutaArchivoMcod);
 t_cpu_ref* crearCpuRef();
 void ejecutarProceso(t_pcb* pcb);
 uint8_t crearPid();
@@ -112,13 +113,29 @@ t_cpu_ref* obtenerCPUDisponible();
 void correrProcesoEnCpu(t_pcb* pcb, t_cpu_ref* cpu);
 void ejecucionAFinalizado(t_pcb* pcb);
 t_cpu_ref* obtenerCPUEjecutandoPcb(t_pcb* pcb);
+t_cpu_ref* obtenerCPUEjecutandoPcbPorPid(uint8_t PID);
 void quitarProcesoDeCpu(t_cpu_ref* cpu);
 void imprimirEstadoCpus();
+void imprimirFinalizado(t_pcb* pcb);
+int calcularTiempoRespuesta(t_pcb* pcb);
+int calcularTiempoEjecucion(t_pcb* pcb);
+int calcularTiempoEspera(t_pcb* pcb);
+void imprimirTodo();
+void imprimirColaPcbs(t_list* colaPcb, char* prefijo);
+void imprimirColaDeNuevos();
+void imprimirColaDeListos();
+void imprimirColaDeEntradaSalida();
+void imprimirProcesoEnEntradaSalida();
+void imprimirColaDeFinalizados();
 
 void ejecucionAColaDeListos(t_pcb* pcb);
 void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion);
 //++++++++++++++++++++++++++++++++++++entrada salida +++++++++++++++++++++++++++++++++++++++
 void *ejecutarEntradaSalida(void *param);
+void lockEstadoEntradaSalida();
+void unlockEstadoEntradaSalida();
+void lockHayEntradaSalidaParaEjecutar();
+void unlockHayEntradaSalidaParaEjecutar();
 //++++++++++++++++++++++++++++++++++++global planificador +++++++++++++++++++++++++++++++++++++++
 char* crearNombreCPU();
 void registrarNuevaCPU(int socket, char* nombre);
@@ -155,12 +172,7 @@ t_estado_entrada_salida estadoEntradaSalida;
 pthread_mutex_t mutexEstadoEntradaSalida;
 pthread_mutex_t mutexHayEntradaSalidaParaEjecutar;
 
-int c;
-
 //===========================================================================================
-
-
-
 
 //test
 char* decirHolaMundo();

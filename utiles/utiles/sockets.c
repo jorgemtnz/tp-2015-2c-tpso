@@ -129,6 +129,9 @@ int enviarPorSocket(int fdCliente, const void *msg, int *len) {
 	while (total < *len) {
 		bytes_enviados = send(fdCliente, msg + total, bytesleft, 0);
 		if (bytes_enviados == -1) {
+			if(errno==EINTR){
+				continue;
+			}
 			break;
 		}
 		total += bytes_enviados;
@@ -263,6 +266,9 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 	while (total < len) {
 		bytes_enviados = send(fdCliente, msg + total, bytesleft, 0);
 		if (bytes_enviados == -1) {
+			if(errno==EINTR){
+				continue;
+			}
 			break;
 		}
 		total += bytes_enviados;
@@ -271,8 +277,8 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 	//len = total; // devuelve aquí la cantidad enviada en realidad
 
 	if (bytes_enviados == -1) {
-		perror("[ERROR] Funcion send\bytes_enviados");
-		exit(-1);
+		printf("La conexion no esta disponible al enviar \n");
+		log_error(logger, "La conexion no esta disponible al enviar %s", strerror(errno));
 	}
 
 	return bytes_enviados;
@@ -282,10 +288,10 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 
 
 int recibirPorSocket(int fdCliente, void *buf, int len) {
-	int bytes_recibidos = recv(fdCliente, buf, len, 0);
+	int bytes_recibidos = recv(fdCliente, buf, len, MSG_WAITALL);
 
 	if (bytes_recibidos == -1) {
-		perror("[ERROR] Funcion recv\n");
+		log_error(logger, "Conexion no disponible al recibir: %s", strerror(errno));
 		exit(-1);
 	}
 
@@ -455,7 +461,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE;
 		if ((rv = getaddrinfo(NULL, puerto, &hints, &ai)) != 0) {
-			fprintf(stderr, "selectserver: %s\n", gai_strerror(rv));
+			fprintf(stderr, "Problemas al escuchar conexiones: %s\n", gai_strerror(rv));
 			exit(1);
 		}
 
@@ -478,7 +484,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 
 		// if we got here, it means we didn't get bound
 		if (p == NULL) {
-			fprintf(stderr, "selectserver: failed to bind\n");
+			fprintf(stderr, "El puerto ya es encuentra utilizado\n");
 			exit(2);
 		}
 		printf("Escuchando nuevas conexiones en el puerto %s\n", puerto);
@@ -526,14 +532,18 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 	// main loop
 	for (;;) {
 		read_fds = master; // copy it
+		SELECT:;
 		if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1) {
+			if (errno==EINTR){
+				goto SELECT;
+			}
 			perror("select");
 			exit(4);
 		}
-
 		// run through the existing connections looking for data to read
 		for (i = 0; i <= fdmax; i++) {
 			if (FD_ISSET(i, &read_fds)) { // we got one!!
+				debug("======================================================== inicio ciclo select\n");
 				if (soyServer && i == listener) {
 					// handle new connections
 					addrlen = sizeof remoteaddr;
@@ -546,7 +556,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						if (newfd > fdmax) {    // keep track of the max
 							fdmax = newfd;
 						}
-						printf("selectserver: new connection from %s on "
+						printf("Nueva conexion desde %s en el "
 								"socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*) &remoteaddr), remoteIP, INET6_ADDRSTRLEN), newfd);
 						funcionParaProcesarMensaje(newfd, NULL, NULL, NEW_CONNECTION, extra, logger);
 						/* PRUEBO RECIBIR ALGO SIN TENER QUE INGRESARLO POR CONSOLA
@@ -571,7 +581,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						// got error or connection closed by client
 						if (nbytes == 0) {
 							// connection closed
-							printf("selectserver: socket %d hung up\n", i);
+							printf("De produjo una desconexion desde el socket %d\n", i);
 							funcionParaProcesarMensaje(i, NULL, NULL, HANG_UP, extra, logger);
 						} else {
 							//perror("recv");
@@ -644,6 +654,7 @@ void escucharConexiones(char* puerto, int socketServer, int socketMemoria, int s
 						*/
 					}
 				} // END handle data from client
+				debug("======================================================== fin ciclo select\n");
 			} // END got new incoming connection
 		} // END looping through file descriptors
 	} // END for(;;)--and you thought it would never end!
@@ -658,6 +669,50 @@ void my_log_some(bool info, const char* formato, va_list arguments) {
 		log_info(logger, nuevo);
 	} else {
 		log_error(logger, nuevo);
+	}
+}
+
+void uretardo(unsigned int seconds) {
+	retardo(seconds);
+}
+
+int contadorRetardos = 0;
+
+void retardo(unsigned int seconds) {
+	int factor = 1000;
+	if(!rapido) {
+		factor = factor * 1000;
+	}
+
+	factor = factor * (factorRapidez / 100);
+
+	//printf("######################################################### super retardo en micro %d ........ contador %d\n", (seconds*factor), contadorRetardos++);
+
+	usleep(seconds * factor);
+}
+
+
+void procesarParametros(int argc, char *argv[]) {
+	int i;
+	for (i = 0; i < argc; ++i) {
+		if (string_equals(argv[i], "rapido")) {
+			rapido = true;
+		} else if (string_ends_with(argv[i], "%")) {
+			char** params = string_split(argv[i], "%:");
+			char* velocidad = params[0];
+			float rapidez = atof(velocidad);
+			if(rapidez <= 0) {
+				printf("El porcentaje debe ser mayor  a 0.");
+			}
+			if(rapidez > 100) {
+				printf("El porcentaje debe ser menor o igual a 100");
+			}
+			factorRapidez = rapidez;
+		} else if(string_equals(argv[i], "debug")) {
+			mustDebug = true;
+		} else if(string_equals(argv[i], "nodebug")) {
+			mustDebug = false;
+		}
 	}
 }
 
@@ -708,10 +763,6 @@ int conectar(char* ip, char* puerto, int *sock) {
 }
 
 int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
-//	puts("default procesar mensajes");
-	if(header != NULL) {
-		my_log_info("BORRAR ================ %s \n", getNombreTipoMensaje(header->tipoMensaje));
-	}
 	if(tipoNotificacion == NEW_CONNECTION) {
 //		printf("Nueva conexion desde socket %d\n", socket);
 	} else {
@@ -723,6 +774,10 @@ int defaultProcesarMensajes(int socket, t_header* header, char* buffer, t_tipo_n
 			if(string_starts_with(buffer, "\n")){
 				buffer = "";
 			} else {
+				while(string_ends_with(buffer, "\n\n")){
+					int stringLen = string_length(buffer);
+					buffer[stringLen - 1] = '\0';
+				}
 				char** split = string_split(buffer, "\n");
 				buffer = split[0];
 			}
@@ -750,6 +805,7 @@ void inicializarRegistroSerializadores() {
 		registrarSerializadores(INICIAR_PROC_SWAP, "INICIAR_PROC_SWAP", serializar_INICIAR_PROC_SWAP, deserializar_INICIAR_PROC_SWAP);
 		registrarSerializadores(FIN_PROCESO_SWAP, "FIN_PROCESO_SWAP", serializar_FIN_PROCESO_SWAP, deserializar_FIN_PROCESO_SWAP);
 		registrarSerializadores(LEER_SWAP, "LEER_SWAP", serializar_LEER_SWAP, deserializar_LEER_SWAP);
+		registrarSerializadores(ERROR_EJECUCION, "ERROR_EJECUCION", serializar_ERROR_EJECUCION, deserializar_ERROR_EJECUCION);
 		registrarSerializadores(LEER_MEM, "LEER_MEM", serializar_LEER_MEM, deserializar_LEER_MEM);
 		registrarSerializadores(ESCRIBIR_MEM, "ESCRIBIR_MEM", serializar_ESCRIBIR_MEM, deserializar_ESCRIBIR_MEM);
 		registrarSerializadores(ESCRIBIR_SWAP, "ESCRIBIR_SWAP", serializar_ESCRIBIR_SWAP, deserializar_ESCRIBIR_SWAP);
@@ -768,6 +824,7 @@ void inicializarRegistroSerializadores() {
 //		registrarSerializadores(RESUL_FIN_ERROR, "RESUL_FIN_ERROR", serializar_RESUL_FIN_ERROR, deserializar_RESUL_FIN_ERROR);
 		registrarSerializadores(RESUL_FIN_OK, "RESUL_FIN_OK", serializar_RESUL_FIN_OK, deserializar_RESUL_FIN_OK);
 		registrarSerializadores(RESUL_EJECUCION_OK, "RESUL_EJECUCION_OK", serializar_RESUL_EJECUCION_OK, deserializar_RESUL_EJECUCION_OK);
+		registrarSerializadores(RESUL_EJECUCION_ERROR, "RESUL_EJECUCION_ERROR", serializar_RESUL_EJECUCION_ERROR, deserializar_RESUL_EJECUCION_ERROR);
 		registrarSerializadores(RESUL_LEER_OK, "RESUL_LEER_OK", serializar_RESUL_LEER_OK, deserializar_RESUL_LEER_OK);
 		registrarSerializadores(RESUL_FIN, "RESUL_FIN", serializar_RESUL_FIN, deserializar_RESUL_FIN);
 		registrarSerializadores(RESUL_LEER_OK_CPU, "RESUL_LEER_OK_CPU", serializar_RESUL_LEER_OK_CPU, deserializar_RESUL_LEER_OK_CPU);
@@ -854,18 +911,20 @@ int ejecutarDeserializacion(void* (*funcion)(int, t_tipo_mensaje), int fdCliente
 	return 0;
 }
 
-bool mustDebug = true;
+bool mustDebug = false;
+bool rapido = false;
+float factorRapidez = 100.0;
 
 void debug(const char *formato, ...) {
-	if (mustDebug) {
-	//	puts("printConsola\n");
-		va_list arguments;
-		va_start(arguments, formato);
+//	puts("printConsola\n");
+	va_list arguments;
+	va_start(arguments, formato);
 //		int res = vprintf(formato, arguments);
-		va_end(arguments);
+	va_end(arguments);
 
-		char* nuevo = string_from_vformat(formato, arguments);
-		log_debug(logger, nuevo);
+	char* nuevo = string_from_vformat(formato, arguments);
+	log_debug(logger, nuevo);
+	if (mustDebug) {
 		puts(nuevo);
 	}
 }

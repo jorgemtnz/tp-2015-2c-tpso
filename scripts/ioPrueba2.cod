@@ -1,0 +1,16 @@
+iniciar 10;
+leer 0;
+escribir 1 "IO B";
+escribir 2 "IO B";
+escribir 3 "IO B";
+escribir 4 "IO B";
+escribir 5 "IO B";
+entrada-salida 50;
+leer 0;
+escribir 1 "IO B";
+leer 1;
+escribir 0 "IO B";
+leer 0;
+escribir 1 "IO B";
+leer 1;
+finalizar;

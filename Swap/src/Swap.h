@@ -95,6 +95,7 @@ t_respuesta_iniciar_o_finalizar* crearDevolucionIniciarOFinalizar();
 t_devolucion_escribir_o_leer* crearDevolucionEscribirOLeer();
 t_contenido_pagina* crearContenidoPagina();
 t_contador * crearContador();
+t_sobreescribir_swap* crearEstructuraReemplazar();
 // Funciones Destructoras hace el free de las estructuras para las que se hizo un malloc
 //========================================================================
 
@@ -102,11 +103,13 @@ t_contador * crearContador();
 //============================================================================
 void leerArchivoDeConfiguracion(int argc, char *argv[]);
 void crearArchivo();
+void imprimirListaDeLibres();
+void imprimirListaProcesos();
 void acomodarEspaciosLibres(t_list* listaDeEspaciosLibres);
 void compactarMemoria(t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
 void agregarEnLaPosicionAdecuada(l_espacioLibre *espacioLibre, t_list *listaDeEspaciosLibres);
 t_respuesta_iniciar_o_finalizar* iniciar(t_iniciar_swap* estructuraIniciar, t_list* listaDeEspaciosLibres, t_list* listaDeProcesosCargados);
-t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_contenido_pagina* procesoAEscribir,int bit);
+t_devolucion_escribir_o_leer* escribir(t_list* listaDeProcesosCargados, t_sobreescribir_swap* procesoAEscribir, int bit);
 t_devolucion_escribir_o_leer* leer(t_leerDeProceso *procesoRecibido, t_list* listaDeProcesosCargados);
 t_respuesta_iniciar_o_finalizar* finalizar(uint8_t pid, t_list* listaDeProcesosCargados, t_list* listaDeEspaciosLibres);
 void enviarResultadoIniciarERROR(int socket, void* estructura);
@@ -118,7 +121,7 @@ void enviarResultadoEscribirOK(int socket, void* estructura);
 void enviarResultadoFinalizarERROR(int socket, void* estructura);
 void enviarResultadoFinalizarOK(int socket, void* estructura);
 void inicializarListas();
-t_devolucion_escribir_o_leer* borrarContenidoPagina(t_contenido_pagina* procesoAEscribir);
+t_devolucion_escribir_o_leer* borrarContenidoPagina(t_sobreescribir_swap* procesoAEscribir);
 //++++++++++++++++++++++++++++++++++++funciones envio +++++++++++++++++++++++++++++++++++++++
 int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);
 int procesarMensajesDeMemoria(int socket, t_header* header, char* buffer, t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger);

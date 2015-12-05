@@ -1,6 +1,7 @@
 #include "Memoria.h"
 
 int main(int argc, char *argv[]) {
+	procesarParametros(argc, argv);
 	conexiones = dictionary_create();
 	inicializacionDesdeCero();
 	asignarSeniales();
@@ -22,14 +23,14 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 t_list* listaSocketsCPU;
-//int socketCPU;
+//uint8_t socketCPU;
 int procesarMensajes(int socket, t_header* header, char* buffer,
 		t_tipo_notificacion tipoNotificacion, void* extra, t_log* logger) {
 	if(listaSocketsCPU == NULL) {
 		listaSocketsCPU = list_create();
 	}
 
-	puts("Memoria procesar mensajes");
+	//puts("Memoria procesar mensajes");
 	defaultProcesarMensajes(socket, header, buffer, tipoNotificacion, extra,
 			logger);
 	int socketSwap;
@@ -45,72 +46,126 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			switch (header->tipoMensaje) {
 			case (RESUL_INICIAR_PROC_OK): {
 				t_iniciar_swap* datosDesdeSwap = (t_iniciar_swap*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i cant pag %i \n",
+			//			datosDesdeSwap->PID, datosDesdeSwap->cantidadPaginas));
 				estructuraIniciar->PID = datosDesdeSwap->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeSwap->cantidadPaginas;
 				iniciar(estructuraIniciar->PID,
 						estructuraIniciar->cantidadPaginas, getSocketCPU(estructuraIniciar->PID));
-				char* textoLogger = string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i\n",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas);
+				char* textoLogger = string_new();
+				string_append(&textoLogger,string_from_format("Proceso mProc creado,  PID: %i ,cantidad de páginas asignadas: %i\n",datosDesdeSwap->PID,datosDesdeSwap->cantidadPaginas));
 				my_log_info(textoLogger);
 				break;
 			}
 			case (RESUL_INICIAR_PROC_ERROR): {
 				t_PID* rtaDesdeSwap = (t_PID*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i \n",
+			//			rtaDesdeSwap->PID));
 				int socketCPU = getSocketCPU(rtaDesdeSwap->PID);
 				enviarRtaIniciarFalloCPU(rtaDesdeSwap, socketCPU);
 				break;
 			}
 			case (RESUL_ESCRIBIR_OK): {
-				t_contenido_pagina* datosdesdeSwap =
+				t_contenido_pagina* datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
-				enviarRtaEscribirACPU(datosdesdeSwap, getSocketCPU(datosdesdeSwap->PID));
+			//	puts(string_from_format("recibo de swap PID %i num pag %i contenido %s \n",
+			//						datosDesdeSwap->PID, datosDesdeSwap->numeroPagina,datosDesdeSwap->contenido ));		
+				enviarRtaEscribirACPU(datosDesdeSwap, getSocketCPU(datosDesdeSwap->PID));
 
 				break;
 			}
 			case (RESUL_FIN_OK): {
 				t_PID * datosDesdeSwap = (t_PID*) buffer;
+			//	puts(string_from_format("recibo de swap PID %i  \n",
+			//								datosDesdeSwap->PID ));	
 				int socketCPU = getSocketCPU(datosDesdeSwap->PID);
 				enviarFinalizarACPU(datosDesdeSwap, socketCPU);
+
+
+
 				break;
 			}
 			case (INICIAR_PROCESO_MEM): {
 				t_iniciar_swap* datosDesdeCPU = (t_iniciar_swap*) buffer;
+			//	puts(string_from_format("recibo de swap PID % cant pag %i \n",
+			//			datosDesdeCPU->PID, datosDesdeCPU->cantidadPaginas));
+				registrarPidCpu(socket, datosDesdeCPU->PID);
 				estructuraIniciar->PID = datosDesdeCPU->PID;
 				estructuraIniciar->cantidadPaginas =
 						datosDesdeCPU->cantidadPaginas;
-				sleep(configuracion->retardoMemoria);
-				registrarPidCpu(socket, datosDesdeCPU->PID);
+				uretardo(configuracion->retardoMemoria );
 				enviarIniciarASwap(estructuraIniciar, socketSwap);
 				break;
 			}
 			case (FIN_PROCESO_MEM): {
 				t_PID* datosDesdeCPU = (t_PID*) buffer;
+			//		puts(string_from_format("recibo de swap PID %i \n",
+			//							datosDesdeCPU->PID));
+//				t_PID* estructuraFinalizar;
+				registrarPidCpu(socket, datosDesdeCPU->PID);
+
 				t_PID* estructuraFinalizar;
 				estructuraFinalizar = crearPID();
 				estructuraFinalizar->PID = datosDesdeCPU->PID;
-				sleep(configuracion->retardoMemoria);
-				registrarPidCpu(socket, datosDesdeCPU->PID);
+				uretardo(configuracion->retardoMemoria );
+
+				t_TablaDePaginas* campoTablaDePag;
+				campoTablaDePag = iniciarTablaDePaginas();
+
+				char* textoALoggear = string_new();
+				string_append(&textoALoggear, "TABLA DE PAGINAS FINAL: ");
+				uint8_t a, b, flag=CONTINUA_FOR;
+				uint8_t pag, id;
+
+				t_marco* campoMemoria;
+				campoMemoria = iniciarMarco();
+				for (a = 0; a < list_size(listaMemoria); a++) {
+					campoMemoria = list_get(listaMemoria, a);
+					flag =CONTINUA_FOR ;//no ecnotro
+					//lo busca en tabla de pagina
+					for (b = 0; b < list_size(listaTablaDePag) && flag == CONTINUA_FOR; b++) {
+						campoTablaDePag = list_get(listaTablaDePag, b);
+						if (campoMemoria->idMarco == campoTablaDePag->idMarco) {
+							pag = campoTablaDePag->paginaDelProceso;
+							id = campoTablaDePag->idMarco;
+							string_append(&textoALoggear, string_from_format("Marco: %i, Pagina: %i ;", id, pag));
+							flag =DETIENE_FOR;// encontro_id_campos_iguales Y SE DETIENE
+						}
+
+					}
+				}
+
+				my_log_info(textoALoggear);
+
+
 				finalizar(estructuraFinalizar, socketSwap);
 				break;
 			}
 			case (LEER_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				aux =1;
-				my_log_info("leer pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+			//		puts(string_from_format("recibo de swap PID % num pag %i contenido %s\n",
+			//						datosDesdeCPU->PID, datosDesdeCPU->numeroPagina, datosDesdeCPU->contenido));
 				registrarPidCpu(socket, datosDesdeCPU->PID);
+				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
+				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
+				aux =1;// aux esta en lectura
+				//my_log_info("leer pag %d del proceso %d\n",
+					//	datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
-						socketSwap, getSocketCPU(datosDesdeCPU->PID));
+						socketSwap, socketCPU);
 
 				break;
 			}
 			case (RESUL_LEER_OK): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
+		//		puts(string_from_format("recibo de swap PID %i contenido %s num pag %i  \n",
+		//												datosDesdeSwap->PID, datosDesdeSwap->contenido, datosDesdeSwap->numeroPagina ));		
 				t_contenido_pagina* estructuraRtaLeer;
 				estructuraRtaLeer = iniciarContenidoPagina();
 				estructuraRtaLeer = datosDesdeSwap;
-				int flagEscritura = 0;
+				uint8_t flagEscritura = POR_LECTURA;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(estructuraRtaLeer->PID,
 						estructuraRtaLeer->numeroPagina,
 						estructuraRtaLeer->contenido, flagEscritura, getSocketCPU(estructuraRtaLeer->PID),
@@ -121,6 +176,11 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			case (RESUL_TRAER_PAG_SWAP_OK_POR_ESCRIBIR): {
 				t_contenido_pagina * datosDesdeSwap =
 						(t_contenido_pagina*) buffer;
+			//		puts(
+			//			string_from_format(
+			//					"recibo de swap PID %i contenido %s num pag %i  \n",
+			//					datosDesdeSwap->PID, datosDesdeSwap->contenido,
+			//					datosDesdeSwap->numeroPagina));		
 				t_contenido_pagina* estructuraRtaLeerPorEscribir;
 				estructuraRtaLeerPorEscribir = iniciarContenidoPagina();
 
@@ -129,7 +189,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				estructuraRtaLeerPorEscribir->PID = datosDesdeSwap->PID;
 				estructuraRtaLeerPorEscribir->numeroPagina = datosDesdeSwap->numeroPagina;
 
-				int flagEscritura = 1;
+				uint8_t flagEscritura = POR_ESCRITURA;
 				respuestaTraerDeSwapUnaPaginaDeUnProceso(
 						estructuraRtaLeerPorEscribir->PID,
 						estructuraRtaLeerPorEscribir->numeroPagina,
@@ -139,16 +199,22 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 			}
 			case (ESCRIBIR_MEM): {
 				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				aux =0;
-				my_log_info("leer pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+			//		puts(
+			//			string_from_format(
+			//					"recibo de swap PID % num pag %i contenido %s\n",
+			//					datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
+			//					datosDesdeCPU->contenido));
+				registrarPidCpu(socket, datosDesdeCPU->PID);
+				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
+				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
+				aux =0;// 0 escritura  , 1 en lectura
+				//my_log_info("escribir pag %d del proceso %d\n",
+					//	datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
-				registrarPidCpu(socket, datosDesdeCPU->PID);
-				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				escribir(estructuraEscribir->PID,estructuraEscribir->numeroPagina,
 						estructuraEscribir->contenido, socketSwap, socketCPU);
 
@@ -158,14 +224,14 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				/* solo se usa en las funciones de sacar a un marco de memoria entonces
 				 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 				 que es lo que se manda en el caso que no haya que sacar alguno */
-				t_contenido_pagina* datosDesdeCPU = (t_contenido_pagina*) buffer;
-				my_log_info("resultado sobreescribir ok de pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+				t_contenido_pagina* datosDesdeSwap = (t_contenido_pagina*) buffer;
+				my_log_info("Sobreescritura correcta de pag %d del proceso %d\n",
+						datosDesdeSwap->numeroPagina, datosDesdeSwap->PID);
 				t_contenido_pagina* lecturaMandarCpu;
 				lecturaMandarCpu = iniciarContenidoPagina();
-				lecturaMandarCpu = datosDesdeCPU;
+				lecturaMandarCpu = datosDesdeSwap;
 				enviarACPUContenidoPaginaDeUnProcesoPorLeer(lecturaMandarCpu,
-						getSocketCPU(datosDesdeCPU->PID));
+						getSocketCPU(datosDesdeSwap->PID));
 				break;
 			}
 			default:
@@ -202,7 +268,8 @@ char* getNombre() {
 	return "Memoria";
 }
 
-int getSocketCPU(int pid) {
+int getSocketCPU(uint8_t pid) {
+	debug("get Socket %d, por pid %i, key: %s\n", atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid))), pid, getKeyPidCpu(pid));
 	return atoi((char*) dictionary_get(conexiones, getKeyPidCpu(pid)));
 }
 
@@ -215,14 +282,17 @@ bool hayQueRegistrarPidCpu(int socket) {
 	return encontrado != NULL;
 }
 
-char* getKeyPidCpu(int pid) {
-	return string_from_format("CPU-PID:%d", pid);
+char* getKeyPidCpu(uint8_t pid) {
+	return string_from_format("CPU-PID:%i", pid);
 }
 
-void registrarPidCpu(int socket, int pid) {
+void registrarPidCpu(int socket, uint8_t pid) {
 
 	if(hayQueRegistrarPidCpu(socket)){
 		char* keyCPU = getKeyPidCpu(pid);
+		dictionary_remove(conexiones, keyCPU);
 		dictionary_put(conexiones, keyCPU, string_itoa(socket));
+		debug("reg Socket %s, por pid %i, key: %s\n", string_itoa(socket), pid, keyCPU);
+
 	}
 }

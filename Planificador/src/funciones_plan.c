@@ -161,7 +161,7 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		break;
 	}
 	case (RESUL_INICIAR_PROC_NO_OK_CPU): {
-		printf("proceso no iniciado en CPU\n");
+		printConsola("No se pudo iniciar el proceso\n");
 		break;
 	}
 	case (TIEMPO_CPU_RESUL): {
@@ -171,12 +171,26 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 		t_respuesta_porcentaje* porcentaje = malloc(sizeof(t_respuesta_porcentaje));
 		for (f = 0; f < listaRecibida->cantidadDeElementos; f++) {
 			porcentaje = list_get(listaRecibida->respuestasPorcentaje, f);
-			printf("cpu %lu: %i porciento \n", porcentaje->idCpu, porcentaje->res_porcentaje);
+			printConsola("cpu %lu: %i porciento \n", porcentaje->idCpu, porcentaje->res_porcentaje);
 		}
 		break;
 	}
 	case (NOTIFICACION_HILO_ENTRADA_SALIDA): {
 		ejecutarPlanificadorLargoPlazo();
+		break;
+	}
+	case (RESUL_EJECUCION_ERROR): {
+		t_respuesta_ejecucion* resp = (t_respuesta_ejecucion*) buffer;
+		t_cpu_ref* cpu = obtenerCPUEjecutandoPcbPorPid(resp->pcb->pid);
+		if(cpu == NULL) {
+			printConsola("Se intento finalizar el proceso %d y no se estaba ejecutando\n", resp->pcb->pid);
+			imprimirEstadoCpus();
+			abort();
+		}
+
+		list_add(getColaDeFinalizados(), cpu->pcb);
+		quitarProcesoDeCpu(cpu);
+		printConsola("No se pudo iniciar el proceso pid: %d %s\n", resp->pcb->pid, resp->pcb->rutaArchivoMcod);
 		break;
 	}
 	default: {
@@ -186,16 +200,23 @@ void procesarMensajesSegunTipo(int socket, t_header* header, char* buffer) {
 }
 
 void procesar_RESUL_EJECUCION_OK(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
-	putsConsola("Resultado de la ejecucion:\n");
-	printConsola("Socket: %d, PID: %d\n", socket, respuestaEjecucion->pcb->pid);
+	printConsola("Resultado de la ejecucion:\n");
+	printConsola("Socket: %d, [PID: %d] %s\n", socket, respuestaEjecucion->pcb->pid, respuestaEjecucion->pcb->rutaArchivoMcod);
 	//ESTO ES PARA EL COMANDO FINALIZAR
 	if (respuestaEjecucion->pcb->finalizar == true) {
 		respuestaEjecucion->pcb->proximaInstruccion = respuestaEjecucion->pcb->instruccionFinal;
 	}
 
-	printConsola("Finalizo OK: %s\n", respuestaEjecucion->finalizoOk ? "Si" : "No");
+	printConsola("Fin proceso: %s\n", respuestaEjecucion->finalizoOk ? "Si" : "No");
 
 	imprimirRespuestasDeInstrucciones(respuestaEjecucion);
+
+	t_pcb* pcb = respuestaEjecucion->pcb;
+	time_t fin;
+	time(&fin);
+	ctime(&fin);
+	double duracion = difftime(fin, pcb->tiempoInicioUltimaEjecucion) * 1000;
+	pcb->tiempoEjecucion = pcb->tiempoEjecucion + (int)duracion;
 
 	if (respuestaEjecucion->finalizoOk) {
 		ejecucionAFinalizado(respuestaEjecucion->pcb);
@@ -222,8 +243,8 @@ void imprimirRespuestasDeInstrucciones(t_respuesta_ejecucion* respuestaEjecucion
 
 void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion* respuestaEjecucion) {
 	//por ahora para debugguear visual, pero se debe poner en cola bloqueados y hacerlo esperar
-	putsConsola("Resultado de la ejecucion:\n");
-	printConsola("PID: %d\n", respuestaEjecucion->pcb->pid);
+	debug("Resultado de la ejecucion:\n");
+	debug("PID: %d\n", respuestaEjecucion->pcb->pid);
 
 //ESTO ES PARA EL COMANDO FINALIZAR
 	if (respuestaEjecucion->pcb->finalizar == true) {
@@ -244,8 +265,8 @@ void procesar_ENTRADA_SALIDA(int socket, t_header* header, t_respuesta_ejecucion
 	pcbEntradaSalida->pcb = respuestaEjecucion->pcb;
 	pcbEntradaSalida->cantidadCiclos = respuestaEjecucion->cant_entrada_salida;
 	list_add(getColaDeEntradaSalida(), pcbEntradaSalida);
-
-	printConsola("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
+	//debug("pid %i\n", pcbEntradaSalida->pcb->pid);
+	debug("tiempo espera %d\n", respuestaEjecucion->cant_entrada_salida);
 
 	ejecutarPlanificadorLargoPlazo();
 
@@ -257,7 +278,7 @@ bool existePID(uint8_t pid) {
 	char* ruta = string_new();
 
 	t_pcb* pcb = crearPcb(ruta);
-	t_pcb_entrada_salida* pcbES = malloc(sizeof(t_pcb_entrada_salida));
+	t_pcb_entrada_salida* pcbES = crearPcbES(ruta);
 
 	for (a = 0; a < list_size(listaCPUs); a++) {
 
@@ -270,16 +291,19 @@ bool existePID(uint8_t pid) {
 		}
 
 		t_pcb* pcbEnEntradaSalida = NULL;
-		pthread_mutex_lock(&mutexEstadoEntradaSalida);
+		lockEstadoEntradaSalida();
 
 		pcbEnEntradaSalida = estadoEntradaSalida.pcb;
+		if (pcbEnEntradaSalida != NULL) {
+			if (pcbEnEntradaSalida->pid == pid) {
 
-		pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+				unlockEstadoEntradaSalida();
 
-		if (pcbEnEntradaSalida->pid == pid) {
-
-			return true;
+				return true;
+			}
 		}
+
+		unlockEstadoEntradaSalida();
 
 	}
 
@@ -302,3 +326,20 @@ bool existePID(uint8_t pid) {
 	return false;
 
 }
+
+void lockEstadoEntradaSalida() {
+	pthread_mutex_lock(&mutexEstadoEntradaSalida);
+}
+
+void unlockEstadoEntradaSalida() {
+	pthread_mutex_unlock(&mutexEstadoEntradaSalida);
+}
+
+void lockHayEntradaSalidaParaEjecutar() {
+	pthread_mutex_lock(&mutexHayEntradaSalidaParaEjecutar);
+}
+
+void unlockHayEntradaSalidaParaEjecutar() {
+	pthread_mutex_unlock(&mutexHayEntradaSalidaParaEjecutar);
+}
+

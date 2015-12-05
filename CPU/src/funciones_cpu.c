@@ -17,7 +17,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 //		log_info(logger,identificaCPU(queHiloSoy()));
 //		log_error(logger, logMsg);
 //		pthread_mutex_unlock(&mutexCPULogs);
-		exit(-1);
+		abort();
 	}
 	char* nombreArchivoConfig = nombreArchivoConfig = strdup(argv[1]);
 //	nombreArchivoConfig = strdup(
@@ -27,7 +27,7 @@ void leerArchivoDeConfiguracion(int argc, char *argv[]) {
 		perror("[ERROR]: Archivo de configuracion no encontrado");
 //	log_info(logger,identificaCPU(queHiloSoy()));
 		log_error(logger, "[ERROR]: Archivo de configuracion no encontrado");
-		exit(-1);
+		abort();
 	} else {
 		archivoConfig = config_create(nombreArchivoConfig);
 		configuracion = malloc(sizeof(t_configuracion));
@@ -61,23 +61,30 @@ void ejecuta_Instruccion(char* instruccion_origen, t_cpu* cpu) {
 
 	//le estoy mandando solo la instruccion sin el token
 	pthread_mutex_lock(&mutexCPULogs);
-		log_info(logger,identificaCPU(queHiloSoy()));
-		log_info(logger, "se va a ejecutar interpretaInstruccion ");
-		log_info(logger, string_from_format("token:  %i \n", token));
-		log_info(logger,string_from_format("\n================ Ejecutando %s\n", instruccion->instruccion_separada[0]));
-		pthread_mutex_unlock(&mutexCPULogs);
+	log_info(logger, identificaCPU(queHiloSoy()));
+	log_info(logger, "se va a ejecutar interpretaInstruccion ");
+	log_info(logger, string_from_format("token:  %i \n", token));
+	log_info(logger,
+			string_from_format("\n================ Ejecutando %s\n",
+					instruccion->instruccion_separada[0]));
+	pthread_mutex_unlock(&mutexCPULogs);
 //	printf("\n================ Ejecutando %s, en cpu %lu\n", instruccion->instruccion_separada[0], cpu->idCPU);
 	ejecutar(token, instruccion->instruccion_separada, cpu);
 }
 // ejecuta las instrucciones del mCod
 //carga codigo, interpreta y ejecuta las instrucciones
 void procesaCodigo(t_cpu* cpu) {
+//	puts(
+//						string_from_format(
+//								"se esta procesando el codigo  %s  %s PID %i \n",
+//								queCPUsoy(cpu), identificaCPU(cpu->idCPU),
+//								cpu->pcbPlanificador->pid));
+
 	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar procesaCodigo");
 	pthread_mutex_unlock(&mutexCPULogs);
-	t_mCod* mCodCPU = crearmCod();
-//++++++++++++++++++++++++++++++++
+
 	int fd = open(cpu->pcbPlanificador->rutaArchivoMcod, O_RDONLY);
 	if (fd == -1) {
 		perror("Error al abrir el archivo");
@@ -99,21 +106,27 @@ void procesaCodigo(t_cpu* cpu) {
 		i++;
 	} //el buffer solo contiene las instrucciones, sin punto y coma
 //	printf("%s sin enter\n", sin_enter);
+	t_mCod* mCodCPU = crearmCod();
 	mCodCPU->bufferInstrucciones = string_split(sin_enter, ";");
 	mCodCPU->cantidadInstrucciones = devuelveCantidadElementosArreglo(
 			mCodCPU->bufferInstrucciones);
+	cpu->mCodCPU = mCodCPU;
 	cpu->mCodCPU->bufferInstrucciones = mCodCPU->bufferInstrucciones;
 	cpu->mCodCPU->cantidadInstrucciones = mCodCPU->cantidadInstrucciones;
 	//se resta uno, porque se conto el cero anteriormente
-	cpu->pcbPlanificador->instruccionFinal= mCodCPU->cantidadInstrucciones-1;
+	cpu->pcbPlanificador->instruccionFinal = mCodCPU->cantidadInstrucciones - 1;
 
 	//++++++++++++++++++++++++++++++++sin_enter ya tengo un string con las instrucciones
 //aca estoy haciendo la ejecucion de una de las instrucciones
 	pthread_mutex_lock(&mutexCPULogs);
-	log_info(logger,identificaCPU(queHiloSoy()));
+	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	pthread_mutex_unlock(&mutexCPULogs);
-
+//	printf("antes de ejecuta instruccion e if \n");
+	if(cpu->pcbPlanificador->proximaInstruccion>cpu->pcbPlanificador->instruccionFinal){
+		printf("[[ERROR]]  LA PROXIMA INSTRUCCION EXCEDE EL BUFFER");
+		abort();
+	}
 	ejecuta_Instruccion(
 			cpu->mCodCPU->bufferInstrucciones[cpu->pcbPlanificador->proximaInstruccion],
 			cpu);

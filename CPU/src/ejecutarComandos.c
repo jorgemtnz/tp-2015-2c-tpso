@@ -2,39 +2,60 @@
 //nota
 //no se cuenta una instruccion ejecutada hasta que no regreso de memoria la respuesta, cuando corresponda
 void ejecuta_IniciarProceso(char** separada_instruccion, t_cpu* cpu) {
+//	puts(
+//				string_from_format(
+//						" %s  %s  INICIAR_PROCESO_MEM de PID %i:  dir EstructuraSolicitud %p\n",
+//						queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//						cpu->estructuraSolicitud));
+//	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
 	cpu->terminaInstruccion = NO_TERMINO;
+
+	calculafecha(cpu);
 	t_iniciar_swap* estructura = malloc(sizeof(t_iniciar_swap));
 	estructura->PID = cpu->pcbPlanificador->pid;
 	estructura->cantidadPaginas = atoi(separada_instruccion[1]);
+
 	cpu->estructuraSolicitud = (t_iniciar_swap*) estructura;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,
-			string_from_format("Id del proceso %i", estructura->PID));
+	log_info(logger, string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger,
 			string_from_format(
 					"instruccion ejecutada: iniciar. Cantidad de paginas, %i\n",
 					estructura->cantidadPaginas));
 	pthread_mutex_unlock(&mutexCPULogs);
 
-	sleep(configuracion->retardo);
+//	puts(
+//			string_from_format(
+//					" %s  %s  INICIAR_PROCESO_MEM de PID %i: se envia:PID %i, cant pag %i dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID, estructura->cantidadPaginas, estructura,
+//					cpu->estructuraSolicitud));
+
+	retardo(configuracion->retardo);
 }
 //mandar comando a  memoria con los datos y la pagina donde debe ser escrita
 void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
-	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
+
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
+	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
+
 	//printf("BBBBBBBBBBBB %s \n",separada_instruccion)
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->contenido = string_new();
 	string_append(&estructura->contenido, separada_instruccion[2]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,
-			string_from_format("Id del proceso %i", estructura->PID));
+	log_info(logger, string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger,
 			string_from_format(
 					"instruccion ejecutada: escribir. numero de pagina, %i",
@@ -42,55 +63,88 @@ void ejecuta_EscribirMemoria(char** separada_instruccion, t_cpu* cpu) {
 	log_info(logger,
 			string_from_format("contenido %s \n", estructura->contenido));
 	pthread_mutex_unlock(&mutexCPULogs);
-	sleep(configuracion->retardo);
+
+//	puts(
+//			string_from_format(
+//					" %s  %s  ESCRIBIR_MEM de PID %i: se envia:PID %i, num pag %i  contenido %s, \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID,estructura->numeroPagina, estructura->contenido, estructura,
+//					cpu->estructuraSolicitud));
+	retardo(configuracion->retardo);
 }
 //devuelve la estructura de leerMemoria
 void ejecuta_LeerMemoria(char** separada_instruccion, t_cpu* cpu) {
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 	t_contenido_pagina* estructura = malloc(sizeof(t_contenido_pagina));
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	estructura->contenido = string_new();
 	estructura->numeroPagina = atoi(separada_instruccion[1]);
 	estructura->PID = cpu->pcbPlanificador->pid;
 	cpu->pcbPlanificador->proximaInstruccion++;
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,
-			string_from_format("Id del proceso %i ", estructura->PID));
+	log_info(logger, string_from_format("Id del proceso %i ", estructura->PID));
 	log_info(logger,
 			string_from_format(
 					"instruccion ejecutada: leer . numero de pagina, %i \n",
 					estructura->numeroPagina));
 	pthread_mutex_unlock(&mutexCPULogs);
-	sleep(configuracion->retardo);
+//	puts(
+//			string_from_format(
+//					" %s  %s  LEER_MEM de PID %i: se envia:PID %i, num pag %i , \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID,estructura->numeroPagina, estructura,
+//					cpu->estructuraSolicitud));
+
+	retardo(configuracion->retardo);
 }
 //mandar el comando de finalizar y el respectivo PID IP del proceso
 void ejecuta_FinProcesoMemoria(t_cpu* cpu) {
+	free(cpu->estructuraSolicitud);
+	cpu->estructuraSolicitud = NULL;
+
 	t_PID* estructura = malloc(sizeof(t_PID));
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	estructura->PID = cpu->pcbPlanificador->pid;
-	//cpu->pcbPlanificador->proximaInstruccion = 0;
+
 	cpu->estructuraSolicitud = estructura;
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,
-			string_from_format("Id del proceso %i", estructura->PID));
+	log_info(logger, string_from_format("Id del proceso %i", estructura->PID));
 	log_info(logger, "instruccion ejecutada: fin proceso memoria  \n");
 	pthread_mutex_unlock(&mutexCPULogs);
-	sleep(configuracion->retardo);
+
+//	puts(
+//			string_from_format(
+//					" %s  %s  FIN_PROCESO_MEM de PID %i: se envia:PID %i, \n dirEstructura %p dir EstructuraSolicitud %p\n",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID,
+//					estructura->PID, estructura,
+//					cpu->estructuraSolicitud));
+
+	retardo(configuracion->retardo);
 }
 // mandar el proceso al planificador para que lo  ponga a dormir y en su cola de bloqueados
-void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
-
+void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu,
+		int socketPlanificador) {
 	cpu->terminaInstruccion = NO_TERMINO;
+	calculafecha(cpu);
 	//+++++++++++++++
+	if (cpu->mCodCPU->respEjec == NULL) {
+		cpu->mCodCPU->respEjec = malloc(sizeof(t_respuesta_ejecucion));
+	}
 	cpu->mCodCPU->respEjec->resultadosInstrucciones = realloc(
 			cpu->mCodCPU->respEjec->resultadosInstrucciones,
 			strlen(cpu->mCodCPU->respEjec->resultadosInstrucciones) + 1
 					+ strlen("mProc %d %s %d - en entrada-salida de tiempo ;\0")
 					+ strlen(separada_instruccion[1]));
 	//		++++++++++++++++++++++
-	cpu->mCodCPU->respEjec->finalizoOk = true;
+	cpu->mCodCPU->respEjec->finalizoOk = false;
 	cpu->pcbPlanificador->proximaInstruccion++;
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	cpu->mCodCPU->respEjec->cant_entrada_salida = atoi(separada_instruccion[1]);
@@ -99,35 +153,59 @@ void ejecuta_EntradaSalida(char** separada_instruccion, t_cpu* cpu) {
 					"en entrada-salida de tiempo \n ",
 					atoi(separada_instruccion[1])));
 	//+++++++++++++++++++++++++++++++++++
-	cpu->cantInstEjecutadas += 1;
-	cpu->terminaInstruccion = SI_TERMINO;
+
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger,
-			string_from_format("Id del proceso %i",
-					cpu->pcbPlanificador->pid));
+			string_from_format("Id del proceso %i", cpu->pcbPlanificador->pid));
 	log_info(logger,
-			string_from_format("instruccion ejecutada: entrada -salida por un valor de %i \n",
+			string_from_format(
+					"instruccion ejecutada: entrada -salida por un valor de %i \n",
 					cpu->mCodCPU->respEjec->cant_entrada_salida));
 	pthread_mutex_unlock(&mutexCPULogs);
-	sleep(configuracion->retardo);
+
+//	puts(
+//			string_from_format(
+//					" %s  %s  ENTRADA_SALIDA de PID %i: se envia:PID %i,\n tiempo de entrada salida %i\n ",
+//					queCPUsoy(cpu), identificaCPU(cpu->idCPU), cpu->actualPID
+//					, cpu->mCodCPU->respEjec->cant_entrada_salida
+//					));
+
+	retardo(configuracion->retardo);
+
+	enviarStruct(socketPlanificador, ENTRADA_SALIDA, cpu->mCodCPU->respEjec);
 }
 
 void resultadoAlPlanificador(t_cpu* cpu) {
 	//int socketPlanificador = atoi(
 	//		(char*) dictionary_get(conexiones, "Planificador"));
 	int socketPlanificador = cpu->socketPlanificador;
-	//		++++++++++++++++++++++funcion finalizar
-	cpu->mCodCPU->respEjec->finalizoOk = true;
+
+
 	cpu->mCodCPU->respEjec->pcb = cpu->pcbPlanificador;
 	enviarStruct(socketPlanificador, RESUL_EJECUCION_OK,
 			cpu->mCodCPU->respEjec);
 	pthread_mutex_lock(&mutexCPULogs);
 	log_info(logger, identificaCPU(queHiloSoy()));
-	log_info(logger,"rafaga de proceso terminada");
+	log_info(logger, "rafaga de proceso terminada");
 	log_info(logger,
 			string_from_format("Id del proceso %i \n",
 					cpu->pcbPlanificador->pid));
 	pthread_mutex_unlock(&mutexCPULogs);
-///	free(cpu->mCodCPU->respEjec);
+	cpu->actualPID = -1;
+//	time_t * inicioInstruccionAnterior = cpu->inicioInstruccion;
+//	time_t *now = malloc(sizeof(time_t));
+//	time(now);
+//	cpu->inicioInstruccion = now;
+//	pthread_mutex_lock(&mutexCPUPorcentaje);
+//	cpu->acumuladoSegundos += dameDiferencia(inicioInstruccionAnterior,
+//			cpu->inicioInstruccion);
+//	pthread_mutex_unlock(&mutexCPUPorcentaje);
+}
+//solo cuando quiero que no me regrese el mismo proceso
+void resul_TerminoAlPlanificador(t_cpu* cpu ,int estado) {
+if(estado==SI)
+	cpu->mCodCPU->respEjec->finalizoOk = true; //ya termino no va a regresar
+if(estado==NO)
+	cpu->mCodCPU->respEjec->finalizoOk = false; //me va a regresar despues el proceso
 }
