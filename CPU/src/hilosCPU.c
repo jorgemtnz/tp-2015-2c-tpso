@@ -114,8 +114,8 @@ void calcularPorcentaje() {
 //				cpu->porcentajeUso = (uint8_t) ((cpu->cantInstEjecutadasPorcentaje * 100)
 //						/ instEquivalenteCienPorciento(configuracion->retardo));
 			pthread_mutex_lock(&mutexCPUPorcentaje);
-				cpu->porcentajeUso = (cpu->acumuladoSegundos * 100)
-										/60;
+			//	cpu->porcentajeUso = (cpu->acumuladoSegundos * 100)
+			//							/60;
 
 //			printf("cant Inst ejecutadas %d \n",
 //					cpu->cantInstEjecutadasPorcentaje);
