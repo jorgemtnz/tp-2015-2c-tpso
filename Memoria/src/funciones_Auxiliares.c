@@ -913,6 +913,7 @@ t_list* buscarLosMarcoYBitDeProceso(uint8_t idProc) {
 			}
 		}
 		if (list_size(listamarcoYBit) == cantPagDelPID) {
+			pthread_mutex_unlock(&mutexTablaPags);
 			return listamarcoYBit;
 		} else {
 			list_clean(listamarcoYBit);
@@ -1085,8 +1086,8 @@ void eliminarDeTablaDePaginasDefinitivamente(uint8_t PID) {
 	campoTablaDePag = iniciarTablaDePaginas();
 
 
+	uretardo(configuracion->retardoMemoria );
 	for (a = 0; a < tamanioTablaDePaginas; a++) {
-		uretardo(configuracion->retardoMemoria );
 		campoTablaDePag = list_get(listaTablaDePag, a);
 		if (campoTablaDePag->idProc == PID) {
 			list_remove(listaTablaDePag, a);
@@ -1094,6 +1095,7 @@ void eliminarDeTablaDePaginasDefinitivamente(uint8_t PID) {
 			tamanioTablaDePaginas--;
 		}
 	}
+
 	pthread_mutex_unlock(&mutexTablaPags);
 
 }

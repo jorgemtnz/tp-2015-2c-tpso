@@ -162,7 +162,6 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 	tamanioListaId = list_size(listaDemarcoYBit);
 	t_marco_y_bit* marcoYBit;
 	marcoYBit = iniciarMarcoYBit();
-
 	eliminarDeTablaDePaginasDefinitivamente(estructuraFinalizar->PID);
 
 	for (a = 0; a < tamanioListaId; a++) {
@@ -171,6 +170,7 @@ void finalizar(t_PID* estructuraFinalizar, int socketSwap) {
 			eliminarDeMemoria(marcoYBit->idMarco);
 		}
 		if (configuracion->tlbHabilitada == 1) {
+
 			eliminarDeTLBDefinitivamente(marcoYBit->idMarco);
 		}
 	}
