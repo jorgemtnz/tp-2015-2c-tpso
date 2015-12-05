@@ -205,6 +205,7 @@ t_marco_y_bit* buscarSiEstaEnMemoria(uint8_t idProc, uint8_t nroPag, uint8_t fla
 				my_log_info(textoLogger);
 			}
 		}
+		printf("*------------------------------------------*\n");
 	return marcoYBit;
 
 }

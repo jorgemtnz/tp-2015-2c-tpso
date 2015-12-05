@@ -277,7 +277,8 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 	//len = total; // devuelve aquí la cantidad enviada en realidad
 
 	if (bytes_enviados == -1) {
-		perror("[ERROR] Funcion send\bytes_enviados");
+		printf("La conexion no esta disponible al enviar \n");
+		log_error(logger, "La conexion no esta disponible al enviar %s", strerror(errno));
 	}
 
 	return bytes_enviados;
@@ -287,10 +288,10 @@ int enviarSimple(int fdCliente, void *msg, int len) {
 
 
 int recibirPorSocket(int fdCliente, void *buf, int len) {
-	int bytes_recibidos = recv(fdCliente, buf, len, 0);
+	int bytes_recibidos = recv(fdCliente, buf, len, MSG_WAITALL);
 
 	if (bytes_recibidos == -1) {
-		perror("[ERROR] Funcion recv\n");
+		log_error(logger, "Conexion no disponible al recibir: %s", strerror(errno));
 		exit(-1);
 	}
 
