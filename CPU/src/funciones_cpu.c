@@ -122,7 +122,7 @@ void procesaCodigo(t_cpu* cpu) {
 	log_info(logger, identificaCPU(queHiloSoy()));
 	log_info(logger, "se va a ejecutar una Instruccion en donde quedo");
 	pthread_mutex_unlock(&mutexCPULogs);
-	printf("antes de ejecuta instruccion e if \n");
+//	printf("antes de ejecuta instruccion e if \n");
 	if(cpu->pcbPlanificador->proximaInstruccion>cpu->pcbPlanificador->instruccionFinal){
 		printf("[[ERROR]]  LA PROXIMA INSTRUCCION EXCEDE EL BUFFER");
 		abort();
