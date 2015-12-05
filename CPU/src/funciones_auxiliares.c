@@ -174,7 +174,7 @@ void decrementeInstProcentaje(t_cpu* cpu) {
 int redondea(double tiempoPromedio) {
 
 	double parte_entera = 0;
-	double result = 60 / tiempoPromedio;
+	double result = 60 / (tiempoPromedio+0.0001);
 	double parte_decimal = modf(result, &parte_entera);
 //	printf("++++++++++++PARTE DECIMAL %f\n", parte_decimal);
 	if (parte_decimal > 0) {
