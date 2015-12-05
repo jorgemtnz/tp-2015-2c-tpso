@@ -76,6 +76,10 @@ int procesarMensajes(int socket, t_header* header, char* buffer, t_tipo_notifica
 				enviarStruct(socket, RESUL_INICIAR_PROC_OK, estructuraAEnviar);
 				contador->PID = estructuraIniciar->PID;
 				list_add(contadorLecturasYEscrituras, contador);
+				printf("Estado de la swap: \n\n");
+				imprimirListaProcesos();
+				imprimirListaDeLibres();
+
 			} else {
 				enviarStruct(socket, RESUL_INICIAR_PROC_ERROR, estructuraAEnviar);
 			}
