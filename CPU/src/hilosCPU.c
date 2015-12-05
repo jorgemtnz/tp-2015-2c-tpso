@@ -113,7 +113,7 @@ void calcularPorcentaje() {
 										/60;
 
 				if (cpu->porcentajeUso >100)
-					cpu->porcentajeUso =93.331133;
+					cpu->porcentajeUso =93.333333;
 
 //				printf("acumuladoSegundos %f\n", cpu->acumuladoSegundos);
 				resetValPorcentaje(cpu);
