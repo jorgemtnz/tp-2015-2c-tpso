@@ -410,10 +410,10 @@ bool llegoAlMaximoDelProcesoLaMemoria(uint8_t idProc) {
 		}
 	}
 	pthread_mutex_unlock(&mutexTablaPags);
-	if (flagTLB ==0 || flagTDP == NO_ENCONTRO) {
-		respuesta = false;
-	} else {
+	if (flagTLB == 1|| flagTDP == 1) {
 		respuesta = true;
+	} else {
+		respuesta = false;
 	}
 
 	return respuesta;
