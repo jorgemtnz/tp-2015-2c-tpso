@@ -212,6 +212,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();
+				mostrarTLB();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
 				estructuraEscribir->numeroPagina = datosDesdeCPU->numeroPagina;
 				estructuraEscribir->contenido = datosDesdeCPU->contenido;
