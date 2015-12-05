@@ -150,8 +150,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =1;// aux esta en lectura
-				my_log_info("leer pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+				//my_log_info("leer pag %d del proceso %d\n",
+					//	datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				leer(datosDesdeCPU->PID, datosDesdeCPU->numeroPagina,
 						socketSwap, socketCPU);
 
@@ -208,8 +208,8 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				int socketCPU = getSocketCPU(datosDesdeCPU->PID);
 				revisarQueExistaPidYPagina(datosDesdeCPU->numeroPagina,datosDesdeCPU->PID,socketCPU);
 				aux =0;// 0 escritura  , 1 en lectura
-				my_log_info("escribir pag %d del proceso %d\n",
-						datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
+				//my_log_info("escribir pag %d del proceso %d\n",
+					//	datosDesdeCPU->numeroPagina, datosDesdeCPU->PID);
 				t_contenido_pagina* estructuraEscribir;
 				estructuraEscribir = iniciarContenidoPagina();
 				estructuraEscribir->PID = datosDesdeCPU->PID;
@@ -225,7 +225,7 @@ int procesarMensajes(int socket, t_header* header, char* buffer,
 				 en la respuesta de sobreescribir a swap, se va a mandar a cpu el contenido,
 				 que es lo que se manda en el caso que no haya que sacar alguno */
 				t_contenido_pagina* datosDesdeSwap = (t_contenido_pagina*) buffer;
-				my_log_info("resultado sobreescribir ok de pag %d del proceso %d\n",
+				my_log_info("Sobreescritura correcta de pag %d del proceso %d\n",
 						datosDesdeSwap->numeroPagina, datosDesdeSwap->PID);
 				t_contenido_pagina* lecturaMandarCpu;
 				lecturaMandarCpu = iniciarContenidoPagina();
