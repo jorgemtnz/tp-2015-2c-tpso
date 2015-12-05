@@ -127,7 +127,7 @@ void calcularPorcentaje() {
 			puts(string_from_format("Para el minuto %d, \n", i));
 			puts(
 					string_from_format(
-							"el porcentaje de uso es de  %f, porciento. \n",
+							"El porcentaje de uso es de  %f porciento.\n",
 							cpu->porcentajeUso));
 			puts(
 					string_from_format(
